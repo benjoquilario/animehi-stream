@@ -1,5 +1,5 @@
 export const episodesTitle = (str: string) => {
-  const removeSymbol = str.toLowerCase().replace(/[^a-zA-Z ]/g, '');
+  const removeSymbol = str.toLowerCase().replace(/[^a-zA-Z0-9 ]/g, '');
   const splitEpisode = removeSymbol.split(' ');
   const episode = splitEpisode.join('-');
   return episode;
