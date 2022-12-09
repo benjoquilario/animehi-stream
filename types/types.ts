@@ -1,21 +1,21 @@
-export type IAnimeResponse = {
+export type AnimeResponseType = {
   currentPage: number;
   hasNextPage: boolean;
   results: TResults[];
 };
 
-export type TRecentResponse = {
-  currentPage: number;
-  hasNextPage: boolean;
-  totalPages: number;
-  totalResults: number;
-  results: TRecentResults[];
+export type RecentResponseType<T> = {
+  currentPage?: number;
+  hasNextPage?: boolean;
+  totalPages?: number;
+  totalResults?: number;
+  results: T[];
 };
 
-export type TSameTypes = {
+export type SameType = {
   id: string;
   malId: number;
-  title: Title;
+  title: TitleType;
   image: string;
   genres: string[];
   description: string;
@@ -23,7 +23,7 @@ export type TSameTypes = {
   rating: number | null;
 };
 
-export type Title = {
+export type TitleType = {
   romaji: string;
   english: string;
   native: string;
@@ -41,16 +41,16 @@ export type TResults = {
   releaseDate: string;
   totalEpisodes: number;
   duration: number;
-} & TSameTypes;
+} & SameType;
 
-export type TRecentResults = {
+export type RecentType = {
   color: string;
   episodeId: string;
   episodeTitle: string;
   episodeNumber: number;
-} & TSameTypes;
+} & SameType;
 
-export type TEpisodes = {
+export type EpisodesType = {
   description: string;
   id: string;
   image: string;
@@ -58,7 +58,7 @@ export type TEpisodes = {
   title: string;
 };
 
-export type TName = {
+export type NameType = {
   first: string;
   last: string | null;
   full: string;
@@ -70,30 +70,45 @@ export type TRecommendation = {
   cover: string;
   status: string;
   episodes: number;
-} & TSameTypes;
+} & SameType;
 
-export type TCharacters = {
+export type CharactersType = {
   id: number;
   image: string;
-  name: TName;
+  name: NameType;
   role: string;
   voiceActors: {
     id: number;
     image: string;
     language: string;
-    name: TName;
+    name: NameType;
+  }[];
+};
+
+export type SourceType = {
+  sources: {
+    url: string;
+    isM3U8: boolean;
+    quality: string;
   };
 };
 
-export type TAnimeInfo = {
-  characters: TCharacters[];
+export type VideosType = {
+  headers: {
+    Referer: string;
+  };
+  sources: SourceType[];
+};
+
+export type AnimeType = {
+  characters: CharactersType[];
   color: string;
   countryOfOrigin: string;
   cover: string;
   description: string;
   duration: number;
   endDate: { year: number | null; month: number | null; day: number | null };
-  episodes: TEpisodes[];
+  episodes: EpisodesType[];
   genres: string[];
   hasDub: boolean;
   hasSub: boolean;
@@ -117,7 +132,7 @@ export type TAnimeInfo = {
   studios: string[];
   subOrDub: string;
   synonyms: string[];
-  title: Title;
+  title: TitleType;
   totalEpisodes: number;
   type: string;
 };
