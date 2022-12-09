@@ -35,9 +35,9 @@ export const getStaticProps = async ({ params }: any) => {
 
 export const getStaticPaths: GetStaticPaths = async () => {
   return {
-    // Prerender the next 15 pages after the first page, which is handled by the index page.
+    // Prerender the next 24 pages after the first page, which is handled by the index page.
     // Other pages will be prerendered at runtime.
-    paths: Array.from({ length: 15 }).map((_, i) => `/recent/${i + 2}`),
+    paths: Array.from({ length: 24 }).map((_, i) => `/recent/${i + 2}`),
     // Block the request for non-generated pages and cache them in the background
     fallback: 'blocking',
   };

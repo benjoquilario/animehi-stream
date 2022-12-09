@@ -2,8 +2,8 @@ import { initialiseStore, useDispatch, useSelector } from '@/store/store';
 import { useRouter } from 'next/router';
 import dynamic from 'next/dynamic';
 import useSWR from 'swr';
-import React, { useEffect, useRef } from 'react';
-import { setEpisodeId, setSources, resetSources } from '@/store/watch/slice';
+import React, { useEffect, useRef, Fragment } from 'react';
+import { setEpisodeId, setSources, setProviders } from '@/store/watch/slice';
 import { setAnime } from '@/store/anime/slice';
 import { BASE_URL } from '@/utils/config';
 import Header from '@/components/header/header';
@@ -12,9 +12,12 @@ import { GetServerSideProps, InferGetServerSidePropsType } from 'next';
 import api from '@/utils/request';
 import { extractEpisode } from '@/utils/index';
 import Episodes from '@/components/watch/episodes';
-import progressBar from '@/components/shared/loading';
+import progressBar, { LoadingVideo } from '@/components/shared/loading';
 import { NextSeo } from 'next-seo';
 import DetailLinks from '@/components/shared/detail-links';
+import WatchDetails from '@/components/watch/details';
+import { IAnimeInfo, META } from '@consumet/extensions';
+import useEpisodes from '@/hooks/useEpisodes';
 
 const VideoPlayer = dynamic(() => import('@/components/watch/video'), {
   ssr: false,
@@ -24,17 +27,28 @@ export const getServerSideProps: GetServerSideProps = async context => {
   const store = initialiseStore();
   const id = context.params?.id;
   let episode = context.query.episode;
+  let provider = context.query.provider;
 
   episode = typeof episode === 'string' ? episode : episode?.join('');
+  provider =
+    typeof provider === 'string'
+      ? provider.toLowerCase()
+      : provider?.join('').toLowerCase();
+
   store.dispatch(setAnime(id));
 
   if (episode) {
     store.dispatch(setEpisodeId(episode));
   }
 
-  const animeList = await api.animeInfo(id as string);
+  if (provider) {
+    store.dispatch(setProviders(provider));
+  }
 
-  if (!id || !animeList || !episode) {
+  const anilist = new META.Anilist();
+  const data: IAnimeInfo = await anilist.fetchAnilistInfoById(id as string);
+
+  if (!id || !data || !episode) {
     return {
       notFound: true,
     };
@@ -42,7 +56,7 @@ export const getServerSideProps: GetServerSideProps = async context => {
 
   return {
     props: {
-      animeList,
+      animeList: JSON.parse(JSON.stringify(data)),
       initialReduxState: store.getState(),
     },
   };
@@ -58,7 +72,10 @@ const WatchAnime = ({
     store.watch.episodeId,
     store.watch.provider,
   ]);
-  const episodeNumber = extractEpisode(episodeId);
+
+  const currentEpisode = animeList?.episodes?.find(
+    (episode: any) => episode?.id === episodeId
+  );
   const animeTitle = animeList?.title?.english || animeList?.title?.romaji;
 
   const fetcher = async (episodeId: string, provider: string) =>
@@ -70,6 +87,10 @@ const WatchAnime = ({
     revalidateOnFocus: false,
   });
 
+  const { episodes, isLoading, isError } = useEpisodes(animeList.id);
+
+  console.log(animeList);
+
   const dispatch = useDispatch();
   const routerRef = useRef(router);
 
@@ -77,14 +98,14 @@ const WatchAnime = ({
     routerRef.current.replace(
       {
         pathname: '/watch/[id]',
-        query: { id: anime, episode: episodeId },
+        query: { id: anime, episode: episodeId, provider },
       },
-      `/watch/${anime}?episode=${episodeId}`,
+      `/watch/${anime}?episode=${episodeId}&provider=${provider}`,
       {
         shallow: true,
       }
     );
-  }, [anime, episodeId]);
+  }, [anime, episodeId, provider]);
 
   useEffect(() => {
     if (!data && !error) return;
@@ -92,10 +113,8 @@ const WatchAnime = ({
     dispatch(setSources(data?.sources));
   }, [dispatch, data, error]);
 
-  console.log(extractEpisode(episodeId));
-
   return (
-    <>
+    <Fragment>
       <NextSeo
         title={`Watch ${animeTitle} Episode - ${extractEpisode(
           episodeId
@@ -119,50 +138,54 @@ const WatchAnime = ({
 
       <div className="min-h-screen overflow-x-hidden bg-[#000]">
         <Header />
-
         <div className="mt-[48px] md:mt-[60px] px-0 md:px-[4%]">
           <DetailLinks
             animeId={animeList?.id}
             animeTitle={animeTitle}
-            episodeNumber={episodeNumber as number}
+            episodeNumber={currentEpisode?.number}
           />
-          <div className="grid grid-cols-5 gap-2 h-full w-full">
-            <VideoPlayer
-              poster={
-                animeList?.episodes[(episodeNumber as number) - 1]?.image ||
-                animeList?.cover
-              }
-              className="col-span-full"
-              title={animeTitle}
-            />
-            <div className="h-full md:w-[12.5rem] lg:w-[14rem] md:min-w-[12.5rem] lg:min-w-[14rem]">
-              <div className="text-center text-white text-xs my-2">
-                <p>You are watching</p>
-                <p className="text-[#6A55FA]">
-                  {animeTitle} Episode {episodeNumber}
-                </p>
+          <div className="grid grid-cols-1 md:grid-cols-5 gap-2 h-full w-full">
+            {!data && !error ? (
+              <LoadingVideo classname="h-7 h-7 md:h-12 md:w-12" />
+            ) : (
+              <VideoPlayer
+                poster={currentEpisode?.image || animeList?.cover}
+                className="col-span-full"
+                title={animeTitle}
+                episodeNumber={currentEpisode?.number}
+                episodes={episodes}
+              />
+            )}
+            <div className="row-start-2 row-end-5 col-start-1 col-end-5 md:col-start-1 md:col-end-2	md:row-start-1 md:row-end-1 h-full">
+              <div className="bg-[#100f0f] p-4 w-full text-white text-xs">
+                List of episode :
               </div>
-              <div className="flex flex-col bg-[#100f0f] md:bg-[#000000eb] overflow-auto pr-[10px] h-[340px] md:h-[500px]">
-                {animeList?.episodes.length > 25 ? (
+
+              <div className="flex flex-col bg-[#100f0f] md:bg-[#000000eb] overflow-auto pr-[10px] h-[340px] md:h-[545px]">
+                {isLoading && (
+                  <LoadingVideo classname="h-5 h-5 md:h-8 md:w-8" />
+                )}
+                {episodes?.length > 25 ? (
                   <EpisodesButton
                     watchPage={true}
-                    episodes={animeList?.episodes}
-                    activeIndex={episodeNumber}
+                    episodes={episodes}
+                    activeIndex={currentEpisode?.number}
                   />
                 ) : (
                   <Episodes
-                    activeIndex={episodeNumber}
-                    episodes={animeList?.episodes}
+                    activeIndex={currentEpisode?.number}
+                    episodes={episodes}
                   />
                 )}
               </div>
             </div>
-
-            <div className="col-start-2 col-span-4"></div>
+            <div className="col-start-1 col-span-5">
+              <WatchDetails animeList={animeList} />
+            </div>
           </div>
         </div>
       </div>
-    </>
+    </Fragment>
   );
 };
 
