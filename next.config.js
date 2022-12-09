@@ -2,7 +2,7 @@
 const nextConfig = {
   swcMinify: true,
   images: {
-    domains: ['s4.anilist.co'],
+    domains: ['s4.anilist.co', 'gogocdn.net'],
   },
   i18n: {
     locales: ['en-US', 'fr', 'nl-NL', 'nl-BE'],
