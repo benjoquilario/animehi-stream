@@ -2,20 +2,20 @@ import { useDispatch } from '@/store/store';
 import { setEpisodeId } from '@/store/watch/slice';
 import Link from 'next/link';
 import React from 'react';
-import { TEpisodes as EpisodeType } from '@/src/../types/types';
+import { EpisodesType } from '@/src/../types/types';
 import classNames from 'classnames';
 import { BsPlay } from 'react-icons/bs';
 
 interface EpisodeProps {
   active?: boolean;
   onClick?: () => void;
-  episode: EpisodeType;
+  episode: EpisodesType;
   watchPage: boolean;
   animeId?: string;
 }
 
 interface EpisodeNumberProps {
-  episode: EpisodeType;
+  episode: EpisodesType;
   active?: boolean;
 }
 

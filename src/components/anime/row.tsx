@@ -1,18 +1,24 @@
-import { TRecentResponse } from '@/src/../types/types';
+import { RecentResponseType } from '@/src/../types/types';
 import { useRouter } from 'next/router';
 import Thumbnail from './thumbnail';
 
-export interface RowProps {
-  animeList: TRecentResponse;
-  title: string;
-  isLoading: boolean;
-}
+// export interface RowProps {
+//   animeList: RecentResponseType;
+//   title: string;
+//   isLoading: boolean;
+// }
 
-const Row: React.FC<RowProps> = ({ title, animeList, isLoading }) => {
+const Row = () => {
   const router = useRouter();
 
-  return (
-    <div className="mb-4">
+  return <div>Hello World!</div>;
+};
+
+export default Row;
+
+/**
+ * 
+ * <div className="mb-4">
       <div className="flex items-center justify-between text-white mb-4">
         <h2 className="text-base md:text-[20px] uppercase font-semibold">
           {title}
@@ -41,13 +47,10 @@ const Row: React.FC<RowProps> = ({ title, animeList, isLoading }) => {
         // ref={rowRef}
         className="grid grid-cols-6 gap-2 relative ml-6 overflow-hidden"
       >
-        {isLoading && <div>Loadding</div>}
+         {isLoading && <div>Loadding</div>}
         {animeList?.results?.slice(1, 13)?.map((anime, index) => (
           <Thumbnail animeList={anime} key={index} />
         ))}
       </div>
     </div>
-  );
-};
-
-export default Row;
+ */

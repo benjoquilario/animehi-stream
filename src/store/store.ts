@@ -1,6 +1,5 @@
 import { configureStore } from '@reduxjs/toolkit';
 import { useMemo } from 'react';
-import { apiSlice } from 'services/api';
 import {
   useDispatch as useDispatchBase,
   useSelector as useSelectorBase,
@@ -11,13 +10,10 @@ import watchReducer from '@/store/watch/slice';
 export const createStore = (preloadedState?: { [x: string]: any }) =>
   configureStore({
     reducer: {
-      [apiSlice.reducerPath]: apiSlice.reducer,
       anime: animeReducer,
       watch: watchReducer,
     },
     preloadedState,
-    middleware: getDefaultMiddleware =>
-      getDefaultMiddleware().concat(apiSlice.middleware),
   });
 
 let prevStore: Store | undefined;

@@ -1,6 +1,7 @@
 import api from '@/utils/request';
 import { GetStaticPaths } from 'next';
 import { InferGetStaticPropsType } from 'next';
+import { META } from '@consumet/extensions';
 
 export const PER_PAGE = 24;
 
@@ -10,14 +11,18 @@ const RecentReleasePage = ({
   currentPage,
 }: InferGetStaticPropsType<typeof getStaticProps>) => {
   console.log(recentRelease);
-  return <div></div>;
+  return <div>Hello world!!</div>;
 };
 
 export const getStaticProps = async ({ params }: any) => {
-  const page = Number(params?.page) || 1;
+  const PAGE = Number(params?.page) || 1;
 
-  const recentRelease = await api.recentRelease(page);
-
+  const anilist = new META.Anilist();
+  const recentRelease = await anilist.fetchRecentEpisodes(
+    'gogoanime',
+    PAGE,
+    24
+  );
   if (!recentRelease) {
     return {
       notFound: true,
@@ -28,7 +33,7 @@ export const getStaticProps = async ({ params }: any) => {
     props: {
       recentRelease,
       totalPages: recentRelease.totalPages,
-      currentPage: page,
+      currentPage: PAGE,
     },
   };
 };

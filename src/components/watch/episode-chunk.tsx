@@ -1,7 +1,7 @@
 import classNames from 'classnames';
 import React from 'react';
 import { BsChevronDown } from 'react-icons/bs';
-import { TEpisodes as EpisodeType } from '@/src/../types/types';
+import { EpisodesType } from '@/src/../types/types';
 import Disclosure from '@/components/watch/disclosure';
 import Episode from '@/components/watch/episode';
 import { useDispatch } from '@/store/store';
@@ -22,7 +22,7 @@ const EpisodeChunkButton: React.FC<EpisodeChunkButtonProps> = props => {
 };
 
 interface EpisodeChunkProps {
-  episodes: EpisodeType[];
+  episodes: EpisodesType[];
   title: string;
   className?: string;
   buttonClassName?: string;

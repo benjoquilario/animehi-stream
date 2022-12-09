@@ -1,13 +1,13 @@
 import { useDispatch } from '@/store/store';
 import { setEpisodeId } from '@/store/watch/slice';
-import { TEpisodes as EpisodeType } from '@/src/../types/types';
+import { EpisodesType } from '@/src/../types/types';
 import classNames from 'classnames';
 import React from 'react';
 import { BsPlay } from 'react-icons/bs';
 
 export interface EpisodesProps {
   activeIndex?: number;
-  episodes: EpisodeType[];
+  episodes: EpisodesType[];
 }
 
 const Episodes: React.FC<EpisodesProps> = ({ activeIndex, episodes }) => {
