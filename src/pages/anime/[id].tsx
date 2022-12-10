@@ -1,11 +1,9 @@
-import React, { Fragment } from 'react';
-import useSWR from 'swr';
+import React, { Fragment, useState } from 'react';
 import { NextSeo } from 'next-seo';
 import { META } from '@consumet/extensions';
 import Image from 'next/image';
 import Link from 'next/link';
 import { GetServerSideProps, InferGetServerSidePropsType } from 'next';
-import { BASE_URL } from '@/utils/config';
 import { IAnimeInfo } from '@consumet/extensions/dist/models';
 import Header from '@/components/header/header';
 import progressBar from '@/components/shared/loading';
@@ -16,13 +14,13 @@ import classNames from 'classnames';
 import InfoItem from '@/components/shared/info-item';
 import EpisodesButton from '@/components/watch/episodes-button';
 import Characters from '@/components/anime/characters';
-import useShowMore from '@/hooks/useShowMore';
 import { PlayIcon } from '@heroicons/react/outline';
 import SideContent from '@/components/shared/side-content';
 import useEpisodes from '@/hooks/useEpisodes';
 
 export const getServerSideProps: GetServerSideProps = async ({ params }) => {
   const id = params!.id;
+
   const anilist = new META.Anilist();
 
   const data: IAnimeInfo = await anilist.fetchAnilistInfoById(id as string);
@@ -40,16 +38,14 @@ export const getServerSideProps: GetServerSideProps = async ({ params }) => {
   };
 };
 
-const Anime: React.FC<IAnimeInfo> = ({
+const Anime = ({
   animeList,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
-  const [showMore, toggleShowText] = useShowMore();
+  const [showMore, setShowMore] = useState(false);
+
+  const toggleShowText = () => setShowMore(!showMore);
   const { episodes, isLoading, isError } = useEpisodes(animeList?.id);
 
-  console.log(episodes);
-  console.log(animeList);
-  // return <div>Div</div>;
-  // return <AnimeDetails episodes={data?.results} animeList={animeList} />;
   if (isLoading) {
     return <div>Loading...</div>;
   }
@@ -131,7 +127,9 @@ const Anime: React.FC<IAnimeInfo> = ({
                   <a>
                     <button
                       type="button"
-                      style={{ backgroundColor: `${animeList?.color}` }}
+                      style={{
+                        backgroundColor: `${animeList?.color || '#000'}`,
+                      }}
                       className={`transition duration-300 text-base flex items-center space-x-2 px-3 py-2 rounded-md gap-x-1 hover:opacity-80`}
                     >
                       <div className="h-5 w-5 text-white">
@@ -153,7 +151,9 @@ const Anime: React.FC<IAnimeInfo> = ({
                   <div className="flex items-center gap-2" key={genre}>
                     <Genre genre={genre} />
                     <span
-                      style={{ backgroundColor: `${animeList?.color}` }}
+                      style={{
+                        backgroundColor: `${animeList?.color || '#000'}`,
+                      }}
                       className={`w-1.5 h-1.5 rounded-full inline-block`}
                     ></span>
                   </div>
@@ -166,7 +166,7 @@ const Anime: React.FC<IAnimeInfo> = ({
 
                 <button
                   className="shadow-lg text-white text-xs p-1 transform transition duration-300 ease-out hover:scale-105"
-                  onClick={() => toggleShowText}
+                  onClick={() => setShowMore(!showMore)}
                 >
                   {showMore ? 'Show less' : 'Show more'}
                 </button>
