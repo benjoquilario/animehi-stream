@@ -6,13 +6,16 @@ import { useDispatch, useSelector } from '@/store/store';
 import { setProviders, setEpisodeId } from '@/store/watch/slice';
 import { useRouter } from 'next/router';
 import { extractEpisode } from '@/utils/index';
+import { EpisodesType } from '@/src/../types/types';
+import { TbPlayerTrackNext, TbPlayerTrackPrev } from 'react-icons/tb';
 
 interface VideoProps {
   poster: string;
   title: string;
   className: string;
   episodeNumber: number;
-  episodes: any;
+  nextEpisode: EpisodesType;
+  prevEpisode: EpisodesType;
 }
 
 const Video: React.FC<VideoProps> = ({
@@ -20,11 +23,13 @@ const Video: React.FC<VideoProps> = ({
   title,
   className,
   episodeNumber,
-  episodes,
+  nextEpisode,
+  prevEpisode,
 }) => {
   const router = useRouter();
   const dispatch = useDispatch();
   const provider = useSelector(store => store.watch.provider);
+  const totalEpisodes = useSelector(store => store.watch.totalEpisodes);
 
   // const handleChangeProvider = (event: any) => {
   //   const text = event.target.innerText;
@@ -53,7 +58,8 @@ const Video: React.FC<VideoProps> = ({
             <p className="text-[#6A55FA] mb-2">
               {title} Episode {episodeNumber}
             </p>
-            <p>Switch to alternate provider in case of error.</p>
+            <p>Switch to alternate provider or click episode</p>
+            <p>again in case of error.</p>
           </div>
         </div>
         <div className="mt-2 flex justify-between items-start w-full">
@@ -69,9 +75,23 @@ const Video: React.FC<VideoProps> = ({
             </button>
           </div>
           <div>
-            <div>
-              <button>Prev</button>
-              <button>Next</button>
+            <div className="flex gap-2">
+              {episodeNumber !== 1 ? (
+                <button
+                  onClick={() => dispatch(setEpisodeId(prevEpisode?.id))}
+                  className="text-white text-xs hover:text-[#6a55fa] transition"
+                >
+                  <TbPlayerTrackPrev className="h-7 w-7" />
+                </button>
+              ) : null}
+              {episodeNumber !== totalEpisodes ? (
+                <button
+                  onClick={() => dispatch(setEpisodeId(nextEpisode?.id))}
+                  className="text-white text-xs hover:text-[#6a55fa] transition"
+                >
+                  <TbPlayerTrackNext className="h-7 w-7" />
+                </button>
+              ) : null}
             </div>
           </div>
         </div>
