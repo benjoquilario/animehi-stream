@@ -2,14 +2,20 @@ import { initialiseStore, useDispatch, useSelector } from '@/store/store';
 import { useRouter } from 'next/router';
 import dynamic from 'next/dynamic';
 import useSWR from 'swr';
-import React, { useEffect, useRef, Fragment } from 'react';
-import { setEpisodeId, setSources, setProviders } from '@/store/watch/slice';
-import { setAnime } from '@/store/anime/slice';
+import React, { useEffect, useRef, Fragment, useState, useMemo } from 'react';
+import {
+  setEpisodeId,
+  setSources,
+  setProviders,
+  resetSources,
+  setEpisodes,
+  setTotalEpisodes,
+} from '@/store/watch/slice';
+import { setAnimeId } from '@/store/anime/slice';
 import { BASE_URL } from '@/utils/config';
 import Header from '@/components/header/header';
 import EpisodesButton from '@/components/watch/episodes-button';
 import { GetServerSideProps, InferGetServerSidePropsType } from 'next';
-import api from '@/utils/request';
 import { extractEpisode } from '@/utils/index';
 import Episodes from '@/components/watch/episodes';
 import progressBar, { LoadingVideo } from '@/components/shared/loading';
@@ -18,6 +24,7 @@ import DetailLinks from '@/components/shared/detail-links';
 import WatchDetails from '@/components/watch/details';
 import { IAnimeInfo, META } from '@consumet/extensions';
 import useEpisodes from '@/hooks/useEpisodes';
+import { EpisodesType } from '@/src/../types/types';
 
 const VideoPlayer = dynamic(() => import('@/components/watch/video'), {
   ssr: false,
@@ -35,7 +42,7 @@ export const getServerSideProps: GetServerSideProps = async context => {
       ? provider.toLowerCase()
       : provider?.join('').toLowerCase();
 
-  store.dispatch(setAnime(id));
+  store.dispatch(setAnimeId(id));
 
   if (episode) {
     store.dispatch(setEpisodeId(episode));
@@ -67,15 +74,15 @@ const WatchAnime = ({
 }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
   progressBar.finish();
   const router = useRouter();
-  const [anime, episodeId, provider] = useSelector(store => [
-    store.anime.anime,
+  const dispatch = useDispatch();
+  const routerRef = useRef(router);
+
+  const [animeId, episodeId, provider] = useSelector(store => [
+    store.anime.animeId,
     store.watch.episodeId,
     store.watch.provider,
   ]);
 
-  const currentEpisode = animeList?.episodes?.find(
-    (episode: any) => episode?.id === episodeId
-  );
   const animeTitle = animeList?.title?.english || animeList?.title?.romaji;
 
   const fetcher = async (episodeId: string, provider: string) =>
@@ -89,26 +96,57 @@ const WatchAnime = ({
 
   const { episodes, isLoading, isError } = useEpisodes(animeList.id);
 
-  console.log(animeList);
+  const currentEpisode = useMemo(
+    () => episodes?.find((episode: EpisodesType) => episode?.id === episodeId),
+    [episodeId, episodes]
+  );
 
-  const dispatch = useDispatch();
-  const routerRef = useRef(router);
+  const currentEpisodeIndex = useMemo(
+    () =>
+      episodes?.findIndex((episode: EpisodesType) => episode.id === episodeId),
+    [episodes, episodeId]
+  );
+
+  const nextEpisode = useMemo(() => {
+    if (!isLoading) return episodes[currentEpisodeIndex + 1];
+  }, [currentEpisodeIndex, episodes, isLoading]);
+
+  const prevEpisode = useMemo(() => {
+    if (!isLoading) return episodes[currentEpisodeIndex - 1];
+  }, [currentEpisodeIndex, episodes, isLoading]);
+
+  // const nextEpisode = episodes[currentEpisodeIndex - 1];
+  // const prevEpisode = episodes[currentEpisodeIndex - 1];
 
   useEffect(() => {
     routerRef.current.replace(
       {
         pathname: '/watch/[id]',
-        query: { id: anime, episode: episodeId, provider },
+        query: { id: animeId, episode: episodeId, provider },
       },
-      `/watch/${anime}?episode=${episodeId}&provider=${provider}`,
+      `/watch/${animeId}?episode=${episodeId}&provider=${provider}`,
       {
         shallow: true,
       }
     );
-  }, [anime, episodeId, provider]);
+  }, [animeId, episodeId, provider]);
 
   useEffect(() => {
-    if (!data && !error) return;
+    if (isLoading) return;
+
+    dispatch(setEpisodes(currentEpisode?.number));
+  }, [dispatch, currentEpisode?.number, isLoading]);
+
+  useEffect(() => {
+    if (isLoading) return;
+
+    dispatch(setTotalEpisodes(episodes?.length));
+  }, [dispatch, isLoading, episodes]);
+
+  useEffect(() => {
+    if (!data && !error) {
+      dispatch(resetSources());
+    }
 
     dispatch(setSources(data?.sources));
   }, [dispatch, data, error]);
@@ -138,7 +176,7 @@ const WatchAnime = ({
 
       <div className="min-h-screen overflow-x-hidden bg-[#000]">
         <Header />
-        <div className="mt-[48px] md:mt-[60px] px-0 md:px-[4%]">
+        <div className="mt-[48px] md:mt-[64px] px-0 md:px-[4%]">
           <DetailLinks
             animeId={animeList?.id}
             animeTitle={animeTitle}
@@ -153,7 +191,8 @@ const WatchAnime = ({
                 className="col-span-full"
                 title={animeTitle}
                 episodeNumber={currentEpisode?.number}
-                episodes={episodes}
+                nextEpisode={nextEpisode}
+                prevEpisode={prevEpisode}
               />
             )}
             <div className="row-start-2 row-end-5 col-start-1 col-end-5 md:col-start-1 md:col-end-2	md:row-start-1 md:row-end-1 h-full">
