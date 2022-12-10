@@ -3,13 +3,13 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 export interface IAnimeState {
   recentRelease: any[];
   page: number;
-  anime: number;
+  animeId: string;
 }
 
 const initialState: IAnimeState = {
   recentRelease: [],
   page: 1,
-  anime: 1,
+  animeId: '',
 };
 
 export const animeSlice = createSlice({
@@ -23,11 +23,11 @@ export const animeSlice = createSlice({
       if (state.page === 1) return;
       state.page -= 1;
     },
-    setAnime: (state, action) => {
-      state.anime = action.payload;
+    setAnimeId: (state, action) => {
+      state.animeId = action.payload;
     },
   },
 });
 
-export const { increasePage, decreasePage, setAnime } = animeSlice.actions;
+export const { increasePage, decreasePage, setAnimeId } = animeSlice.actions;
 export default animeSlice.reducer;
