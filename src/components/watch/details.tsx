@@ -1,10 +1,9 @@
-import React from 'react';
+import { useState } from 'react';
 import Image from 'next/image';
 import { stripHtml } from '@/utils/index';
-import useShowMore from '@/hooks/useShowMore';
 
 const WatchDetails = ({ animeList }: any) => {
-  const [showMore, toggleShowText] = useShowMore();
+  const [showMore, setShowMore] = useState<boolean>(false);
 
   return (
     <div className="mt-3 ml-4">
@@ -29,7 +28,7 @@ const WatchDetails = ({ animeList }: any) => {
 
             <button
               className="shadow-lg text-white text-xs p-1 transform transition duration-300 ease-out hover:scale-105"
-              onClick={() => toggleShowText}
+              onClick={() => setShowMore(!showMore)}
             >
               {showMore ? 'Show less' : 'Show more'}
             </button>
