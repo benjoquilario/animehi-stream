@@ -17,7 +17,7 @@ export interface SourceType {
 export interface IInitialState {
   episode: number;
   episodeId: string;
-  totalEpisode: number;
+  totalEpisodes: number;
   currentData: string;
   sources: SourceType[];
   prevWatchId: number;
@@ -29,7 +29,7 @@ export interface IInitialState {
 
 const initialState: IInitialState = {
   episode: 1,
-  totalEpisode: 1,
+  totalEpisodes: 1,
   episodeId: '',
   sources: [
     {
@@ -62,6 +62,12 @@ export const watchSlice = createSlice({
     setEpisodes: (state: Draft<IInitialState>, action) => {
       state.episode = action.payload;
     },
+    setTotalEpisodes: (
+      state: Draft<IInitialState>,
+      action: PayloadAction<number>
+    ) => {
+      state.totalEpisodes = action.payload;
+    },
     setEpisodeId: (
       state: Draft<IInitialState>,
       action: PayloadAction<string>
@@ -89,6 +95,18 @@ export const watchSlice = createSlice({
       state.sources = initialState.sources;
       state.videoLink = initialState.videoLink;
     },
+    resetStates: (state: Draft<IInitialState>) => {
+      state.episode = initialState.episode;
+      state.totalEpisodes = initialState.totalEpisodes;
+      state.episodeId = initialState.episodeId;
+      state.sources = initialState.sources;
+      state.currentData = initialState.currentData;
+      state.currentSource = initialState.currentSource;
+      state.prevWatchId = initialState.prevWatchId;
+      state.videoLink = initialState.videoLink;
+      state.provider = initialState.provider;
+      state.watchList = initialState.watchList;
+    },
   },
 });
 
@@ -101,5 +119,7 @@ export const {
   setSources,
   resetSources,
   setProviders,
+  setTotalEpisodes,
+  resetStates,
 } = watchSlice.actions;
 export default watchSlice.reducer;
