@@ -51,7 +51,7 @@ const Banner: React.FC<IBannerProps> = ({
             <Link
               href={`/watch/${id}?episode=${episodesTitle(
                 title?.romaji as string
-              )}-1`}
+              )}episode-1`}
             >
               <a className="mt-4 py-2 px-4 bg-[#6a55fa] text-gray-200 rounded-sm font-semibold flex items-center justify-center gap-2 hover:bg-[#6a55fa] hover:scale-105 transition-all ease-in-out rounded-md">
                 <Icon icon={PlayIcon} text={`Watch Now`} />
