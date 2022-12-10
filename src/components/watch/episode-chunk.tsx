@@ -70,4 +70,4 @@ const EpisodeChunk: React.FC<EpisodeChunkProps> = ({
   );
 };
 
-export default EpisodeChunk;
+export default React.memo(EpisodeChunk);

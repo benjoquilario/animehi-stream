@@ -23,7 +23,7 @@ const EpisodeNumber: React.FC<EpisodeNumberProps> = ({ episode, active }) => (
   <>
     <div>
       <h2 className="text-white text-sm">Eps {episode?.number}</h2>
-      <p className="text-xs capitalize line-clamp-text text-slate-300">
+      <p className="hidden md:block text-xs capitalize line-clamp-text text-slate-300">
         {episode?.title}
       </p>
     </div>

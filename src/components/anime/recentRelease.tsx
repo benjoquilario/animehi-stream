@@ -37,6 +37,7 @@ const RecentRelease: React.FC<IRecentReleaseProps> = ({ title, animeList }) => {
             episodeNumber={anime.episodeNumber}
             image={anime.image}
             title={anime.title}
+            color={anime.color}
           />
         ))}
       </div>
@@ -44,4 +45,4 @@ const RecentRelease: React.FC<IRecentReleaseProps> = ({ title, animeList }) => {
   );
 };
 
-export default RecentRelease;
+export default React.memo(RecentRelease);

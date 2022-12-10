@@ -1,11 +1,14 @@
-import Image from 'next/image';
 import { CharactersType } from '@/src/../types/types';
+import React from 'react';
+import Image from '@/components/shared/image';
+import { base64SolidImage } from '@/utils/image';
 
 export interface CharactersProps {
   characters: CharactersType[];
+  color: string;
 }
 
-const Characters: React.FC<CharactersProps> = ({ characters }) => (
+const Characters: React.FC<CharactersProps> = ({ characters, color }) => (
   <div className="w-full h-full mt-4">
     <h3 className="text-white text-md mb-3">Characters & Voice Actors</h3>
     <ul className="relative grid grid-cols-fill-character lg:grid-cols-2 gap-1 w-full h-full">
@@ -16,16 +19,17 @@ const Characters: React.FC<CharactersProps> = ({ characters }) => (
             className="bg-[#100f0f] flex w-full h-[64px] rounded gap-4"
           >
             <div className="flex-1 grid grid-cols-[70px_auto] gap-3">
-              <div className="relative">
-                <Image
-                  priority
-                  layout="fill"
-                  src={character?.image}
-                  objectFit="cover"
-                  alt={character?.name.full}
-                />
-              </div>
-
+              <Image
+                layout="fill"
+                src={character?.image}
+                objectFit="cover"
+                alt={character?.name.full}
+                placeholder="blur"
+                blurDataURL={`data:image/svg+xml;base64,${base64SolidImage(
+                  color
+                )}`}
+                containerClassName="relative"
+              />
               <div className="flex justify-evenly flex-col">
                 <h3 className="text-[9px] md:text-[11px] text-white opacity-90">
                   {character?.name.full}
@@ -61,4 +65,4 @@ const Characters: React.FC<CharactersProps> = ({ characters }) => (
   </div>
 );
 
-export default Characters;
+export default React.memo(Characters);

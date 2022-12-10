@@ -1,9 +1,10 @@
-import Image from 'next/image';
 import Link from 'next/link';
 import { TitleType } from '@/src/../types/types';
 import classNames from 'classnames';
 import { colorNumber } from '@/utils/color';
 import { base64SolidImage } from '@/utils/image';
+import React from 'react';
+import Image from '@/components/shared/image';
 
 interface PopularItemProps {
   rank: number;
@@ -36,19 +37,19 @@ const PopularItem: React.FC<PopularItemProps> = ({
           >
             {rank}
           </div>
-          <div className="relative h-[52px] w-[43px]">
-            <Image
-              src={image || ''}
-              priority
-              layout="fill"
-              objectFit="cover"
-              placeholder="blur"
-              blurDataURL={`data:image/svg+xml;base64,${base64SolidImage(
-                '#6A55FA'
-              )}`}
-              alt={`Anime - ${title.english || title.romaji}`}
-            />
-          </div>
+
+          <Image
+            src={image || ''}
+            layout="fill"
+            objectFit="cover"
+            placeholder="blur"
+            blurDataURL={`data:image/svg+xml;base64,${base64SolidImage(
+              '#6A55FA'
+            )}`}
+            alt={`Anime - ${title.english || title.romaji}`}
+            containerClassName="relative h-[52px] w-[43px]"
+          />
+
           <div>
             <h3 className="text-white text-[14px]">
               {title.english || title.romaji}
@@ -67,4 +68,4 @@ const PopularItem: React.FC<PopularItemProps> = ({
   );
 };
 
-export default PopularItem;
+export default React.memo(PopularItem);

@@ -14,7 +14,7 @@ const Episodes: React.FC<EpisodesProps> = ({ activeIndex, episodes }) => {
   const dispatch = useDispatch();
 
   return (
-    <ul>
+    <ul className="grid grid-cols-2 md:grid-cols-1">
       {episodes?.map((episode, index) => (
         <li key={index}>
           <button
@@ -26,7 +26,7 @@ const Episodes: React.FC<EpisodesProps> = ({ activeIndex, episodes }) => {
           >
             <div>
               <h2 className="text-white text-sm">Eps {episode?.number}</h2>
-              <p className="text-xs capitalize line-clamp-text text-slate-300">
+              <p className="hidden md:block text-xs capitalize line-clamp-text text-slate-300">
                 {episode?.title}
               </p>
             </div>

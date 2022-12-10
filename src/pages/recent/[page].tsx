@@ -21,7 +21,7 @@ export const getStaticProps = async ({ params }: any) => {
   const recentRelease = await anilist.fetchRecentEpisodes(
     'gogoanime',
     PAGE,
-    19
+    18
   );
 
   if (!recentRelease) {

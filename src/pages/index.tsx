@@ -6,7 +6,7 @@ import Header from '@/components/header/header';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Autoplay, Pagination, Navigation } from 'swiper';
 import Banner from '@/components/anime/banner';
-import { InferGetServerSidePropsType } from 'next';
+import { InferGetServerSidePropsType, NextPage } from 'next';
 import progressBar from '@/components/shared/loading';
 import {
   IAnimeInfo,
@@ -26,6 +26,7 @@ export interface IRecentResults extends IAnimeResult {
   episodeNumber: number;
   image: string;
   title: TitleType;
+  color: string;
 }
 
 export const getServerSideProps = async () => {
@@ -37,7 +38,7 @@ export const getServerSideProps = async () => {
     10
   );
   const recentRelease: ISearch<IAnimeResult> =
-    await anilist.fetchRecentEpisodes(GOGO_PROVIDER, page, 19);
+    await anilist.fetchRecentEpisodes(GOGO_PROVIDER, page, 18);
 
   const popular: ISearch<IAnimeResult> = await anilist.fetchPopularAnime();
   if (!trending && !recentRelease) {

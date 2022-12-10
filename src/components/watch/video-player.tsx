@@ -107,4 +107,4 @@ const VideoPlayer = ({ option, getInstance, poster, title }: any) => {
   );
 };
 
-export default VideoPlayer;
+export default React.memo(VideoPlayer);

@@ -1,7 +1,7 @@
 import { TitleType } from '@/src/../types/types';
 import { IAnimeResult } from '@consumet/extensions/dist/models/types';
-import React from 'react';
 import PopularItem from './popular-items';
+import React from 'react';
 
 export interface PopularProps {
   animeList?: IAnimeResult[];
@@ -40,4 +40,4 @@ const Popular: React.FC<PopularProps> = ({ animeList }) => {
   );
 };
 
-export default Popular;
+export default React.memo(Popular);

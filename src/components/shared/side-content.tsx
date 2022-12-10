@@ -1,9 +1,9 @@
-import React from 'react';
+import React, { type ReactNode } from 'react';
 
 export interface ISideContentProps {
   classes: string;
   title: string;
-  info: string | number | boolean;
+  info?: string | number | boolean | ReactNode;
 }
 
 const SideContent: React.FC<ISideContentProps> = ({ classes, title, info }) => {

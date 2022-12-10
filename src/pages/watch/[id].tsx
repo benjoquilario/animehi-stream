@@ -209,6 +209,7 @@ const WatchAnime = ({
                     watchPage={true}
                     episodes={episodes}
                     activeIndex={currentEpisode?.number}
+                    episodesClassName="grid grid-cols-2 md:grid-cols-1"
                   />
                 ) : (
                   <Episodes

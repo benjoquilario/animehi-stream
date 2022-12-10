@@ -1,7 +1,6 @@
-import React, { Fragment, useState } from 'react';
+import React, { Fragment, useState, useMemo } from 'react';
 import { NextSeo } from 'next-seo';
 import { META } from '@consumet/extensions';
-import Image from 'next/image';
 import Link from 'next/link';
 import { GetServerSideProps, InferGetServerSidePropsType } from 'next';
 import { IAnimeInfo } from '@consumet/extensions/dist/models';
@@ -17,6 +16,7 @@ import Characters from '@/components/anime/characters';
 import { PlayIcon } from '@heroicons/react/outline';
 import SideContent from '@/components/shared/side-content';
 import useEpisodes from '@/hooks/useEpisodes';
+import Image from '@/components/shared/image';
 
 export const getServerSideProps: GetServerSideProps = async ({ params }) => {
   const id = params!.id;
@@ -41,14 +41,15 @@ export const getServerSideProps: GetServerSideProps = async ({ params }) => {
 const Anime = ({
   animeList,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
-  const [showMore, setShowMore] = useState(false);
+  const [showMore, setShowMore] = useState<boolean>(false);
 
-  const toggleShowText = () => setShowMore(!showMore);
   const { episodes, isLoading, isError } = useEpisodes(animeList?.id);
 
-  if (isLoading) {
-    return <div>Loading...</div>;
-  }
+  const lastEpisodes = useMemo(() => {
+    if (!isLoading) {
+      return episodes[episodes?.length - 1].id;
+    }
+  }, [episodes, isLoading]);
 
   return (
     <Fragment>
@@ -80,50 +81,43 @@ const Anime = ({
         <div className="overflow-hidden">
           <Header />
           <div className="relative z-0 w-full h-[200px] md:h-[400px]">
-            <div className="relative w-full h-full">
-              <Image
-                priority
-                src={animeList?.cover ?? undefined}
-                alt={animeList?.title?.romaji}
-                layout="fill"
-                placeholder="blur"
-                onLoadingComplete={progressBar.finish}
-                blurDataURL={`data:image/svg+xml;base64,${base64SolidImage(
-                  animeList?.color as string
-                )}`}
-                // className="blur-sm w-full h-full"
-                objectFit="cover"
-              />
-            </div>
+            <Image
+              src={animeList?.cover ?? undefined}
+              alt={animeList?.title?.romaji}
+              layout="fill"
+              placeholder="blur"
+              onLoadingComplete={progressBar.finish}
+              blurDataURL={`data:image/svg+xml;base64,${base64SolidImage(
+                animeList?.color as string
+              )}`}
+              // className="blur-sm w-full h-full"
+              objectFit="cover"
+              containerClassName="relative w-full h-full"
+            />
+
             <div className="absolute top-0 left-0 bg-banner-shadow h-full w-full"></div>
           </div>
           <div className="bg-[#100f0f] px-[12px] md:px-[40px] grid grid-cols-1 justify-items-center gap-[70px] md:grid-cols-[228px_1fr] md:gap-[18px] pb-7">
             <div className="min-w-[170px] w-[170px] h-auto">
               <div className="min-w-[170px] w-[170px] h-[216px] block mt-[-88px] md:mt-[-69px] md:min-w-[200px] md:w-[200px] md:h-[300px]">
-                <div className="relative w-full min-w-full h-full">
-                  <Image
-                    priority
-                    className="rounded-lg"
-                    objectFit="cover"
-                    layout="fill"
-                    onLoadingComplete={progressBar.finish}
-                    placeholder="blur"
-                    blurDataURL={`data:image/svg+xml;base64,${base64SolidImage(
-                      animeList?.color as string
-                    )}`}
-                    src={animeList?.image}
-                    alt={animeList?.title?.english || animeList?.title?.romaji}
-                  />
-                </div>
+                <Image
+                  containerClassName="relative w-full min-w-full h-full"
+                  className="rounded-lg"
+                  objectFit="cover"
+                  layout="fill"
+                  onLoadingComplete={progressBar.finish}
+                  placeholder="blur"
+                  blurDataURL={`data:image/svg+xml;base64,${base64SolidImage(
+                    animeList?.color as string
+                  )}`}
+                  src={animeList?.image}
+                  alt={animeList?.title?.english || animeList?.title?.romaji}
+                />
               </div>
             </div>
             <div className="grid auto-rows-min text-white py-4 w-full z-10 mt-[-69px]">
               <div className="flex items-center flex-wrap gap-2 mb-7">
-                <Link
-                  href={`/watch/${animeList.id}?episode=${
-                    episodes[episodes?.length - 1].id
-                  }`}
-                >
+                <Link href={`/watch/${animeList.id}?episode=${lastEpisodes}`}>
                   <a>
                     <button
                       type="button"
@@ -218,24 +212,24 @@ const Anime = ({
                     title="Type"
                     info={animeList?.type}
                   />
-                  <li className="text-xs mb-3">
-                    <div className="text-white">Genres</div>
-                    <div className="text-slate-300 italic text-[12px] flex flex-col">
-                      {animeList?.genres.map((genre: string, index: number) => (
+                  <SideContent
+                    classes="text-xs mb-3"
+                    title="Genres"
+                    info={animeList?.genres.map(
+                      (genre: string, index: number) => (
                         <span key={index}>{genre}</span>
-                      ))}
-                    </div>
-                  </li>
-                  <li className="text-xs mb-3">
-                    <div className="text-white">Genres</div>
-                    <div className="text-slate-300 italic text-[12px] flex flex-col">
-                      {animeList?.studios?.map(
-                        (studio: string, index: number) => (
-                          <span key={index}>{studio}</span>
-                        )
-                      )}
-                    </div>
-                  </li>
+                      )
+                    )}
+                  />
+                  <SideContent
+                    classes="text-xs mb-3"
+                    title="Studios"
+                    info={animeList?.studios?.map(
+                      (studio: string, index: number) => (
+                        <span key={index}>{studio}</span>
+                      )
+                    )}
+                  />
                   <SideContent
                     classes="text-xs mb-3"
                     title="Release Date"
@@ -261,6 +255,17 @@ const Anime = ({
                     title="Season"
                     info={animeList?.season}
                   />
+                  {animeList?.synonyms ? (
+                    <SideContent
+                      classes="text-xs mb-3"
+                      title="Synonyms"
+                      info={animeList?.synonyms?.map(
+                        (synonym: string, index: number) => (
+                          <span key={index}>{synonym}</span>
+                        )
+                      )}
+                    />
+                  ) : null}
                 </ul>
               </div>
             </div>
@@ -283,7 +288,10 @@ const Anime = ({
                   />
                 </div>
               )}
-              <Characters characters={animeList?.characters} />
+              <Characters
+                color={animeList?.color}
+                characters={animeList?.characters}
+              />
               <div className="min-h-full">Recommendation</div>
             </div>
           </div>
