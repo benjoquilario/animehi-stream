@@ -27,3 +27,5 @@ export function chunk<T>(arr: Array<T>, chunkSize: number) {
 
   return R;
 }
+
+export const parseData = (data: any) => JSON.parse(JSON.stringify(data));
