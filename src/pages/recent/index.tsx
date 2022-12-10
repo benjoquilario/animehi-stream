@@ -14,7 +14,7 @@ const RecentPage = ({
 export const getStaticProps = async () => {
   const RECENT_PAGE = 2;
   const anilist = new META.Anilist();
-  const data = await anilist.fetchRecentEpisodes('gogoanime', RECENT_PAGE, 24);
+  const data = await anilist.fetchRecentEpisodes('gogoanime', RECENT_PAGE, 12);
   const recentRelease = JSON.parse(JSON.stringify(data));
 
   return {
