@@ -27,7 +27,7 @@ const Episodes: React.FC<EpisodesButtonProps> = ({
       );
 
       return (
-        <li key={index}>
+        <li className="mt-1" key={index}>
           <EpisodeChunk
             buttonClassName="episode-buttons bg-background-darker"
             title={`${firstEpisode.number} - ${lastEpisode.number}`}

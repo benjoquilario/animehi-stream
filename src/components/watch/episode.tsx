@@ -51,7 +51,7 @@ const Episode: React.FC<EpisodeProps> = ({
     <button
       onClick={onClick}
       className={classNames(
-        'flex flex-row justify-between items-center py-2 px-4 w-full text-left',
+        'ml-1 flex flex-row justify-between items-center py-2 px-4 w-full text-left hover:bg-[#100f0f] transition',
         active && 'bg-[#6A55FA]'
       )}
     >
@@ -59,11 +59,7 @@ const Episode: React.FC<EpisodeProps> = ({
     </button>
   ) : (
     <Link href={`/watch/${animeId}?episode=${episode?.id}`}>
-      <a
-        className={classNames(
-          'flex flex-row justify-between items-center py-2 px-4 w-full text-left'
-        )}
-      >
+      <a className="flex flex-row justify-between items-center py-2 px-4 w-full text-left hover:bg-[#100f0f] transition">
         <EpisodeNumber active={active} episode={episode} />
       </a>
     </Link>
