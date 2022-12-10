@@ -36,7 +36,7 @@ const Thumbnail: React.FC<IThumbnailProps> = ({
 
   return (
     <div className="relative flex flex-col">
-      <div className="relative w-full min-w-full md:w-[150px] md:min-w-[150px] overflow-visible flex flex-wrap rounded-[6px] content-start mx-auto">
+      <div className="relative w-full min-w-full md:w-[145px] md:min-w-[145px] overflow-visible flex flex-wrap rounded-[6px] content-start mx-auto">
         <div className="relative overflow-hidden w-full rounded-[6px] h-[200px] md:h-[161px] ">
           <div className="relative w-full h-full hover:opacity-70 transition-opacity">
             <Image

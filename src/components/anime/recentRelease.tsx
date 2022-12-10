@@ -4,21 +4,14 @@ import React from 'react';
 import Thumbnail from './thumbnail';
 import Link from 'next/link';
 import { AiOutlineArrowRight } from 'react-icons/ai';
-import { IAnimeResult } from '@consumet/extensions';
 import { IRecentResults } from '@/pages/index';
 
 export interface IRecentReleaseProps {
   title: string;
   animeList?: IRecentResults[];
-  isLoading: boolean;
 }
 
-const RecentRelease: React.FC<IRecentReleaseProps> = ({
-  title,
-  animeList,
-  isLoading,
-}) => {
-  const dispatch = useDispatch();
+const RecentRelease: React.FC<IRecentReleaseProps> = ({ title, animeList }) => {
   return (
     <div>
       <div className="flex items-center justify-between text-white mb-4">
@@ -35,9 +28,8 @@ const RecentRelease: React.FC<IRecentReleaseProps> = ({
       </div>
       <div
         // ref={rowRef}
-        className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 relative overflow-hidden"
+        className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 relative overflow-hidden"
       >
-        {isLoading && <div>Loadding</div>}
         {animeList?.map((anime, index) => (
           <Thumbnail
             key={index}

@@ -1,12 +1,11 @@
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 import Link from 'next/link';
 import Icon from '@/components/shared/icon';
 import Genre from '@/components/shared/genre';
 import progressBar from '@/components/shared/loading';
-import { PlayIcon } from '@heroicons/react/solid';
-import { stripHtml } from '@/utils/index';
+import { PlayIcon, InformationCircleIcon } from '@heroicons/react/solid';
 import { TitleType } from '@/src/../types/types';
-import useDevice from '@/hooks/useDevice';
+import { episodesTitle, stripHtml } from '@/utils/index';
 
 export interface IBannerProps {
   cover?: string;
@@ -31,14 +30,14 @@ const Banner: React.FC<IBannerProps> = ({
     <div className="relative w-full h-[386px] md:h-[420px] min-h-[386px] md:min-h-[420px]">
       <div className="relative flex items-center w-full h-full shrink-0">
         <span className="banner-linear absolute top-0 left-0 w-full h-[101%] z-[20]"></span>
-        <div className="absolute left-0 pl-[4%] p-[1rem] z-[20] w-[60%] md:w-[45%] bottom-[15%]">
+        <div className="absolute left-0 pl-[4%] p-[1rem] z-[20] w-[80%] md:w-[45%] bottom-[15%]">
           <h1 className="text-gray-300 text-xl font-bold line-clamp-1 sm:text-2xl md:text-3xl lg:text-4xl xl:text-5xl 2xl:text-6xl">
             {title?.english || title?.romaji}
           </h1>
+
           <p className="leading-6 text-xs md:text-sm webkit-box line-clamp-1 text-gray-300 font-extralight mt-2">
             {stripHtml(description || '')}
           </p>
-
           <div className="hidden mr-2 md:flex flex-wrap gap-2 mt-2">
             {genres!.map((genre: string) => (
               <div className="flex items-center gap-2" key={genre}>
@@ -48,10 +47,19 @@ const Banner: React.FC<IBannerProps> = ({
             ))}
           </div>
 
-          <div className="flex items-center">
-            <Link href={`/anime/${id}`}>
+          <div className="flex items-center gap-2">
+            <Link
+              href={`/watch/${id}?episode=${episodesTitle(
+                title?.romaji as string
+              )}-1`}
+            >
               <a className="mt-4 py-2 px-4 bg-[#6a55fa] text-gray-200 rounded-sm font-semibold flex items-center justify-center gap-2 hover:bg-[#6a55fa] hover:scale-105 transition-all ease-in-out rounded-md">
-                <Icon icon={PlayIcon} text={`Read More`} />
+                <Icon icon={PlayIcon} text={`Watch Now`} />
+              </a>
+            </Link>
+            <Link href={`/anime/${id}`}>
+              <a className="mt-4 py-2 px-4 bg-[#6e6f74] text-gray-200 rounded-sm font-semibold flex items-center justify-center gap-2 hover:bg-[#6a55fa] hover:scale-105 transition-all ease-in-out rounded-md">
+                <Icon icon={InformationCircleIcon} text={`Read More`} />
               </a>
             </Link>
           </div>
