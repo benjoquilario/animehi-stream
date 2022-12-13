@@ -153,7 +153,7 @@ const Anime = ({
                   </div>
                 ))}
               </div>
-              <p className="leading-6 text-xs md:text-sm line-clamp-1 text-gray-400 font-extralight mt-2">
+              <p className="leading-6 text-xs md:text-sm line-clamp-1 text-slate-300 font-extralight mt-2">
                 {showMore
                   ? stripHtml(animeList?.description)
                   : stripHtml(animeList?.description.substring(0, 415))}

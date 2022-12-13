@@ -26,11 +26,11 @@ const Banner: React.FC<IBannerProps> = ({
     <div className="relative flex items-center w-full h-full shrink-0">
       <span className="banner-linear absolute top-0 left-0 w-full h-[101%] z-[20]"></span>
       <div className="absolute left-0 pl-[4%] p-[1rem] z-[20] w-[80%] md:w-[45%] bottom-[15%]">
-        <h1 className="text-gray-300 text-xl font-bold line-clamp-1 sm:text-2xl md:text-3xl lg:text-4xl xl:text-5xl 2xl:text-6xl">
+        <h1 className="text-white text-xl font-bold line-clamp-1 sm:text-2xl md:text-3xl lg:text-4xl xl:text-5xl 2xl:text-6xl">
           {title?.english || title?.romaji}
         </h1>
 
-        <p className="leading-6 text-xs md:text-sm webkit-box line-clamp-1 text-gray-300 font-extralight mt-2">
+        <p className="leading-6 text-xs md:text-sm webkit-box line-clamp-1 text-slate-300 font-extralight mt-2">
           {stripHtml(description || '')}
         </p>
         <div className="hidden mr-2 md:flex flex-wrap gap-2 mt-2">

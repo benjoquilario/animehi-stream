@@ -94,7 +94,7 @@ const WatchAnime = ({
     revalidateOnFocus: false,
   });
 
-  const { episodes, isLoading, isError } = useEpisodes(animeList.id);
+  const { episodes, isLoading } = useEpisodes(animeList.id);
 
   const currentEpisode = useMemo(
     () => episodes?.find((episode: EpisodesType) => episode?.id === episodeId),

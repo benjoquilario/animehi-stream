@@ -40,6 +40,7 @@ export const getServerSideProps = async () => {
   );
 
   const popular: ISearch<IAnimeResult> = await anilist.fetchPopularAnime();
+
   if (!trending && !popular) {
     return {
       notFound: true,

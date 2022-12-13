@@ -1,12 +1,9 @@
-import { RecentResponseType } from '@/src/../types/types';
-import { useDispatch } from '@/store/store';
 import useSWR from 'swr';
 import Thumbnail from './thumbnail';
-import Link from 'next/link';
 import { AiOutlineArrowRight, AiOutlineArrowLeft } from 'react-icons/ai';
 import { IRecentResults } from '@/pages/index';
 import { BASE_URL } from '@/utils/config';
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect } from 'react';
 
 export interface IRecentReleaseProps {
   title: string;
@@ -67,6 +64,7 @@ const RecentRelease: React.FC<IRecentReleaseProps> = ({ title }) => {
             image={anime?.image}
             title={anime?.title}
             episodeId={anime?.episodeId}
+            color={anime?.color}
           />
         ))}
       </div>

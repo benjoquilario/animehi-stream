@@ -28,8 +28,11 @@ const Video: React.FC<VideoProps> = ({
 }) => {
   const router = useRouter();
   const dispatch = useDispatch();
-  const provider = useSelector(store => store.watch.provider);
-  const totalEpisodes = useSelector(store => store.watch.totalEpisodes);
+  const [provider, totalEpisodes] = useSelector(store => [
+    store.watch.provider,
+    store.watch.totalEpisodes,
+  ]);
+  // const  = useSelector(store => );
 
   // const handleChangeProvider = (event: any) => {
   //   const text = event.target.innerText;

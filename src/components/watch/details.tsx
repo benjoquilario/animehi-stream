@@ -20,7 +20,7 @@ const WatchDetails = ({ animeList }: any) => {
           <h1 className="mb-2 text-md md:text-3xl font-semibold text-white">
             {animeList?.title?.english}
           </h1>
-          <p className="leading-6 text-xs md:text-sm text-gray-300 font-extralight mt-2">
+          <p className="leading-6 text-xs md:text-sm text-slate-300 font-extralight mt-2">
             {showMore
               ? stripHtml(animeList?.description)
               : stripHtml(animeList?.description?.substring(0, 415))}
