@@ -13,8 +13,8 @@ import {
   IAnimeResult,
   ISearch,
 } from '@consumet/extensions/dist/models/types';
-import { META } from '@consumet/extensions';
-import { GOGO_PROVIDER } from '@/utils/config';
+import { META, ANIME } from '@consumet/extensions';
+import { GOGO_PROVIDER, ZORO_PROVIDER } from '@/utils/config';
 import RecentRelease from '@/components/anime/recentRelease';
 import { TitleType } from '@/src/../types/types';
 import Popular from '@/components/anime/popular';
@@ -27,6 +27,7 @@ export interface IRecentResults extends IAnimeResult {
   image: string;
   title: TitleType;
   color: string;
+  episodeId: string;
 }
 
 export const getServerSideProps = async () => {
@@ -37,11 +38,9 @@ export const getServerSideProps = async () => {
     page,
     10
   );
-  const recentRelease: ISearch<IAnimeResult> =
-    await anilist.fetchRecentEpisodes(GOGO_PROVIDER, page, 18);
 
   const popular: ISearch<IAnimeResult> = await anilist.fetchPopularAnime();
-  if (!trending && !recentRelease) {
+  if (!trending && !popular) {
     return {
       notFound: true,
     };
@@ -50,7 +49,6 @@ export const getServerSideProps = async () => {
   return {
     props: {
       trending: parseData(trending),
-      recentRelease: parseData(recentRelease),
       popular: parseData(popular),
     },
   };
@@ -58,15 +56,12 @@ export const getServerSideProps = async () => {
 
 const HomePage = ({
   trending,
-  recentRelease,
   popular,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
   progressBar.finish();
   const dispatch = useDispatch();
 
   const { results: trendingResults }: ISearch<IAnimeInfo> = trending;
-  const { results: recentReleaseResults }: ISearch<IRecentResults> =
-    recentRelease;
   const { results: popularResults }: ISearch<IAnimeInfo> = popular;
 
   useEffect(() => {
@@ -105,11 +100,8 @@ const HomePage = ({
         </Swiper>
       </div>
       <main className="mt-[40px] px-4 md:px-8">
-        <div className="grid grid-cols-1 md:grid-cols-[1fr_260px] gap-4">
-          <RecentRelease
-            title="Recent Release"
-            animeList={recentReleaseResults}
-          />
+        <div className="grid lg:grid-cols-1 xl:grid-cols-[1fr_280px] gap-4">
+          <RecentRelease title="Recent Updated" />
           <div className="overflow-hidden">
             <Popular animeList={popularResults} />
           </div>

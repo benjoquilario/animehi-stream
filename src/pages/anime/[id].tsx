@@ -92,7 +92,7 @@ const Anime = ({
               )}`}
               // className="blur-sm w-full h-full"
               objectFit="cover"
-              containerClassName="relative w-full h-full"
+              containerclassname="relative w-full h-full"
             />
 
             <div className="absolute top-0 left-0 bg-banner-shadow h-full w-full"></div>
@@ -101,7 +101,7 @@ const Anime = ({
             <div className="min-w-[170px] w-[170px] h-auto">
               <div className="min-w-[170px] w-[170px] h-[216px] block mt-[-88px] md:mt-[-69px] md:min-w-[200px] md:w-[200px] md:h-[300px]">
                 <Image
-                  containerClassName="relative w-full min-w-full h-full"
+                  containerclassname="relative w-full min-w-full h-full"
                   className="rounded-lg"
                   objectFit="cover"
                   layout="fill"

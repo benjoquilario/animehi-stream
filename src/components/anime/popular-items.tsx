@@ -28,11 +28,11 @@ const PopularItem: React.FC<PopularItemProps> = ({
   return (
     <li className="relative overflow-unset p-[1px]">
       <Link href={`/anime/${animeId}`}>
-        <a className="flex gap-2 pl-4 py-2 pr-3 hover:bg-[#000] transition">
+        <a className="flex gap-2 pl-4 py-3 pr-3 hover:bg-[#000] transition">
           <div
             style={{ borderColor: colorNumber(rank) }}
             className={classNames(
-              'text-white text-2xl font-bold mr-5 border-b-2 border-solid'
+              'text-white text-2xl font-bold mr-3 border-b-2 border-solid'
             )}
           >
             {rank}
@@ -47,11 +47,11 @@ const PopularItem: React.FC<PopularItemProps> = ({
               '#6A55FA'
             )}`}
             alt={`Anime - ${title.english || title.romaji}`}
-            containerClassName="relative h-[52px] w-[43px]"
+            containerclassname="relative h-[54px] w-[45px]"
           />
 
           <div>
-            <h3 className="text-white text-[14px]">
+            <h3 className="text-white text-[12px]">
               {title.english || title.romaji}
             </h3>
             <div className="text-white text-slate-300 text-xs flex gap-1 items-center">

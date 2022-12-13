@@ -6,12 +6,14 @@ import {
 } from 'react-redux';
 import animeReducer from '@/store/anime/slice';
 import watchReducer from '@/store/watch/slice';
+import recentReducer from '@/store/recent/slice';
 
 export const createStore = (preloadedState?: { [x: string]: any }) =>
   configureStore({
     reducer: {
       anime: animeReducer,
       watch: watchReducer,
+      recent: recentReducer
     },
     preloadedState,
   });

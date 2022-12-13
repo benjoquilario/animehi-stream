@@ -25,6 +25,10 @@ export interface IInitialState {
   videoLink: string;
   provider: string;
   watchList: WatchState[];
+  setting: {
+    aspectRation: string;
+    playspeed: number;
+  };
 }
 
 const initialState: IInitialState = {
@@ -44,6 +48,10 @@ const initialState: IInitialState = {
   videoLink: '',
   provider: 'gogoanime',
   watchList: [],
+  setting: {
+    aspectRation: 'default',
+    playspeed: 1,
+  },
 };
 
 export const watchSlice = createSlice({
@@ -91,6 +99,9 @@ export const watchSlice = createSlice({
         state.videoLink = `${CORS_PROXY}${state.sources[1]?.url}`;
       }
     },
+    setSetting: (state, action) => {
+      state.setting = action.payload;
+    },
     resetSources: (state: Draft<IInitialState>) => {
       state.sources = initialState.sources;
       state.videoLink = initialState.videoLink;
@@ -121,5 +132,6 @@ export const {
   setProviders,
   setTotalEpisodes,
   resetStates,
+  setSetting,
 } = watchSlice.actions;
 export default watchSlice.reducer;

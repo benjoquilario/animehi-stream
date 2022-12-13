@@ -2,14 +2,14 @@ import React from 'react';
 import NextImage, { ImageProps as NextImageProps } from 'next/image';
 
 interface ImageProps extends NextImageProps {
-  containerClassName?: string;
+  containerclassname?: string;
 }
 
 const Image: React.FC<ImageProps> = ({ ...props }) => {
-  const { containerClassName } = props;
+  const { containerclassname } = props;
 
   return (
-    <div className={containerClassName}>
+    <div className={containerclassname}>
       <NextImage {...props} />
     </div>
   );

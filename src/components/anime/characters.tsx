@@ -28,7 +28,7 @@ const Characters: React.FC<CharactersProps> = ({ characters, color }) => (
                 blurDataURL={`data:image/svg+xml;base64,${base64SolidImage(
                   color
                 )}`}
-                containerClassName="relative"
+                containerclassname="relative"
               />
               <div className="flex justify-evenly flex-col">
                 <h3 className="text-[9px] md:text-[11px] text-white opacity-90">
@@ -48,15 +48,17 @@ const Characters: React.FC<CharactersProps> = ({ characters, color }) => (
                   {character?.voiceActors[0]?.language}
                 </p>
               </div>
-              <div className="relative">
-                <Image
-                  priority
-                  layout="fill"
-                  src={character?.voiceActors[0]?.image}
-                  objectFit="cover"
-                  alt={character?.voiceActors[0]?.name.full}
-                />
-              </div>
+              <Image
+                layout="fill"
+                src={character?.voiceActors[0]?.image}
+                objectFit="cover"
+                alt={character?.voiceActors[0]?.name.full}
+                placeholder="blur"
+                blurDataURL={`data:image/svg+xml;base64,${base64SolidImage(
+                  color
+                )}`}
+                containerclassname="relative"
+              />
             </div>
           </li>
         );

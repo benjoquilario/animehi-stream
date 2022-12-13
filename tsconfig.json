@@ -18,38 +18,35 @@
     "isolatedModules": true,
     "jsx": "preserve",
     "incremental": true,
-    "baseUrl": "./src",
+    "baseUrl": "./",
     "paths": {
       "@/components/*": [
-        "./components/*"
+        "./src/components/*"
       ],
       "@/store/*": [
-        "./store/*"
+        "./src/store/*"
       ],
       "@/services/*": [
-        "./services/*"
+        "./src/services/*"
       ],
       "@/utils/*": [
-        "./utils/*"
+        "./src/utils/*"
       ],
       "@/app/*": [
-        "./app/*"
+        "./src/app/*"
       ],
       "@/pages/*": [
-        "./pages/*"
+        "./src/pages/*"
       ],
       "@/hooks/*": [
-        "./hooks/*"
+        "./src/hooks/*"
       ],
       "@/src/*": [
-        "./*"
+        "./src/*"
       ],
       "@/styles/*": [
-        "./styles/*"
+        "./src/styles/*"
       ],
-      "@/public/*": [
-        "./public/*"
-      ]
     },
     "plugins": [
       {
