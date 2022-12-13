@@ -1,6 +1,7 @@
 import { chunk } from '@/utils/index';
 import { EpisodesType } from '@/src/../types/types';
 import EpisodeChunk from './episode-chunk';
+import React from 'react';
 
 interface EpisodesButtonProps {
   episodes: EpisodesType[];
@@ -44,4 +45,4 @@ const Episodes: React.FC<EpisodesButtonProps> = ({
   </ul>
 );
 
-export default Episodes;
+export default React.memo(Episodes);

@@ -1,17 +1,18 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import Artplayer from 'artplayer';
 import Hls from 'hls.js';
 import { useSelector } from '@/store/store';
 import { SourceType } from '@/store/watch/slice';
 import progressBar from '../shared/loading';
-import { CORS_PROXY } from '@/utils/config';
 
 const VideoPlayer = ({ option, getInstance, poster, title }: any) => {
   progressBar.finish();
   const artRef = useRef<HTMLDivElement | null>(null);
-  const videoLink = useSelector(store => store.watch.videoLink);
+  const [videoLink, provider] = useSelector(store => [
+    store.watch.videoLink,
+    store.watch.provider,
+  ]);
   const sources = useSelector(store => store.watch.sources);
-  const provider = useSelector(store => store.watch.provider);
 
   const handleQuality = () => {
     return sources?.map((source: SourceType) => {
@@ -50,7 +51,7 @@ const VideoPlayer = ({ option, getInstance, poster, title }: any) => {
           } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
             video.src = url;
           } else {
-            art.notice.show = 'Does not support playback of m3u8';
+            art.notice.show = 'Hls is not supported';
           }
         },
       },
@@ -85,17 +86,37 @@ const VideoPlayer = ({ option, getInstance, poster, title }: any) => {
       moreVideoAttr: {
         crossOrigin: 'anonymous',
       },
+      icons: {
+        loading:
+          '<img class="animate-spin text-white h-12 h-12" src="/loading.svg">',
+        setting: '<img class="h-6 h-6" src="/setting.svg">',
+        volume: '<img class="h-6 h-6" src="/volume.svg">',
+      },
     });
 
     if (getInstance && typeof getInstance === 'function') {
       getInstance(art);
     }
 
+    art.on('aspectRatio', (...args) => {
+      art.storage.set('aspectRatio', args[0]);
+    });
+
+    art.on('playbackRate', (...args) => {
+      art.storage.set('playBackRate', args[0]);
+    });
+
+    art.on('ready', () => {
+      art.aspectRatio = art.storage.get('aspectRatio');
+      art.playbackRate = art.storage.get('playBackRate');
+    });
+
     return () => {
       if (art && art.destroy) {
         art.destroy(false);
       }
     };
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [videoLink]);
 

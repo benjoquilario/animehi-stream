@@ -1,6 +1,6 @@
 import { useState } from 'react';
-import Image from 'next/image';
 import { stripHtml } from '@/utils/index';
+import Image from '@/components/shared/image';
 
 const WatchDetails = ({ animeList }: any) => {
   const [showMore, setShowMore] = useState<boolean>(false);
@@ -8,15 +8,14 @@ const WatchDetails = ({ animeList }: any) => {
   return (
     <div className="mt-3 ml-4">
       <div className="grid grid-cols-[auto_1fr] gap-4">
-        <div className="relative h-[130px] w-[100px] md:h-[250px] md:w-[200px]">
-          <Image
-            layout="fill"
-            objectFit="cover"
-            src={animeList?.image}
-            alt={animeList?.title?.romaji}
-            className="rounded-md"
-          />
-        </div>
+        <Image
+          layout="fill"
+          objectFit="cover"
+          src={animeList?.image}
+          alt={animeList?.title?.romaji}
+          className="rounded-md"
+          containerclassname="relative h-[130px] w-[100px] md:h-[250px] md:w-[200px]"
+        />
         <div className="text-white">
           <h1 className="mb-2 text-md md:text-3xl font-semibold text-white">
             {animeList?.title?.english}
