@@ -1,17 +1,36 @@
 import { RecentResponseType } from '@/src/../types/types';
 import { useDispatch } from '@/store/store';
-import React from 'react';
+import useSWR from 'swr';
 import Thumbnail from './thumbnail';
 import Link from 'next/link';
-import { AiOutlineArrowRight } from 'react-icons/ai';
+import { AiOutlineArrowRight, AiOutlineArrowLeft } from 'react-icons/ai';
 import { IRecentResults } from '@/pages/index';
+import { BASE_URL } from '@/utils/config';
+import React, { useState, useEffect, useCallback } from 'react';
 
 export interface IRecentReleaseProps {
   title: string;
-  animeList?: IRecentResults[];
 }
 
-const RecentRelease: React.FC<IRecentReleaseProps> = ({ title, animeList }) => {
+const RecentRelease: React.FC<IRecentReleaseProps> = ({ title }) => {
+  const [recent, setRecent] = useState<IRecentResults[] | []>([]);
+  const [pageNumber, setPageNumber] = useState(1);
+
+  const fetcher = async (page: number) =>
+    fetch(
+      `${BASE_URL}/meta/anilist/recent-episodes?page=${page}&perPage=15`
+    ).then(res => res.json());
+
+  const { data, error } = useSWR([pageNumber], fetcher, {
+    revalidateOnFocus: false,
+  });
+
+  useEffect(() => {
+    if (!data && !error) return;
+
+    setRecent(data.results);
+  }, [data, error, pageNumber]);
+
   return (
     <div>
       <div className="flex items-center justify-between text-white mb-4">
@@ -19,25 +38,35 @@ const RecentRelease: React.FC<IRecentReleaseProps> = ({ title, animeList }) => {
           {title}
         </h2>
         <div className="flex gap-3 items-center">
-          <Link href="/recent">
-            <a className="p-1 md:p-2 text-[#ededed]">
-              <AiOutlineArrowRight className="h-6 w-6" />
-            </a>
-          </Link>
+          {pageNumber !== 1 ? (
+            <button
+              onClick={() => setPageNumber(pageNumber - 1)}
+              className="p-1 md:p-2 text-[#ededed] hover:bg-[#111] rounded-full transition"
+            >
+              <AiOutlineArrowLeft className="h-6 w-6" />
+            </button>
+          ) : null}
+
+          <button
+            onClick={() => setPageNumber(pageNumber + 1)}
+            className="p-1 md:p-2 text-[#ededed] hover:bg-[#111] rounded-full transition"
+          >
+            <AiOutlineArrowRight className="h-6 w-6" />
+          </button>
         </div>
       </div>
       <div
         // ref={rowRef}
-        className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 relative overflow-hidden"
+        className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 relative overflow-hidden"
       >
-        {animeList?.map((anime, index) => (
+        {recent?.map((anime, index) => (
           <Thumbnail
             key={index}
-            id={anime.id}
-            episodeNumber={anime.episodeNumber}
-            image={anime.image}
-            title={anime.title}
-            color={anime.color}
+            id={anime?.id}
+            episodeNumber={anime?.episodeNumber}
+            image={anime?.image}
+            title={anime?.title}
+            episodeId={anime?.episodeId}
           />
         ))}
       </div>

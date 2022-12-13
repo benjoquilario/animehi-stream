@@ -1,52 +1,68 @@
 import api from '@/utils/request';
-import { GetStaticPaths } from 'next';
-import { InferGetStaticPropsType } from 'next';
+import useSWR from 'swr';
+import { GetServerSideProps, InferGetServerSidePropsType } from 'next';
 import { META } from '@consumet/extensions';
+import { GOGO_PROVIDER } from '@/utils/config';
+import { useRouter } from 'next/router';
+import { useDispatch, initialiseStore, useSelector } from '@/store/store';
+import { BASE_URL } from '@/utils/config';
+import React, { useRef, useEffect } from 'react';
+import {
+  setCurrentPage,
+  increasePage,
+  decreasePage,
+} from '@/store/recent/slice';
+import { useState } from 'react';
 
-export const PER_PAGE = 19;
-
-const RecentReleasePage = ({
+const RecentPage = ({
   recentRelease,
-  totalPages,
-  currentPage,
-}: InferGetStaticPropsType<typeof getStaticProps>) => {
-  console.log(recentRelease);
-  return <div>Hello world!!</div>;
+}: InferGetServerSidePropsType<typeof getServerSideProps>) => {
+  const router = useRouter();
+  const [recent, setRecent] = useState(recentRelease);
+  const dispatch = useDispatch();
+  const routerRef = useRef(router);
+  const page = useSelector(store => store.recent.page);
+  const [pageNumber, setPageNumber] = useState(1);
+
+  const fetcher = async (page: number) =>
+    fetch(
+      `${BASE_URL}/meta/anilist/recent-episodes?page=${page}&perPage=12`
+    ).then(res => res.json());
+
+  const { data, error } = useSWR([pageNumber], fetcher, {
+    revalidateOnFocus: false,
+  });
+
+  useEffect(() => {
+    if (!data && !error) return;
+
+    setRecent(data);
+  }, [data, error]);
+
+  console.log(recent);
+
+  return (
+    <div>
+      <button onClick={() => setPageNumber(pageNumber + 1)}>+ page</button>
+    </div>
+  );
 };
 
-export const getStaticProps = async ({ params }: any) => {
-  const PAGE = Number(params?.page) || 1;
-
+export const getServerSideProps: GetServerSideProps = async () => {
   const anilist = new META.Anilist();
-  const recentRelease = await anilist.fetchRecentEpisodes(
-    'gogoanime',
-    PAGE,
-    18
-  );
+  const store = initialiseStore();
+  const PAGE = 2;
 
-  if (!recentRelease) {
-    return {
-      notFound: true,
-    };
-  }
+  const data = await anilist.fetchRecentEpisodes(GOGO_PROVIDER, PAGE, 12);
+
+  const recentRelease = JSON.parse(JSON.stringify(data));
 
   return {
     props: {
       recentRelease,
-      totalPages: recentRelease.totalPages,
-      currentPage: PAGE,
+      initialReduxState: store.getState(),
     },
   };
 };
 
-export const getStaticPaths: GetStaticPaths = async () => {
-  return {
-    // Prerender the next 24 pages after the first page, which is handled by the index page.
-    // Other pages will be prerendered at runtime.
-    paths: Array.from({ length: 19 }).map((_, i) => `/recent/${i + 2}`),
-    // Block the request for non-generated pages and cache them in the background
-    fallback: 'blocking',
-  };
-};
-
-export default RecentReleasePage;
+export default RecentPage;

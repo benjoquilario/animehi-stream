@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 // import Image from 'next/image';
 import Link from 'next/link';
-import { base64SolidImage } from 'utils/image';
+import { base64SolidImage } from '@/utils/image';
 import { RecentType } from '@/src/../types/types';
 import { PlayIcon } from '@heroicons/react/outline';
 import { useRouter } from 'next/router';
@@ -10,13 +10,14 @@ import { useDispatch } from '@/store/store';
 import { IAnimeResult } from '@consumet/extensions';
 import { TitleType } from '@/src/../types/types';
 import Image from '@/components/shared/image';
+import useEpisodes from '@/hooks/useEpisodes';
 
 export interface IThumbnailProps {
   id: string;
   episodeNumber: number;
   image: string;
   title: TitleType;
-  color: string;
+  episodeId: string;
 }
 
 const Thumbnail: React.FC<IThumbnailProps> = ({
@@ -24,53 +25,49 @@ const Thumbnail: React.FC<IThumbnailProps> = ({
   episodeNumber,
   image,
   title,
-  color,
-}) => {
-  const router = useRouter();
-  const dispatch = useDispatch();
-
-  const onHandleWatchNow = () => {
-    router.push(
-      `/watch/${id}?episode=${episodesTitle(
-        title.romaji
-      )}-episode-${episodeNumber}`
-    );
-  };
-
-  return (
-    <div className="relative flex flex-col">
-      <div className="relative w-full min-w-full md:w-[145px] md:min-w-[145px] overflow-visible flex flex-wrap rounded-[6px] content-start mx-auto">
-        <div className="relative overflow-hidden w-full rounded-[6px] h-[200px] md:h-[161px] ">
-          <Image
-            layout="fill"
-            src={`${image}`}
-            objectFit="cover"
-            placeholder="blur"
-            blurDataURL={`data:image/svg+xml;base64,${base64SolidImage(color)}`}
-            alt={`Anime - ${title.english || title.romaji}`}
-            containerClassName="relative w-full h-full hover:opacity-70 transition-opacity"
-          />
+  episodeId,
+}) => (
+  <div className="relative flex flex-col">
+    <div className="relative w-full min-w-full md:w-[185px] md:min-w-[185px] overflow-visible flex flex-wrap rounded-[6px] content-start mx-auto">
+      <div className="relative overflow-hidden w-full rounded-[6px] h-[205px] md:h-[215px] ">
+        <div className="absolute top-0 left-0 font-bold p-1 text-[10px] rounded-br z-20 bg-white text-black">
+          HD
         </div>
-        <h2 className="bg-[#100f0f] text-sm w-full h-auto p-1 text-center text-white bg-top bg-repeat-x bg-[#111] shadow-2xl">
-          <span className="line-clamp-text text-sm">
-            {title.romaji || title.english}
+        <Image
+          layout="fill"
+          src={`${image}`}
+          objectFit="cover"
+          placeholder="blur"
+          blurDataURL={`data:image/svg+xml;base64,${base64SolidImage(
+            '#6a55fa'
+          )}`}
+          alt={`Anime - ${title.english || title.romaji}`}
+          containerclassname="relative w-full h-full hover:opacity-70 transition-opacity"
+        />
+        <div className="absolute bottom-0 left-0 z-20 flex justify-between w-full">
+          <span className="bg-[#6a55fa] text-white rounded-tr-md p-1 text-sm font-bold">
+            Ep {episodeNumber}
           </span>
-          <span className="line-clamp-text text-xs">
-            Episode {episodeNumber}
+          <span className="bg-[#ffc107] text-white rounded-tr p-1 text-sm font-bold rounded-tl-md	">
+            SUB
           </span>
-        </h2>
+        </div>
+      </div>
 
-        <button
-          onClick={onHandleWatchNow}
-          className="center-element flex justify-center items-center w-[101%] h-[85%] opacity-0 hover:opacity-100 hover:bg-[#1111117a]"
-        >
+      <Link href={`/watch/${id}?episode=${episodeId}`}>
+        <a className="center-element flex justify-center items-center w-[101%] h-full opacity-0 hover:opacity-100 hover:bg-[#1111117a] transition">
           <div className="h-11 w-11 text-[#6a55fa]">
             <PlayIcon />
           </div>
-        </button>
-      </div>
+        </a>
+      </Link>
     </div>
-  );
-};
+    <Link href={`/anime/${id}`}>
+      <a className="text-slate-300 w-full h-auto p-1 text-center text-sm hover:text-white">
+        {title.english || title.romaji}
+      </a>
+    </Link>
+  </div>
+);
 
 export default React.memo(Thumbnail);
