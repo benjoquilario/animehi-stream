@@ -2,7 +2,7 @@ import '@/styles/globals.css';
 import { ReactElement, ReactNode, useEffect } from 'react';
 import type { NextPage } from 'next';
 import type { AppProps } from 'next/app';
-import { useStore } from 'store/store';
+import { useStore } from '@/store/store';
 import { Provider } from 'react-redux';
 import Router from 'next/router';
 import progressBar from '@/components/shared/loading';
