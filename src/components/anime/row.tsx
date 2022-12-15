@@ -1,56 +1,67 @@
-import { RecentResponseType } from '@/src/../types/types';
+import { RecentResponseType, TitleType } from '@/src/../types/types';
 import { useRouter } from 'next/router';
 import Thumbnail from './thumbnail';
+import Link from 'next/link';
+import Image from '../shared/image';
+import ColumnSection from '@/components/shared/column-section';
+import { IAnimeInfo, IAnimeResult, ISearch } from '@consumet/extensions';
+import React from 'react';
 
-// export interface RowProps {
-//   animeList: RecentResponseType;
-//   title: string;
-//   isLoading: boolean;
-// }
-
-const Row = () => {
-  const router = useRouter();
-
-  return <div>Hello World!</div>;
+export type RowProps = {
+  animeList?: ISearch<IAnimeResult | IAnimeInfo>;
+  title: string;
+  isLoading: boolean;
+  season?: string;
 };
 
-export default Row;
-
-/**
- * 
- * <div className="mb-4">
-      <div className="flex items-center justify-between text-white mb-4">
-        <h2 className="text-base md:text-[20px] uppercase font-semibold">
-          {title}
-        </h2>
-        <div className="flex gap-3 items-center">
-          <button
-            onClick={() => router.push(title)}
-            className="p-1 md:p-2 text-[#ededed]"
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              className="h-5 w-5"
-              viewBox="0 0 20 20"
-              fill="currentColor"
-            >
-              <path
-                fillRule="evenodd"
-                d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
-                clipRule="evenodd"
+const Row = ({ title, animeList, season, isLoading }: RowProps): JSX.Element =>
+  !isLoading ? (
+    <div className="w-full">
+      <div className="md:space-between flex flex-col items-center space-y-4 space-x-0 md:flex-row md:space-y-0 md:space-x-4">
+        <div className="flex-1 bg-background-800 pt-4 w-full">
+          <h2 className="mb-2 px-4 text-white text-base md:text-[20px] uppercase font-semibold">
+            {title}
+          </h2>
+          <ul className="w-full">
+            {animeList?.results?.map((anime, index) => (
+              <ColumnSection
+                animeId={anime.id}
+                image={anime.image}
+                title={anime.title as TitleType}
+                type={anime.type}
+                genres={anime.genres as string[]}
+                status={anime.status}
+                key={index}
+                releaseDate={anime.releaseDate}
+                color={anime.color as string}
               />
-            </svg>
-          </button>
+            ))}
+            <li>
+              <button className="bg-[#111] text-white w-full flex justify-center items-center py-3">
+                View More
+              </button>
+            </li>
+          </ul>
         </div>
       </div>
-      <div
-        // ref={rowRef}
-        className="grid grid-cols-6 gap-2 relative ml-6 overflow-hidden"
-      >
-         {isLoading && <div>Loadding</div>}
-        {animeList?.results?.slice(1, 13)?.map((anime, index) => (
-          <Thumbnail animeList={anime} key={index} />
-        ))}
-      </div>
     </div>
- */
+  ) : (
+    <RowLoading />
+  );
+
+const ColumnLoading = () => (
+  <div className="animate-pulse h-[88px] w-full odd:bg-[#0d0d0d] even:bg-[#111]"></div>
+);
+
+const RowLoading = () => {
+  return (
+    <div className="h-[520px] w-full flex flex-col">
+      <div className="h-[30px] w-[200px] bg-[#111] rounded-lg mb-3"></div>
+      {Array.from(Array(5), (_, i) => (
+        <ColumnLoading key={i} />
+      ))}
+    </div>
+  );
+};
+
+export default React.memo(Row);

@@ -3,21 +3,21 @@ import { EpisodesType } from '@/src/../types/types';
 import EpisodeChunk from './episode-chunk';
 import React from 'react';
 
-interface EpisodesButtonProps {
+type EpisodesButtonProps = {
   episodes: EpisodesType[];
   activeIndex?: number;
   episodesClassName?: string;
   watchPage: boolean;
   animeId?: string;
-}
+};
 
-const Episodes: React.FC<EpisodesButtonProps> = ({
+const Episodes = ({
   episodes,
   activeIndex,
   episodesClassName,
   watchPage,
   animeId,
-}) => (
+}: EpisodesButtonProps): JSX.Element => (
   <ul className={episodesClassName}>
     {chunk<EpisodesType>(episodes, 50).map((episode, index) => {
       const firstEpisode = episode[0];

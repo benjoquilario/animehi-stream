@@ -1,12 +1,12 @@
 import React, { SVGProps } from 'react';
 
-export interface IconProps {
+type IconProps = {
   icon: React.FC<SVGProps<any>>;
   text: string;
   className?: string;
-}
+};
 
-const Icon: React.FC<IconProps> = ({ icon, text, className }) => {
+const Icon = ({ icon, text, className }: IconProps): JSX.Element => {
   const HeroIcon = icon;
   return (
     <div className={`flex items-center space-x-1 ${className || ''}`}>

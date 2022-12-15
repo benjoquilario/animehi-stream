@@ -47,7 +47,7 @@ const Anime = ({
 
   const lastEpisodes = useMemo(() => {
     if (!isLoading) {
-      return episodes[episodes?.length - 1].id;
+      return episodes[episodes?.length - 1]?.id;
     }
   }, [episodes, isLoading]);
 
@@ -90,7 +90,6 @@ const Anime = ({
               blurDataURL={`data:image/svg+xml;base64,${base64SolidImage(
                 animeList?.color as string
               )}`}
-              // className="blur-sm w-full h-full"
               objectFit="cover"
               containerclassname="relative w-full h-full"
             />
@@ -153,7 +152,7 @@ const Anime = ({
                   </div>
                 ))}
               </div>
-              <p className="leading-6 text-xs md:text-sm line-clamp-1 text-slate-300 font-extralight mt-2">
+              <p className="leading-6 text-sm md:text-base line-clamp-1 text-slate-300 font-extralight mt-2">
                 {showMore
                   ? stripHtml(animeList?.description)
                   : stripHtml(animeList?.description.substring(0, 415))}
@@ -185,10 +184,16 @@ const Anime = ({
           <div className="px-[12px] md:px-[40px] grid grid-cols-none md:grid-cols-[238px_auto] md:mt-[20px] md:gap-[18px]">
             <div className="block">
               <div className="bg-[#100f0f] my-2 p-3 rounded">
-                <p className="text-slate-300 text-xs">Score: 9.12</p>
+                <p className="text-white text-base">
+                  Score:{' '}
+                  <span className="text-slate-300 italic text-sm">9.12</span>
+                </p>
               </div>
               <div className="bg-[#100f0f] my-2 p-3 rounded">
-                <p className="text-slate-300 text-xs">Popularity: 707</p>
+                <p className="text-white text-base">
+                  Popularity:{' '}
+                  <span className="text-slate-300 italic text-sm">707</span>
+                </p>
               </div>
               <div className="bg-[#100f0f] my-2 p-3 rounded">
                 <ul className="grid grid-cols-2  w-full md:grid-cols-1">
@@ -270,6 +275,7 @@ const Anime = ({
               </div>
             </div>
             <div className="flex flex-col items-start">
+              {isError ? <div>Error</div> : null}
               {isLoading ? (
                 <div>Loading...</div>
               ) : (

@@ -4,15 +4,18 @@ import { ImSpinner6 } from 'react-icons/im';
 
 export const LoadingBanner = () => {
   return (
-    <div className="px-4 relative h-[600px] bg-black overflow-hidden w-full flex justify-center items-center">
-      <div className="flex w-full justify-center items-center gap-4">
-        <div className="animate-pulse h-[240px] w-[220px] md:h-[340px] md:w-[280px] bg-[#141313] rounded-lg"></div>
-        <div className="w-[70%] h-[300px] animate-pulse">
-          <div className="mt-2 w-[40%] bg-black h-9 bg-[#141313] rounded-lg"></div>
-          <div className="mt-2 w-[30%] bg-black h-4 bg-[#141313] rounded-lg"></div>
-          <div className="mt-2 w-full bg-black h-[45%] bg-[#141313] rounded-lg "></div>
-          <div className="mt-2 w-[135px] bg-black h-[45px] bg-[#141313] rounded-lg"></div>
+    <div className="relative h-[396px] md:h-[430px] min-h-[396px] md:min-h-[430px] 2xl:h-[620px] 2xl:min-h-[620px] bg-black overflow-hidden w-full flex justify-center items-center mt-2">
+      <div className="flex w-full items-center justify-between gap-4">
+        <div className="pl-[4%] w-[80%] md:w-[45%] h-[396px] md:h-[430px] min-h-[396px] md:min-h-[430px] 2xl:h-[620px] 2xl:min-h-[620px] animate-pulse flex flex-col justify-center">
+          <div className="mt-2 w-[60%] bg-black h-[30px] md:h-[60px] bg-[#141313] rounded-lg"></div>
+          <div className="mt-2 w-full bg-black h-[28px] md:h-[64px] bg-[#141313] rounded-lg "></div>
+          <div className="hidden md:block mt-2 w-[80%] bg-black h-4 bg-[#141313] rounded-lg"></div>
+          <div className="flex gap-2">
+            <div className="mt-2 w-[135px] bg-black h-[45px] bg-[#141313] rounded-lg"></div>
+            <div className="mt-2 w-[135px] bg-black h-[45px] bg-[#141313] rounded-lg"></div>
+          </div>
         </div>
+        <div className="absolute md:relative w-full animate-pulse h-full md:h-[290px] md:w-[512px] xl:w-[620px] 2xl:w-[662px] bg-[#111] md:bg-[#141313] rounded-lg"></div>
       </div>
     </div>
   );

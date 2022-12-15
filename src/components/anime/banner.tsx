@@ -7,13 +7,14 @@ import { PlayIcon, InformationCircleIcon } from '@heroicons/react/solid';
 import { TitleType } from '@/src/../types/types';
 import { episodesTitle, stripHtml } from '@/utils/index';
 
-export interface IBannerProps {
+export type IBannerProps = {
   cover?: string;
   title?: TitleType;
   description?: string;
   genres?: string[];
   id?: string;
-}
+  image?: string;
+};
 
 const Banner: React.FC<IBannerProps> = ({
   cover,
@@ -21,16 +22,17 @@ const Banner: React.FC<IBannerProps> = ({
   description,
   genres,
   id,
+  image,
 }) => (
-  <div className="relative w-full h-[386px] md:h-[420px] min-h-[386px] md:min-h-[420px]">
+  <div className="relative w-full h-[396px] md:h-[430px] min-h-[396px] md:min-h-[430px] 2xl:h-[620px] 2xl:min-h-[620px]">
     <div className="relative flex items-center w-full h-full shrink-0">
       <span className="banner-linear absolute top-0 left-0 w-full h-[101%] z-[20]"></span>
-      <div className="absolute left-0 pl-[4%] p-[1rem] z-[20] w-[80%] md:w-[45%] bottom-[15%]">
-        <h1 className="text-white text-xl font-bold line-clamp-1 sm:text-2xl md:text-3xl lg:text-4xl xl:text-5xl 2xl:text-6xl">
+      <div className="absolute pl-[4%] md:pl-0 pr-[1rem] left-0 z-[20] w-[80%] md:w-[45%] bottom-[15%]">
+        <h1 className="text-white text-xl font-bold line-clamp-2 sm:text-2xl md:text-3xl lg:text-4xl xl:text-5xl 2xl:text-6xl">
           {title?.english || title?.romaji}
         </h1>
 
-        <p className="leading-6 text-xs md:text-sm webkit-box line-clamp-1 text-slate-300 font-extralight mt-2">
+        <p className="leading-6 text-sm md:text-base line-clamp-2 text-slate-300 font-extralight mt-2">
           {stripHtml(description || '')}
         </p>
         <div className="hidden mr-2 md:flex flex-wrap gap-2 mt-2">
@@ -60,9 +62,9 @@ const Banner: React.FC<IBannerProps> = ({
         </div>
       </div>
 
-      <div className="absolute right-0 md:right-[4%] grow z-[2] md:z-40 h-full md:h-[290px] w-full md:w-[50%]">
+      <div className="absolute right-0 grow z-[2] md:z-40 h-full md:h-[290px] w-full md:w-[50%]">
         <div
-          style={{ backgroundImage: `url("${cover}")` }}
+          style={{ backgroundImage: `url("${cover || image}")` }}
           className="relative overflow-hidden bg-no-repeat	bg-center	w-full h-full bg-cover rounded-md mt-4"
         ></div>
       </div>

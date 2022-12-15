@@ -1,9 +1,9 @@
 import React from 'react';
 import NextImage, { ImageProps as NextImageProps } from 'next/image';
 
-interface ImageProps extends NextImageProps {
+type ImageProps = {
   containerclassname?: string;
-}
+} & NextImageProps;
 
 const Image: React.FC<ImageProps> = ({ ...props }) => {
   const { containerclassname } = props;

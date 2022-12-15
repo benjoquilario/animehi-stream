@@ -1,37 +1,32 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React from 'react';
 // import Image from 'next/image';
 import Link from 'next/link';
 import { base64SolidImage } from '@/utils/image';
-import { RecentType } from '@/src/../types/types';
 import { PlayIcon } from '@heroicons/react/outline';
-import { useRouter } from 'next/router';
-import { episodesTitle } from '@/utils/index';
-import { useDispatch } from '@/store/store';
-import { IAnimeResult } from '@consumet/extensions';
 import { TitleType } from '@/src/../types/types';
 import Image from '@/components/shared/image';
-import useEpisodes from '@/hooks/useEpisodes';
+import classNames from 'classnames';
 
-export interface IThumbnailProps {
+export type ThumbnailProps = {
   id: string;
   episodeNumber: number;
   image: string;
   title: TitleType;
   episodeId: string;
   color: string;
-}
+};
 
-const Thumbnail: React.FC<IThumbnailProps> = ({
+const Thumbnail = ({
   id,
   episodeNumber,
   image,
   title,
   episodeId,
   color,
-}) => (
+}: ThumbnailProps): JSX.Element => (
   <div className="relative flex flex-col">
-    <div className="relative w-full min-w-full md:w-[185px] md:min-w-[185px] overflow-visible flex flex-wrap rounded-[6px] content-start mx-auto">
-      <div className="relative overflow-hidden w-full rounded-[6px] h-[205px] md:h-[215px] ">
+    <div className="relative w-full min-w-full md:w-[174px] md:min-w-[174px] overflow-visible flex flex-wrap rounded-[6px] content-start mx-auto">
+      <div className="relative overflow-hidden w-full rounded-[6px] h-[205px] md:h-[220px] ">
         <div className="absolute top-0 left-0 font-bold p-1 text-[10px] rounded-br z-20 bg-white text-black">
           HD
         </div>
@@ -40,9 +35,7 @@ const Thumbnail: React.FC<IThumbnailProps> = ({
           src={`${image}`}
           objectFit="cover"
           placeholder="blur"
-          blurDataURL={`data:image/svg+xml;base64,${base64SolidImage(
-            color
-          )}`}
+          blurDataURL={`data:image/svg+xml;base64,${base64SolidImage(color)}`}
           alt={`Anime - ${title.english || title.romaji}`}
           containerclassname="relative w-full h-full hover:opacity-70 transition-opacity"
         />
@@ -65,7 +58,12 @@ const Thumbnail: React.FC<IThumbnailProps> = ({
       </Link>
     </div>
     <Link href={`/anime/${id}`}>
-      <a className="text-slate-300 w-full h-auto p-1 text-center text-sm hover:text-white">
+      <a
+        style={{ color: `${color}` }}
+        className={classNames(
+          'w-full h-auto p-1 text-left text-md hover:text-white font-semibold'
+        )}
+      >
         {title.english || title.romaji}
       </a>
     </Link>

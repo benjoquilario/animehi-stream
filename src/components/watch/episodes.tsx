@@ -5,12 +5,12 @@ import classNames from 'classnames';
 import React from 'react';
 import { BsPlay } from 'react-icons/bs';
 
-export interface EpisodesProps {
+type EpisodesProps = {
   activeIndex?: number;
   episodes: EpisodesType[];
-}
+};
 
-const Episodes: React.FC<EpisodesProps> = ({ activeIndex, episodes }) => {
+const Episodes = ({ activeIndex, episodes }: EpisodesProps): JSX.Element => {
   const dispatch = useDispatch();
 
   return (

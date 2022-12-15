@@ -1,3 +1,5 @@
+import dayjs from './time';
+
 export const episodesTitle = (str: string) => {
   const removeSymbol = str.toLowerCase().replace(/[^a-zA-Z0-9 ]/g, '');
   const splitEpisode = removeSymbol.split(' ');
@@ -29,3 +31,29 @@ export function chunk<T>(arr: Array<T>, chunkSize: number) {
 }
 
 export const parseData = (data: any) => JSON.parse(JSON.stringify(data));
+export const encodedURI = (data: string[]) =>
+  encodeURIComponent(JSON.stringify(data));
+
+export const getSeason = () => {
+  const month = dayjs().month();
+  const year = dayjs().year();
+
+  let season = 'WINTER';
+
+  if (3 <= month && month <= 5) {
+    season = 'SPRING';
+  }
+
+  if (6 <= month && month <= 8) {
+    season = 'SUMMER';
+  }
+
+  if (9 < month && month <= 11) {
+    season = 'FALL';
+  }
+
+  return {
+    season,
+    year,
+  };
+};

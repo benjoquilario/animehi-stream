@@ -9,23 +9,23 @@ import { extractEpisode } from '@/utils/index';
 import { EpisodesType } from '@/src/../types/types';
 import { TbPlayerTrackNext, TbPlayerTrackPrev } from 'react-icons/tb';
 
-interface VideoProps {
+type VideoProps = {
   poster: string;
   title: string;
   className: string;
   episodeNumber: number;
   nextEpisode: EpisodesType;
   prevEpisode: EpisodesType;
-}
+};
 
-const Video: React.FC<VideoProps> = ({
+const Video = ({
   poster,
   title,
   className,
   episodeNumber,
   nextEpisode,
   prevEpisode,
-}) => {
+}: VideoProps): JSX.Element => {
   const router = useRouter();
   const dispatch = useDispatch();
   const [provider, totalEpisodes] = useSelector(store => [

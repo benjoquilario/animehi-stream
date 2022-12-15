@@ -9,12 +9,12 @@ const Header = () => {
   return (
     <header
       className={classNames(
-        'absolute top-0 left-0 w-full z-20 h-[48px] md:h-[60px] bg-[#0d0d0d]'
+        'absolute top-0 left-0 w-full z-20 h-[48px] md:h-[60px] 2xl:h-[80px] bg-[#0d0d0d] bg-gradient-to-b from-[#000000b3] to-[#00000000]'
       )}
     >
       <div
         className={classNames(
-          'flex items-center gap-4 h-[48px] md:h-[60px] px-[4%] bg-gradient-to-b from-[#000000b3] to-[#00000000]'
+          'flex items-center gap-4 h-[48px] md:h-[60px] 2xl:h-[80px] px-[4%]  mx-auto max-w-screen-2xl'
         )}
       >
         <Link href="/">
@@ -35,7 +35,7 @@ const Header = () => {
                 alt="animehi"
               />
             </div>
-            <span className="text-sm md:text-[20px] font-semibold uppercase">
+            <span className="text-sm md:text-[20px] 2xl:[30px] font-semibold uppercase">
               AnimeHi
             </span>
           </a>

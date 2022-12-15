@@ -2,15 +2,15 @@ import { Disclosure as HeadlessDisclosure } from '@headlessui/react';
 import classNames from 'classnames';
 import React, { PropsWithChildren } from 'react';
 
-interface DisclosureProps {
+type DisclosureProps = {
   button: JSX.Element;
   className?: string;
   panelClassName?: string;
   buttonClassName?: string;
   defaultOpen?: boolean;
-}
+};
 
-const Disclosure = (props: PropsWithChildren<DisclosureProps>) => {
+const Disclosure = (props: PropsWithChildren<DisclosureProps>): JSX.Element => {
   return (
     <HeadlessDisclosure
       defaultOpen={props.defaultOpen}

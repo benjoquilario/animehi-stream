@@ -6,20 +6,23 @@ import { EpisodesType } from '@/src/../types/types';
 import classNames from 'classnames';
 import { BsPlay } from 'react-icons/bs';
 
-interface EpisodeProps {
+type EpisodeProps = {
   active?: boolean;
   onClick?: () => void;
   episode: EpisodesType;
   watchPage: boolean;
   animeId?: string;
-}
+};
 
-interface EpisodeNumberProps {
+type EpisodeNumberProps = {
   episode: EpisodesType;
   active?: boolean;
-}
+};
 
-const EpisodeNumber: React.FC<EpisodeNumberProps> = ({ episode, active }) => (
+const EpisodeNumber = ({
+  episode,
+  active,
+}: EpisodeNumberProps): JSX.Element => (
   <>
     <div>
       <h2 className="text-white text-sm">Eps {episode?.number}</h2>
@@ -40,14 +43,14 @@ const EpisodeNumber: React.FC<EpisodeNumberProps> = ({ episode, active }) => (
   </>
 );
 
-const Episode: React.FC<EpisodeProps> = ({
+const Episode = ({
   active,
   onClick,
   episode,
   watchPage,
   animeId,
-}) => {
-  return watchPage ? (
+}: EpisodeProps): JSX.Element =>
+  watchPage ? (
     <button
       onClick={onClick}
       className={classNames(
@@ -64,6 +67,5 @@ const Episode: React.FC<EpisodeProps> = ({
       </a>
     </Link>
   );
-};
 
 export default Episode;

@@ -7,21 +7,21 @@ import Episode from '@/components/watch/episode';
 import { useDispatch } from '@/store/store';
 import { setEpisodeId } from '@/store/watch/slice';
 
-interface EpisodeChunkButtonProps {
+type EpisodeChunkButtonProps = {
   title: string;
-}
+};
 
-const EpisodeChunkButton: React.FC<EpisodeChunkButtonProps> = props => {
+const EpisodeChunkButton = ({ title }: EpisodeChunkButtonProps) => {
   return (
     <div className="w-full flex items-center justify-between py-2 px-4 md:px-0">
-      <p className="text-white text-sm">Episode {props.title}</p>
+      <p className="text-white text-sm">Episode {title}</p>
 
       <BsChevronDown className="w-4 h-4 text-white" />
     </div>
   );
 };
 
-interface EpisodeChunkProps {
+type EpisodeChunkProps = {
   episodes: EpisodesType[];
   title: string;
   className?: string;
@@ -30,9 +30,9 @@ interface EpisodeChunkProps {
   open?: boolean;
   watchPage: boolean;
   animeId?: string;
-}
+};
 
-const EpisodeChunk: React.FC<EpisodeChunkProps> = ({
+const EpisodeChunk = ({
   episodes,
   title,
   className,
@@ -41,7 +41,7 @@ const EpisodeChunk: React.FC<EpisodeChunkProps> = ({
   open,
   watchPage,
   animeId,
-}) => {
+}: EpisodeChunkProps): JSX.Element => {
   const dispatch = useDispatch();
 
   const onHandleChangeEpisode = (episodeId: string) => {
