@@ -24,23 +24,22 @@ import {
 import RecentRelease from '@/components/anime/recentRelease';
 import { TitleType } from '@/src/../types/types';
 import Popular from '@/components/anime/popular';
-import { getSeason, parseData } from '../utils';
+import { getSeason } from '../utils';
 import { useDispatch } from '@/store/store';
 import { resetStates } from '@/store/watch/slice';
 import Row from '@/components/anime/row';
 import useMedia from '@/hooks/useMedia';
 import { encodedURI } from '../utils';
-import usePopular from '@/hooks/usePopular';
 import Genres from '@/components/anime/genres';
 import { LoadingBanner } from '@/components/shared/loading';
 
-export interface IRecentResults extends IAnimeResult {
+export type IRecentResults = {
   episodeNumber: number;
   image: string;
   title: TitleType;
   color: string;
   episodeId: string;
-}
+} & IAnimeResult;
 
 const HomePage = () => {
   progressBar.finish();
