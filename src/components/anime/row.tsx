@@ -1,6 +1,6 @@
 import { RecentResponseType, TitleType } from '@/src/../types/types';
 import { useRouter } from 'next/router';
-import Thumbnail from './thumbnail';
+import Thumbnail from '../shared/thumbnail';
 import Link from 'next/link';
 import Image from '../shared/image';
 import ColumnSection from '@/components/shared/column-section';

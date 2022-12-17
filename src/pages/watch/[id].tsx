@@ -76,12 +76,13 @@ const WatchAnime = ({
   const router = useRouter();
   const dispatch = useDispatch();
   const routerRef = useRef(router);
-
+  const [animeItems, setAnimeItems] = useState([]);
   const [animeId, episodeId, provider] = useSelector(store => [
     store.anime.animeId,
     store.watch.episodeId,
     store.watch.provider,
   ]);
+  const animeEpisode = JSON.parse(localStorage.getItem('watch') || '{}');
 
   const animeTitle = animeList?.title?.english || animeList?.title?.romaji;
 
@@ -176,11 +177,14 @@ const WatchAnime = ({
 
       <div className="min-h-screen overflow-x-hidden bg-[#000]">
         <Header />
-        <div className="mt-[48px] md:mt-[64px] px-0 md:px-[4%]">
+        <div className="mt-[48px] mt-[64px] px-0 md:px-[4%]">
           <DetailLinks
             animeId={animeList?.id}
             animeTitle={animeTitle}
-            episodeNumber={currentEpisode?.number}
+            episodeNumber={
+              currentEpisode?.number ||
+              animeList?.nextAiringEpisode?.episode - 1
+            }
           />
           <div className="grid grid-cols-1 md:grid-cols-5 gap-2 h-full w-full">
             {!data && !error ? (
@@ -190,7 +194,10 @@ const WatchAnime = ({
                 poster={currentEpisode?.image || animeList?.cover}
                 className="col-span-full"
                 title={animeTitle}
-                episodeNumber={currentEpisode?.number}
+                episodeNumber={
+                  currentEpisode?.number ||
+                  animeList?.nextAiringEpisode?.episode - 1
+                }
                 nextEpisode={nextEpisode}
                 prevEpisode={prevEpisode}
               />
@@ -200,7 +207,7 @@ const WatchAnime = ({
                 List of episode :
               </div>
 
-              <div className="flex flex-col bg-[#100f0f] md:bg-[#000000eb] overflow-auto pr-[10px] h-[340px] md:h-[545px]">
+              <div className="flex flex-col bg-[#100f0f] md:bg-[#000000eb] overflow-auto pr-[10px] h-[340px] md:h-[575px]">
                 {isLoading && (
                   <LoadingVideo classname="h-5 h-5 md:h-8 md:w-8" />
                 )}
@@ -208,24 +215,30 @@ const WatchAnime = ({
                   <EpisodesButton
                     watchPage={true}
                     episodes={episodes}
-                    activeIndex={currentEpisode?.number}
+                    activeIndex={
+                      currentEpisode?.number ||
+                      animeList?.nextAiringEpisode?.episode - 1
+                    }
                     episodesClassName="grid grid-cols-2 md:grid-cols-1"
                   />
                 ) : (
                   <Episodes
-                    activeIndex={currentEpisode?.number}
+                    activeIndex={
+                      currentEpisode?.number ||
+                      animeList?.nextAiringEpisode?.episode - 1
+                    }
                     episodes={episodes}
                   />
                 )}
               </div>
             </div>
-            <div className="col-start-1 col-span-5">
+            {/* <div className="col-start-1 col-span-5">
               <WatchDetails
                 title={animeList.title}
                 image={animeList.image}
                 description={animeList.description}
               />
-            </div>
+            </div> */}
           </div>
         </div>
       </div>

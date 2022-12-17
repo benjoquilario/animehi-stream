@@ -32,6 +32,8 @@ import useMedia from '@/hooks/useMedia';
 import { encodedURI } from '../utils';
 import Genres from '@/components/anime/genres';
 import { LoadingBanner } from '@/components/shared/loading';
+import ClientOnly from '@/components/shared/client-only';
+import AiringScheduling from '@/components/anime/airing-schedule';
 
 export type IRecentResults = {
   episodeNumber: number;
@@ -101,78 +103,81 @@ const HomePage = () => {
   }, [dispatch]);
 
   return (
-    <div className="min-h-screen overflow-x-hidden bg-[#000] w-full mx-auto max-w-screen-2xl">
-      <Header />
-      <div className="w-full h-full bg-center bg-top overflow-hidden bg-cover px-0 md:px-[4%]">
-        {!trendingLoading ? (
-          <Swiper
-            spaceBetween={30}
-            centeredSlides={true}
-            autoplay={{
-              delay: 2500,
-              disableOnInteraction: false,
-            }}
-            pagination={{
-              clickable: true,
-            }}
-            navigation={true}
-            modules={[Autoplay, Pagination, Navigation]}
-            className="mySwiper"
-          >
-            {trendingAnime?.results?.map((anime: IAnimeInfo, idx: number) => (
-              <SwiperSlide key={idx}>
-                <Banner
-                  cover={anime.cover}
-                  title={anime.title as TitleType}
-                  description={anime.description}
-                  genres={anime.genres}
-                  image={anime.image}
-                  id={anime.id}
+    <ClientOnly>
+      <div className="min-h-screen overflow-x-hidden bg-[#000] w-full mx-auto max-w-screen-2xl">
+        <Header />
+        <div className="w-full h-full bg-center bg-top overflow-hidden bg-cover px-0 md:px-[4%]">
+          {!trendingLoading ? (
+            <Swiper
+              spaceBetween={30}
+              centeredSlides={true}
+              autoplay={{
+                delay: 2500,
+                disableOnInteraction: false,
+              }}
+              pagination={{
+                clickable: true,
+              }}
+              navigation={true}
+              modules={[Autoplay, Pagination, Navigation]}
+              className="mySwiper"
+            >
+              {trendingAnime?.results?.map((anime: IAnimeInfo, idx: number) => (
+                <SwiperSlide key={idx}>
+                  <Banner
+                    cover={anime.cover}
+                    title={anime.title as TitleType}
+                    description={anime.description}
+                    genres={anime.genres}
+                    image={anime.image}
+                    id={anime.id}
+                  />
+                </SwiperSlide>
+              ))}
+            </Swiper>
+          ) : (
+            <LoadingBanner />
+          )}
+        </div>
+        <main className="mt-[40px] px-[4%]">
+          <div className="grid lg:grid-cols-1 xl:grid-cols-[1fr_310px] 2xl:grid-cols-[1fr_340px] gap-4">
+            <div>
+              <RecentRelease title="Recent Updated" />
+              <div className="mt-2 flex flex-col md:flex-row gap-2">
+                <Row
+                  season={currentSeason.season}
+                  animeList={popularThisSeason}
+                  title="Popular this season"
+                  isLoading={popularSeasonLoading}
                 />
-              </SwiperSlide>
-            ))}
-          </Swiper>
-        ) : (
-          <LoadingBanner />
-        )}
-      </div>
-      <main className="mt-[40px] px-[4%]">
-        <div className="grid lg:grid-cols-1 xl:grid-cols-[1fr_310px] 2xl:grid-cols-[1fr_350px] gap-4">
-          <div>
-            <RecentRelease title="Recent Updated" />
-            <div className="mt-2 flex flex-col md:flex-row gap-2">
-              <Row
-                season={currentSeason.season}
-                animeList={popularThisSeason}
-                title="Popular this season"
-                isLoading={popularSeasonLoading}
+                <Row
+                  season={currentSeason.season}
+                  animeList={favouritesThisSeason}
+                  title="Favorite this season"
+                  isLoading={favouritesSeasonLoading}
+                />
+                <Row
+                  season={currentSeason.season}
+                  animeList={favouritesAnime}
+                  title="All time favorite"
+                  isLoading={favouritesAnimeLoading}
+                />
+              </div>
+              <AiringScheduling />
+            </div>
+
+            <div className="overflow-hidden">
+              <Popular
+                isLoading={popularAnimeLoading}
+                popularSeason={popularAnime?.results}
               />
-              <Row
-                season={currentSeason.season}
-                animeList={favouritesThisSeason}
-                title="Favorite this season"
-                isLoading={favouritesSeasonLoading}
-              />
-              <Row
-                season={currentSeason.season}
-                animeList={favouritesAnime}
-                title="All time favorite"
-                isLoading={favouritesAnimeLoading}
-              />
+              <Genres />
             </div>
           </div>
-
-          <div className="overflow-hidden">
-            <Popular
-              isLoading={popularAnimeLoading}
-              popularSeason={popularAnime?.results}
-            />
-            <Genres />
-          </div>
-        </div>
-        {/* <Row title="Popular" anime={popular} isLoading={false} /> */}
-      </main>
-    </div>
+          {/* <Row title="Popular" anime={popular} isLoading={false} /> */}
+        </main>
+      </div>
+    </ClientOnly>
   );
 };
 

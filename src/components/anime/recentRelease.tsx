@@ -1,5 +1,5 @@
 import useSWR from 'swr';
-import Thumbnail from './thumbnail';
+import Thumbnail from '@/components/shared/thumbnail';
 import { AiOutlineArrowRight, AiOutlineArrowLeft } from 'react-icons/ai';
 import { IRecentResults } from '@/pages/index';
 import { BASE_URL } from '@/utils/config';
@@ -15,7 +15,7 @@ const RecentRelease = ({ title }: RecentReleaseProps): JSX.Element => {
 
   const fetcher = async (page: number) =>
     fetch(
-      `${BASE_URL}/meta/anilist/recent-episodes?page=${page}&perPage=10`
+      `${BASE_URL}/meta/anilist/recent-episodes?page=${page}&perPage=12`
     ).then(res => res.json());
 
   const { data, error } = useSWR([pageNumber], fetcher, {
@@ -25,7 +25,7 @@ const RecentRelease = ({ title }: RecentReleaseProps): JSX.Element => {
   useEffect(() => {
     if (!data && !error) return;
 
-    setRecent(data.results);
+    setRecent(data?.results);
   }, [data, error, pageNumber]);
 
   return (
@@ -54,19 +54,20 @@ const RecentRelease = ({ title }: RecentReleaseProps): JSX.Element => {
       </div>
       <div
         // ref={rowRef}
-        className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 relative overflow-hidden"
+        className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3 relative overflow-hidden"
       >
         {!data && !error
-          ? Array.from(Array(10), (_, i) => <RecentLoading key={i} />)
+          ? Array.from(Array(12), (_, i) => <RecentLoading key={i} />)
           : recent?.map((anime, index) => (
               <Thumbnail
                 key={index}
                 id={anime?.id}
-                episodeNumber={anime?.episodeNumber}
+                episodeNumber={anime.episodeNumber}
                 image={anime?.image}
                 title={anime?.title}
                 episodeId={anime?.episodeId}
                 color={anime?.color}
+                isRecent={true}
               />
             ))}
       </div>
@@ -76,7 +77,7 @@ const RecentRelease = ({ title }: RecentReleaseProps): JSX.Element => {
 
 const RecentLoading = () => (
   <div className="relatve flex flex-col animate-pulse">
-    <div className="md:w-[174px] md:min-w-[174px] h-[205px] md:h-[220px] bg-[#141313] rounded-lg"></div>
+    <div className="md:w-[144px] md:min-w-[153px] h-[210px] md:h-[229px] bg-[#141313] rounded-lg"></div>
     <div className="h-4 w-full bg-[#141313] rounded-lg mt-2"></div>
   </div>
 );

@@ -4,8 +4,21 @@ import Hls from 'hls.js';
 import { useSelector } from '@/store/store';
 import { SourceType } from '@/store/watch/slice';
 import progressBar from '../shared/loading';
+import artplayerPluginHlsQuality from 'artplayer-plugin-hls-quality';
 
-const VideoPlayer = ({ option, getInstance, poster, title }: any) => {
+type VideoPlayerProps = {
+  option?: any;
+  getInstance?: (...args: any) => void;
+  poster: string;
+  title: string;
+};
+
+const VideoPlayer = ({
+  option,
+  getInstance,
+  poster,
+  title,
+}: VideoPlayerProps) => {
   progressBar.finish();
   const artRef = useRef<HTMLDivElement | null>(null);
   const [videoLink, provider] = useSelector(store => [
@@ -55,8 +68,8 @@ const VideoPlayer = ({ option, getInstance, poster, title }: any) => {
           }
         },
       },
-      title: title,
       quality: handleQuality(),
+      title: title,
       autoSize: false,
       autoOrientation: false,
       volume: 0.5,
@@ -68,7 +81,7 @@ const VideoPlayer = ({ option, getInstance, poster, title }: any) => {
       screenshot: false,
       setting: true,
       loop: false,
-      flip: true,
+      flip: false,
       playbackRate: true,
       aspectRatio: true,
       fullscreen: true,

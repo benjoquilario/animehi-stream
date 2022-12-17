@@ -20,7 +20,7 @@ const Episodes = ({ activeIndex, episodes }: EpisodesProps): JSX.Element => {
           <button
             onClick={() => dispatch(setEpisodeId(episode.id))}
             className={classNames(
-              'flex flex-row justify-between items-center py-2 px-4 w-full text-left hover:bg-[#100f0f] transition',
+              'flex flex-row justify-between items-center py-2 px-4 w-full text-left hover:bg-[#000] transition',
               activeIndex === episode.number && 'bg-[#6A55FA]'
             )}
           >

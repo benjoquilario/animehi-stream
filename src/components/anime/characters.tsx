@@ -9,14 +9,13 @@ export type CharactersProps = {
 };
 
 const Characters = ({ characters, color }: CharactersProps): JSX.Element => (
-  <div className="w-full h-full mt-4">
-    <h3 className="text-white text-md mb-3">Characters & Voice Actors</h3>
-    <ul className="relative grid grid-cols-fill-character lg:grid-cols-2 gap-1 w-full h-full">
+  <div>
+    <div className="relative grid grid-cols-fill-character lg:grid-cols-2 gap-2 w-full h-full">
       {characters.slice(0, 10)?.map((character, index) => {
         return (
-          <li
+          <div
             key={index}
-            className="bg-[#100f0f] flex w-full h-[64px] rounded gap-4"
+            className="bg-[#100f0f] flex w-full h-[68px] rounded gap-4"
           >
             <div className="flex-1 grid grid-cols-[70px_auto] gap-3">
               <Image
@@ -60,10 +59,10 @@ const Characters = ({ characters, color }: CharactersProps): JSX.Element => (
                 containerclassname="relative"
               />
             </div>
-          </li>
+          </div>
         );
       })}
-    </ul>
+    </div>
   </div>
 );
 

@@ -22,7 +22,7 @@ export interface IInitialState {
   sources: SourceType[];
   prevWatchId: number;
   currentSource: string;
-  videoLink: string;
+  videoLink?: string;
   provider: string;
   watchList: WatchState[];
   setting: {
@@ -37,9 +37,9 @@ const initialState: IInitialState = {
   episodeId: '',
   sources: [
     {
-      url: 'https://example.com/404/',
-      quality: '720p',
+      url: '',
       isM3U8: true,
+      quality: '',
     },
   ],
   currentData: '',
@@ -92,11 +92,11 @@ export const watchSlice = createSlice({
       state: Draft<IInitialState>,
       action: PayloadAction<SourceType[]>
     ) => {
-      if (!action.payload || action.payload.length === 0) {
+      if (!action.payload) {
         state.sources = initialState.sources;
       } else {
         state.sources = action.payload;
-        state.videoLink = `${CORS_PROXY}${state.sources[1]?.url}`;
+        state.videoLink = `${CORS_PROXY}${state.sources[1].url}`;
       }
     },
     setSetting: (state, action) => {

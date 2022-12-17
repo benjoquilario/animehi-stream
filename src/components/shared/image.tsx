@@ -5,6 +5,16 @@ type ImageProps = {
   containerclassname?: string;
 } & NextImageProps;
 
+const variants = {
+  hidden: {
+    opacity: 0,
+  },
+
+  visible: {
+    opacity: 1,
+  },
+};
+
 const Image: React.FC<ImageProps> = ({ ...props }) => {
   const { containerclassname } = props;
 

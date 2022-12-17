@@ -47,7 +47,7 @@ const Video = ({
   return (
     <div
       className={classNames(
-        'flex flex-col col-start-1 col-end-6 md:col-start-2 md:col-end-6 w-full h-[394px] md:h-[550px] min-h-[394px] md:min-h-[550px]',
+        'flex flex-col col-start-1 col-end-6 md:col-start-2 md:col-end-6 w-full h-[394px] md:h-[620px] min-h-[394px] md:min-h-[620px]',
         className
       )}
     >
@@ -61,8 +61,10 @@ const Video = ({
             <p className="text-[#6A55FA] mb-2">
               {title} Episode {episodeNumber}
             </p>
-            <p>Switch to alternate provider or click episode</p>
-            <p>again in case of error.</p>
+            <p>
+              Click <b>Episode</b> again or Switch to alternate
+            </p>
+            <p>provider again in case of error.</p>
           </div>
         </div>
         <div className="mt-2 flex justify-between items-start w-full">

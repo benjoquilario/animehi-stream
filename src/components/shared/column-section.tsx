@@ -26,55 +26,53 @@ const ColumnSection = ({
   status,
   releaseDate,
   color,
-}: ColumnSectionProps) => {
-  return (
-    <li className="flex h-22 items-center py-2 px-4 odd:bg-[#0d0d0d] even:bg-[#111]">
-      <div className="w-12 shrink-0">
-        <Link href={`/anime/${animeId}`}>
-          <a className="">
-            <Image
-              containerclassname="relative h-[72px] w-[48px]"
-              src={`${image}`}
-              alt={`${title.english || title.romaji}`}
-              layout="fill"
-              objectFit="cover"
-              placeholder="blur"
-              blurDataURL={`data:image/svg+xml;base64,${base64SolidImage(
-                color as string
-              )}`}
-            />
-          </a>
-        </Link>
+}: ColumnSectionProps) => (
+  <li className="flex h-22 items-center py-2 px-4 odd:bg-[#0d0d0d] even:bg-[#111]">
+    <div className="w-12 shrink-0">
+      <Image
+        containerclassname="relative h-[72px] w-[48px]"
+        src={`${image}`}
+        alt={`${title.english || title.romaji}`}
+        layout="fill"
+        objectFit="cover"
+        placeholder="blur"
+        blurDataURL={`data:image/svg+xml;base64,${base64SolidImage(
+          color as string
+        )}`}
+      />
+    </div>
+    <div className="pl-2 self-start">
+      <style jsx>{`
+        .hover-text:hover {
+          color: ${color ? color : '#6a55fa'};
+        }
+      `}</style>
+      <Link href={`/anime/${animeId}`}>
+        <a
+          className={classNames(
+            'hover-text text-base font-semibold text-white transition duration-300 line-clamp-1'
+          )}
+        >
+          {title.english || title.romaji}
+        </a>
+      </Link>
+      <div className="flex line-clamp-1 items-center space-x-2 text-sm text-slate-300">
+        <span>{type}</span>
+        <span className="w-1.5 h-1.5 bg-[#6a55fa] rounded-full inline-block"></span>
+        <span>{releaseDate}</span>
+        <span className="w-1.5 h-1.5 bg-[#6a55fa] rounded-full inline-block"></span>
+        <span>{status}</span>
       </div>
-      <div className="pl-2 self-start">
-        <Link href={`/anime/${animeId}`}>
-          <a
-            className={classNames(
-              'text-base font-semibold text-white transition duration-300 line-clamp-1',
-              `hover:[${color}]`
-            )}
-          >
-            {title.english || title.romaji}
-          </a>
-        </Link>
-        <div className="flex line-clamp-1 items-center space-x-2 text-sm text-slate-300">
-          <span>{type}</span>
-          <span className="w-1.5 h-1.5 bg-[#6a55fa] rounded-full inline-block"></span>
-          <span>{releaseDate}</span>
-          <span className="w-1.5 h-1.5 bg-[#6a55fa] rounded-full inline-block"></span>
-          <span>{status}</span>
-        </div>
-        <div className="line-clamp-1 items-center space-x-2 text-sm text-slate-300">
-          {genres?.map((genre: string) => (
-            <>
-              <span>{genre}</span>
-              <span className="w-1.5 h-1.5 bg-[#6a55fa] rounded-full inline-block"></span>
-            </>
-          ))}
-        </div>
+      <div className="line-clamp-1 items-center space-x-2 text-sm text-slate-300">
+        {genres?.map((genre: string) => (
+          <React.Fragment key={genre}>
+            <span>{genre}</span>
+            <span className="w-1.5 h-1.5 bg-[#6a55fa] rounded-full inline-block"></span>
+          </React.Fragment>
+        ))}
       </div>
-    </li>
-  );
-};
+    </div>
+  </li>
+);
 
 export default React.memo(ColumnSection);
