@@ -2,8 +2,9 @@ import React, { useEffect, useRef, useState } from 'react';
 import Artplayer from 'artplayer';
 import Hls from 'hls.js';
 import { useSelector } from '@/store/store';
-import { SourceType } from '@/store/watch/slice';
-import progressBar from '../shared/loading';
+// import { SourceType } from '@/store/watch/slice';
+import progressBar from '@/components/shared/loading';
+import { IVideo } from '@consumet/extensions/dist/models/types';
 import artplayerPluginHlsQuality from 'artplayer-plugin-hls-quality';
 
 type VideoPlayerProps = {
@@ -28,7 +29,7 @@ const VideoPlayer = ({
   const sources = useSelector(store => store.watch.sources);
 
   const handleQuality = () => {
-    return sources?.map((source: SourceType) => {
+    return sources?.map((source: IVideo) => {
       if (source.quality === '720p')
         return {
           default: true,

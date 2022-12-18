@@ -23,6 +23,7 @@ import { NextSeo } from 'next-seo';
 import DetailLinks from '@/components/shared/detail-links';
 import WatchDetails from '@/components/watch/details';
 import { IAnimeInfo, META } from '@consumet/extensions';
+import { ISource } from '@consumet/extensions/dist/models/types';
 import useEpisodes from '@/hooks/useEpisodes';
 import { EpisodesType } from '@/src/../types/types';
 
