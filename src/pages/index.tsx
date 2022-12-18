@@ -72,7 +72,7 @@ const HomePage = () => {
   const { data: popularAnime, isLoading: popularAnimeLoading } = useMedia({
     type: TYPE.ANIME,
     page: 1,
-    perPage: 9,
+    perPage: 10,
     format: FORMAT.TV,
     sort: encodedURI(SORT.POPULARITY_DESC),
   });
@@ -139,11 +139,12 @@ const HomePage = () => {
             <LoadingBanner />
           )}
         </div>
+
         <main className="mt-[40px] px-[4%]">
-          <div className="grid lg:grid-cols-1 xl:grid-cols-[1fr_310px] 2xl:grid-cols-[1fr_340px] gap-4">
-            <div>
+          <div className="flex flex-col space-y-6 md:grid lg:grid-cols-1 xl:grid-cols-[1fr_310px] 2xl:grid-cols-[1fr_340px] md:gap-4">
+            <div className="space-y-6">
               <RecentRelease title="Recent Updated" />
-              <div className="mt-2 flex flex-col md:flex-row gap-2">
+              <div className="flex flex-col md:flex-row gap-2">
                 <Row
                   season={currentSeason.season}
                   animeList={popularThisSeason}

@@ -1,8 +1,4 @@
-import { RecentResponseType, TitleType } from '@/src/../types/types';
-import { useRouter } from 'next/router';
-import Thumbnail from '../shared/thumbnail';
-import Link from 'next/link';
-import Image from '../shared/image';
+import { TitleType } from '@/src/../types/types';
 import ColumnSection from '@/components/shared/column-section';
 import { IAnimeInfo, IAnimeResult, ISearch } from '@consumet/extensions';
 import React from 'react';

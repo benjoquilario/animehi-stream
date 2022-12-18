@@ -1,9 +1,20 @@
 import React from 'react';
+import classNames from 'classnames';
 
-const TitleName = ({ title }: { title: string }): JSX.Element => {
+type TitleNameProps = {
+  title: string;
+  classNames?: string;
+};
+
+const TitleName = (props: TitleNameProps): JSX.Element => {
   return (
-    <h2 className="mb-2 text-white text-base md:text-[20px] uppercase font-semibold">
-      {title}
+    <h2
+      className={classNames(
+        'mb-2 text-white text-base md:text-[20px] uppercase font-semibold',
+        props.classNames
+      )}
+    >
+      {props.title}
     </h2>
   );
 };

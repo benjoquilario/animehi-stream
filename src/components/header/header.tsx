@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import classNames from 'classnames';
 import logo from '../../../public/animehi.svg';
@@ -6,10 +6,61 @@ import h from '../../../public/h.png';
 import Image from '../shared/image';
 
 const Header = () => {
+  const [isFixed, setIsFixed] = useState(false);
+
+  useEffect(() => {
+    const doc = document.documentElement;
+
+    let currScroll: number;
+    let prevScroll = window.scrollY || doc.scrollTop;
+    let currDirection = 0;
+    let prevDirection = 0;
+
+    let threshold = 200;
+    let toggle: boolean;
+
+    const toggleHeader = () => {
+      if (currDirection === 2 && currScroll > threshold) {
+        setIsFixed(true);
+      } else if (currDirection === 1) {
+        setIsFixed(false);
+      } else {
+        toggle = false;
+      }
+
+      return toggle;
+    };
+
+    const checkScroll = () => {
+      currScroll = window.scrollY || doc.scrollTop;
+
+      if (currScroll > prevScroll) {
+        currDirection = 2;
+      } else {
+        currDirection = 1;
+      }
+
+      if (currDirection !== prevDirection) {
+        toggle = toggleHeader();
+      }
+
+      if (toggle) {
+        prevDirection = currDirection;
+      }
+
+      prevScroll = currScroll;
+    };
+
+    window.addEventListener('scroll', checkScroll);
+
+    return () => window.removeEventListener('scroll', checkScroll);
+  });
+
   return (
     <header
       className={classNames(
-        'absolute top-0 left-0 w-full z-20 h-[48px] md:h-[60px] 2xl:h-[80px] bg-[#0d0d0d] bg-gradient-to-b from-[#000000b3] to-[#00000000]'
+        'fixed left-0 w-full z-50 h-[52px] md:h-[67px] 2xl:h-[80px] bg-[#0d0d0d] bg-gradient-to-b from-[#000000b3] to-[#00000000] transition-all',
+        isFixed ? 'top-[-56px]' : 'top-0'
       )}
     >
       <div

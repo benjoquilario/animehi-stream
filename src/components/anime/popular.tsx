@@ -33,6 +33,11 @@ const Popular = ({ popularSeason, isLoading }: PopularProps): JSX.Element =>
               color={anime.color as string}
             />
           ))}
+          <li>
+            <button className="bg-[#111] text-white w-full flex justify-center items-center py-3">
+              View More
+            </button>
+          </li>
         </ul>
       </div>
     </div>

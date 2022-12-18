@@ -24,10 +24,10 @@ const Banner: React.FC<IBannerProps> = ({
   id,
   image,
 }) => (
-  <div className="relative w-full h-[396px] md:h-[430px] min-h-[396px] md:min-h-[430px] 2xl:h-[620px] 2xl:min-h-[620px]">
+  <div className="relative w-full h-[396px] md:h-[450px] min-h-[396px] md:min-h-[450px] 2xl:h-[620px] 2xl:min-h-[620px]">
     <div className="relative flex items-center w-full h-full shrink-0">
       <span className="banner-linear absolute top-0 left-0 w-full h-[101%] z-[20]"></span>
-      <div className="absolute pl-[4%] md:pl-0 pr-[1rem] left-0 z-[20] w-[80%] md:w-[45%] bottom-[15%]">
+      <div className="absolute pl-[4%] md:pl-0 pr-[1rem] left-0 z-[20] w-[80%] md:w-[40%] bottom-[15%]">
         <h1 className="text-white text-xl font-bold line-clamp-2 sm:text-2xl md:text-3xl lg:text-4xl xl:text-5xl 2xl:text-6xl">
           {title?.english || title?.romaji}
         </h1>
@@ -62,7 +62,7 @@ const Banner: React.FC<IBannerProps> = ({
         </div>
       </div>
 
-      <div className="absolute right-0 grow z-[2] md:z-40 h-full md:h-[290px] w-full md:w-[50%]">
+      <div className="absolute right-0 grow z-[2] md:z-40 h-full md:h-[320px] w-full md:w-[60%]">
         <div
           style={{ backgroundImage: `url("${cover || image}")` }}
           className="relative overflow-hidden bg-no-repeat	bg-center	w-full h-full bg-cover rounded-md mt-4"
