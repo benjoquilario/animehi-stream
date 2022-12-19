@@ -105,7 +105,7 @@ const WatchAnime = ({
 
   const currentEpisodeIndex = useMemo(
     () =>
-      episodes?.findIndex((episode: EpisodesType) => episode.id === episodeId),
+      episodes?.findIndex((episode: EpisodesType) => episode?.id === episodeId),
     [episodes, episodeId]
   );
 

@@ -6,21 +6,12 @@ import Header from '@/components/header/header';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Autoplay, Pagination, Navigation } from 'swiper';
 import Banner from '@/components/anime/banner';
-import { InferGetServerSidePropsType, NextPage } from 'next';
 import progressBar from '@/components/shared/loading';
 import {
   IAnimeInfo,
   IAnimeResult,
-  ISearch,
 } from '@consumet/extensions/dist/models/types';
-import { META, ANIME } from '@consumet/extensions';
-import {
-  GOGO_PROVIDER,
-  ZORO_PROVIDER,
-  TYPE,
-  FORMAT,
-  SORT,
-} from '@/utils/config';
+import { TYPE, FORMAT, SORT } from '@/utils/config';
 import RecentRelease from '@/components/anime/recentRelease';
 import { TitleType } from '@/src/../types/types';
 import Popular from '@/components/anime/popular';
