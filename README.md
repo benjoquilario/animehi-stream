@@ -1,13 +1,13 @@
 <p align="center">
-  <div style="display: flex; align-items: center; justify-content: center;">
+  <div align="center">
     <a href="https://animehi-stream.vercel.app/">
-      <img alt="AnimeHi" src="https://animehi-stream.vercel.app/_next/static/media/animehi.9fc8dd87.svg" width="60" height="54" />
+      <img alt="AnimeHi" src="https://animehi-stream.vercel.app/_next/static/media/animehi.9fc8dd87.svg" width="49" height="52" />
     </a>
-    <a href="https://animehi-stream.vercel.app/" style="margin-left: -4px">
-      <img alt="AnimeHi" src="https://animehi-stream.vercel.app/_next/image?url=%2F_next%2Fstatic%2Fmedia%2Fh.0c186236.png&w=1920&q=75" width="65" height="61" />
+    <a href="https://animehi-stream.vercel.app/" style="margin-left: -10px">
+      <img alt="AnimeHi" src="https://animehi-stream.vercel.app/_next/image?url=%2F_next%2Fstatic%2Fmedia%2Fh.0c186236.png&w=1920&q=75" width="65" height="52" />
     </a>
   </div>
-    <h3>AnimeHi - Watch animes without ads</h3>
+    <h3 align="center">AnimeHi - Watch animes without ads</h3>
 </p>
 <p align="center">
     AnimeHi is an open-source anime streaming service that uses the consumet API, built using NextJS and Tailwind CSS. It lets you search, watch animes without any ads with a beautiful user interface.
@@ -20,7 +20,7 @@
     <a href="https://www.gnu.org/licenses/agpl-3.0.en.html">
       <img src="https://img.shields.io/github/issues/benjoquilario/animehi-stream" alt="Github Issues">
     </a>
-     <a href="https://github.com/Ashanime/Ashanime-App">
+     <a href="https://github.com/benjoquilario/animehi-stream>
       <img src="https://img.shields.io/github/forks/benjoquilario/animehi-stream" alt="Github Forks">
   </a>
   <a href="https://github.com/benjoquilario/animehi-stream/stargazers" target="blank">
@@ -60,7 +60,7 @@
   <img src="screenshots/profile.png" />
 </a>
 
-Try the App: [Insider](https://insider.vercel.app/)
+Try the App: [AnimeHI](https://insider.vercel.app/)
 
 ### Acknowledgements
 
@@ -77,6 +77,8 @@ Try the App: [Insider](https://insider.vercel.app/)
 </p>
 
 This app would not have been possible without the kind and rapid support of the experts over at [Consumet](https://github.com/consumet/). Ashanime was built using the Consumet API to supply 99% of the data.
+
+Credits to the person who made the logo [Vergel](https://github.com/vergelmacayan)
 
 ### Features
 
