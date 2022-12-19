@@ -60,7 +60,7 @@
   <img src="screenshots/profile.png" />
 </a>
 
-Try the App: [AnimeHI](https://insider.vercel.app/)
+Try the App: [AnimeHI](https://animehi-stream.vercel.app/)
 
 ### Acknowledgements
 
@@ -76,7 +76,7 @@ Try the App: [AnimeHI](https://insider.vercel.app/)
   </a>
 </p>
 
-This app would not have been possible without the kind and rapid support of the experts over at [Consumet](https://github.com/consumet/). Ashanime was built using the Consumet API to supply 99% of the data.
+This app would not have been possible without the kind and rapid support of the experts over at [Consumet](https://github.com/consumet/). AnimeHI was built using the Consumet API to supply 99% of the data.
 
 Credits to the person who made the logo [Vergel](https://github.com/vergelmacayan)
 
