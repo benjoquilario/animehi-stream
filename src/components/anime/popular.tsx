@@ -2,12 +2,13 @@ import { TitleType } from '@/src/../types/types';
 import {
   IAnimeInfo,
   IAnimeResult,
+  ISearch,
 } from '@consumet/extensions/dist/models/types';
 import React from 'react';
 import ColumnSection from '../shared/column-section';
 
 export type PopularProps = {
-  popularSeason?: IAnimeResult[] | IAnimeInfo[];
+  popularSeason?: ISearch<IAnimeResult | IAnimeInfo>;
   isLoading: boolean;
 };
 
@@ -20,7 +21,7 @@ const Popular = ({ popularSeason, isLoading }: PopularProps): JSX.Element =>
 
       <div className="bg-[#100f0f]">
         <ul>
-          {popularSeason?.map((anime, index) => (
+          {popularSeason?.results?.map((anime, index) => (
             <ColumnSection
               image={anime.image}
               title={anime.title as TitleType}

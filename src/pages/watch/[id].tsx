@@ -83,7 +83,7 @@ const WatchAnime = ({
     store.watch.episodeId,
     store.watch.provider,
   ]);
-  const animeEpisode = JSON.parse(localStorage.getItem('watch') || '{}');
+  // const animeEpisode = JSON.parse(localStorage.getItem('watch') || '{}');
 
   const animeTitle = animeList?.title?.english || animeList?.title?.romaji;
 
@@ -178,7 +178,7 @@ const WatchAnime = ({
 
       <div className="min-h-screen overflow-x-hidden bg-[#000]">
         <Header />
-        <div className="mt-[48px] mt-[64px] px-0 md:px-[4%]">
+        <div className="mt-[48px] md:mt-[64px] px-0 md:px-[4%]">
           <DetailLinks
             animeId={animeList?.id}
             animeTitle={animeTitle}

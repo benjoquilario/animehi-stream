@@ -10,7 +10,7 @@
     <h3 align="center">AnimeHi - Watch animes without ads</h3>
 </p>
 <p align="center">
-    AnimeHi is an open-source anime streaming service that uses the consumet API, built using NextJS and Tailwind CSS. It lets you search, watch animes without any ads with a beautiful user interface.
+    AnimeHi is an open-source anime streaming service that uses the consumet API, built using NextJS with typescript and Tailwind CSS. It lets you search, watch animes without any ads with a beautiful user interface.
  </p>
 
 <p align="center">
@@ -20,12 +20,9 @@
     <a href="https://www.gnu.org/licenses/agpl-3.0.en.html">
       <img src="https://img.shields.io/github/issues/benjoquilario/animehi-stream" alt="Github Issues">
     </a>
-     <a href="https://github.com/benjoquilario/animehi-stream>
-      <img src="https://img.shields.io/github/forks/benjoquilario/animehi-stream" alt="Github Forks">
-  </a>
-  <a href="https://github.com/benjoquilario/animehi-stream/stargazers" target="blank">
-    <img src="https://img.shields.io/github/stars/benjoquilario/animehi-stream?style=flat-square" alt="animeHi stars"/>
-  </a>
+     <a href="https://github.com/benjoquilario/animehi-stream">
+      <img src="https://img.shields.io/github/forks/benjoquilario/animehi-stream" alt="Github Forks" />
+    </a>
 </p>
 
 </br>
@@ -38,7 +35,7 @@
     <img src="https://img.shields.io/github/package-json/dependency-version/benjoquilario/animehi-stream/dev/tailwindcss?filename=package.json&color=37b8f1&logo=tailwindcss&labelColor=0b1120&style=flat-square&logoColor=38bdf8">
   </a>
   <a href="https://17.reactjs.org/">
-    <img src="https://img.shields.io/github/package-json/dependency-version/chirag-droid/animeflix/react?filename=frontend/package.json&color=5fd9fb&logo=react&labelColor=222435&style=flat-square">
+    <img src="https://img.shields.io/github/package-json/dependency-version/benjoquilario/animehi-stream/react?filename=frontend/package.json&color=5fd9fb&logo=react&labelColor=222435&style=flat-square">
   </a>
   <a href="https://redux-toolkit.js.org/">
     <img src="https://img.shields.io/github/package-json/dependency-version/benjoquilario/animehi-stream/@reduxjs/toolkit?filename=package.json&label=redux-toolkit&color=593d88&logo=redux&labelColor=242526&style=flat-square&logoColor=b58bf7">
@@ -74,11 +71,14 @@ Try the App: [AnimeHI](https://animehi-stream.vercel.app/)
   <a href="https://gogoanime.bid">
     <img src="https://img.shields.io/badge/GogoAnime-00a651.svg?style=flat-square">
   </a>
+  <a href="https://github.com/Enime-Project/api.enime.moe">
+    <img src="https://img.shields.io/badge/Enime-Projects/api.enime.moe-333.svg?style=flat-square">
+  </a>
 </p>
 
-This app would not have been possible without the kind and rapid support of the experts over at [Consumet](https://github.com/consumet/). AnimeHI was built using the Consumet API to supply 99% of the data.
+This app would not have been possible without the kind and rapid support of the experts over at [Consumet](https://github.com/consumet/) and [Enime](https://github.com/Enime-Project/api.enime.moe). AnimeHI was built using the Consumet API and Enime API to supply 99% of the data.
 
-Credits to the person who made the logo [Vergel](https://github.com/vergelmacayan)
+Credits to the person who made the logo [Vergel](https://github.com/vergelmacayan).
 
 ### Features
 
@@ -92,7 +92,7 @@ Credits to the person who made the logo [Vergel](https://github.com/vergelmacaya
 - Airing Scheduled
 - Advance Search and filter genres
 - Fully Responsive
-- ...enough talk see it yourself
+- ...enough talk [see it yourself](https://animehi-stream.vercel.app/)
 
 ### Coming Features
 
@@ -108,7 +108,7 @@ Credits to the person who made the logo [Vergel](https://github.com/vergelmacaya
 
 Your ideas, translations, design changes, code cleaning, real heavy code changes, or any help are always welcome. The more is the contribution, the better it gets.
 
-[Pull requests](https://github.com/benjoquilario/insider/pulls) will be reviewed
+[Pull requests](https://github.com/benjoquilario/anime-stream/pulls) will be reviewed
 
 ## Author
 
@@ -118,6 +118,6 @@ Your ideas, translations, design changes, code cleaning, real heavy code changes
 - Github: [@benjoquilario](https://github.com/benjoquilario)
 - Portfolio: [@benjoquilario](https://benjoquilario.me)
 
-<h3 align="center">
+<h4 align="center">
 AnimeHi needs a ⭐️ from you
 </h3>

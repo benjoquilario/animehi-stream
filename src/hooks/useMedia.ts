@@ -1,5 +1,6 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { BASE_URL } from '@/utils/config';
+import { META } from '@consumet/extensions';
 import useSWR from 'swr';
 import { IAnimeInfo, IAnimeResult, ISearch } from '@consumet/extensions';
 
@@ -9,11 +10,11 @@ interface IUseMediaProps {
   perPage: number;
   season?: string;
   format: string;
-  sort: string;
+  sort: string[];
   year?: number;
 }
 
-const useMedia = ({
+const useMedia = async ({
   type,
   page,
   perPage,
@@ -22,32 +23,15 @@ const useMedia = ({
   sort,
   year,
 }: IUseMediaProps) => {
-  const fetcher = async (
-    type: string,
-    page: number,
-    perPage: number,
-    season: string,
-    format: string,
-    sort: string,
-    year: number
-  ) =>
-    fetch(
-      `${BASE_URL}/meta/anilist/advanced-search?page=${page}&sort=${sort}&type=${type}&format=${format}&perPage=${perPage}${
-        season ? `&season=${season}` : ''
-      }${year ? `&year=${year}` : ''}`
-    ).then(res => res.json());
+  const anilist = new META.Anilist();
 
-  const { data, error } = useSWR<ISearch<IAnimeResult | IAnimeInfo>>(
-    [type, page, perPage, season, format, sort, year],
-    fetcher,
-    {
-      revalidateOnFocus: false,
-    }
+  // prettier-ignore
+  const data: ISearch<IAnimeResult | IAnimeInfo> = await anilist.advancedSearch(undefined,type,page,perPage,format,
+    sort, undefined, undefined, year, undefined, season
   );
 
   return {
     data,
-    isLoading: !data && !error,
   };
 };
 

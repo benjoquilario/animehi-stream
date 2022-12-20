@@ -1,12 +1,35 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
+import { META } from '@consumet/extensions';
+import { IAnimeResult } from '@consumet/extensions/dist/models/types';
 import Link from 'next/link';
 import classNames from 'classnames';
 import logo from '../../../public/animehi.svg';
 import h from '../../../public/h.png';
 import Image from '../shared/image';
+import { FaRandom } from 'react-icons/fa';
+import {
+  AiOutlineFileSearch,
+  AiFillHome,
+  AiOutlineSearch,
+  AiOutlineArrowRight,
+} from 'react-icons/ai';
+import NavLink from '../shared/nav-links';
+import Button from '../shared/button';
+import Input from '../shared/input';
+import { debounce } from 'lodash';
+import ColumnSection from '../shared/column-section';
+import { TitleType } from 'types/types';
+import { isMobile } from 'react-device-detect';
+import useClickOutside from '@/hooks/useClickOutside';
 
 const Header = () => {
+  const anilist = new META.Anilist();
   const [isFixed, setIsFixed] = useState(false);
+  const [isSearchOpen, setIsSearchOpen] = useState(false);
+  const [resultsOpen, setResultsOpen] = useState(false);
+  const searchRef = useRef<HTMLInputElement | null>(null);
+  const ref = useRef<HTMLDivElement | null>(null);
+  const [searchResults, setSearchResults] = useState<IAnimeResult[] | []>([]);
 
   useEffect(() => {
     const doc = document.documentElement;
@@ -20,13 +43,9 @@ const Header = () => {
     let toggle: boolean;
 
     const toggleHeader = () => {
-      if (currDirection === 2 && currScroll > threshold) {
-        setIsFixed(true);
-      } else if (currDirection === 1) {
-        setIsFixed(false);
-      } else {
-        toggle = false;
-      }
+      if (currDirection === 2 && currScroll > threshold) setIsFixed(true);
+      else if (currDirection === 1) setIsFixed(false);
+      else toggle = false;
 
       return toggle;
     };
@@ -34,19 +53,12 @@ const Header = () => {
     const checkScroll = () => {
       currScroll = window.scrollY || doc.scrollTop;
 
-      if (currScroll > prevScroll) {
-        currDirection = 2;
-      } else {
-        currDirection = 1;
-      }
+      if (currScroll > prevScroll) currDirection = 2;
+      else currDirection = 1;
 
-      if (currDirection !== prevDirection) {
-        toggle = toggleHeader();
-      }
+      if (currDirection !== prevDirection) toggle = toggleHeader();
 
-      if (toggle) {
-        prevDirection = currDirection;
-      }
+      if (toggle) prevDirection = currDirection;
 
       prevScroll = currScroll;
     };
@@ -56,6 +68,35 @@ const Header = () => {
     return () => window.removeEventListener('scroll', checkScroll);
   });
 
+  useEffect(() => {
+    searchRef?.current?.focus();
+  }, [isSearchOpen]);
+
+  const debouncedSearch = useRef(
+    debounce(async (query: string) => {
+      const search = await anilist.search(query, 1, 6);
+
+      if (!query) return;
+
+      setResultsOpen(true);
+      setSearchResults(search.results);
+    }, 350)
+  ).current;
+
+  useEffect(() => {
+    return () => {
+      debouncedSearch.cancel();
+    };
+  }, [debouncedSearch]);
+
+  const handleInputChange = async (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    debouncedSearch(event.target.value);
+  };
+
+  useClickOutside(ref, () => setResultsOpen(false));
+
   return (
     <header
       className={classNames(
@@ -63,13 +104,9 @@ const Header = () => {
         isFixed ? 'top-[-56px]' : 'top-0'
       )}
     >
-      <div
-        className={classNames(
-          'flex items-center gap-4 h-[48px] md:h-[60px] 2xl:h-[80px] px-[4%]  mx-auto max-w-screen-2xl'
-        )}
-      >
+      <div className="flex items-center gap-4 h-[52px] md:h-[67px] 2xl:h-[80px] px-[4%] w-full mx-auto max-w-screen-2xl">
         <Link href="/">
-          <a className={classNames('flex items-center text-white z-10')}>
+          <a className="flex items-center text-white z-10">
             <div className="flex">
               <Image
                 containerclassname="relative h-[20px] w-[20px] md:h-[24px] md:w-[24px]"
@@ -91,29 +128,102 @@ const Header = () => {
             </span>
           </a>
         </Link>
-        {/* <nav className="z-10">
+        <div
+          className={classNames(
+            'absolute top-[52px] left-0 md:relative md:top-0 w-full xl:block',
+            isSearchOpen ? 'block' : 'hidden'
+          )}
+        >
           <div
-            className={`-z-10 md:z-10 relative md:bg-transparent w-full h-full flex justify-center flex-col md:flex-row items-center gap-4`}
+            ref={ref}
+            className="relative w-full bg-[#111] p-2 rounded-none md:rounded-lg"
           >
-            <ul className="flex gap-2 md:gap-3 text-center py-3 md:p-0 rounded">
-              <li className="text-[12px] md:text-[14px] text-[#e5e5e5]">
-                <Link href="/tv">
-                  <a>Shows</a>
-                </Link>
+            <form>
+              <div className="grid grid-cols-[34px_1fr] items-center">
+                <Button
+                  type="submit"
+                  className="text-slate-300 flex justify-center items-center"
+                >
+                  <AiOutlineSearch className="h-6 w-6" />
+                </Button>
+                <Input
+                  type="search"
+                  ref={searchRef}
+                  placeholder="Search anime..."
+                  className="w-full"
+                  onChange={handleInputChange}
+                />
+              </div>
+            </form>
+
+            {resultsOpen && !isMobile ? (
+              <div className="absolute top-[40px] left-0 w-full rounded-lg">
+                <ul className="w-full">
+                  {searchResults?.map(result => (
+                    <ColumnSection
+                      key={result.id}
+                      animeId={result.id}
+                      image={result.image}
+                      type={result.type}
+                      status={result.status}
+                      releaseDate={result.releaseDate}
+                      title={result.title as TitleType}
+                      color={result.color as string}
+                      isGenres={false}
+                      className="h-20"
+                    />
+                  ))}
+                </ul>
+              </div>
+            ) : null}
+          </div>
+        </div>
+        <nav className="w-3/4 hidden md:block">
+          <div>
+            <ul className="text-slate-300 flex gap-4">
+              <NavLink
+                name="Home"
+                icon={AiFillHome}
+                className="flex gap-1 items-center hover:text-white transition"
+              />
+              <NavLink
+                name="Advanced Search"
+                icon={AiOutlineFileSearch}
+                className="flex gap-1 items-center hover:text-white transition"
+              />
+              <NavLink
+                name="Random"
+                icon={FaRandom}
+                className="flex gap-1 items-center hover:text-white transition"
+              />
+            </ul>
+          </div>
+        </nav>
+        <div className="w-full md:w-2/4 flex justify-end">
+          <div>
+            <ul className="text-white flex gap-2 items-center text-sm md:text-base">
+              <li className="block md:hidden">
+                <Button
+                  onClick={() => setIsSearchOpen(!isSearchOpen)}
+                  className="text-slate-300 flex justify items-center"
+                >
+                  <AiOutlineSearch className="h-6 w-6" />
+                </Button>
               </li>
-              <li className="text-[12px] md:text-[14px] text-[#e5e5e5]">
-                <Link href="/movies">
-                  <a>Movies</a>
-                </Link>
-              </li>
-              <li className="text-[12px] md:text-[14px] text-[#e5e5e5]">
-                <Link href="/mylist">
-                  <a>My List</a>
-                </Link>
+              <li>
+                <Button
+                  type="button"
+                  className="flex items-center justify-center bg-[#6a55fa] h-8 md:h-9 w-20 rounded-md"
+                >
+                  <span>Sign in</span>
+                  <span>
+                    <AiOutlineArrowRight />
+                  </span>
+                </Button>
               </li>
             </ul>
           </div>
-        </nav> */}
+        </div>
       </div>
     </header>
   );

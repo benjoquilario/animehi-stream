@@ -51,7 +51,7 @@ const Anime = ({
 
   const lastEpisodes = useMemo(() => {
     if (!isLoading) {
-      return episodes[episodes?.length - 1]?.id;
+      return episodes?.[episodes?.length - 1]?.id;
     }
   }, [episodes, isLoading]);
 
@@ -321,9 +321,14 @@ const Anime = ({
                       <div key={index} className="col-span-1">
                         <Thumbnail
                           id={anime?.id}
-                          image={anime?.image}
+                          image={anime?.image || anime?.cover}
                           title={anime?.title as TitleType}
                           color={anime?.color as string}
+                          format={anime?.type}
+                          description={anime?.description}
+                          genres={anime?.genres}
+                          popularity={anime?.rating}
+                          banner={anime?.cover || anime?.image}
                           isRecent={false}
                         />
                       </div>
@@ -342,9 +347,14 @@ const Anime = ({
                       <div key={index} className="col-span-1">
                         <Thumbnail
                           id={anime?.id}
-                          image={anime?.image}
+                          image={anime?.image || anime?.cover}
                           title={anime?.title as TitleType}
                           color={anime?.color as string}
+                          format={anime?.type}
+                          description={anime?.description}
+                          genres={anime?.genres}
+                          popularity={anime?.rating}
+                          banner={anime?.cover || anime?.image}
                           isRecent={false}
                         />
                       </div>

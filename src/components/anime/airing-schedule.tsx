@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useMemo } from 'react';
 import dayjs from '@/utils/time';
 import TitleName from '../shared/title-name';
 import useAiringSchedule from '@/hooks/useAiringSchedule';
@@ -28,7 +28,7 @@ const AiringScheduling = () => {
             <div className="flex justify-between w-full text-white">
               <div className="flex gap-2 items-center">
                 <span className="text-slate-300 text-xs">
-                  {dayjs(anime.airingAt as number).format('LTS')}
+                  {dayjs(anime.airingAt as number).format('HH')}
                 </span>
 
                 <Link href={`/anime/${anime.id}`}>

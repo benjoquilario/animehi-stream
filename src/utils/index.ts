@@ -19,7 +19,7 @@ export const extractEpisode = (x: string | number) => {
   return num;
 };
 
-export const stripHtml = (data: string) => data.replace(/<\/?\w*\\?>/gm, '');
+export const stripHtml = (data: string) => data?.replace(/<\/?\w*\\?>/gm, '');
 
 export function chunk<T>(arr: Array<T>, chunkSize: number) {
   let R = [];

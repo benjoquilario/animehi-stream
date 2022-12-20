@@ -15,6 +15,8 @@ type ColumnSectionProps = {
   status?: string;
   releaseDate?: string;
   color: string;
+  isGenres?: boolean;
+  className?: string;
 };
 
 const ColumnSection = ({
@@ -26,8 +28,15 @@ const ColumnSection = ({
   status,
   releaseDate,
   color,
+  isGenres = true,
+  className,
 }: ColumnSectionProps) => (
-  <li className="flex h-22 items-center py-2 px-4 odd:bg-[#0d0d0d] even:bg-[#111]">
+  <li
+    className={classNames(
+      'flex h-22 items-center py-2 px-4 odd:bg-[#0d0d0d] even:bg-[#111]',
+      className
+    )}
+  >
     <div className="w-12 shrink-0">
       <Image
         containerclassname="relative h-[72px] w-[48px]"
@@ -63,14 +72,17 @@ const ColumnSection = ({
         <span className="w-1.5 h-1.5 bg-[#6a55fa] rounded-full inline-block"></span>
         <span>{status}</span>
       </div>
-      <div className="line-clamp-1 items-center space-x-2 text-sm text-slate-300">
-        {genres?.map((genre: string) => (
-          <React.Fragment key={genre}>
-            <span>{genre}</span>
-            <span className="w-1.5 h-1.5 bg-[#6a55fa] rounded-full inline-block"></span>
-          </React.Fragment>
-        ))}
-      </div>
+
+      {isGenres ? (
+        <div className="line-clamp-1 items-center space-x-2 text-sm text-slate-300">
+          {genres?.map((genre: string) => (
+            <React.Fragment key={genre}>
+              <span>{genre}</span>
+              <span className="w-1.5 h-1.5 bg-[#6a55fa] rounded-full inline-block"></span>
+            </React.Fragment>
+          ))}
+        </div>
+      ) : null}
     </div>
   </li>
 );

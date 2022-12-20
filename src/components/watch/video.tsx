@@ -8,6 +8,7 @@ import { useRouter } from 'next/router';
 import { extractEpisode } from '@/utils/index';
 import { EpisodesType } from '@/src/../types/types';
 import { TbPlayerTrackNext, TbPlayerTrackPrev } from 'react-icons/tb';
+import Button from '../shared/button';
 
 type VideoProps = {
   poster: string;
@@ -58,13 +59,13 @@ const Video = ({
         <div className="bg-[#100f0f] py-2 px-6">
           <div className="text-center text-white text-xs my-2">
             <p>You are watching</p>
-            <p className="text-[#6A55FA] mb-2">
+            <Button type="button" className="text-[#6A55FA] mb-2 bg-none">
               {title} Episode {episodeNumber}
-            </p>
+            </Button>
             <p>
               Click <b>Episode</b> again or Switch to alternate
             </p>
-            <p>provider again in case of error.</p>
+            <p>provider in case of error.</p>
           </div>
         </div>
         <div className="mt-2 flex justify-between items-start w-full">

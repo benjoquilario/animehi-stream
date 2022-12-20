@@ -189,7 +189,7 @@ const Popup: React.FC<PopupProps> = props => {
               ref={setPopperElement}
               style={styles.popper}
               className={classNames(
-                'popup z-50 relative bg-background-900 p-4 rounded-md drop-shadow-lg',
+                'popup z-50 relative bg-white rounded-md drop-shadow-lg',
                 className
               )}
               {...attributes.popper}

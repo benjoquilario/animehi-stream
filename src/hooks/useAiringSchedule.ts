@@ -1,11 +1,6 @@
 import useSWR from 'swr';
-
 import { BASE_URL } from '@/utils/config';
-import {
-  IAnimeInfo,
-  IAnimeResult,
-  ISearch,
-} from '@consumet/extensions/dist/models/types';
+import { IAnimeResult, ISearch } from '@consumet/extensions/dist/models/types';
 import { TitleType } from 'types/types';
 
 interface AiringResults extends IAnimeResult {

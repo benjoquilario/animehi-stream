@@ -100,6 +100,11 @@ const VideoPlayer = ({
       moreVideoAttr: {
         crossOrigin: 'anonymous',
       },
+      thumbnails: {
+        url: '',
+        number: 60,
+        column: 10,
+      },
       icons: {
         loading:
           '<img class="animate-spin text-white h-12 h-12" src="/loading.svg">',
