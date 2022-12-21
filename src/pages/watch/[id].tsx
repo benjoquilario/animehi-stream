@@ -15,7 +15,11 @@ import { setAnimeId } from '@/store/anime/slice';
 import { BASE_URL } from '@/utils/config';
 import Header from '@/components/header/header';
 import EpisodesButton from '@/components/watch/episodes-button';
-import { GetServerSideProps, InferGetServerSidePropsType } from 'next';
+import {
+  GetServerSideProps,
+  InferGetServerSidePropsType,
+  NextPage,
+} from 'next';
 import { extractEpisode } from '@/utils/index';
 import Episodes from '@/components/watch/episodes';
 import progressBar, { LoadingVideo } from '@/components/shared/loading';
@@ -23,9 +27,10 @@ import { NextSeo } from 'next-seo';
 import DetailLinks from '@/components/shared/detail-links';
 import WatchDetails from '@/components/watch/details';
 import { IAnimeInfo, META } from '@consumet/extensions';
-import { ISource } from '@consumet/extensions/dist/models/types';
+import { IAnimeResult, ISource } from '@consumet/extensions/dist/models/types';
 import useEpisodes from '@/hooks/useEpisodes';
 import { EpisodesType } from '@/src/../types/types';
+import DefaultLayout from '@/components/layouts/default';
 
 const VideoPlayer = dynamic(() => import('@/components/watch/video'), {
   ssr: false,
@@ -70,7 +75,11 @@ export const getServerSideProps: GetServerSideProps = async context => {
   };
 };
 
-const WatchAnime = ({
+interface WatchAnimeProps {
+  animeList: IAnimeInfo | IAnimeResult;
+}
+
+const WatchAnime: NextPage<WatchAnimeProps> = ({
   animeList,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
   progressBar.finish();
@@ -154,7 +163,7 @@ const WatchAnime = ({
   }, [dispatch, data, error]);
 
   return (
-    <Fragment>
+    <DefaultLayout footer={false}>
       <NextSeo
         title={`Watch ${animeTitle} Episode - ${extractEpisode(
           episodeId
@@ -176,75 +185,72 @@ const WatchAnime = ({
         }}
       />
 
-      <div className="min-h-screen overflow-x-hidden bg-[#000]">
-        <Header />
-        <div className="mt-[48px] md:mt-[64px] px-0 md:px-[4%]">
-          <DetailLinks
-            animeId={animeList?.id}
-            animeTitle={animeTitle}
-            episodeNumber={
-              currentEpisode?.number ||
-              animeList?.nextAiringEpisode?.episode - 1
-            }
-          />
-          <div className="grid grid-cols-1 md:grid-cols-5 gap-2 h-full w-full">
-            {!data && !error ? (
-              <LoadingVideo classname="h-7 h-7 md:h-12 md:w-12" />
-            ) : (
-              <VideoPlayer
-                poster={currentEpisode?.image || animeList?.cover}
-                className="col-span-full"
-                title={animeTitle}
-                episodeNumber={
-                  currentEpisode?.number ||
-                  animeList?.nextAiringEpisode?.episode - 1
-                }
-                nextEpisode={nextEpisode}
-                prevEpisode={prevEpisode}
-              />
-            )}
-            <div className="row-start-2 row-end-5 col-start-1 col-end-5 md:col-start-1 md:col-end-2	md:row-start-1 md:row-end-1 h-full">
-              <div className="bg-[#100f0f] p-4 w-full text-white text-xs">
-                List of episode :
-              </div>
-
-              <div className="flex flex-col bg-[#100f0f] md:bg-[#000000eb] overflow-auto pr-[10px] h-[340px] md:h-[575px]">
-                {isLoading && (
-                  <LoadingVideo classname="h-5 h-5 md:h-8 md:w-8" />
-                )}
-                {episodes?.length > 25 ? (
-                  <EpisodesButton
-                    watchPage={true}
-                    episodes={episodes}
-                    activeIndex={
-                      currentEpisode?.number ||
-                      animeList?.nextAiringEpisode?.episode - 1
-                    }
-                    episodesClassName="grid grid-cols-2 md:grid-cols-1"
-                  />
-                ) : (
-                  <Episodes
-                    activeIndex={
-                      currentEpisode?.number ||
-                      animeList?.nextAiringEpisode?.episode - 1
-                    }
-                    episodes={episodes}
-                  />
-                )}
-              </div>
+      <div className="mt-[48px] md:mt-[64px] px-0 md:px-[4%]">
+        <DetailLinks
+          animeId={animeList?.id}
+          animeTitle={animeTitle}
+          episodeNumber={
+            currentEpisode?.number || animeList?.nextAiringEpisode?.episode - 1
+          }
+        />
+        <div className="grid grid-cols-1 md:grid-cols-5 gap-2 h-full w-full">
+          {!data && !error ? (
+            <LoadingVideo classname="h-7 h-7 md:h-12 md:w-12" />
+          ) : (
+            <VideoPlayer
+              poster={currentEpisode?.image || animeList?.cover}
+              className="col-span-full"
+              title={animeTitle}
+              episodeNumber={
+                currentEpisode?.number ||
+                animeList?.nextAiringEpisode?.episode - 1
+              }
+              nextEpisode={nextEpisode}
+              prevEpisode={prevEpisode}
+            />
+          )}
+          <div className="row-start-2 row-end-5 col-start-1 col-end-5 md:col-start-1 md:col-end-2	md:row-start-1 md:row-end-1 h-full">
+            <div className="bg-[#100f0f] p-4 w-full text-white text-xs">
+              List of episode :
             </div>
-            {/* <div className="col-start-1 col-span-5">
+
+            <div className="flex flex-col bg-[#100f0f] md:bg-[#000000eb] overflow-auto pr-[10px] h-[340px] md:h-[575px]">
+              {isLoading && <LoadingVideo classname="h-5 h-5 md:h-8 md:w-8" />}
+              {episodes?.length > 25 ? (
+                <EpisodesButton
+                  watchPage={true}
+                  episodes={episodes}
+                  activeIndex={
+                    currentEpisode?.number ||
+                    animeList?.nextAiringEpisode?.episode - 1
+                  }
+                  episodesClassName="grid grid-cols-2 md:grid-cols-1"
+                />
+              ) : (
+                <Episodes
+                  activeIndex={
+                    currentEpisode?.number ||
+                    animeList?.nextAiringEpisode?.episode - 1
+                  }
+                  episodes={episodes}
+                />
+              )}
+            </div>
+          </div>
+          {/* <div className="col-start-1 col-span-5">
               <WatchDetails
                 title={animeList.title}
                 image={animeList.image}
                 description={animeList.description}
               />
             </div> */}
-          </div>
         </div>
       </div>
-    </Fragment>
+    </DefaultLayout>
   );
 };
+
+// @ts-ignore
+WatchAnime.getLayout = page => page;
 
 export default WatchAnime;

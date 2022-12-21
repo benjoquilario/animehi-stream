@@ -21,6 +21,27 @@ export type SourceType = {
   };
 };
 
+export type NameType = {
+  first: string;
+  last?: string | null;
+  full: string;
+  native: string;
+  userPreferred: string;
+};
+
+export type CharactersType = {
+  id: number;
+  image: string;
+  name: NameType;
+  role: string;
+  voiceActors: {
+    id: number;
+    image: string;
+    language: string;
+    name: NameType;
+  }[];
+};
+
 export type EnimeType = {
   anilistId?: number;
   averageScore?: number;

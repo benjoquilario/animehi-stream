@@ -14,7 +14,7 @@ interface IUseMediaProps {
   year?: number;
 }
 
-const useMedia = async ({
+const useMedia = ({
   type,
   page,
   perPage,
@@ -24,14 +24,38 @@ const useMedia = async ({
   year,
 }: IUseMediaProps) => {
   const anilist = new META.Anilist();
+  const [animeList, setAnimeList] = useState<
+    ISearch<IAnimeResult | IAnimeInfo> | undefined
+  >(undefined);
+  const [isLoading, setIsLoading] = useState(true);
 
   // prettier-ignore
-  const data: ISearch<IAnimeResult | IAnimeInfo> = await anilist.advancedSearch(undefined,type,page,perPage,format,
-    sort, undefined, undefined, year, undefined, season
-  );
+  useEffect(() => {
+    (async () => {
+      const data: ISearch<IAnimeResult | IAnimeInfo> =
+        await anilist.advancedSearch(
+          undefined,
+          type,
+          page,
+          perPage,
+          format,
+          sort,
+          undefined,
+          undefined,
+          year,
+          undefined,
+          season
+        );
+
+      setAnimeList(data);
+      setIsLoading(false);
+    })();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   return {
-    data,
+    data: animeList,
+    isLoading,
   };
 };
 

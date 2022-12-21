@@ -30,6 +30,7 @@ const Header = () => {
   const searchRef = useRef<HTMLInputElement | null>(null);
   const ref = useRef<HTMLDivElement | null>(null);
   const [searchResults, setSearchResults] = useState<IAnimeResult[] | []>([]);
+  const [query, setQuery] = useState('');
 
   useEffect(() => {
     const doc = document.documentElement;
@@ -80,6 +81,7 @@ const Header = () => {
 
       setResultsOpen(true);
       setSearchResults(search.results);
+      setQuery(query);
     }, 350)
   ).current;
 
@@ -140,18 +142,27 @@ const Header = () => {
           >
             <form>
               <div className="grid grid-cols-[34px_1fr] items-center">
-                <Button
-                  type="submit"
-                  className="text-slate-300 flex justify-center items-center"
-                >
-                  <AiOutlineSearch className="h-6 w-6" />
-                </Button>
+                <Link href={`/search?query=${query}`}>
+                  <a>
+                    <Button
+                      type="submit"
+                      className="text-slate-300 flex justify-center items-center"
+                      aria-label="submit anime search"
+                    >
+                      <AiOutlineSearch className="h-6 w-6" />
+                    </Button>
+                  </a>
+                </Link>
+
                 <Input
                   type="search"
                   ref={searchRef}
                   placeholder="Search anime..."
                   className="w-full"
                   onChange={handleInputChange}
+                  label="Search Anime"
+                  labelClassName="sr-only"
+                  aria-label="search anime"
                 />
               </div>
             </form>

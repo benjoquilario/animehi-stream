@@ -6,6 +6,7 @@ import { IRecentResults } from '@/pages/index';
 import { BASE_URL, GOGO_PROVIDER } from '@/utils/config';
 import React, { useState, useEffect } from 'react';
 import { EnimeType } from '@/src/../types/types';
+import Pagination from '../shared/pagination';
 
 export type RecentReleaseProps = {
   title: string;
@@ -37,8 +38,6 @@ const RecentRelease = ({ title }: RecentReleaseProps): JSX.Element => {
     revalidateOnReconnect: false,
   });
 
-  console.log(data);
-
   useEffect(() => {
     if (!data && !error) return;
 
@@ -51,23 +50,7 @@ const RecentRelease = ({ title }: RecentReleaseProps): JSX.Element => {
         <h2 className="text-base md:text-[20px] uppercase font-semibold">
           {title}
         </h2>
-        <div className="flex gap-3 items-center">
-          {pageNumber !== 1 ? (
-            <button
-              onClick={() => setPageNumber(pageNumber - 1)}
-              className="p-1 md:p-2 text-[#ededed] hover:bg-[#111] rounded-full transition"
-            >
-              <AiOutlineArrowLeft className="h-6 w-6" />
-            </button>
-          ) : null}
-
-          <button
-            onClick={() => setPageNumber(pageNumber + 1)}
-            className="p-1 md:p-2 text-[#ededed] hover:bg-[#111] rounded-full transition"
-          >
-            <AiOutlineArrowRight className="h-6 w-6" />
-          </button>
-        </div>
+        <Pagination pageNumber={pageNumber} setPageNumber={setPageNumber} />
       </div>
       <div
         // ref={rowRef}

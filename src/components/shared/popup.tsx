@@ -7,8 +7,8 @@ import useDevice from '@/hooks/useDevice';
 import { Modifier, Options, Placement } from '@popperjs/core';
 import classNames from 'classnames';
 import { AnimatePresence, motion, Variants } from 'framer-motion';
-import React, { useCallback, useMemo, useState } from 'react';
 import { usePopper } from 'react-popper';
+import React, { useCallback, useMemo, useState } from 'react';
 
 export interface PopupProps {
   children: React.ReactNode;
@@ -211,4 +211,4 @@ const Popup: React.FC<PopupProps> = props => {
   );
 };
 
-export default Popup;
+export default React.memo(Popup);

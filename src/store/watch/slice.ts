@@ -1,5 +1,5 @@
 import { createSlice, Draft, PayloadAction } from '@reduxjs/toolkit';
-import { TResults, TitleType } from '@/src/../types/types';
+import { TitleType } from '@/src/../types/types';
 import { CORS_PROXY } from '@/utils/config';
 import { IVideo } from '@consumet/extensions/dist/models/types';
 

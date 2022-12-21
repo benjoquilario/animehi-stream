@@ -12,7 +12,6 @@ type InputProps = {
   Icon?: React.ComponentType<Icon>;
   iconClassName?: string;
   className?: string;
-  name?: string;
 } & React.HTMLProps<HTMLInputElement>;
 
 const Input = React.forwardRef<HTMLInputElement, InputProps>((props, ref) => {
@@ -20,7 +19,6 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>((props, ref) => {
     containerClassName,
     label,
     labelClassName,
-    name,
     Icon,
     iconClassName,
     className,
@@ -30,7 +28,7 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>((props, ref) => {
   return (
     <div className={containerClassName}>
       {label && (
-        <label htmlFor={name} className={labelClassName}>
+        <label htmlFor={label} className={labelClassName}>
           {label}
         </label>
       )}
