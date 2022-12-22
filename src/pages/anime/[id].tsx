@@ -19,15 +19,17 @@ import Thumbnail from '@/components/shared/thumbnail';
 import TitleName from '@/components/shared/title-name';
 import { TitleType } from 'types/types';
 import { useRouter } from 'next/router';
+import DefaultLayout from '@/components/layouts/default';
 
 export const getServerSideProps: GetServerSideProps = async ({ params }) => {
   let id = params!.id;
 
   const anilist = new META.Anilist();
+  id = typeof id === 'string' ? id : id?.join('');
 
   const data: IAnimeInfo = await anilist.fetchAnilistInfoById(id as string);
 
-  if (!data) {
+  if (!data && !id) {
     return {
       notFound: true,
     };
@@ -45,7 +47,7 @@ const Anime = ({
 }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
   const router = useRouter();
   const [showMore, setShowMore] = useState<boolean>(false);
-  const { episodes, isLoading, isError } = useEpisodes(animeList?.id);
+  const { data: episodes, isLoading, isError } = useEpisodes(animeList?.id);
 
   const lastEpisodes = useMemo(() => {
     if (!isLoading) {
@@ -54,7 +56,7 @@ const Anime = ({
   }, [episodes, isLoading]);
 
   return (
-    <Fragment>
+    <DefaultLayout>
       <NextSeo
         title={`${
           animeList?.title.romaji || animeList.title.english
@@ -358,7 +360,7 @@ const Anime = ({
           </div>
         </div>
       </div>
-    </Fragment>
+    </DefaultLayout>
   );
 };
 

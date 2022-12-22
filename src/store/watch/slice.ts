@@ -6,56 +6,37 @@ import { IVideo } from '@consumet/extensions/dist/models/types';
 export interface WatchState {
   title: TitleType;
   image: string;
-  episodes: number;
+  episodeId: string;
+  id: string;
+  episodeNumber: number;
 }
 
 export interface IInitialState {
   episode: number;
   episodeId: string;
   totalEpisodes: number;
-  currentData: string;
   sources: IVideo[];
-  prevWatchId: number;
   currentSource: string;
   videoLink?: string;
   provider: string;
   watchList: WatchState[];
-  setting: {
-    aspectRation: string;
-    playspeed: number;
-  };
 }
 
 const initialState: IInitialState = {
   episode: 1,
   totalEpisodes: 1,
   episodeId: '',
-  sources: [
-    {
-      url: '',
-      isM3U8: true,
-      quality: '',
-    },
-  ],
-  currentData: '',
+  sources: [],
   currentSource: '',
-  prevWatchId: 1,
   videoLink: '',
   provider: 'gogoanime',
   watchList: [],
-  setting: {
-    aspectRation: 'default',
-    playspeed: 1,
-  },
 };
 
 export const watchSlice = createSlice({
   name: 'watch',
   initialState,
   reducers: {
-    setPrevWatch: (state, action) => {
-      state.prevWatchId = action.payload;
-    },
     incrementEpisode: (state: Draft<IInitialState>) => {
       state.episode += 1;
     },
@@ -87,15 +68,13 @@ export const watchSlice = createSlice({
       state: Draft<IInitialState>,
       action: PayloadAction<IVideo[]>
     ) => {
-      if (!action.payload) {
+      const sources = action.payload;
+      if (!sources) {
         state.sources = initialState.sources;
       } else {
-        state.sources = action.payload;
-        state.videoLink = `${CORS_PROXY}${state.sources[1].url}`;
+        state.sources = sources.filter(el => el.quality !== 'default');
+        state.videoLink = `${CORS_PROXY}${state.sources[0].url}`;
       }
-    },
-    setSetting: (state, action) => {
-      state.setting = action.payload;
     },
     resetSources: (state: Draft<IInitialState>) => {
       state.sources = initialState.sources;
@@ -106,18 +85,29 @@ export const watchSlice = createSlice({
       state.totalEpisodes = initialState.totalEpisodes;
       state.episodeId = initialState.episodeId;
       state.sources = initialState.sources;
-      state.currentData = initialState.currentData;
       state.currentSource = initialState.currentSource;
-      state.prevWatchId = initialState.prevWatchId;
       state.videoLink = initialState.videoLink;
       state.provider = initialState.provider;
-      state.watchList = initialState.watchList;
+    },
+    recentwatch: (
+      state: Draft<IInitialState>,
+      action: PayloadAction<WatchState>
+    ) => {
+      const item = action.payload;
+      const existEpisode = state.watchList?.find(x => x.id === item.id);
+
+      if (existEpisode) {
+        state.watchList = state.watchList?.map(watch =>
+          watch.id === existEpisode.id ? item : watch
+        );
+      } else {
+      	state.watchList = [...state.watchList, item];
+      }
     },
   },
 });
 
 export const {
-  setPrevWatch,
   incrementEpisode,
   decrementEpisode,
   setEpisodes,
@@ -127,6 +117,6 @@ export const {
   setProviders,
   setTotalEpisodes,
   resetStates,
-  setSetting,
+  recentwatch,
 } = watchSlice.actions;
 export default watchSlice.reducer;

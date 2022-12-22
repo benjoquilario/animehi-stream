@@ -35,7 +35,7 @@
     <img src="https://img.shields.io/github/package-json/dependency-version/benjoquilario/animehi-stream/dev/tailwindcss?filename=package.json&color=37b8f1&logo=tailwindcss&labelColor=0b1120&style=flat-square&logoColor=38bdf8">
   </a>
   <a href="https://17.reactjs.org/">
-    <img src="https://img.shields.io/github/package-json/dependency-version/benjoquilario/animehi-stream/react?filename=frontend/package.json&color=5fd9fb&logo=react&labelColor=222435&style=flat-square">
+    <img src="https://img.shields.io/github/package-json/dependency-version/benjoquilario/animehi-stream/react?filename=package.json&color=5fd9fb&logo=react&labelColor=222435&style=flat-square">
   </a>
   <a href="https://redux-toolkit.js.org/">
     <img src="https://img.shields.io/github/package-json/dependency-version/benjoquilario/animehi-stream/@reduxjs/toolkit?filename=package.json&label=redux-toolkit&color=593d88&logo=redux&labelColor=242526&style=flat-square&logoColor=b58bf7">

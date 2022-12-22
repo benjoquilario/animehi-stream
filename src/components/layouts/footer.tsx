@@ -37,12 +37,25 @@ const Footer = () => {
           </Link>
           <div className="flex gap-2">
             <ContactItem
+              title="github"
               Icon={AiFillGithub}
               href="https://github.com/benjoquilario"
             />
-            <ContactItem Icon={BiWorld} href="https://benjoquilario.me/" />
-            <ContactItem Icon={BsFacebook} href="https://benjoquilario.me/" />
-            <ContactItem Icon={BsTwitter} href="https://benjoquilario.me/" />
+            <ContactItem
+              title="my portfolio"
+              Icon={BiWorld}
+              href="https://benjoquilario.me/"
+            />
+            <ContactItem
+              title="facebook"
+              Icon={BsFacebook}
+              href="https://benjoquilario.me/"
+            />
+            <ContactItem
+              title="twitter"
+              Icon={BsTwitter}
+              href="https://benjoquilario.me/"
+            />
           </div>
           <p className="max-w-[850px] w-full text-slate-300 text-sm">
             ANIMEHI is not affiliated with or endorsed by any of the anime
@@ -63,10 +76,11 @@ const Footer = () => {
 interface ContactItemProps {
   Icon: React.ComponentType<any>;
   href: string;
+  title: string;
 }
 
-const ContactItem = ({ Icon, href }: ContactItemProps): JSX.Element => (
-  <a href={href} target="_blank" rel="noreferrer">
+const ContactItem = ({ Icon, href, title }: ContactItemProps): JSX.Element => (
+  <a href={href} target="_blank" rel="noreferrer" aria-label={`go to ${title}`}>
     <Icon className="w-6 h-6 hover:text-[#6a55fa] text-white" />
   </a>
 );

@@ -1,19 +1,20 @@
 import React, { SVGProps } from 'react';
-import Link from 'next/link';
+import Link, { LinkProps } from 'next/link';
 
 type NavLinksProps = {
   icon: React.FC<SVGProps<any>>;
   name: string;
   className?: string;
   iconClassName?: string;
-};
+} & LinkProps;
 
-const NavLink = ({ icon, name, className, iconClassName }: NavLinksProps) => {
+const NavLink = (props: NavLinksProps) => {
+  const { icon, className, iconClassName, name, ...linkProps } = props;
   const Icon = icon;
 
   return (
     <li>
-      <Link href={`/`}>
+      <Link {...linkProps}>
         <a className={className}>
           <span>
             <Icon className={iconClassName} />

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useMemo } from 'react';
 import { META } from '@consumet/extensions';
 import { IAnimeResult } from '@consumet/extensions/dist/models/types';
 import Link from 'next/link';
@@ -81,7 +81,6 @@ const Header = () => {
 
       setResultsOpen(true);
       setSearchResults(search.results);
-      setQuery(query);
     }, 350)
   ).current;
 
@@ -95,6 +94,7 @@ const Header = () => {
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
     debouncedSearch(event.target.value);
+    setQuery(event.target.value);
   };
 
   useClickOutside(ref, () => setResultsOpen(false));
@@ -106,7 +106,7 @@ const Header = () => {
         isFixed ? 'top-[-56px]' : 'top-0'
       )}
     >
-      <div className="flex items-center gap-4 h-[52px] md:h-[67px] 2xl:h-[80px] px-[4%] w-full mx-auto max-w-screen-2xl">
+      <div className="flex items-center gap-4 h-[52px] md:h-[67px] 2xl:h-[80px] px-[4%] md:px-[6%] w-full mx-auto max-w-screen-2xl">
         <Link href="/">
           <a className="flex items-center text-white z-10">
             <div className="flex">
@@ -193,19 +193,23 @@ const Header = () => {
           <div>
             <ul className="text-slate-300 flex gap-4">
               <NavLink
+                href="/"
                 name="Home"
                 icon={AiFillHome}
                 className="flex gap-1 items-center hover:text-white transition"
               />
               <NavLink
+                href="/"
                 name="Advanced Search"
                 icon={AiOutlineFileSearch}
                 className="flex gap-1 items-center hover:text-white transition"
               />
               <NavLink
+                href="/"
                 name="Random"
                 icon={FaRandom}
                 className="flex gap-1 items-center hover:text-white transition"
+                // href={`/anime/${randomAnime}`}
               />
             </ul>
           </div>
@@ -217,6 +221,7 @@ const Header = () => {
                 <Button
                   onClick={() => setIsSearchOpen(!isSearchOpen)}
                   className="text-slate-300 flex justify items-center"
+                  aria-label="open search"
                 >
                   <AiOutlineSearch className="h-6 w-6" />
                 </Button>
@@ -225,6 +230,7 @@ const Header = () => {
                 <Button
                   type="button"
                   className="flex items-center justify-center bg-[#6a55fa] h-8 md:h-9 w-20 rounded-md"
+                  aria-label="click to sign in"
                 >
                   <span>Sign in</span>
                   <span>

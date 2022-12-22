@@ -12,7 +12,7 @@ const useEpisodes = (id: string) => {
   });
 
   return {
-    episodes: data,
+    data,
     isLoading: !error && !data,
     isError: error,
   };

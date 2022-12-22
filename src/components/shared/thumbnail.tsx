@@ -88,10 +88,11 @@ const Thumbnail = ({
                   </span>
                 </div>
               ) : null}
-              <Link href={`/anime/${id}`}>
-                <a>
-                  <div className="relative aspect-w-2 aspect-h-3">
-                    <div className="opacity-100">
+
+              <div className="relative aspect-w-2 aspect-h-3">
+                <div className="opacity-100">
+                  <Link href={`/anime/${id}`}>
+                    <a aria-label={title?.english || title?.romaji}>
                       <Image
                         layout="fill"
                         src={`${image}`}
@@ -104,19 +105,24 @@ const Thumbnail = ({
                         alt={`Anime - ${title?.english || title?.romaji}`}
                         containerclassname="relative w-full h-full hover:opacity-70 transition-opacity"
                       />
-                    </div>
-                    {isRecent ? (
-                      <Link href={`/watch/${id}?episode=${episodeId}-enime`}>
-                        <a className="center-element flex justify-center items-center w-[101%] h-full opacity-0 hover:opacity-100 focus:opacity-100 hover:bg-[#1111117a] transition">
-                          <div className="h-11 w-11 text-[#6a55fa]">
-                            <PlayIcon />
-                          </div>
-                        </a>
-                      </Link>
-                    ) : null}
-                  </div>
-                </a>
-              </Link>
+                    </a>
+                  </Link>
+                </div>
+                {isRecent ? (
+                  <Link href={`/watch/${id}?episode=${episodeId}-enime`}>
+                    <a
+                      aria-label={`Play - ${
+                        title?.english || title?.romaji
+                      } episode ${episodeNumber}`}
+                      className="center-element flex justify-center items-center w-[101%] h-full opacity-0 hover:opacity-100 focus:opacity-100 hover:bg-[#1111117a] transition"
+                    >
+                      <div className="h-11 w-11 text-[#6a55fa]">
+                        <PlayIcon />
+                      </div>
+                    </a>
+                  </Link>
+                ) : null}
+              </div>
             </div>
           </div>
 

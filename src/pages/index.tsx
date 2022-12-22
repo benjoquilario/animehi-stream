@@ -12,7 +12,7 @@ import RecentRelease from '@/components/anime/recentRelease';
 import { TitleType } from '@/src/../types/types';
 import Popular from '@/components/anime/popular';
 import { getSeason } from '../utils';
-import { useDispatch } from '@/store/store';
+import { useDispatch, useSelector } from '@/store/store';
 import { resetStates } from '@/store/watch/slice';
 import Row from '@/components/anime/row';
 import useMedia from '@/hooks/useMedia';
@@ -32,6 +32,7 @@ export interface IRecentResults extends IAnimeResult {
 
 const HomePage = () => {
   progressBar.finish();
+  const watchList = useSelector(store => store.watch.watchList);
   const dispatch = useDispatch();
   const currentSeason = useMemo(getSeason, []);
 
@@ -86,13 +87,17 @@ const HomePage = () => {
   );
 
   useEffect(() => {
+    localStorage.setItem('recent', JSON.stringify(watchList));
+  }, [watchList]);
+
+  useEffect(() => {
     dispatch(resetStates());
   }, [dispatch]);
 
   return (
     <ClientOnly>
       <DefaultLayout>
-        <div className="w-full h-full bg-center bg-top overflow-hidden bg-cover px-0 md:px-[4%]">
+        <div className="w-full h-full bg-center bg-top overflow-hidden bg-cover px-0 md:px-[6%]">
           {!trendingAnimeLoading ? (
             <Swiper
               spaceBetween={30}
@@ -118,8 +123,7 @@ const HomePage = () => {
             <LoadingBanner />
           )}
         </div>
-
-        <main className="mt-[40px] px-[4%]">
+        <main className="mt-[40px] px-[4%] md:px-[6%]">
           <div className="flex flex-col space-y-6 md:grid lg:grid-cols-1 xl:grid-cols-[1fr_310px] 2xl:grid-cols-[1fr_340px] md:gap-4">
             <div className="space-y-6">
               <RecentRelease title="Recent Updated" />

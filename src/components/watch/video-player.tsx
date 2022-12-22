@@ -1,11 +1,10 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef } from 'react';
 import Artplayer from 'artplayer';
 import Hls from 'hls.js';
 import { useSelector } from '@/store/store';
 // import { SourceType } from '@/store/watch/slice';
 import progressBar from '@/components/shared/loading';
 import { IVideo } from '@consumet/extensions/dist/models/types';
-import artplayerPluginHlsQuality from 'artplayer-plugin-hls-quality';
 
 type VideoPlayerProps = {
   option?: any;

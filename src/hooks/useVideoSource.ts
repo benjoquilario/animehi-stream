@@ -1,5 +1,5 @@
 import { BASE_URL } from '@/utils/config';
-import useSWRImmutable from 'swr';
+import useSWR from 'swr';
 
 const useVideoSource = ({
   episodeId,
@@ -13,10 +13,12 @@ const useVideoSource = ({
       `${BASE_URL}/meta/anilist/watch/${episodeId}?provider=${provider}`
     ).then(res => res.json());
 
-  const { data, error } = useSWRImmutable([episodeId, provider], fetcher);
+  const { data, error } = useSWR([episodeId, provider], fetcher, {
+    revalidateOnFocus: false,
+  });
 
   return {
-    sources: data?.sources,
+    data,
     isLoading: !error && !data,
     isError: error,
   };

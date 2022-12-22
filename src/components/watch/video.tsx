@@ -33,17 +33,6 @@ const Video = ({
     store.watch.provider,
     store.watch.totalEpisodes,
   ]);
-  // const  = useSelector(store => );
-
-  // const handleChangeProvider = (event: any) => {
-  //   const text = event.target.innerText;
-  //   const currentNumber = extractEpisode(router.query.episode as string);
-  //   const currentEpisode = episodes.find(ep => ep.number === currentNumber);
-  //   dispatch(setEpisodeId(currentEpisode.id));
-  //   dispatch(setProviders(text.toLowerCase()));
-
-  //   console.log(currentEpisode);
-  // };
 
   return (
     <div

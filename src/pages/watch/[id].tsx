@@ -2,7 +2,7 @@ import { initialiseStore, useDispatch, useSelector } from '@/store/store';
 import { useRouter } from 'next/router';
 import dynamic from 'next/dynamic';
 import useSWR from 'swr';
-import React, { useEffect, useRef, Fragment, useState, useMemo } from 'react';
+import React, { useEffect, useRef, useState, useMemo } from 'react';
 import {
   setEpisodeId,
   setSources,
@@ -10,10 +10,9 @@ import {
   resetSources,
   setEpisodes,
   setTotalEpisodes,
+  recentwatch,
 } from '@/store/watch/slice';
 import { setAnimeId } from '@/store/anime/slice';
-import { BASE_URL } from '@/utils/config';
-import Header from '@/components/header/header';
 import EpisodesButton from '@/components/watch/episodes-button';
 import {
   GetServerSideProps,
@@ -25,10 +24,10 @@ import Episodes from '@/components/watch/episodes';
 import progressBar, { LoadingVideo } from '@/components/shared/loading';
 import { NextSeo } from 'next-seo';
 import DetailLinks from '@/components/shared/detail-links';
-import WatchDetails from '@/components/watch/details';
 import { IAnimeInfo, META } from '@consumet/extensions';
-import { IAnimeResult, ISource } from '@consumet/extensions/dist/models/types';
+import { IAnimeResult } from '@consumet/extensions/dist/models/types';
 import useEpisodes from '@/hooks/useEpisodes';
+import useVideoSource from '@/hooks/useVideoSource';
 import { EpisodesType } from '@/src/../types/types';
 import DefaultLayout from '@/components/layouts/default';
 
@@ -86,26 +85,31 @@ const WatchAnime: NextPage<WatchAnimeProps> = ({
   const router = useRouter();
   const dispatch = useDispatch();
   const routerRef = useRef(router);
-  const [animeItems, setAnimeItems] = useState([]);
+  const [recentWatched, setRecentWatched] = useState([]);
   const [animeId, episodeId, provider] = useSelector(store => [
     store.anime.animeId,
     store.watch.episodeId,
     store.watch.provider,
   ]);
+
+  useEffect(() => {
+    dispatch(
+      recentwatch({
+        id: animeId,
+        episodeId,
+        title: animeList.title,
+        episodeNumber:
+          currentEpisode?.number || animeList?.nextAiringEpisode?.episode - 1,
+        image: animeList.image,
+      })
+    );
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [dispatch, animeId, episodeId]);
+
   // const animeEpisode = JSON.parse(localStorage.getItem('watch') || '{}');
 
   const animeTitle = animeList?.title?.english || animeList?.title?.romaji;
-
-  const fetcher = async (episodeId: string, provider: string) =>
-    fetch(
-      `${BASE_URL}/meta/anilist/watch/${episodeId}?provider=${provider}`
-    ).then(res => res.json());
-
-  const { data, error } = useSWR([episodeId, provider], fetcher, {
-    revalidateOnFocus: false,
-  });
-
-  const { episodes, isLoading } = useEpisodes(animeList.id);
+  const { data: episodes, isLoading: episodesLoading } = useEpisodes(animeId);
 
   const currentEpisode = useMemo(
     () => episodes?.find((episode: EpisodesType) => episode?.id === episodeId),
@@ -119,15 +123,12 @@ const WatchAnime: NextPage<WatchAnimeProps> = ({
   );
 
   const nextEpisode = useMemo(() => {
-    if (!isLoading) return episodes[currentEpisodeIndex + 1];
-  }, [currentEpisodeIndex, episodes, isLoading]);
+    if (!episodesLoading) return episodes[currentEpisodeIndex + 1];
+  }, [currentEpisodeIndex, episodes, episodesLoading]);
 
   const prevEpisode = useMemo(() => {
-    if (!isLoading) return episodes[currentEpisodeIndex - 1];
-  }, [currentEpisodeIndex, episodes, isLoading]);
-
-  // const nextEpisode = episodes[currentEpisodeIndex - 1];
-  // const prevEpisode = episodes[currentEpisodeIndex - 1];
+    if (!episodesLoading) return episodes[currentEpisodeIndex - 1];
+  }, [currentEpisodeIndex, episodes, episodesLoading]);
 
   useEffect(() => {
     routerRef.current.replace(
@@ -143,24 +144,30 @@ const WatchAnime: NextPage<WatchAnimeProps> = ({
   }, [animeId, episodeId, provider]);
 
   useEffect(() => {
-    if (isLoading) return;
+    if (episodesLoading) return;
 
     dispatch(setEpisodes(currentEpisode?.number));
-  }, [dispatch, currentEpisode?.number, isLoading]);
+  }, [dispatch, currentEpisode?.number, episodesLoading]);
 
   useEffect(() => {
-    if (isLoading) return;
+    if (episodesLoading) return;
 
     dispatch(setTotalEpisodes(episodes?.length));
-  }, [dispatch, isLoading, episodes]);
+  }, [dispatch, episodesLoading, episodes]);
+
+  const { data: videoSource, isLoading: videoLoading } = useVideoSource({
+    episodeId,
+    provider,
+  });
 
   useEffect(() => {
-    if (!data && !error) {
+    if (videoLoading) {
       dispatch(resetSources());
     }
 
-    dispatch(setSources(data?.sources));
-  }, [dispatch, data, error]);
+    dispatch(setSources(videoSource?.sources));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [dispatch, videoLoading]);
 
   return (
     <DefaultLayout footer={false}>
@@ -185,7 +192,7 @@ const WatchAnime: NextPage<WatchAnimeProps> = ({
         }}
       />
 
-      <div className="mt-[48px] md:mt-[64px] px-0 md:px-[4%]">
+      <div className="mt-[48px] xl:mt-[84px] 2xl:mt-[104px] px-0 md:px-[4%]">
         <DetailLinks
           animeId={animeList?.id}
           animeTitle={animeTitle}
@@ -194,7 +201,7 @@ const WatchAnime: NextPage<WatchAnimeProps> = ({
           }
         />
         <div className="grid grid-cols-1 md:grid-cols-5 gap-2 h-full w-full">
-          {!data && !error ? (
+          {videoLoading ? (
             <LoadingVideo classname="h-7 h-7 md:h-12 md:w-12" />
           ) : (
             <VideoPlayer
@@ -215,7 +222,9 @@ const WatchAnime: NextPage<WatchAnimeProps> = ({
             </div>
 
             <div className="flex flex-col bg-[#100f0f] md:bg-[#000000eb] overflow-auto pr-[10px] h-[340px] md:h-[575px]">
-              {isLoading && <LoadingVideo classname="h-5 h-5 md:h-8 md:w-8" />}
+              {episodesLoading && (
+                <LoadingVideo classname="h-5 h-5 md:h-8 md:w-8" />
+              )}
               {episodes?.length > 25 ? (
                 <EpisodesButton
                   watchPage={true}
@@ -237,20 +246,10 @@ const WatchAnime: NextPage<WatchAnimeProps> = ({
               )}
             </div>
           </div>
-          {/* <div className="col-start-1 col-span-5">
-              <WatchDetails
-                title={animeList.title}
-                image={animeList.image}
-                description={animeList.description}
-              />
-            </div> */}
         </div>
       </div>
     </DefaultLayout>
   );
 };
-
-// @ts-ignore
-WatchAnime.getLayout = page => page;
 
 export default WatchAnime;
