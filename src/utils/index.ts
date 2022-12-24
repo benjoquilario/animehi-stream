@@ -57,3 +57,15 @@ export const getSeason = () => {
     year,
   };
 };
+
+export const getFromStorage = (key: string) => {
+  if (typeof window !== undefined) {
+    return localStorage.getItem(key);
+  }
+};
+
+export const setFromStorage = (key: string, value: any) => {
+  if (typeof window !== undefined) {
+    return localStorage.setItem(key, value);
+  }
+};

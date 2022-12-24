@@ -32,7 +32,6 @@ export interface IRecentResults extends IAnimeResult {
 
 const HomePage = () => {
   progressBar.finish();
-  const watchList = useSelector(store => store.watch.watchList);
   const dispatch = useDispatch();
   const currentSeason = useMemo(getSeason, []);
 
@@ -85,10 +84,6 @@ const HomePage = () => {
       sort: SORT.FAVORITES_SEASON,
     }
   );
-
-  useEffect(() => {
-    localStorage.setItem('recent', JSON.stringify(watchList));
-  }, [watchList]);
 
   useEffect(() => {
     dispatch(resetStates());

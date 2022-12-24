@@ -13,6 +13,7 @@ import {
   AiOutlineSearch,
   AiOutlineArrowRight,
 } from 'react-icons/ai';
+import { BsList } from 'react-icons/bs';
 import NavLink from '../shared/nav-links';
 import Button from '../shared/button';
 import Input from '../shared/input';
@@ -58,7 +59,6 @@ const Header = () => {
       else currDirection = 1;
 
       if (currDirection !== prevDirection) toggle = toggleHeader();
-
       if (toggle) prevDirection = currDirection;
 
       prevScroll = currScroll;
@@ -189,32 +189,39 @@ const Header = () => {
             ) : null}
           </div>
         </div>
-        <nav className="w-3/4 hidden md:block">
+        <nav className="w-5/6 hidden md:block">
           <div>
             <ul className="text-slate-300 flex gap-4">
               <NavLink
                 href="/"
                 name="Home"
                 icon={AiFillHome}
-                className="flex gap-1 items-center hover:text-white transition"
+                className="flex gap-1 items-center hover:text-white transition text-sm"
               />
               <NavLink
                 href="/"
                 name="Advanced Search"
                 icon={AiOutlineFileSearch}
-                className="flex gap-1 items-center hover:text-white transition"
+                className="flex gap-1 items-center hover:text-white transition text-sm"
               />
               <NavLink
                 href="/"
                 name="Random"
                 icon={FaRandom}
-                className="flex gap-1 items-center hover:text-white transition"
+                className="flex gap-1 items-center hover:text-white transition text-sm"
+                // href={`/anime/${randomAnime}`}
+              />
+              <NavLink
+                href="/watchlist"
+                name="Watch List"
+                icon={BsList}
+                className="flex gap-1 items-center hover:text-white transition text-sm"
                 // href={`/anime/${randomAnime}`}
               />
             </ul>
           </div>
         </nav>
-        <div className="w-full md:w-2/4 flex justify-end">
+        <div className="w-full md:w-1/6 flex justify-end">
           <div>
             <ul className="text-white flex gap-2 items-center text-sm md:text-base">
               <li className="block md:hidden">

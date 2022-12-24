@@ -23,8 +23,8 @@ const AiringScheduling = () => {
         </span>
       </div>
       <div className="h-[330px] overflow-auto mt-4">
-        {animeAired?.map(anime => (
-          <div key={anime.id} className="p-4 odd:bg-[#0d0d0d] even:bg-[#111]">
+        {animeAired?.map((anime, index) => (
+          <div key={index} className="p-4 odd:bg-[#0d0d0d] even:bg-[#111]">
             <div className="flex justify-between w-full text-white">
               <div className="flex gap-2 items-center">
                 <span className="text-slate-300 text-xs">

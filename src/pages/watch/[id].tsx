@@ -10,7 +10,7 @@ import {
   resetSources,
   setEpisodes,
   setTotalEpisodes,
-  recentwatch,
+  setRecentlyWatching,
 } from '@/store/watch/slice';
 import { setAnimeId } from '@/store/anime/slice';
 import EpisodesButton from '@/components/watch/episodes-button';
@@ -91,21 +91,6 @@ const WatchAnime: NextPage<WatchAnimeProps> = ({
     store.watch.episodeId,
     store.watch.provider,
   ]);
-
-  useEffect(() => {
-    dispatch(
-      recentwatch({
-        id: animeId,
-        episodeId,
-        title: animeList.title,
-        episodeNumber:
-          currentEpisode?.number || animeList?.nextAiringEpisode?.episode - 1,
-        image: animeList.image,
-      })
-    );
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [dispatch, animeId, episodeId]);
-
   // const animeEpisode = JSON.parse(localStorage.getItem('watch') || '{}');
 
   const animeTitle = animeList?.title?.english || animeList?.title?.romaji;

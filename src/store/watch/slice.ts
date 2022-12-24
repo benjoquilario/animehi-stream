@@ -1,14 +1,11 @@
-import { createSlice, Draft, PayloadAction } from '@reduxjs/toolkit';
+import { createSlice, current, Draft, PayloadAction } from '@reduxjs/toolkit';
 import { TitleType } from '@/src/../types/types';
 import { CORS_PROXY } from '@/utils/config';
-import { IVideo } from '@consumet/extensions/dist/models/types';
+import { IAnimeResult, IVideo } from '@consumet/extensions/dist/models/types';
+import { setFromStorage } from '@/utils/index';
 
 export interface WatchState {
-  title: TitleType;
-  image: string;
-  episodeId: string;
-  id: string;
-  episodeNumber: number;
+  animeList: IAnimeResult;
 }
 
 export interface IInitialState {
@@ -19,7 +16,8 @@ export interface IInitialState {
   currentSource: string;
   videoLink?: string;
   provider: string;
-  watchList: WatchState[];
+  watchList: IAnimeResult[];
+  recentWatch: any[];
 }
 
 const initialState: IInitialState = {
@@ -31,18 +29,13 @@ const initialState: IInitialState = {
   videoLink: '',
   provider: 'gogoanime',
   watchList: [],
+  recentWatch: [],
 };
 
 export const watchSlice = createSlice({
   name: 'watch',
   initialState,
   reducers: {
-    incrementEpisode: (state: Draft<IInitialState>) => {
-      state.episode += 1;
-    },
-    decrementEpisode: (state: Draft<IInitialState>) => {
-      if (!(state.episode <= 1)) state.episode -= 1;
-    },
     setEpisodes: (state: Draft<IInitialState>, action) => {
       state.episode = action.payload;
     },
@@ -89,27 +82,36 @@ export const watchSlice = createSlice({
       state.videoLink = initialState.videoLink;
       state.provider = initialState.provider;
     },
-    recentwatch: (
+    setWatchList: (
       state: Draft<IInitialState>,
-      action: PayloadAction<WatchState>
+      action: PayloadAction<IAnimeResult>
+    ) => {
+      const existAnime = state.watchList.find(x => x.id === action.payload.id);
+
+      if (existAnime) state.watchList.filter(x => x.id !== action.payload.id);
+      else state.watchList = [...state.watchList, action.payload];
+
+      setFromStorage('watchList', JSON.stringify(state.watchList));
+    },
+    setRecentlyWatching: (
+      state: Draft<IInitialState>,
+      action: PayloadAction<IAnimeResult>
     ) => {
       const item = action.payload;
-      const existEpisode = state.watchList?.find(x => x.id === item.id);
+      const isEpisodeExist = state.recentWatch.find(x => x.id === item.id);
 
-      if (existEpisode) {
-        state.watchList = state.watchList?.map(watch =>
-          watch.id === existEpisode.id ? item : watch
+      if (isEpisodeExist)
+        state.recentWatch.map(recent =>
+          recent.id === item.id ? item : recent
         );
-      } else {
-      	state.watchList = [...state.watchList, item];
-      }
+      else state.recentWatch = [...state.recentWatch, item];
+
+      setFromStorage('recentWatch', JSON.stringify(state.recentWatch));
     },
   },
 });
 
 export const {
-  incrementEpisode,
-  decrementEpisode,
   setEpisodes,
   setEpisodeId,
   setSources,
@@ -117,6 +119,7 @@ export const {
   setProviders,
   setTotalEpisodes,
   resetStates,
-  recentwatch,
+  setWatchList,
+  setRecentlyWatching,
 } = watchSlice.actions;
 export default watchSlice.reducer;

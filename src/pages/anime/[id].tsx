@@ -1,4 +1,4 @@
-import React, { Fragment, useState, useMemo } from 'react';
+import React, { Fragment, useState, useMemo, useEffect } from 'react';
 import { NextSeo } from 'next-seo';
 import { META } from '@consumet/extensions';
 import { GetServerSideProps, InferGetServerSidePropsType } from 'next';
@@ -6,7 +6,7 @@ import { IAnimeInfo } from '@consumet/extensions/dist/models';
 import progressBar from '@/components/shared/loading';
 import { base64SolidImage } from '@/utils/image';
 import Genre from '@/components/shared/genre';
-import { stripHtml, parseData } from '@/utils/index';
+import { stripHtml, parseData, getFromStorage } from '@/utils/index';
 import classNames from 'classnames';
 import InfoItem from '@/components/shared/info-item';
 import EpisodesButton from '@/components/watch/episodes-button';
@@ -20,6 +20,9 @@ import TitleName from '@/components/shared/title-name';
 import { TitleType } from 'types/types';
 import { useRouter } from 'next/router';
 import DefaultLayout from '@/components/layouts/default';
+import Button from '@/components/shared/button';
+import { setWatchList } from '@/store/watch/slice';
+import { useDispatch, useSelector } from '@/store/store';
 
 export const getServerSideProps: GetServerSideProps = async ({ params }) => {
   let id = params!.id;
@@ -46,8 +49,17 @@ const Anime = ({
   animeList,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
   const router = useRouter();
+  const dispatch = useDispatch();
   const [showMore, setShowMore] = useState<boolean>(false);
+  const [watchListStore, setWatchListStore] = useState([]);
   const { data: episodes, isLoading, isError } = useEpisodes(animeList?.id);
+
+  // const existedStored = useMemo(
+  //   () => watchListStore?.find(x => x.id === animeList.id),
+  //   [watchListStore, animeList]
+  // );
+
+  // console.log(existedStored);
 
   const lastEpisodes = useMemo(() => {
     if (!isLoading) {
@@ -100,8 +112,8 @@ const Anime = ({
           <div className="absolute top-0 left-0 bg-banner-shadow h-full w-full"></div>
         </div>
         <div className="bg-[#100f0f] px-[4%] grid grid-cols-1 justify-items-center gap-[70px] md:grid-cols-[228px_1fr] md:gap-[18px] pb-7">
-          <div className="min-w-[170px] w-[170px] h-auto">
-            <div className="min-w-[170px] w-[170px] h-[216px] block mt-[-88px] md:mt-[-69px] md:min-w-[200px] md:w-[200px] md:h-[300px]">
+          <div className="min-w-[180px] w-[180px] md:w-full md:min-w-full h-auto">
+            <div className="min-w-full w-full h-[216px] block mt-[-88px] md:mt-[-69px] md:h-[300px]">
               <Image
                 containerclassname="relative w-full min-w-full h-full"
                 className="rounded-lg"
@@ -116,10 +128,20 @@ const Anime = ({
                 alt={animeList?.title?.english || animeList?.title?.romaji}
               />
             </div>
+            {/* <Button
+              onClick={() => dispatch(setWatchList(animeList))}
+              style={{
+                backgroundColor: `${animeList?.color || '#000'}`,
+              }}
+              className="w-full py-2 text-white hover:opacity-80"
+              type="button"
+            >
+              Add to watchlist
+            </Button> */}
           </div>
-          <div className="grid auto-rows-min text-white py-4 w-full z-10 mt-[-69px]">
+          <div className="grid text-white py-4 w-full z-10 mt-[-69px]">
             <div className="flex items-center flex-wrap gap-2 mb-7">
-              <button
+              <Button
                 onClick={() =>
                   router.push(`/watch/${animeList?.id}?episode=${lastEpisodes}`)
                 }
@@ -133,7 +155,7 @@ const Anime = ({
                   <PlayIcon />
                 </div>
                 <p className="text-sm">Watch Now</p>
-              </button>
+              </Button>
             </div>
             <h1
               style={{ color: `${animeList?.color}` }}
@@ -154,16 +176,17 @@ const Anime = ({
                 </div>
               ))}
             </div>
-            <p className="leading-6 text-sm md:text-base line-clamp-1 text-slate-300 font-extralight mt-2">
+            <p className="leading-6 text-sm md:text-base text-slate-300 font-extralight mt-2">
               {showMore
                 ? stripHtml(animeList?.description)
-                : stripHtml(animeList?.description?.substring(0, 415))}
-              <button
+                : stripHtml(animeList?.description?.substring(0, 485))}
+              <Button
+                type="button"
                 className="shadow-lg text-white text-xs p-1 transform transition duration-300 ease-out hover:scale-105"
                 onClick={() => setShowMore(!showMore)}
               >
                 {showMore ? 'Show less' : 'Show more'}
-              </button>
+              </Button>
             </p>
             <div className="hidden md:flex flex-row gap-x-8 overflow-x-auto md:gap-x-16 [&>*]:shrink-0 mt-4">
               <InfoItem

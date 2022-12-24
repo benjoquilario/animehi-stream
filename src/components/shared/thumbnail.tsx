@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import Link from 'next/link';
 import { Options } from '@popperjs/core';
 import { base64SolidImage } from '@/utils/image';
@@ -12,6 +12,8 @@ import Genre from './genre';
 import Icon from './icon';
 import { FaThumbsUp, FaPlay } from 'react-icons/fa';
 import { AiFillClockCircle } from 'react-icons/ai';
+import { useDispatch } from '@/store/store';
+import { setRecentlyWatching } from '@/store/watch/slice';
 
 export type ThumbnailProps = {
   id: string | number;
@@ -67,6 +69,8 @@ const Thumbnail = ({
   popularity,
   banner,
 }: ThumbnailProps): JSX.Element => {
+  const dispatch = useDispatch();
+
   return (
     <Popup
       reference={
