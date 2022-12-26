@@ -50,11 +50,14 @@
 
 ## Screenshots
 
-<a href="https://insider.vercel.app/" target="blank">
-  <img src="screenshots/home.png" />
+<a href="https://animehi-stream.vercel.app/" target="blank">
+  <img src="public/watch.jpg" />
 </a>
-<a href="https://insider.vercel.app/" target="blank">
-  <img src="screenshots/profile.png" />
+<a href="https://animehi-stream.vercel.app/" target="blank">
+  <img src="public/page.png" />
+</a>
+<a href="https://animehi-stream.vercel.app/" target="blank">
+  <img src="public/mobile.png" />
 </a>
 
 Try the App: [AnimeHI](https://animehi-stream.vercel.app/)
