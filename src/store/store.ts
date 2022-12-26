@@ -13,8 +13,14 @@ export const createStore = (preloadedState?: { [x: string]: any }) =>
     reducer: {
       anime: animeReducer,
       watch: watchReducer,
-      recent: recentReducer
+      recent: recentReducer,
     },
+    middleware: getDefaultMiddleware =>
+      getDefaultMiddleware({
+        serializableCheck: {
+          ignoredActions: ['persist/PERSIST'],
+        },
+      }),
     preloadedState,
   });
 
@@ -41,7 +47,6 @@ export type Store = ReturnType<typeof createStore>;
 
 // Infer the `RootState` and `AppDispatch` types from the store itself
 export type RootState = ReturnType<Store['getState']>;
-// Inferred type: {posts: PostsState, comments: CommentsState, users: UsersState}
 export type AppDispatch = Store['dispatch'];
 
 export const useDispatch = () => useDispatchBase<AppDispatch>();

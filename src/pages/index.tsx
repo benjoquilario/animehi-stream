@@ -92,7 +92,7 @@ const HomePage = () => {
   return (
     <ClientOnly>
       <DefaultLayout>
-        <div className="w-full h-full bg-center bg-top overflow-hidden bg-cover px-0 md:px-[6%]">
+        <div className="w-full h-full bg-center bg-top overflow-hidden bg-cover px-0 md:px-[3%]">
           {!trendingAnimeLoading ? (
             <Swiper
               spaceBetween={30}
@@ -118,7 +118,7 @@ const HomePage = () => {
             <LoadingBanner />
           )}
         </div>
-        <main className="mt-[40px] px-[4%] md:px-[6%]">
+        <main className="mt-[40px] px-[3%]">
           <div className="flex flex-col space-y-6 md:grid lg:grid-cols-1 xl:grid-cols-[1fr_310px] 2xl:grid-cols-[1fr_340px] md:gap-4">
             <div className="space-y-6">
               <RecentRelease title="Recent Updated" />

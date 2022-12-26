@@ -14,7 +14,7 @@ type EpisodeChunkButtonProps = {
 const EpisodeChunkButton = ({ title }: EpisodeChunkButtonProps) => {
   return (
     <div className="w-full flex items-center justify-between py-2 px-4 md:px-0">
-      <p className="text-white text-sm">Episode {title}</p>
+      <p className="text-white text-xs">Episode {title}</p>
 
       <BsChevronDown className="w-4 h-4 text-white" />
     </div>

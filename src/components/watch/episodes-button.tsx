@@ -28,7 +28,7 @@ const Episodes = ({
       );
 
       return (
-        <li className="mt-1" key={index}>
+        <li className="odd:bg-[#0d0d0d] even:bg-[#111]" key={index}>
           <EpisodeChunk
             buttonClassName="episode-buttons bg-background-darker"
             title={`${firstEpisode.number} - ${lastEpisode.number}`}

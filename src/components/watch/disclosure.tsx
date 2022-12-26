@@ -20,7 +20,7 @@ const Disclosure = (props: PropsWithChildren<DisclosureProps>): JSX.Element => {
       {({ open }) => (
         <>
           <HeadlessDisclosure.Button
-            className={classNames('ml-1 block', props.buttonClassName)}
+            className={classNames('mt-1 px-3 block', props.buttonClassName)}
           >
             {props.button}
           </HeadlessDisclosure.Button>

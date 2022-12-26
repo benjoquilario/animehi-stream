@@ -64,7 +64,7 @@ export const getFromStorage = (key: string) => {
   }
 };
 
-export const setFromStorage = (key: string, value: any) => {
+export const setStorage = (key: string, value: any) => {
   if (typeof window !== undefined) {
     return localStorage.setItem(key, value);
   }

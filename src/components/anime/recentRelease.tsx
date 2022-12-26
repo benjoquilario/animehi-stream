@@ -54,7 +54,7 @@ const RecentRelease = ({ title }: RecentReleaseProps): JSX.Element => {
       </div>
       <div
         // ref={rowRef}
-        className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-2 relative overflow-hidden"
+        className="grid grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-2 relative overflow-hidden"
       >
         {!data && !error
           ? Array.from(Array(12), (_, i) => <RecentLoading key={i} />)
@@ -83,7 +83,7 @@ const RecentRelease = ({ title }: RecentReleaseProps): JSX.Element => {
 
 const RecentLoading = () => (
   <div className="relatve flex flex-col animate-pulse">
-    <div className="md:w-[144px] md:min-w-[153px] h-[210px] md:h-[221px] bg-[#141313] rounded-lg"></div>
+    <div className="md:w-[140px] md:min-w-[140px] h-[160px] min-h-[160px] md:h-[210px] md:min-h-[221px] bg-[#141313] rounded-lg"></div>
     <div className="h-4 w-full bg-[#141313] rounded-lg mt-2"></div>
   </div>
 );

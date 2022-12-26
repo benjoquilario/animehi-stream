@@ -75,7 +75,7 @@ const Search = ({ query }: { query: string }) => {
 
 const RecentLoading = () => (
   <div className="relatve flex flex-col animate-pulse">
-    <div className="md:w-[144px] md:min-w-[153px] h-[210px] md:h-[221px] bg-[#141313] rounded-lg"></div>
+    <div className="md:w-[144px] md:min-w-[153px] h-[210px] md:h-[235px] xl:w-[190px] xl:min-w-[190px] bg-[#141313] rounded-lg"></div>
     <div className="h-4 w-full bg-[#141313] rounded-lg mt-2"></div>
   </div>
 );

@@ -21,8 +21,8 @@ import { TitleType } from 'types/types';
 import { useRouter } from 'next/router';
 import DefaultLayout from '@/components/layouts/default';
 import Button from '@/components/shared/button';
-import { setWatchList } from '@/store/watch/slice';
 import { useDispatch, useSelector } from '@/store/store';
+import { setWatchList } from '@/store/recent/slice';
 
 export const getServerSideProps: GetServerSideProps = async ({ params }) => {
   let id = params!.id;
@@ -309,7 +309,7 @@ const Anime = ({
                 <TitleName title="Episodes" />
                 <EpisodesButton
                   episodesClassName={classNames(
-                    'grid items-start gap-3 bg-[#100f0f] p-2',
+                    'grid items-start gap-3 bg-[#100f0f]',
                     episodes?.length > 50
                       ? 'grid-cols-2 md:grid-cols-5'
                       : 'grid-cols-1'

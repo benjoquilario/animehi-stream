@@ -106,7 +106,7 @@ const Header = () => {
         isFixed ? 'top-[-56px]' : 'top-0'
       )}
     >
-      <div className="flex items-center gap-4 h-[52px] md:h-[67px] 2xl:h-[80px] px-[4%] md:px-[6%] w-full mx-auto max-w-screen-2xl">
+      <div className="flex items-center gap-4 h-[52px] md:h-[67px] 2xl:h-[80px] px-[3%] w-full mx-auto max-w-screen-2xl">
         <Link href="/">
           <a className="flex items-center text-white z-10">
             <div className="flex">

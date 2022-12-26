@@ -8,9 +8,8 @@ import progressBar from '@/components/shared/loading';
 import { DefaultSeo } from 'next-seo';
 
 function MyApp({ Component, pageProps }: AppProps) {
-  // const getLayout =
-  //   Component.getLayout ?? (page => <DefaultLayout>{page}</DefaultLayout>);
   const reduxStore = useStore(pageProps.initialReduxState);
+
   useEffect(() => {
     Router.events.on('routeChangeStart', progressBar.start);
     Router.events.on('routeChangeComplete', progressBar.finish);

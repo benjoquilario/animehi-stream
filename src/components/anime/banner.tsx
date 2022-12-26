@@ -17,7 +17,7 @@ export type IBannerProps = {
 };
 
 const Banner: React.FC<IBannerProps> = ({ animeList }) => (
-  <div className="relative w-full h-[396px] md:h-[450px] min-h-[396px] md:min-h-[450px] 2xl:h-[620px] 2xl:min-h-[620px]">
+  <div className="relative w-full h-[326px] md:h-[450px] min-h-[326px] md:min-h-[450px] 2xl:h-[620px] 2xl:min-h-[620px]">
     <div className="relative flex items-center w-full h-full shrink-0">
       <span className="banner-linear absolute top-0 left-0 w-full h-[101%] z-[20]"></span>
       <div className="absolute pl-[4%] md:pl-0 pr-[1rem] left-0 z-[20] w-[80%] md:w-[40%] bottom-[15%]">
@@ -60,7 +60,7 @@ const Banner: React.FC<IBannerProps> = ({ animeList }) => (
           style={{
             backgroundImage: `url("${animeList?.cover || animeList?.image}")`,
           }}
-          className="relative overflow-hidden bg-no-repeat	bg-center	w-full h-full bg-cover rounded-md mt-4"
+          className="relative overflow-hidden bg-no-repeat	bg-center	w-full h-full bg-cover rounded-md mt-6"
         ></div>
       </div>
     </div>

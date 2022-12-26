@@ -75,6 +75,60 @@
   display: none !important;
 }
 
+:root {
+  --plyr-color-main: #6a55fa;
+}
+
+.plyr__controls .plyr__progress__container {
+  flex: 1 1;
+  min-width: 0;
+  position: absolute;
+  bottom: 40px;
+  width: 100%;
+  padding-left: 5px !important;
+  padding-right: 5px !important;
+  margin-left: 0 !important;
+  margin-right: 0 !important;
+  left: 0 !important;
+}
+
+.plyr__volume {
+  align-items: center;
+  display: flex;
+  max-width: 110px;
+  min-width: 80px;
+  position: relative;
+  margin-right: auto !important;
+  width: 20%;
+}
+
+.plyr__controls .plyr__controls__item:first-child {
+  margin-left: 0;
+  margin-right: 0 !important;
+}
+
+/* .episodename {
+  position: absolute;
+  left: 50%;
+  -webkit-transform: translate(-50%);
+  transform: translate(-50%);
+  cursor: default;
+} */
+
+.plyr--full-ui {
+  height: 100%;
+  max-height: 100%;
+}
+
+/*
+.video {
+  width: 100%;
+  min-height: 100vh;
+  position: absolute;
+  opacity: 1;
+  transition: opacity 300ms ease 0s;
+} */
+
 @layer base {
   html {
     font-family: 'Source Sans Pro', sans-serif;

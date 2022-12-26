@@ -13,7 +13,8 @@ import Icon from './icon';
 import { FaThumbsUp, FaPlay } from 'react-icons/fa';
 import { AiFillClockCircle } from 'react-icons/ai';
 import { useDispatch } from '@/store/store';
-import { setRecentlyWatching } from '@/store/watch/slice';
+import { useRouter } from 'next/router';
+import { setRecentlyWatching } from '@/store/recent/slice';
 
 export type ThumbnailProps = {
   id: string | number;
@@ -69,6 +70,7 @@ const Thumbnail = ({
   popularity,
   banner,
 }: ThumbnailProps): JSX.Element => {
+  const router = useRouter();
   const dispatch = useDispatch();
 
   return (

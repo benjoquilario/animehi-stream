@@ -12,7 +12,7 @@ const DetailLinks = ({
   animeTitle,
   episodeNumber,
 }: DetailLinkProps): JSX.Element => (
-  <div className="flex text-white text-xs gap-2 items-center mb-4">
+  <div className="hidden md:flex text-white text-xs gap-2 items-center mb-4">
     <Link href="/">
       <a>Home</a>
     </Link>
