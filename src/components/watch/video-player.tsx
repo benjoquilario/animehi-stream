@@ -148,3 +148,9 @@ const VideoPlayer = ({
 
 export default React.memo(VideoPlayer);
 */
+
+const ArtPlyr = () => {
+  return <div>Plyr</div>;
+};
+
+export default ArtPlyr;

@@ -12,7 +12,7 @@ type ColumnSectionProps = {
   data: IAnimeInfo | IAnimeResult;
   isGenres?: boolean;
   className?: string;
-  genres: string[];
+  genres?: string[];
 };
 
 const ColumnSection = ({

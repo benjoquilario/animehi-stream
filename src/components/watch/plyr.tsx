@@ -106,3 +106,9 @@ const PlyrComponent = () => {
 
 export default React.memo(PlyrComponent);
 */
+
+const Plyr = () => {
+  return <div>Plyr</div>;
+};
+
+export default Plyr;

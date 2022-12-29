@@ -194,13 +194,7 @@ const Header = () => {
                   {searchResults?.map(result => (
                     <ColumnSection
                       key={result.id}
-                      animeId={result.id}
-                      image={result.image}
-                      type={result.type}
-                      status={result.status}
-                      releaseDate={result.releaseDate}
-                      title={result.title as TitleType}
-                      color={result.color as string}
+                      data={result}
                       isGenres={false}
                       className="h-20"
                     />
