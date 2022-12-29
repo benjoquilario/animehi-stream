@@ -16,7 +16,6 @@ import { useDispatch } from '@/store/store';
 import { useRouter } from 'next/router';
 import { IAnimeInfo } from '@consumet/extensions/dist/models/types';
 import { title } from '@/lib/helper';
-import Genres from './genres';
 
 export type ThumbnailProps = {
   data: IAnimeInfo | EnimeType;
@@ -103,7 +102,11 @@ const Thumbnail = ({
                   </Link>
                 </div>
                 {isRecent ? (
-                  <Link href={`/watch/${data.id}?episode=${episodeId}-enime`}>
+                  <Link
+                    href={`/watch/${
+                      data.anilistId || data.id
+                    }?episode=${episodeId}-enime`}
+                  >
                     <a
                       aria-label={`Play - ${title(
                         data.title as TitleType
