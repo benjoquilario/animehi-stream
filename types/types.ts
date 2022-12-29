@@ -14,12 +14,12 @@ export type EpisodesType = {
 };
 
 export type RecentType = {
-  animeId: string;
-  episodeId: string;
-  episodeNumber: number;
-  image: string;
-  title: string;
-  color: string;
+  animeId?: string;
+  episodeId?: string;
+  episodeNumber?: number;
+  image?: string;
+  title?: string | TitleType;
+  color?: string;
 };
 
 export type AniSkip = {

@@ -3,7 +3,7 @@ import Link from 'next/link';
 import { Options } from '@popperjs/core';
 import { base64SolidImage } from '@/src/lib/utils/image';
 import { PlayIcon } from '@heroicons/react/outline';
-import { TitleType } from '@/src/../types/types';
+import { EnimeType, TitleType } from '@/src/../types/types';
 import Image from '@/components/shared/image';
 import classNames from 'classnames';
 import Popup from './popup';
@@ -14,22 +14,17 @@ import { FaThumbsUp, FaPlay } from 'react-icons/fa';
 import { AiFillClockCircle } from 'react-icons/ai';
 import { useDispatch } from '@/store/store';
 import { useRouter } from 'next/router';
-import { setRecentlyWatching } from '@/store/recent/slice';
+import { IAnimeInfo } from '@consumet/extensions/dist/models/types';
+import { title } from '@/lib/helper';
+import Genres from './genres';
 
 export type ThumbnailProps = {
-  id: string | number;
-  episodeNumber?: number;
-  image?: string;
-  title: TitleType;
-  episodeId?: string;
-  color: string;
+  data: IAnimeInfo | EnimeType;
   isRecent: boolean;
-  description?: string;
-  format?: string;
+  episodeNumber?: number;
+  episodeId?: string;
+  image?: string;
   genres?: string[];
-  duration?: number;
-  popularity?: number;
-  banner?: string;
 };
 
 const popupOptions: Partial<Options> = {
@@ -55,23 +50,14 @@ const popupOptions: Partial<Options> = {
   ],
 };
 
-const Thumbnail = (props: ThumbnailProps): JSX.Element => {
-  const {
-    id,
-    episodeNumber,
-    image,
-    title,
-    episodeId,
-    color,
-    isRecent,
-    description,
-    genres,
-    format,
-    duration,
-    popularity,
-    banner,
-  } = props;
-
+const Thumbnail = ({
+  data,
+  isRecent,
+  episodeId,
+  episodeNumber,
+  image,
+  genres,
+}: ThumbnailProps): JSX.Element => {
   const router = useRouter();
   const dispatch = useDispatch();
 
@@ -99,29 +85,29 @@ const Thumbnail = (props: ThumbnailProps): JSX.Element => {
 
               <div className="relative aspect-w-2 aspect-h-3">
                 <div className="opacity-100">
-                  <Link href={`/anime/${id}`}>
-                    <a aria-label={title?.english || title?.romaji}>
+                  <Link href={`/anime/${data.id}`}>
+                    <a aria-label={title(data.title as TitleType)}>
                       <Image
                         layout="fill"
                         src={`${image}`}
                         objectFit="cover"
                         placeholder="blur"
                         blurDataURL={`data:image/svg+xml;base64,${base64SolidImage(
-                          color
+                          `${data.color}`
                         )}`}
                         className="rounded-lg"
-                        alt={`Anime - ${title?.english || title?.romaji}`}
+                        alt={`Anime - ${title(data.title as TitleType)}`}
                         containerclassname="relative w-full h-full hover:opacity-70 transition-opacity"
                       />
                     </a>
                   </Link>
                 </div>
                 {isRecent ? (
-                  <Link href={`/watch/${id}?episode=${episodeId}-enime`}>
+                  <Link href={`/watch/${data.id}?episode=${episodeId}-enime`}>
                     <a
-                      aria-label={`Play - ${
-                        title?.english || title?.romaji
-                      } episode ${episodeNumber}`}
+                      aria-label={`Play - ${title(
+                        data.title as TitleType
+                      )} episode ${episodeNumber}`}
                       className="center-element flex justify-center items-center w-[101%] h-full opacity-0 hover:opacity-100 focus:opacity-100 hover:bg-[#1111117a] transition"
                     >
                       <div className="h-11 w-11 text-primary">
@@ -134,14 +120,14 @@ const Thumbnail = (props: ThumbnailProps): JSX.Element => {
             </div>
           </div>
 
-          <Link href={`/anime/${id}`}>
+          <Link href={`/anime/${data.id}`}>
             <a
-              style={{ color: `${color ? color : '#fff'}` }}
+              style={{ color: `${data.color ? data.color : '#fff'}` }}
               className={classNames(
                 'line-clamp-2 w-full h-auto p-1 text-left text-sm md:text-base hover:text-white font-semibold'
               )}
             >
-              {title?.english || title?.romaji}
+              {title(data.title as TitleType)}
             </a>
           </Link>
         </div>
@@ -151,22 +137,24 @@ const Thumbnail = (props: ThumbnailProps): JSX.Element => {
     >
       <Image
         layout="fill"
-        src={`${banner}`}
+        src={`${image}`}
         objectFit="cover"
         placeholder="blur"
-        blurDataURL={`data:image/svg+xml;base64,${base64SolidImage(color)}`}
+        blurDataURL={`data:image/svg+xml;base64,${base64SolidImage(
+          `${data.color}`
+        )}`}
         className=""
-        alt={`Anime - ${title?.english || title?.romaji}`}
+        alt={`Anime - ${title(data.title as TitleType)}`}
         containerclassname="relative w-full h-full transition-opacity"
       />
       <div className="absolute inset-0 bg-black opacity-60 z-100"></div>
       <div className="absolute inset-0 text-white p-4 flex justify-center flex-col">
-        <h2 className="text-2xl">{title?.english || title?.romaji}</h2>
+        <h2 className="text-2xl">{title(data.title as TitleType)}</h2>
         <p className="line-clamp-4 text-sm">
-          {stripHtml(description as string)}
+          {stripHtml(`${data.description}`)}
         </p>
         <div className="hidden mr-2 md:flex flex-wrap gap-2 mt-2">
-          {genres?.map((genre: string) => (
+          {genres?.map(genre => (
             <div className="flex items-center gap-2" key={genre}>
               <Genre genre={genre} className="text-base" />
               <span className="w-1.5 h-1.5 bg-primary rounded-full inline-block"></span>
@@ -174,9 +162,12 @@ const Thumbnail = (props: ThumbnailProps): JSX.Element => {
           ))}
         </div>
         <div className="flex space-x-2">
-          <Icon icon={FaPlay} text={`${format}`} />
-          <Icon icon={AiFillClockCircle} text={`${duration || 24} Min/Ep`} />
-          <Icon icon={FaThumbsUp} text={`${popularity}`} />
+          <Icon icon={FaPlay} text={`${data.format}`} />
+          <Icon
+            icon={AiFillClockCircle}
+            text={`${data.duration || 24} Min/Ep`}
+          />
+          <Icon icon={FaThumbsUp} text={`${data.popularity}`} />
         </div>
       </div>
     </Popup>

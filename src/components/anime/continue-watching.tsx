@@ -1,17 +1,15 @@
-import React, { useMemo } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import Storage from '@/src/lib/utils/storage';
-import Link from 'next/link';
-import Image from '@/components/shared/image';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { RecentType } from 'types/types';
-import { base64SolidImage } from '@/src/lib/utils/image';
 import 'swiper/css';
 import 'swiper/css/free-mode';
 import 'swiper/css/pagination';
 import { FreeMode, Pagination } from 'swiper';
-import { PlayIcon } from '@heroicons/react/outline';
-import classNames from 'classnames';
+import Button from '../shared/button';
 import TitleName from '../shared/title-name';
+import WatchCard from '../shared/watch-card';
+import { BsFillTrashFill } from 'react-icons/bs';
 
 const breakpoints = {
   1280: {
@@ -32,17 +30,41 @@ const breakpoints = {
 };
 
 const ContinueWatching = () => {
-  const recentlyWatching = useMemo(() => {
-    const storage = new Storage('recentWatched');
+  const [recentWatched, setRecentWatched] = useState<RecentType[] | []>([]);
+  const storage = new Storage('recentWatched');
 
+  useEffect(() => {
     const list =
       typeof window !== 'undefined' && storage.find<RecentType>().reverse();
-    return list as RecentType[];
+    setRecentWatched(list as RecentType[]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  return (
+  const deleteRecentWatched = () => {
+    setRecentWatched([]);
+    return typeof window !== 'undefined' && storage.clear();
+  };
+
+  const removeItem = (animeId?: string) => {
+    typeof window !== 'undefined' && storage.remove({ animeId: animeId });
+    const list =
+      typeof window !== 'undefined' && storage.find<RecentType>().reverse();
+
+    setRecentWatched(list as RecentType[]);
+  };
+
+  return recentWatched.length > 0 ? (
     <div className="relative">
-      <TitleName title="Continue Watching" />
+      <div className="flex items-center justify-between text-white">
+        <TitleName title="Continue Watching" />
+        <Button
+          onClick={deleteRecentWatched}
+          className="p-1 md:p-2 text-[#ededed] hover:bg-background-900 rounded-full transition"
+          aria-label="previous page"
+        >
+          <BsFillTrashFill className="h-6 w-6" />
+        </Button>
+      </div>
       <Swiper
         breakpoints={breakpoints}
         spaceBetween={10}
@@ -53,70 +75,22 @@ const ContinueWatching = () => {
         modules={[FreeMode, Pagination]}
         className="mySwiper"
       >
-        {recentlyWatching?.map(recently => (
+        {recentWatched?.map(recently => (
           <SwiperSlide key={recently.animeId}>
-            <div className="col-span-1">
-              <div className="relative">
-                <div className="relative cursor-pointer rounded overflow-hidden">
-                  <div className="relative aspect-w-2 aspect-h-3">
-                    <div className="opacity-100">
-                      <Link href={`/anime/${recently?.animeId}`}>
-                        <a aria-label={recently?.title || recently?.title}>
-                          <Image
-                            layout="fill"
-                            src={`${recently?.image}`}
-                            objectFit="cover"
-                            placeholder="blur"
-                            blurDataURL={`data:image/svg+xml;base64,${base64SolidImage(
-                              recently?.color
-                            )}`}
-                            className="rounded-lg"
-                            alt={`Anime - ${
-                              recently?.title || recently?.title
-                            }`}
-                            containerclassname="relative w-full h-full hover:opacity-70 transition-opacity"
-                          />
-                        </a>
-                      </Link>
-                    </div>
-                    <Link
-                      href={`/watch/${recently.animeId}?episode=${recently.episodeId}`}
-                    >
-                      <a
-                        aria-label={`Play - ${
-                          recently.title || recently.title
-                        } episode ${recently.episodeNumber}`}
-                        className="center-element flex justify-center items-center w-[101%] h-full opacity-0 hover:opacity-100 focus:opacity-100 hover:bg-[#1111117a] transition"
-                      >
-                        <div className="text-primary text-center flex flex-col items-center">
-                          <PlayIcon className="h-11 w-11 md:h-16 md:w-16" />
-                        </div>
-                      </a>
-                    </Link>
-                  </div>
-                  <h4 className="text-sm md:text-base font-bold text-white text-left">
-                    Episode {recently.episodeNumber}
-                  </h4>
-                  <Link href={`/anime/${recently.animeId}`}>
-                    <a
-                      style={{
-                        color: `${recently.color ? recently.color : '#fff'}`,
-                      }}
-                      className={classNames(
-                        'line-clamp-2 w-full h-auto text-left text-sm md:text-base hover:text-white font-semibold'
-                      )}
-                    >
-                      {recently.title || recently.title}
-                    </a>
-                  </Link>
-                </div>
-              </div>
-            </div>
+            <WatchCard
+              onClick={() => removeItem(recently.animeId)}
+              animeId={recently.animeId}
+              title={recently.title}
+              image={recently.image}
+              color={recently.color}
+              episodeNumber={recently.episodeNumber}
+              episodeId={recently.episodeId}
+            />
           </SwiperSlide>
         ))}
       </Swiper>
     </div>
-  );
+  ) : null;
 };
 
 export default React.memo(ContinueWatching);

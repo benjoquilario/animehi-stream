@@ -1,35 +1,25 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import Link from 'next/link';
 import Image from './image';
 import Genre from './genre';
 import classNames from 'classnames';
 import { base64SolidImage } from '@/src/lib/utils/image';
 import { TitleType } from 'types/types';
+import { IAnimeInfo, IAnimeResult } from '@consumet/extensions';
+import { title } from '@/lib/helper';
 
 type ColumnSectionProps = {
-  animeId?: string;
-  image?: string;
-  title: TitleType;
-  type?: string;
-  genres?: string[];
-  status?: string;
-  releaseDate?: string;
-  color: string;
+  data: IAnimeInfo | IAnimeResult;
   isGenres?: boolean;
   className?: string;
+  genres: string[];
 };
 
 const ColumnSection = ({
-  animeId,
-  image,
-  title,
-  type,
-  genres,
-  status,
-  releaseDate,
-  color,
+  data,
   isGenres = true,
   className,
+  genres,
 }: ColumnSectionProps) => (
   <li
     className={classNames(
@@ -40,42 +30,42 @@ const ColumnSection = ({
     <div className="w-12 shrink-0">
       <Image
         containerclassname="relative h-[72px] w-[48px]"
-        src={`${image}`}
-        alt={`${title.english || title.romaji}`}
+        src={`${data.image}`}
+        alt={`${title(data.title as TitleType)}`}
         layout="fill"
         objectFit="cover"
         placeholder="blur"
         blurDataURL={`data:image/svg+xml;base64,${base64SolidImage(
-          color as string
+          `${data.color}`
         )}`}
       />
     </div>
     <div className="pl-2 self-start">
       <style jsx>{`
         .hover-text:hover {
-          color: ${color ? color : '#6a55fa'};
+          color: ${data.color ? data.color : '#6a55fa'};
         }
       `}</style>
-      <Link href={`/anime/${animeId}`}>
+      <Link href={`/anime/${data.id}`}>
         <a
           className={classNames(
             'hover-text text-base font-semibold text-white transition duration-300 line-clamp-1'
           )}
         >
-          {title.english || title.romaji}
+          {title(data.title as TitleType)}
         </a>
       </Link>
       <div className="flex line-clamp-1 items-center space-x-2 text-sm text-slate-300">
-        <span>{type}</span>
+        <span>{data.type}</span>
         <span className="w-1.5 h-1.5 bg-primary rounded-full inline-block"></span>
-        <span>{releaseDate}</span>
+        <span>{data.releaseDate}</span>
         <span className="w-1.5 h-1.5 bg-primary rounded-full inline-block"></span>
-        <span>{status}</span>
+        <span>{data.status}</span>
       </div>
 
       {isGenres ? (
         <div className="line-clamp-1 items-center space-x-2 text-sm text-slate-300">
-          {genres?.map((genre: string) => (
+          {genres?.map(genre => (
             <React.Fragment key={genre}>
               <span>{genre}</span>
               <span className="w-1.5 h-1.5 bg-primary rounded-full inline-block"></span>

@@ -5,10 +5,6 @@ import { EnimeType } from '@/src/../types/types';
 import Pagination from '../shared/pagination';
 import TitleName from '../shared/title-name';
 
-export type RecentReleaseProps = {
-  title: string;
-};
-
 interface RecentResults {
   sources: {
     id: string;
@@ -20,7 +16,7 @@ interface RecentResults {
   anime: EnimeType;
 }
 
-const RecentRelease = ({ title }: RecentReleaseProps): JSX.Element => {
+const RecentRelease = (): JSX.Element => {
   const [recent, setRecent] = useState<RecentResults[] | []>([]);
   const [pageNumber, setPageNumber] = useState(1);
 
@@ -56,19 +52,12 @@ const RecentRelease = ({ title }: RecentReleaseProps): JSX.Element => {
           : recent?.map(({ anime, sources }, index) => (
               <Thumbnail
                 key={index}
-                id={anime?.anilistId as number}
                 episodeNumber={anime.currentEpisode}
-                image={anime?.coverImage || anime?.bannerImage}
-                title={anime?.title}
-                episodeId={sources?.[0]?.id}
-                color={anime?.color}
-                description={anime?.description}
+                data={anime}
                 isRecent={true}
+                image={anime.coverImage || anime.bannerImage}
+                episodeId={sources?.[0]?.id}
                 genres={anime.genre}
-                format={anime.format}
-                duration={anime.duration}
-                popularity={anime.popularity}
-                banner={anime.bannerImage || anime.coverImage}
               />
             ))}
       </div>

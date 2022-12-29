@@ -24,16 +24,10 @@ const ResultsCard = ({
           : animeList?.map((anime, index) => (
               <Thumbnail
                 key={index}
-                id={anime?.id}
-                image={anime?.image || anime?.cover}
-                title={anime?.title as TitleType}
-                color={anime?.color as string}
-                description={anime?.description as string}
-                genres={anime?.genres as string[]}
-                format={anime?.type}
-                popularity={anime?.popularity as number}
-                banner={anime?.cover || anime?.image}
+                data={anime}
                 isRecent={false}
+                image={anime.image || anime.cover}
+                genres={anime.genres}
               />
             ))}
       </div>

@@ -60,7 +60,6 @@ const OPlayer = (props: PlayerProps) => {
           }),
         })
         .then(() => {
-          console.log(malId);
           if (malId) {
             fetch(
               `https://api.aniskip.com/v2/skip-times/${malId}/${episodeNumber}?types=op&types=recap&types=mixed-op&types=ed&types=mixed-ed&episodeLength=0`
@@ -68,8 +67,6 @@ const OPlayer = (props: PlayerProps) => {
               .then(res => res.json())
               .then(res => {
                 res = res as AniSkip;
-
-                console.log(res);
 
                 const highlights: Highlight[] = [];
                 let opDuration = [],

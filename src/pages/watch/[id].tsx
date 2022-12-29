@@ -193,7 +193,7 @@ const WatchAnime: NextPage<WatchAnimeProps> = ({
           ) : (
             <VideoPlayer
               malId={animeList?.malId}
-              poster={currentEpisode?.image || animeList?.cover}
+              poster={currentEpisode?.image}
               episodeId={episodeId}
               image={animeList?.image || animeList?.cover}
               className="col-span-full"

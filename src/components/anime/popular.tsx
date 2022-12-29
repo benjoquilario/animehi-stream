@@ -23,15 +23,9 @@ const Popular = ({ popularSeason, isLoading }: PopularProps): JSX.Element =>
         <ul>
           {popularSeason?.results?.map((anime, index) => (
             <ColumnSection
-              image={anime.image}
-              title={anime.title as TitleType}
-              type={anime.type}
-              releaseDate={anime.releaseDate}
-              status={anime.status}
-              key={index}
-              animeId={anime.id}
+              data={anime}
               genres={anime.genres as string[]}
-              color={anime.color as string}
+              key={index}
             />
           ))}
           <li>

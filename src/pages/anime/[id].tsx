@@ -66,7 +66,7 @@ const Anime = ({
     typeof window !== 'undefined' &&
       storage.create({
         id: animeList?.id,
-        title: animeList?.title,
+        title: animeList?.title?.romaji || animeList?.title?.english,
         image: animeList?.image,
         color: animeList?.color,
         description: animeList?.description,

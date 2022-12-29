@@ -6,7 +6,10 @@ import { Swiper, SwiperSlide } from 'swiper/react';
 import { Autoplay, Pagination, Navigation } from 'swiper';
 import Banner, { BannerResult } from '@/components/anime/banner';
 import progressBar from '@/components/shared/loading';
-import { IAnimeResult } from '@consumet/extensions/dist/models/types';
+import {
+  IAnimeInfo,
+  IAnimeResult,
+} from '@consumet/extensions/dist/models/types';
 import { TYPE, FORMAT, SORT } from '@/src/lib/utils/config';
 import RecentRelease from '@/components/anime/recentRelease';
 import { TitleType } from '@/src/../types/types';
@@ -109,7 +112,7 @@ const HomePage = () => {
               modules={[Autoplay, Pagination, Navigation]}
               className="mySwiper"
             >
-              {trendingAnime?.results?.map((anime, idx) => (
+              {trendingAnime?.results?.map((anime: IAnimeInfo, idx: number) => (
                 <SwiperSlide key={idx}>
                   <Banner animeList={anime as BannerResult} />
                 </SwiperSlide>
@@ -123,7 +126,7 @@ const HomePage = () => {
           <div className="flex flex-col space-y-6 md:grid lg:grid-cols-1 xl:grid-cols-[1fr_310px] 2xl:grid-cols-[1fr_340px] md:gap-4">
             <div className="space-y-6 w-full overflow-hidden">
               <ContinueWatching />
-              <RecentRelease title="Recent Updated" />
+              <RecentRelease />
               <div className="flex flex-col md:flex-row gap-2">
                 <Row
                   season={currentSeason.season}

@@ -21,15 +21,9 @@ const Row = ({ title, animeList, season, isLoading }: RowProps): JSX.Element =>
           <ul className="w-full">
             {animeList?.results?.map((anime, index) => (
               <ColumnSection
-                animeId={anime.id}
-                image={anime.image}
-                title={anime.title as TitleType}
-                type={anime.type}
-                genres={anime.genres as string[]}
-                status={anime.status}
                 key={index}
-                releaseDate={anime.releaseDate}
-                color={anime.color as string}
+                data={anime}
+                genres={anime.genres as string[]}
               />
             ))}
             <li>
