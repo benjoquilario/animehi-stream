@@ -1,42 +1,79 @@
-import React, { useEffect, useState } from 'react';
-import VideoPlayer from './video-player';
+import React, { useEffect } from 'react';
 import classNames from 'classnames';
 import { AiFillDatabase } from 'react-icons/ai';
 import { useDispatch, useSelector } from '@/store/store';
-import { setProviders, setEpisodeId, setServer } from '@/store/watch/slice';
-import { setRecentlyWatching } from '@/store/recent/slice';
-import { useRouter } from 'next/router';
-import { extractEpisode, getFromStorage, setStorage } from '@/utils/index';
-import { EpisodesType } from '@/src/../types/types';
+import { setEpisodeId, setServer } from '@/store/watch/slice';
+import { EpisodesType, RecentType } from '@/src/../types/types';
 import { TbPlayerTrackNext, TbPlayerTrackPrev } from 'react-icons/tb';
 import Button from '../shared/button';
-import { IAnimeResult } from '@consumet/extensions';
-import PlyrComponent from './plyr';
+import Storage from '@/src/lib/utils/storage';
+import OPlayer from '@/components/player/op-player';
 
 type VideoProps = {
+  malId: number;
   poster: string;
+  episodeId: string;
+  image: string;
   title: string;
-  animeList: IAnimeResult;
   className: string;
+  color: string;
   episodeNumber: number;
   nextEpisode: EpisodesType;
   prevEpisode: EpisodesType;
 };
 
-const Video = ({
-  poster,
-  title,
-  className,
-  episodeNumber,
-  nextEpisode,
-  prevEpisode,
-}: VideoProps): JSX.Element => {
-  const router = useRouter();
+const Video = (props: VideoProps): JSX.Element => {
+  const {
+    malId,
+    poster,
+    episodeId,
+    image,
+    title,
+    color,
+    className,
+    episodeNumber,
+    nextEpisode,
+    prevEpisode,
+  } = props;
+
   const dispatch = useDispatch();
-  const [server, totalEpisodes] = useSelector(store => [
+  const [animeId, server, totalEpisodes] = useSelector(store => [
+    store.anime.animeId,
     store.watch.server,
     store.watch.totalEpisodes,
   ]);
+
+  useEffect(() => {
+    const storage = new Storage('recentWatched');
+    if (storage.has({ episodeId })) return;
+
+    const list =
+      typeof window !== 'undefined' &&
+      storage.findOne<RecentType>({ animeId: animeId });
+
+    if (list)
+      typeof window !== 'undefined' &&
+        storage.update(list, {
+          animeId,
+          title,
+          episodeNumber,
+          image,
+          episodeId,
+          color,
+        });
+    else
+      typeof window !== 'undefined' &&
+        storage.create({
+          animeId,
+          title,
+          episodeNumber,
+          image,
+          episodeId,
+          color,
+        });
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [animeId, episodeId]);
 
   return (
     <div
@@ -46,8 +83,11 @@ const Video = ({
       )}
     >
       <div className="h-full">
-        {server === 'server 1' ? <PlyrComponent /> : null}
-        {/* {server === 'server 2' ? <VideoPlayer poster={poster} title={title} /> : null} */}
+        <OPlayer episodeNumber={episodeNumber} malId={malId} poster={poster} />
+        {/* {server === 'server 1' ? <PlyrComponent /> : null} */}
+        {/* {server === 'server 2' ? (
+          <VideoPlayer poster={poster} title={title} />
+        ) : null} */}
       </div>
       <div className="grid grid-cols-1 md:grid-cols-[auto_1fr] bg-[#000] pt-5 px-3 gap-3">
         <div className="bg-[#100f0f] py-2 px-6">

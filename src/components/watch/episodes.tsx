@@ -22,7 +22,7 @@ const Episodes = ({ activeIndex, episodes }: EpisodesProps): JSX.Element => {
           <Button
             onClick={() => dispatch(setEpisodeId(episode.id))}
             className={classNames(
-              'flex flex-row justify-between items-center py-3 px-4 w-full text-left hover:bg-[#000] transition',
+              'flex flex-row justify-between items-center py-3 px-4 w-full text-left hover:bg-[#1b1919] transition',
               activeIndex === episode.number && 'bg-[#6A55FA]'
             )}
           >
@@ -34,4 +34,4 @@ const Episodes = ({ activeIndex, episodes }: EpisodesProps): JSX.Element => {
   );
 };
 
-export default Episodes;
+export default React.memo(Episodes);

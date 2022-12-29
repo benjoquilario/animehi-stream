@@ -1,5 +1,5 @@
 import useSWR from 'swr';
-import { BASE_URL } from '@/utils/config';
+import { BASE_URL } from '@/src/lib/utils/config';
 
 const useEpisodes = (id: string) => {
   const fetcher = async (episodeId: string) =>

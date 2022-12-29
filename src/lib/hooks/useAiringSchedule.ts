@@ -1,5 +1,5 @@
 import useSWR from 'swr';
-import { BASE_URL } from '@/utils/config';
+import { BASE_URL } from '@/src/lib/utils/config';
 import { IAnimeResult, ISearch } from '@consumet/extensions/dist/models/types';
 import { TitleType } from 'types/types';
 

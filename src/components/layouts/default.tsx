@@ -14,7 +14,7 @@ const DefaultLayout = ({
   header = true,
 }: IDefaultProps) => {
   return (
-    <div className="min-h-screen overflow-x-hidden bg-[#000] w-full mx-auto max-w-screen-2xl">
+    <div className="min-h-screen overflow-x-hidden bg-black w-full mx-auto max-w-screen-2xl">
       {header && <Header />}
       {children}
       {footer && <Footer />}

@@ -4,7 +4,7 @@ import Icon from '@/components/shared/icon';
 import Genre from '@/components/shared/genre';
 import { PlayIcon, InformationCircleIcon } from '@heroicons/react/solid';
 import { TitleType } from '@/src/../types/types';
-import { episodesTitle, stripHtml } from '@/utils/index';
+import { episodesTitle, stripHtml } from '@/src/lib/utils/index';
 import { IAnimeResult } from '@consumet/extensions/dist/models/types';
 
 export interface BannerResult extends IAnimeResult {
@@ -32,7 +32,7 @@ const Banner: React.FC<IBannerProps> = ({ animeList }) => (
           {animeList?.genres?.map((genre: string) => (
             <div className="flex items-center gap-2" key={genre}>
               <Genre genre={genre} />
-              <span className="w-1.5 h-1.5 bg-[#6a55fa] rounded-full inline-block"></span>
+              <span className="w-1.5 h-1.5 bg-primary rounded-full inline-block"></span>
             </div>
           ))}
         </div>
@@ -41,14 +41,14 @@ const Banner: React.FC<IBannerProps> = ({ animeList }) => (
           <Link
             href={`/watch/${animeList?.id}?episode=${episodesTitle(
               animeList?.title?.romaji as string
-            )}episode-1`}
+            )}-episode-1`}
           >
-            <a className="mt-4 py-2 px-4 bg-[#6a55fa] text-gray-200 rounded-sm font-semibold flex items-center justify-center gap-2 hover:bg-[#6a55fa] hover:scale-105 transition-all ease-in-out rounded-md">
-              <Icon icon={PlayIcon} text={`Watch Now`} />
+            <a className="mt-4 py-2 px-4 bg-primary text-gray-200 rounded-sm font-semibold flex items-center justify-center gap-2 hover:bg-primary hover:scale-105 transition-all ease-in-out rounded-md">
+              <Icon icon={PlayIcon} text={`Watch Episode 1`} />
             </a>
           </Link>
           <Link href={`/anime/${animeList?.id}`}>
-            <a className="mt-4 py-2 px-4 bg-[#6e6f74] text-gray-200 rounded-sm font-semibold flex items-center justify-center gap-2 hover:bg-[#6a55fa] hover:scale-105 transition-all ease-in-out rounded-md">
+            <a className="mt-4 py-2 px-4 bg-[#6e6f74] text-gray-200 rounded-sm font-semibold flex items-center justify-center gap-2 hover:bg-primary hover:scale-105 transition-all ease-in-out rounded-md">
               <Icon icon={InformationCircleIcon} text={`Read More`} />
             </a>
           </Link>

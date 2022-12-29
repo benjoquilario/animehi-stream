@@ -3,7 +3,7 @@ import Link from 'next/link';
 import Image from './image';
 import Genre from './genre';
 import classNames from 'classnames';
-import { base64SolidImage } from '@/utils/image';
+import { base64SolidImage } from '@/src/lib/utils/image';
 import { TitleType } from 'types/types';
 
 type ColumnSectionProps = {
@@ -33,7 +33,7 @@ const ColumnSection = ({
 }: ColumnSectionProps) => (
   <li
     className={classNames(
-      'flex h-22 items-center py-2 px-4 odd:bg-[#0d0d0d] even:bg-[#111]',
+      'flex h-22 items-center py-2 px-4 odd:bg-background-800 even:bg-background-900',
       className
     )}
   >
@@ -67,9 +67,9 @@ const ColumnSection = ({
       </Link>
       <div className="flex line-clamp-1 items-center space-x-2 text-sm text-slate-300">
         <span>{type}</span>
-        <span className="w-1.5 h-1.5 bg-[#6a55fa] rounded-full inline-block"></span>
+        <span className="w-1.5 h-1.5 bg-primary rounded-full inline-block"></span>
         <span>{releaseDate}</span>
-        <span className="w-1.5 h-1.5 bg-[#6a55fa] rounded-full inline-block"></span>
+        <span className="w-1.5 h-1.5 bg-primary rounded-full inline-block"></span>
         <span>{status}</span>
       </div>
 
@@ -78,7 +78,7 @@ const ColumnSection = ({
           {genres?.map((genre: string) => (
             <React.Fragment key={genre}>
               <span>{genre}</span>
-              <span className="w-1.5 h-1.5 bg-[#6a55fa] rounded-full inline-block"></span>
+              <span className="w-1.5 h-1.5 bg-primary rounded-full inline-block"></span>
             </React.Fragment>
           ))}
         </div>

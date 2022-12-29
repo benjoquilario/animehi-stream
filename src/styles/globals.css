@@ -68,6 +68,10 @@
   background-color: white !important;
 }
 
+.swiper-pagination {
+  display: none;
+}
+
 .swiper-button-prev {
   display: none !important;
 }

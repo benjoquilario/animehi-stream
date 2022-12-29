@@ -1,10 +1,10 @@
 import React from 'react';
-import { genreList } from '@/utils/config';
+import { genreList } from '@/src/lib/utils/config';
 
 const Genres = () => {
   return (
     <div className="mt-3 w-full hidden xl:block">
-      <div className="bg-[#100f0f] p-2">
+      <div className="bg-background-700 p-2">
         <h2 className="text-white text-base md:text-[20px] uppercase font-semibold">
           Genres
         </h2>

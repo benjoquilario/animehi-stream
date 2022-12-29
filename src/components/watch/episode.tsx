@@ -42,7 +42,7 @@ const Episode = ({
       onClick={onClick}
       className={classNames(
         'flex flex-row justify-between items-center p-3 w-full text-left odd:bg-[#0d0d0d] even:bg-[#111] hover:bg-[#1b1919] transition',
-        active && 'bg-[#6A55FA]'
+        active && '!bg-[#6A55FA]'
       )}
     >
       <EpisodeNumber active={active} episode={episode} />
@@ -55,4 +55,4 @@ const Episode = ({
     </Link>
   );
 
-export default Episode;
+export default React.memo(Episode);

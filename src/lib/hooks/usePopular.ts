@@ -1,6 +1,6 @@
 import useSWR from 'swr';
 
-import { BASE_URL } from '@/utils/config';
+import { BASE_URL } from '@/src/lib/utils/config';
 
 const usePopular = () => {
   const url = `${BASE_URL}/meta/anilist/popular`;

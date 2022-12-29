@@ -13,6 +13,28 @@ export type EpisodesType = {
   title: string;
 };
 
+export type RecentType = {
+  animeId: string;
+  episodeId: string;
+  episodeNumber: number;
+  image: string;
+  title: string;
+  color: string;
+};
+
+export type AniSkip = {
+  statusCode: number;
+  results?: AniSkipResult[];
+};
+
+export type AniSkipResult = {
+  interval: {
+    startTime: number;
+    endTime: number;
+  };
+  type: string;
+};
+
 export type SourceType = {
   sources: {
     url: string;

@@ -18,7 +18,7 @@ const Pagination = ({
       {pageNumber !== 1 ? (
         <Button
           onClick={() => setPageNumber(pageNumber - 1)}
-          className="p-1 md:p-2 text-[#ededed] hover:bg-[#111] rounded-full transition"
+          className="p-1 md:p-2 text-[#ededed] hover:bg-background-900 rounded-full transition"
           aria-label="previous page"
         >
           <AiOutlineArrowLeft className="h-6 w-6" />
@@ -27,7 +27,7 @@ const Pagination = ({
       {hasNextPage ? (
         <Button
           onClick={() => setPageNumber(pageNumber + 1)}
-          className="p-1 md:p-2 text-[#ededed] hover:bg-[#111] rounded-full transition"
+          className="p-1 md:p-2 text-[#ededed] hover:bg-background-900 rounded-full transition"
           aria-label="next page"
         >
           <AiOutlineArrowRight className="h-6 w-6" />

@@ -1,6 +1,6 @@
 import { createSlice, current, Draft, PayloadAction } from '@reduxjs/toolkit';
 import { TitleType } from '@/src/../types/types';
-import { CORS_PROXY } from '@/utils/config';
+import { CORS_PROXY } from '@/src/lib/utils/config';
 import { IAnimeResult, IVideo } from '@consumet/extensions/dist/models/types';
 
 export interface WatchState {
@@ -66,7 +66,7 @@ export const watchSlice = createSlice({
         state.sources = initialState.sources;
       } else {
         state.sources = action.payload;
-        state.videoLink = `${
+        state.videoLink = `${CORS_PROXY}${
           sources.find(el => el.quality === 'default')?.url ||
           sources.find(el => el.quality === 'backup')?.url
         }`;

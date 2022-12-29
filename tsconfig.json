@@ -1,11 +1,7 @@
 {
   "compilerOptions": {
     "target": "es5",
-    "lib": [
-      "dom",
-      "dom.iterable",
-      "esnext"
-    ],
+    "lib": ["dom", "dom.iterable", "esnext"],
     "allowJs": true,
     "skipLibCheck": true,
     "strict": true,
@@ -20,33 +16,16 @@
     "incremental": true,
     "baseUrl": "./",
     "paths": {
-      "@/components/*": [
-        "./src/components/*"
-      ],
-      "@/store/*": [
-        "./src/store/*"
-      ],
-      "@/services/*": [
-        "./src/services/*"
-      ],
-      "@/utils/*": [
-        "./src/utils/*"
-      ],
-      "@/app/*": [
-        "./src/app/*"
-      ],
-      "@/pages/*": [
-        "./src/pages/*"
-      ],
-      "@/hooks/*": [
-        "./src/hooks/*"
-      ],
-      "@/src/*": [
-        "./src/*"
-      ],
-      "@/styles/*": [
-        "./src/styles/*"
-      ],
+      "@/components/*": ["./src/components/*"],
+      "@/store/*": ["./src/store/*"],
+      "@/services/*": ["./src/services/*"],
+      "@/utils/*": ["src/lib/utils/*"],
+      "@/app/*": ["./src/app/*"],
+      "@/pages/*": ["./src/pages/*"],
+      "@/lib/*": ["./src/lib/*"],
+      "@/hooks/*": ["./src/lib/hooks/*"],
+      "@/src/*": ["./src/*"],
+      "@/styles/*": ["./src/styles/*"]
     },
     "plugins": [
       {
@@ -54,13 +33,6 @@
       }
     ]
   },
-  "include": [
-    "next-env.d.ts",
-    "**/*.ts",
-    "**/*.tsx",
-    ".next/types/**/*.ts"
-  ],
-  "exclude": [
-    "node_modules"
-  ]
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
+  "exclude": ["node_modules"]
 }

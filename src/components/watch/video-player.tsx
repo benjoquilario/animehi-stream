@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+/*import React, { useEffect, useRef } from 'react';
 import Artplayer from 'artplayer';
 import Hls from 'hls.js';
 import { useSelector } from '@/store/store';
@@ -147,3 +147,4 @@ const VideoPlayer = ({
 };
 
 export default React.memo(VideoPlayer);
+*/

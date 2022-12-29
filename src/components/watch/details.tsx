@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { stripHtml } from '@/utils/index';
+import { stripHtml } from '@/src/lib/utils/index';
 import Image from '@/components/shared/image';
 import { IAnimeInfo, IAnimeResult } from '@consumet/extensions';
 import { TitleType } from 'types/types';
@@ -14,7 +14,7 @@ const WatchDetails = ({ image, title, description }: WatchDetailsProps) => {
   const [showMore, setShowMore] = useState<boolean>(false);
 
   return (
-    <div className="mt-3 ml-4">
+    <div className="col-span-full mt-3 ml-4 ">
       <div className="grid grid-cols-[auto_1fr] gap-4">
         <Image
           layout="fill"

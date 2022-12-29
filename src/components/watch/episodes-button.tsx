@@ -1,4 +1,4 @@
-import { chunk } from '@/utils/index';
+import { chunk } from '@/src/lib/utils/index';
 import { EpisodesType } from '@/src/../types/types';
 import EpisodeChunk from './episode-chunk';
 import React from 'react';
@@ -28,7 +28,10 @@ const Episodes = ({
       );
 
       return (
-        <li className="odd:bg-[#0d0d0d] even:bg-[#111]" key={index}>
+        <li
+          className="odd:bg-[#0d0d0d] even:bg-[#111] hover:bg-[#1b1919]"
+          key={index}
+        >
           <EpisodeChunk
             buttonClassName="episode-buttons bg-background-darker"
             title={`${firstEpisode.number} - ${lastEpisode.number}`}

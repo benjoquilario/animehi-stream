@@ -37,4 +37,4 @@ const Disclosure = (props: PropsWithChildren<DisclosureProps>): JSX.Element => {
   );
 };
 
-export default Disclosure;
+export default React.memo(Disclosure);

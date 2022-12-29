@@ -19,7 +19,7 @@ const Popular = ({ popularSeason, isLoading }: PopularProps): JSX.Element =>
         Most Popular Anime
       </h2>
 
-      <div className="bg-[#100f0f]">
+      <div className="bg-background-700">
         <ul>
           {popularSeason?.results?.map((anime, index) => (
             <ColumnSection
@@ -35,7 +35,7 @@ const Popular = ({ popularSeason, isLoading }: PopularProps): JSX.Element =>
             />
           ))}
           <li>
-            <button className="bg-[#111] text-white w-full flex justify-center items-center py-3">
+            <button className="bg-background-900 text-white w-full flex justify-center items-center py-3">
               View More
             </button>
           </li>
@@ -47,13 +47,13 @@ const Popular = ({ popularSeason, isLoading }: PopularProps): JSX.Element =>
   );
 
 const ColumnLoading = () => (
-  <div className="animate-pulse h-[88px] w-full odd:bg-[#0d0d0d] even:bg-[#111]"></div>
+  <div className="animate-pulse h-[88px] w-full odd:bg-background-800 even:bg-background-900"></div>
 );
 
 const PopularLoading = () => {
   return (
     <div className="h-[824px] w-full flex flex-col">
-      <div className="h-[30px] w-[200px] bg-[#111] rounded-lg mb-3"></div>
+      <div className="h-[30px] w-[200px] bg-background-900 rounded-lg mb-3"></div>
       {Array.from(Array(9), (_, i) => (
         <ColumnLoading key={i} />
       ))}

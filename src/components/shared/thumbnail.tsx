@@ -1,13 +1,13 @@
 import React, { useCallback } from 'react';
 import Link from 'next/link';
 import { Options } from '@popperjs/core';
-import { base64SolidImage } from '@/utils/image';
+import { base64SolidImage } from '@/src/lib/utils/image';
 import { PlayIcon } from '@heroicons/react/outline';
 import { TitleType } from '@/src/../types/types';
 import Image from '@/components/shared/image';
 import classNames from 'classnames';
 import Popup from './popup';
-import { stripHtml } from '@/utils/index';
+import { stripHtml } from '@/src/lib/utils/index';
 import Genre from './genre';
 import Icon from './icon';
 import { FaThumbsUp, FaPlay } from 'react-icons/fa';
@@ -55,21 +55,23 @@ const popupOptions: Partial<Options> = {
   ],
 };
 
-const Thumbnail = ({
-  id,
-  episodeNumber,
-  image,
-  title,
-  episodeId,
-  color,
-  isRecent,
-  description,
-  genres,
-  format,
-  duration,
-  popularity,
-  banner,
-}: ThumbnailProps): JSX.Element => {
+const Thumbnail = (props: ThumbnailProps): JSX.Element => {
+  const {
+    id,
+    episodeNumber,
+    image,
+    title,
+    episodeId,
+    color,
+    isRecent,
+    description,
+    genres,
+    format,
+    duration,
+    popularity,
+    banner,
+  } = props;
+
   const router = useRouter();
   const dispatch = useDispatch();
 
@@ -122,7 +124,7 @@ const Thumbnail = ({
                       } episode ${episodeNumber}`}
                       className="center-element flex justify-center items-center w-[101%] h-full opacity-0 hover:opacity-100 focus:opacity-100 hover:bg-[#1111117a] transition"
                     >
-                      <div className="h-11 w-11 text-[#6a55fa]">
+                      <div className="h-11 w-11 text-primary">
                         <PlayIcon />
                       </div>
                     </a>
@@ -136,7 +138,7 @@ const Thumbnail = ({
             <a
               style={{ color: `${color ? color : '#fff'}` }}
               className={classNames(
-                'line-clamp-2 w-full h-auto p-1 text-left text-base hover:text-white font-semibold'
+                'line-clamp-2 w-full h-auto p-1 text-left text-sm md:text-base hover:text-white font-semibold'
               )}
             >
               {title?.english || title?.romaji}
@@ -167,7 +169,7 @@ const Thumbnail = ({
           {genres?.map((genre: string) => (
             <div className="flex items-center gap-2" key={genre}>
               <Genre genre={genre} className="text-base" />
-              <span className="w-1.5 h-1.5 bg-[#6a55fa] rounded-full inline-block"></span>
+              <span className="w-1.5 h-1.5 bg-primary rounded-full inline-block"></span>
             </div>
           ))}
         </div>

@@ -1,28 +1,27 @@
-import React, { Fragment, useState, useMemo, useEffect } from 'react';
 import { NextSeo } from 'next-seo';
 import { META } from '@consumet/extensions';
 import { GetServerSideProps, InferGetServerSidePropsType } from 'next';
-import { IAnimeInfo } from '@consumet/extensions/dist/models';
-import progressBar from '@/components/shared/loading';
-import { base64SolidImage } from '@/utils/image';
+import { IAnimeInfo } from '@consumet/extensions/dist/models/types';
+import progressBar, { EpisodeLoading } from '@/components/shared/loading';
+import { base64SolidImage } from '@/src/lib/utils/image';
 import Genre from '@/components/shared/genre';
-import { stripHtml, parseData, getFromStorage } from '@/utils/index';
+import { stripHtml, parseData } from '@/src/lib/utils/index';
 import classNames from 'classnames';
 import InfoItem from '@/components/shared/info-item';
 import EpisodesButton from '@/components/watch/episodes-button';
 import Characters from '@/components/anime/characters';
-import { PlayIcon } from '@heroicons/react/outline';
-import SideContent from '@/components/shared/side-content';
 import useEpisodes from '@/hooks/useEpisodes';
 import Image from '@/components/shared/image';
-import Thumbnail from '@/components/shared/thumbnail';
 import TitleName from '@/components/shared/title-name';
-import { TitleType } from 'types/types';
+import { RecentType } from 'types/types';
 import { useRouter } from 'next/router';
 import DefaultLayout from '@/components/layouts/default';
 import Button from '@/components/shared/button';
-import { useDispatch, useSelector } from '@/store/store';
-import { setWatchList } from '@/store/recent/slice';
+import Storage from '@/src/lib/utils/storage';
+import Side from '@/components/anime/side';
+import ResultsCard from '@/components/shared/results-card';
+import WatchLink from '@/components/shared/watch-link';
+import React, { useState, useMemo, useCallback, useEffect } from 'react';
 
 export const getServerSideProps: GetServerSideProps = async ({ params }) => {
   let id = params!.id;
@@ -32,7 +31,7 @@ export const getServerSideProps: GetServerSideProps = async ({ params }) => {
 
   const data: IAnimeInfo = await anilist.fetchAnilistInfoById(id as string);
 
-  if (!data && !id) {
+  if (!data || !id) {
     return {
       notFound: true,
     };
@@ -49,10 +48,48 @@ const Anime = ({
   animeList,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
   const router = useRouter();
-  const dispatch = useDispatch();
+  const recentWatched = new Storage('recentWatched');
+  const watchList = new Storage('watchedList');
   const [showMore, setShowMore] = useState<boolean>(false);
-  const [watchListStore, setWatchListStore] = useState([]);
+  const [isHydrated, setIsHydrated] = useState(false);
   const { data: episodes, isLoading, isError } = useEpisodes(animeList?.id);
+
+  useEffect(() => {
+    setIsHydrated(true);
+  }, []);
+
+  const handleWatchedList = useCallback(() => {
+    const storage = new Storage('watchedList');
+
+    if (storage.has({ id: animeList?.id })) return;
+
+    typeof window !== 'undefined' &&
+      storage.create({
+        id: animeList?.id,
+        title: animeList?.title,
+        image: animeList?.image,
+        color: animeList?.color,
+        description: animeList?.description,
+        type: animeList?.type,
+        duration: animeList?.popularity,
+        genres: animeList?.genres,
+      });
+
+    return router.push('/watchlist');
+  }, [animeList, router]);
+
+  const existedWatched =
+    typeof window !== 'undefined' && watchList.findOne({ id: animeList?.id });
+
+  const currentWatchEpisode =
+    typeof window !== 'undefined' &&
+    recentWatched.findOne<RecentType>({ animeId: animeList?.id });
+
+  const existedEpisode =
+    typeof window !== 'undefined' &&
+    recentWatched.has({ animeId: animeList?.id });
+
+  // console.log(existedWatched);
 
   // const existedStored = useMemo(
   //   () => watchListStore?.find(x => x.id === animeList.id),
@@ -61,11 +98,10 @@ const Anime = ({
 
   // console.log(existedStored);
 
-  const lastEpisodes = useMemo(() => {
-    if (!isLoading) {
-      return episodes?.[episodes?.length - 1]?.id;
-    }
-  }, [episodes, isLoading]);
+  const lastEpisodes = useMemo(
+    () => !isLoading && episodes?.[episodes?.length - 1]?.id,
+    [episodes, isLoading]
+  );
 
   return (
     <DefaultLayout>
@@ -111,9 +147,9 @@ const Anime = ({
 
           <div className="absolute top-0 left-0 bg-banner-shadow h-full w-full"></div>
         </div>
-        <div className="bg-[#100f0f] px-[4%] grid grid-cols-1 justify-items-center gap-[70px] md:grid-cols-[228px_1fr] md:gap-[18px] pb-7">
-          <div className="min-w-[180px] w-[180px] md:w-full md:min-w-full h-auto">
-            <div className="min-w-full w-full h-[216px] block mt-[-88px] md:mt-[-69px] md:h-[300px]">
+        <div className="bg-background-700 px-[4%] grid grid-cols-1 justify-items-center gap-[70px] md:grid-cols-[228px_1fr] md:gap-[18px] pb-7">
+          <div className="min-w-[155px] w-[155px] md:w-full md:min-w-full h-auto">
+            <div className="min-w-full w-full h-[196px] block mt-[-88px] md:mt-[-69px] md:h-[300px]">
               <Image
                 containerclassname="relative w-full min-w-full h-full"
                 className="rounded-lg"
@@ -128,33 +164,28 @@ const Anime = ({
                 alt={animeList?.title?.english || animeList?.title?.romaji}
               />
             </div>
-            {/* <Button
-              onClick={() => dispatch(setWatchList(animeList))}
-              style={{
-                backgroundColor: `${animeList?.color || '#000'}`,
-              }}
-              className="w-full py-2 text-white hover:opacity-80"
-              type="button"
-            >
-              Add to watchlist
-            </Button> */}
           </div>
           <div className="grid text-white py-4 w-full z-10 mt-[-69px]">
-            <div className="flex items-center flex-wrap gap-2 mb-7">
+            <div className="flex items-center gap-2 mb-7">
+              {isHydrated && (
+                <WatchLink
+                  isExist={existedEpisode}
+                  id={animeList?.id}
+                  color={animeList?.color}
+                  currentWatchEpisode={currentWatchEpisode as RecentType}
+                  lastEpisode={lastEpisodes}
+                />
+              )}
               <Button
-                onClick={() =>
-                  router.push(`/watch/${animeList?.id}?episode=${lastEpisodes}`)
-                }
-                type="button"
+                disabled={isHydrated && existedWatched ? true : false}
+                onClick={handleWatchedList}
                 style={{
                   backgroundColor: `${animeList?.color || '#000'}`,
                 }}
-                className={`transition duration-300 text-base flex items-center space-x-2 px-3 py-2 rounded-md gap-x-1 hover:opacity-80`}
+                className="text-xs md:text-sm transition duration-300 text-sm md:text-base flex items-center px-3 py-2 rounded-md gap-x-1 hover:opacity-80"
+                type="button"
               >
-                <div className="h-5 w-5 text-white">
-                  <PlayIcon />
-                </div>
-                <p className="text-sm">Watch Now</p>
+                {isHydrated && existedWatched ? 'Watching' : 'Add to WatchList'}
               </Button>
             </div>
             <h1
@@ -207,109 +238,50 @@ const Anime = ({
         </div>
         <div className="px-[4%] grid grid-cols-none md:grid-cols-[238px_auto] md:mt-[20px] md:gap-[18px]">
           <div className="block">
-            <div className="bg-[#100f0f] my-2 p-3 rounded">
+            <div className="bg-background-700 my-2 p-3 rounded">
               <p className="text-white text-base">
                 Score:{' '}
-                <span className="text-slate-300 italic text-sm">9.12</span>
+                <span className="text-slate-300 italic text-sm">
+                  {animeList?.rating}
+                </span>
               </p>
             </div>
-            <div className="bg-[#100f0f] my-2 p-3 rounded">
+            <div className="bg-background-700 my-2 p-3 rounded">
               <p className="text-white text-base">
                 Popularity:{' '}
-                <span className="text-slate-300 italic text-sm">707</span>
+                <span className="text-slate-300 italic text-sm">
+                  {animeList?.popularity}
+                </span>
               </p>
             </div>
-            <div className="bg-[#100f0f] my-2 p-3 rounded">
+            <div className="bg-background-700 my-2 p-3 rounded">
               <ul className="grid grid-cols-2  w-full md:grid-cols-1">
-                <SideContent
-                  classes="text-xs mb-3"
-                  title="Romaji"
-                  info={animeList?.title?.romaji}
+                <Side
+                  title={animeList?.title}
+                  status={animeList?.status}
+                  type={animeList?.type}
+                  genres={animeList?.genres}
+                  studios={animeList?.studios}
+                  releaseDate={animeList?.releaseDate}
+                  totalEpisodes={animeList?.totalEpisodes}
+                  rating={animeList?.rating}
+                  countryOfOrigin={animeList?.contryOfOrigin}
+                  season={animeList?.season}
+                  synonyms={animeList?.synonyms}
                 />
-                <SideContent
-                  classes="text-xs mb-3"
-                  title="English"
-                  info={animeList?.title?.english}
-                />
-                <SideContent
-                  classes="text-xs mb-3"
-                  title="Status"
-                  info={animeList?.status}
-                />
-                <SideContent
-                  classes="text-xs mb-3"
-                  title="Type"
-                  info={animeList?.type}
-                />
-                <SideContent
-                  classes="text-xs mb-3"
-                  title="Genres"
-                  info={
-                    <div className="flex flex-col">
-                      {animeList?.genres.map((genre: string, index: number) => (
-                        <span key={index}>{genre}</span>
-                      ))}
-                    </div>
-                  }
-                />
-                <SideContent
-                  classes="text-xs mb-3"
-                  title="Studios"
-                  info={animeList?.studios?.map(
-                    (studio: string, index: number) => (
-                      <span key={index}>{studio}</span>
-                    )
-                  )}
-                />
-                <SideContent
-                  classes="text-xs mb-3"
-                  title="Release Date"
-                  info={animeList?.releaseDate}
-                />
-                <SideContent
-                  classes="text-xs mb-3"
-                  title="Total Episodes"
-                  info={animeList?.totalEpisodes}
-                />
-                <SideContent
-                  classes="text-xs mb-3"
-                  title="Rating"
-                  info={animeList?.rating}
-                />
-                <SideContent
-                  classes="text-xs mb-3"
-                  title="Country"
-                  info={animeList?.ountryOfOrigin}
-                />
-                <SideContent
-                  classes="text-xs mb-3"
-                  title="Season"
-                  info={animeList?.season}
-                />
-                {animeList?.synonyms ? (
-                  <SideContent
-                    classes="text-xs mb-3"
-                    title="Synonyms"
-                    info={animeList?.synonyms?.map(
-                      (synonym: string, index: number) => (
-                        <span key={index}>{synonym}</span>
-                      )
-                    )}
-                  />
-                ) : null}
               </ul>
             </div>
           </div>
           <div className="grid grid-cols-1 space-y-6">
             {isError ? <div>Error</div> : null}
             {isLoading ? (
-              <div>Loading...</div>
+              <EpisodeLoading />
             ) : (
               <div className="w-full">
                 <TitleName title="Episodes" />
                 <EpisodesButton
                   episodesClassName={classNames(
-                    'grid items-start gap-3 bg-[#100f0f]',
+                    'grid items-start bg-background-700',
                     episodes?.length > 50
                       ? 'grid-cols-2 md:grid-cols-5'
                       : 'grid-cols-1'
@@ -327,59 +299,16 @@ const Anime = ({
                 characters={animeList?.characters}
               />
             </div>
-
-            <div>
-              <TitleName title="Relations" />
-              <div
-                // ref={rowRef}
-                className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4 relative overflow-hidden"
-              >
-                {animeList?.relations?.map(
-                  (anime: IAnimeInfo, index: number) => (
-                    <div key={index} className="col-span-1">
-                      <Thumbnail
-                        id={anime?.id}
-                        image={anime?.image || anime?.cover}
-                        title={anime?.title as TitleType}
-                        color={anime?.color as string}
-                        format={anime?.type}
-                        description={anime?.description}
-                        genres={anime?.genres}
-                        popularity={anime?.rating}
-                        banner={anime?.cover || anime?.image}
-                        isRecent={false}
-                      />
-                    </div>
-                  )
-                )}
-              </div>
-            </div>
-            <div>
-              <TitleName title="Recommendations" />
-              <div
-                // ref={rowRef}
-                className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4 relative overflow-hidden"
-              >
-                {animeList?.recommendations?.map(
-                  (anime: IAnimeInfo, index: number) => (
-                    <div key={index} className="col-span-1">
-                      <Thumbnail
-                        id={anime?.id}
-                        image={anime?.image || anime?.cover}
-                        title={anime?.title as TitleType}
-                        color={anime?.color as string}
-                        format={anime?.type}
-                        description={anime?.description}
-                        genres={anime?.genres}
-                        popularity={anime?.rating}
-                        banner={anime?.cover || anime?.image}
-                        isRecent={false}
-                      />
-                    </div>
-                  )
-                )}
-              </div>
-            </div>
+            <ResultsCard
+              isLoading={!animeList}
+              title="Relations"
+              animeList={animeList?.relations}
+            />
+            <ResultsCard
+              isLoading={!animeList}
+              title="Recommendations"
+              animeList={animeList?.recommendations}
+            />
           </div>
         </div>
       </div>

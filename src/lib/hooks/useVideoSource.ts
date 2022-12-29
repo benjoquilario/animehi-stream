@@ -1,4 +1,4 @@
-import { BASE_URL } from '@/utils/config';
+import { BASE_URL } from '@/src/lib/utils/config';
 import useSWR from 'swr';
 
 const useVideoSource = ({

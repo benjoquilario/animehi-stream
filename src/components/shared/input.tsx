@@ -35,7 +35,7 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>((props, ref) => {
       <input
         ref={ref}
         className={classNames(
-          'bg-[#111] focus:outline-none text-slate-300 text-sm md:text-base',
+          'bg-background-900 focus:outline-none text-slate-300 text-sm md:text-base',
           className
         )}
         {...inputProps}

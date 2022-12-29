@@ -1,3 +1,4 @@
+/*
 import React, { useEffect, useRef, useState } from 'react';
 import Hls from 'hls.js';
 import { APITypes, PlyrProps, usePlyr } from 'plyr-react';
@@ -104,3 +105,4 @@ const PlyrComponent = () => {
 };
 
 export default React.memo(PlyrComponent);
+*/

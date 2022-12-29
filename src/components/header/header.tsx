@@ -23,6 +23,27 @@ import { TitleType } from 'types/types';
 import { isMobile } from 'react-device-detect';
 import useClickOutside from '@/hooks/useClickOutside';
 
+const LINKS = [
+  {
+    href: '/',
+    name: 'Home',
+    icon: AiFillHome,
+    className: 'flex gap-1 items-center hover:text-white transition text-sm',
+  },
+  {
+    href: '/',
+    name: 'Random',
+    icon: FaRandom,
+    className: 'flex gap-1 items-center hover:text-white transition text-sm',
+  },
+  {
+    href: '/watchlist',
+    name: 'Watch List',
+    icon: BsList,
+    className: 'flex gap-1 items-center hover:text-white transition text-sm',
+  },
+];
+
 const Header = () => {
   const anilist = new META.Anilist();
   const [isFixed, setIsFixed] = useState(false);
@@ -102,7 +123,7 @@ const Header = () => {
   return (
     <header
       className={classNames(
-        'fixed left-0 w-full z-50 h-[52px] md:h-[67px] 2xl:h-[80px] bg-[#0d0d0d] bg-gradient-to-b from-[#000000b3] to-[#00000000] transition-all',
+        'fixed left-0 w-full z-50 h-[52px] md:h-[67px] 2xl:h-[80px] bg-background-800 bg-gradient-to-b from-[#000000b3] to-[#00000000] transition-all',
         isFixed ? 'top-[-56px]' : 'top-0'
       )}
     >
@@ -138,7 +159,7 @@ const Header = () => {
         >
           <div
             ref={ref}
-            className="relative w-full bg-[#111] p-2 rounded-none md:rounded-lg"
+            className="relative w-full bg-background-900 p-2 rounded-none md:rounded-lg"
           >
             <form>
               <div className="grid grid-cols-[34px_1fr] items-center">
@@ -192,32 +213,15 @@ const Header = () => {
         <nav className="w-5/6 hidden md:block">
           <div>
             <ul className="text-slate-300 flex gap-4">
-              <NavLink
-                href="/"
-                name="Home"
-                icon={AiFillHome}
-                className="flex gap-1 items-center hover:text-white transition text-sm"
-              />
-              <NavLink
-                href="/"
-                name="Advanced Search"
-                icon={AiOutlineFileSearch}
-                className="flex gap-1 items-center hover:text-white transition text-sm"
-              />
-              <NavLink
-                href="/"
-                name="Random"
-                icon={FaRandom}
-                className="flex gap-1 items-center hover:text-white transition text-sm"
-                // href={`/anime/${randomAnime}`}
-              />
-              <NavLink
-                href="/watchlist"
-                name="Watch List"
-                icon={BsList}
-                className="flex gap-1 items-center hover:text-white transition text-sm"
-                // href={`/anime/${randomAnime}`}
-              />
+              {LINKS.map((link, index) => (
+                <NavLink
+                  key={index}
+                  href={link.href}
+                  name={link.name}
+                  icon={link.icon}
+                  className={link.className}
+                />
+              ))}
             </ul>
           </div>
         </nav>

@@ -25,7 +25,7 @@ const FormSearch = React.forwardRef<HTMLInputElement, FormProps>(
           </button>
           <div>
             <input
-              className="bg-[#111] focus:outline-none text-slate-300 text-sm md:text-base"
+              className="bg-background-900 focus:outline-none text-slate-300 text-sm md:text-base"
               type="text"
               placeholder="Search anime..."
               {...inputProps}

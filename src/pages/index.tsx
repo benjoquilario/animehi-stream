@@ -7,12 +7,12 @@ import { Autoplay, Pagination, Navigation } from 'swiper';
 import Banner, { BannerResult } from '@/components/anime/banner';
 import progressBar from '@/components/shared/loading';
 import { IAnimeResult } from '@consumet/extensions/dist/models/types';
-import { TYPE, FORMAT, SORT } from '@/utils/config';
+import { TYPE, FORMAT, SORT } from '@/src/lib/utils/config';
 import RecentRelease from '@/components/anime/recentRelease';
 import { TitleType } from '@/src/../types/types';
 import Popular from '@/components/anime/popular';
-import { getSeason } from '../utils';
-import { useDispatch, useSelector } from '@/store/store';
+import { getSeason } from '../lib/utils';
+import { useDispatch } from '@/store/store';
 import { resetStates } from '@/store/watch/slice';
 import Row from '@/components/anime/row';
 import useMedia from '@/hooks/useMedia';
@@ -21,6 +21,7 @@ import { LoadingBanner } from '@/components/shared/loading';
 import AiringScheduling from '@/components/anime/airing-schedule';
 import DefaultLayout from '@/components/layouts/default';
 import ClientOnly from '@/components/shared/client-only';
+import ContinueWatching from '@/components/anime/continue-watching';
 
 export interface IRecentResults extends IAnimeResult {
   episodeNumber: number;
@@ -120,7 +121,8 @@ const HomePage = () => {
         </div>
         <main className="mt-[40px] px-[3%]">
           <div className="flex flex-col space-y-6 md:grid lg:grid-cols-1 xl:grid-cols-[1fr_310px] 2xl:grid-cols-[1fr_340px] md:gap-4">
-            <div className="space-y-6">
+            <div className="space-y-6 w-full overflow-hidden">
+              <ContinueWatching />
               <RecentRelease title="Recent Updated" />
               <div className="flex flex-col md:flex-row gap-2">
                 <Row

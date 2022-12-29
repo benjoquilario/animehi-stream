@@ -7,6 +7,29 @@ import { AiFillGithub } from 'react-icons/ai';
 import { BiWorld } from 'react-icons/bi';
 import { BsFacebook, BsTwitter } from 'react-icons/bs';
 
+const LINKS = [
+  {
+    title: 'github',
+    Icon: AiFillGithub,
+    href: 'https://github.com/benjoquilario',
+  },
+  {
+    title: 'my portfolio',
+    Icon: BiWorld,
+    href: 'https://benjoquilario.me/',
+  },
+  {
+    title: 'facebook',
+    Icon: BsFacebook,
+    href: 'https://www.facebook.com/Benjo.Add07',
+  },
+  {
+    title: 'twitter',
+    Icon: BsTwitter,
+    href: 'https://twitter.com/iam_benjo',
+  },
+];
+
 const Footer = () => {
   return (
     <footer className="mt-20 px-[4%] py-8">
@@ -36,26 +59,14 @@ const Footer = () => {
             </a>
           </Link>
           <div className="flex gap-2">
-            <ContactItem
-              title="github"
-              Icon={AiFillGithub}
-              href="https://github.com/benjoquilario"
-            />
-            <ContactItem
-              title="my portfolio"
-              Icon={BiWorld}
-              href="https://benjoquilario.me/"
-            />
-            <ContactItem
-              title="facebook"
-              Icon={BsFacebook}
-              href="https://benjoquilario.me/"
-            />
-            <ContactItem
-              title="twitter"
-              Icon={BsTwitter}
-              href="https://benjoquilario.me/"
-            />
+            {LINKS.map(link => (
+              <ContactItem
+                key={link.title}
+                title={link.title}
+                Icon={link.Icon}
+                href={link.href}
+              />
+            ))}
           </div>
           <p className="max-w-[850px] w-full text-slate-300 text-sm">
             ANIMEHI is not affiliated with or endorsed by any of the anime

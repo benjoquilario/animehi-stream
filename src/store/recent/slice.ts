@@ -2,13 +2,6 @@ import { createSlice, Draft, PayloadAction } from '@reduxjs/toolkit';
 import { IAnimeResult } from '@consumet/extensions/dist/models/types';
 import { TitleType } from 'types/types';
 
-const getRecentWatchedFromStorage = () => {
-  if (typeof window === 'undefined') return;
-
-  // @ts-ignore
-  return JSON.parse(localStorage.getItem('recent'));
-};
-
 export interface IRecentState {
   watchList: IAnimeResult[];
   recentWatch: any[];
@@ -23,7 +16,7 @@ export interface IRecent {
 
 const initialState: IRecentState = {
   watchList: [],
-  recentWatch: getRecentWatchedFromStorage() || [],
+  recentWatch: [],
 };
 
 export const recentSlice = createSlice({
@@ -45,7 +38,6 @@ export const recentSlice = createSlice({
     ) => {
       const item = action.payload;
       state.recentWatch = [...state.recentWatch, item];
-      localStorage.setItem('recent', JSON.stringify(state.recentWatch));
     },
   },
 });

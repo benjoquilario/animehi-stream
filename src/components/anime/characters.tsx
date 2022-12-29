@@ -1,7 +1,8 @@
 import { CharactersType } from '@/src/../types/types';
 import React from 'react';
 import Image from '@/components/shared/image';
-import { base64SolidImage } from '@/utils/image';
+import { base64SolidImage } from '@/src/lib/utils/image';
+import placeholder from '/public/placeholder.png';
 
 export type CharactersProps = {
   characters: CharactersType[];
@@ -15,12 +16,12 @@ const Characters = ({ characters, color }: CharactersProps): JSX.Element => (
         return (
           <div
             key={index}
-            className="bg-[#100f0f] flex w-full h-[68px] rounded gap-4"
+            className="bg-background-700 flex w-full h-[68px] rounded gap-4"
           >
             <div className="flex-1 grid grid-cols-[70px_auto] gap-3">
               <Image
                 layout="fill"
-                src={character?.image}
+                src={character?.image || placeholder}
                 objectFit="cover"
                 alt={character?.name.full}
                 placeholder="blur"
@@ -49,7 +50,7 @@ const Characters = ({ characters, color }: CharactersProps): JSX.Element => (
               </div>
               <Image
                 layout="fill"
-                src={character?.voiceActors[0]?.image}
+                src={character?.voiceActors[0]?.image || placeholder}
                 objectFit="cover"
                 alt={character?.voiceActors[0]?.name.full}
                 placeholder="blur"
