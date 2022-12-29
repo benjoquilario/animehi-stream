@@ -65,6 +65,9 @@ Try the App: [AnimeHI](https://animehi-stream.vercel.app/)
 ### Acknowledgements
 
 <p align="center">
+<a href="https://github.com/shiyiya/oplayer">
+    <img src="https://img.shields.io/badge/shiyiya/oplayer-333.svg?style=flat-square">
+  </a>
   <a href="https://github.com/consumet/">
     <img src="https://img.shields.io/badge/consumet/consumet.ts-333.svg?style=flat-square">
   </a>
@@ -93,15 +96,17 @@ Credits to the person who made the logo [Vergel](https://github.com/vergelmacaya
 - All time favorite Anime list
 - Favorite this seasonm
 - Airing Scheduled
-- Advance Search and filter genres
+-
 - Fully Responsive
 - ...enough talk [see it yourself](https://animehi-stream.vercel.app/)
 
 ### Coming Features
 
-- Login/Register.
-- Watch list
-- Notification
+- Authorization system
+- <s>Watch list</s> ✅
+- <s>Recently Watching</s> ✅
+- PWA
+- Advance Search and filter genres
 - Dark more
 - Comments
 - Own domain name
@@ -121,6 +126,4 @@ Your ideas, translations, design changes, code cleaning, real heavy code changes
 - Github: [@benjoquilario](https://github.com/benjoquilario)
 - Portfolio: [@benjoquilario](https://benjoquilario.me)
 
-<h4 align="center">
-AnimeHi needs a ⭐️ from you
-</h3>
+Please give this repository a ⭐️ if you liked this app. It seems like a little thing, but it helps a lot with the motivation.
