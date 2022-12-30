@@ -1,51 +1,34 @@
 import React from 'react';
 import SideContent from '@/components/shared/side-content';
-
+import { IAnimeInfo } from '@consumet/extensions/dist/models/types';
 import { TitleType } from 'types/types';
+import { title } from '@/lib/helper';
 
 type SideProps = {
-  title: TitleType;
-  status: string;
-  type: string;
-  genres: string[];
-  studios: string[];
-  releaseDate: number;
-  totalEpisodes: number;
-  rating: number;
-  countryOfOrigin: string;
-  season: string;
-  synonyms: string[];
+  data: IAnimeInfo;
 };
 
-const Side = ({
-  title,
-  status,
-  type,
-  genres,
-  studios,
-  releaseDate,
-  totalEpisodes,
-  rating,
-  countryOfOrigin,
-  season,
-  synonyms,
-}: SideProps): JSX.Element => {
+const Side = ({ data }: SideProps): JSX.Element => {
   return (
     <React.Fragment>
-      <SideContent classes="text-xs mb-3" title="Romaji" info={title?.romaji} />
+      <SideContent
+        classes="text-xs mb-3"
+        title="Romaji"
+        info={title(data.title as TitleType)}
+      />
       <SideContent
         classes="text-xs mb-3"
         title="English"
-        info={title?.english}
+        info={title(data.title as TitleType)}
       />
-      <SideContent classes="text-xs mb-3" title="Status" info={status} />
-      <SideContent classes="text-xs mb-3" title="Type" info={type} />
+      <SideContent classes="text-xs mb-3" title="Status" info={data.status} />
+      <SideContent classes="text-xs mb-3" title="Type" info={data.type} />
       <SideContent
         classes="text-xs mb-3"
         title="Genres"
         info={
           <div className="flex flex-col">
-            {genres.map((genre: string, index: number) => (
+            {data.genres?.map((genre: string, index: number) => (
               <span key={index}>{genre}</span>
             ))}
           </div>
@@ -54,32 +37,32 @@ const Side = ({
       <SideContent
         classes="text-xs mb-3"
         title="Studios"
-        info={studios?.map((studio: string, index: number) => (
+        info={data.studios?.map((studio: string, index: number) => (
           <span key={index}>{studio}</span>
         ))}
       />
       <SideContent
         classes="text-xs mb-3"
         title="Release Date"
-        info={releaseDate}
+        info={data.releaseDate}
       />
       <SideContent
         classes="text-xs mb-3"
         title="Total Episodes"
-        info={totalEpisodes}
+        info={data.totalEpisodes}
       />
-      <SideContent classes="text-xs mb-3" title="Rating" info={rating} />
+      <SideContent classes="text-xs mb-3" title="Rating" info={data.rating} />
       <SideContent
         classes="text-xs mb-3"
         title="Country"
-        info={countryOfOrigin}
+        info={data.countryOfOrigin}
       />
-      <SideContent classes="text-xs mb-3" title="Season" info={season} />
-      {synonyms ? (
+      <SideContent classes="text-xs mb-3" title="Season" info={data.season} />
+      {data.synonyms ? (
         <SideContent
           classes="text-xs mb-3"
           title="Synonyms"
-          info={synonyms?.map((synonym: string, index: number) => (
+          info={data.synonyms?.map((synonym: string, index: number) => (
             <span key={index}>{synonym}</span>
           ))}
         />

@@ -5,9 +5,10 @@ import { useDispatch, useSelector } from '@/store/store';
 import { setEpisodeId, setServer } from '@/store/watch/slice';
 import { EpisodesType, RecentType } from '@/src/../types/types';
 import { TbPlayerTrackNext, TbPlayerTrackPrev } from 'react-icons/tb';
-import Button from '../shared/button';
+import Button from '@/components/shared/button';
 import Storage from '@/src/lib/utils/storage';
 import OPlayer from '@/components/player/op-player';
+import { LoadingVideo } from '@/components/shared/loading';
 
 type VideoProps = {
   malId: number;
@@ -20,6 +21,7 @@ type VideoProps = {
   episodeNumber: number;
   nextEpisode: EpisodesType;
   prevEpisode: EpisodesType;
+  isLoading: boolean;
 };
 
 const Video = (props: VideoProps): JSX.Element => {
@@ -34,6 +36,7 @@ const Video = (props: VideoProps): JSX.Element => {
     episodeNumber,
     nextEpisode,
     prevEpisode,
+    isLoading,
   } = props;
 
   const dispatch = useDispatch();
@@ -82,18 +85,22 @@ const Video = (props: VideoProps): JSX.Element => {
         className
       )}
     >
-      <div className="h-full">
-        <OPlayer episodeNumber={episodeNumber} malId={malId} poster={poster} />
-        {/* {server === 'server 1' ? <PlyrComponent /> : null} */}
-        {/* {server === 'server 2' ? (
-          <VideoPlayer poster={poster} title={title} />
-        ) : null} */}
-      </div>
-      <div className="grid grid-cols-1 md:grid-cols-[auto_1fr] bg-[#000] pt-5 px-3 gap-3">
-        <div className="bg-[#100f0f] py-2 px-6">
+      {!isLoading ? (
+        <div className="relative">
+          <OPlayer
+            episodeNumber={episodeNumber}
+            malId={malId}
+            poster={poster}
+          />
+        </div>
+      ) : (
+        <LoadingVideo classname="w-10 h-10 md:h-12 md:w-12" />
+      )}
+      <div className="grid grid-cols-1 md:grid-cols-[auto_1fr] bg-black pt-5 px-3 gap-3">
+        <div className="bg-background-700 py-2 px-6">
           <div className="text-center text-white text-xs my-2">
             <p>You are watching</p>
-            <Button type="button" className="text-[#6A55FA] mb-2 bg-none">
+            <Button type="button" className="text-primary mb-2 bg-none">
               {title} Episode {episodeNumber}
             </Button>
             <p>
@@ -112,7 +119,7 @@ const Video = (props: VideoProps): JSX.Element => {
               disabled={server === 'server 1' ? true : false}
               // onClick={handleChangeProvider}
               onClick={() => dispatch(setServer('server 1'))}
-              className="bg-[#6A55FA] p-2 text-xs rounded-md uppercase font-semibold"
+              className="bg-primary p-2 text-xs rounded-md uppercase font-semibold"
             >
               server 1
             </Button>
@@ -129,7 +136,7 @@ const Video = (props: VideoProps): JSX.Element => {
               {episodeNumber !== 1 ? (
                 <Button
                   onClick={() => dispatch(setEpisodeId(prevEpisode?.id))}
-                  className="text-white text-xs hover:text-[#6a55fa] transition"
+                  className="text-white text-xs hover:text-primary transition"
                 >
                   <TbPlayerTrackPrev className="h-5 w-5 md:h-7 md:w-7" />
                 </Button>
@@ -137,7 +144,7 @@ const Video = (props: VideoProps): JSX.Element => {
               {episodeNumber !== totalEpisodes ? (
                 <Button
                   onClick={() => dispatch(setEpisodeId(nextEpisode?.id))}
-                  className="text-white text-xs hover:text-[#6a55fa] transition"
+                  className="text-white text-xs hover:text-primary transition"
                 >
                   <TbPlayerTrackNext className="h-5 w-5 md:h-7 md:w-7" />
                 </Button>

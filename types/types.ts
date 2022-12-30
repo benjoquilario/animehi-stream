@@ -1,57 +1,57 @@
-export type TitleType = {
+export interface TitleType {
   romaji: string;
   english: string;
   native: string;
   userPreferred: string;
-};
+}
 
-export type EpisodesType = {
+export interface EpisodesType {
   description: string;
   id: string;
   image: string;
   number: number;
   title: string;
-};
+}
 
-export type RecentType = {
+export interface RecentType {
   animeId?: string;
   episodeId?: string;
   episodeNumber?: number;
   image?: string;
   title?: string | TitleType;
   color?: string;
-};
+}
 
-export type AniSkip = {
+export interface AniSkip {
   statusCode: number;
   results?: AniSkipResult[];
-};
+}
 
-export type AniSkipResult = {
+export interface AniSkipResult {
   interval: {
     startTime: number;
     endTime: number;
   };
   type: string;
-};
+}
 
-export type SourceType = {
+export interface SourceType {
   sources: {
     url: string;
     isM3U8: boolean;
     quality: string;
   };
-};
+}
 
-export type NameType = {
+export interface NameType {
   first: string;
   last?: string | null;
   full: string;
   native: string;
   userPreferred: string;
-};
+}
 
-export type CharactersType = {
+export interface CharactersType {
   id: number;
   image: string;
   name: NameType;
@@ -62,9 +62,9 @@ export type CharactersType = {
     language: string;
     name: NameType;
   }[];
-};
+}
 
-export type EnimeType = {
+export interface EnimeType {
   anilistId?: number;
   averageScore?: number;
   bannerImage?: string;
@@ -90,4 +90,4 @@ export type EnimeType = {
   title: TitleType;
   updatedAt?: string;
   year?: number;
-};
+}

@@ -38,6 +38,7 @@ const Search = ({ query }: { query: string }) => {
             <div className="flex justify-between w-full mb-4">
               <TitleName title={`Search results : ${query}`} />
               <Pagination
+                className="p-1 md:p-2 text-[#ededed] hover:bg-background-900 rounded-full transition"
                 pageNumber={pageNumber}
                 setPageNumber={setPageNumber}
                 hasNextPage={results?.hasNextPage}

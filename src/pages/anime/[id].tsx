@@ -21,7 +21,8 @@ import Storage from '@/src/lib/utils/storage';
 import Side from '@/components/anime/side';
 import ResultsCard from '@/components/shared/results-card';
 import WatchLink from '@/components/shared/watch-link';
-import React, { useState, useMemo, useCallback, useEffect } from 'react';
+import ClientOnly from '@/components/shared/client-only';
+import React, { useState, useMemo, useCallback } from 'react';
 
 export const getServerSideProps: GetServerSideProps = async ({ params }) => {
   let id = params!.id;
@@ -51,12 +52,7 @@ const Anime = ({
   const recentWatched = new Storage('recentWatched');
   const watchList = new Storage('watchedList');
   const [showMore, setShowMore] = useState<boolean>(false);
-  const [isHydrated, setIsHydrated] = useState(false);
   const { data: episodes, isLoading, isError } = useEpisodes(animeList?.id);
-
-  useEffect(() => {
-    setIsHydrated(true);
-  }, []);
 
   const handleWatchedList = useCallback(() => {
     const storage = new Storage('watchedList');
@@ -167,7 +163,7 @@ const Anime = ({
           </div>
           <div className="grid text-white py-4 w-full z-10 mt-[-69px]">
             <div className="flex items-center gap-2 mb-7">
-              {isHydrated && (
+              <ClientOnly>
                 <WatchLink
                   isExist={existedEpisode}
                   id={animeList?.id}
@@ -175,17 +171,19 @@ const Anime = ({
                   currentWatchEpisode={currentWatchEpisode as RecentType}
                   lastEpisode={lastEpisodes}
                 />
-              )}
+              </ClientOnly>
               <Button
-                disabled={isHydrated && existedWatched ? true : false}
+                disabled={existedWatched ? true : false}
                 onClick={handleWatchedList}
                 style={{
                   backgroundColor: `${animeList?.color || '#000'}`,
                 }}
-                className="text-xs md:text-sm transition duration-300 text-sm md:text-base flex items-center px-3 py-2 rounded-md gap-x-1 hover:opacity-80"
+                className="text-xs md:text-sm transition duration-300 flex items-center px-3 py-2 rounded-md gap-x-1 hover:opacity-80"
                 type="button"
               >
-                {isHydrated && existedWatched ? 'Watching' : 'Add to WatchList'}
+                <ClientOnly>
+                  {existedWatched ? 'Watching' : 'Add to WatchList'}
+                </ClientOnly>
               </Button>
             </div>
             <h1
@@ -256,19 +254,7 @@ const Anime = ({
             </div>
             <div className="bg-background-700 my-2 p-3 rounded">
               <ul className="grid grid-cols-2  w-full md:grid-cols-1">
-                <Side
-                  title={animeList?.title}
-                  status={animeList?.status}
-                  type={animeList?.type}
-                  genres={animeList?.genres}
-                  studios={animeList?.studios}
-                  releaseDate={animeList?.releaseDate}
-                  totalEpisodes={animeList?.totalEpisodes}
-                  rating={animeList?.rating}
-                  countryOfOrigin={animeList?.contryOfOrigin}
-                  season={animeList?.season}
-                  synonyms={animeList?.synonyms}
-                />
+                <Side data={animeList} />
               </ul>
             </div>
           </div>

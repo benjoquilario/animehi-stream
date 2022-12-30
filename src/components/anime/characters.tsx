@@ -9,10 +9,10 @@ export type CharactersProps = {
   color: string;
 };
 
-const Characters = ({ characters, color }: CharactersProps): JSX.Element => (
+const Characters = (props: CharactersProps): JSX.Element => (
   <div>
     <div className="relative grid grid-cols-fill-character lg:grid-cols-2 gap-2 w-full h-full">
-      {characters.slice(0, 10)?.map((character, index) => {
+      {props.characters.slice(0, 10)?.map((character, index) => {
         return (
           <div
             key={index}
@@ -26,7 +26,7 @@ const Characters = ({ characters, color }: CharactersProps): JSX.Element => (
                 alt={character?.name.full}
                 placeholder="blur"
                 blurDataURL={`data:image/svg+xml;base64,${base64SolidImage(
-                  color
+                  props.color
                 )}`}
                 containerclassname="relative"
               />
@@ -55,7 +55,7 @@ const Characters = ({ characters, color }: CharactersProps): JSX.Element => (
                 alt={character?.voiceActors[0]?.name.full}
                 placeholder="blur"
                 blurDataURL={`data:image/svg+xml;base64,${base64SolidImage(
-                  color
+                  props.color
                 )}`}
                 containerclassname="relative"
               />

@@ -10,30 +10,24 @@ type ResultsCardProps = {
   animeList?: IAnimeInfo[];
 };
 
-const ResultsCard = ({
-  isLoading,
-  title,
-  animeList,
-}: ResultsCardProps): JSX.Element => {
-  return (
-    <div>
-      {title ? <TitleName title={title} /> : null}
-      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4 relative overflow-hidden">
-        {isLoading
-          ? Array.from(Array(12), (_, i) => <SkeletonLoading key={i} />)
-          : animeList?.map((anime, index) => (
-              <Thumbnail
-                key={index}
-                data={anime}
-                isRecent={false}
-                image={anime.image || anime.cover}
-                genres={anime.genres}
-              />
-            ))}
-      </div>
+const ResultsCard = (props: ResultsCardProps): JSX.Element => (
+  <div>
+    {props.title ? <TitleName title={props.title} /> : null}
+    <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4 relative overflow-hidden">
+      {props.isLoading
+        ? Array.from(Array(12), (_, i) => <SkeletonLoading key={i} />)
+        : props.animeList?.map((anime, index) => (
+            <Thumbnail
+              key={index}
+              data={anime}
+              isRecent={false}
+              image={anime.image || anime.cover}
+              genres={anime.genres}
+            />
+          ))}
     </div>
-  );
-};
+  </div>
+);
 
 const SkeletonLoading = () => (
   <div className="relatve flex flex-col animate-pulse">

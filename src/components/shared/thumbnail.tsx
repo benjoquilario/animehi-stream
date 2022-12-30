@@ -49,16 +49,8 @@ const popupOptions: Partial<Options> = {
   ],
 };
 
-const Thumbnail = ({
-  data,
-  isRecent,
-  episodeId,
-  episodeNumber,
-  image,
-  genres,
-}: ThumbnailProps): JSX.Element => {
-  const router = useRouter();
-  const dispatch = useDispatch();
+const Thumbnail = (props: ThumbnailProps): JSX.Element => {
+  const { data, isRecent, episodeId, episodeNumber, image, genres } = props;
 
   return (
     <Popup

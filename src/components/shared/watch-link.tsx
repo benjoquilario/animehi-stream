@@ -11,13 +11,8 @@ type WatchLinkProps = {
   lastEpisode: string;
 };
 
-const WatchLink = ({
-  isExist,
-  id,
-  color,
-  currentWatchEpisode,
-  lastEpisode,
-}: WatchLinkProps): JSX.Element => {
+const WatchLink = (props: WatchLinkProps): JSX.Element => {
+  const { isExist, id, color, currentWatchEpisode, lastEpisode } = props;
   return (
     <Link
       href={`/watch/${id}?episode=${

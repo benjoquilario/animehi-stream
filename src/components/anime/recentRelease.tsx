@@ -41,7 +41,11 @@ const RecentRelease = (): JSX.Element => {
     <div>
       <div className="flex items-center justify-between text-white">
         <TitleName title="Latest Releases" />
-        <Pagination pageNumber={pageNumber} setPageNumber={setPageNumber} />
+        <Pagination
+          className="p-1 md:p-2 text-[#ededed] hover:bg-background-900 rounded-full transition"
+          pageNumber={pageNumber}
+          setPageNumber={setPageNumber}
+        />
       </div>
       <div
         // ref={rowRef}
@@ -67,7 +71,7 @@ const RecentRelease = (): JSX.Element => {
 
 const RecentLoading = () => (
   <div className="relatve flex flex-col animate-pulse">
-    <div className="md:w-[187px] md:min-w-[187px] lg:w-[180px] lg:min-w-[180px] 2xl:w-[180px] 2xl:min-w-[180px] h-[160px] min-h-[160px] md:h-[210px] md:min-h-[221px] bg-[#141313] rounded-lg"></div>
+    <div className="md:w-[187px] md:min-w-[187px] lg:w-[155px] lg:min-w-[155px] 2xl:w-[180px] 2xl:min-w-[180px] h-[160px] min-h-[160px] md:h-[210px] md:min-h-[221px] bg-[#141313] rounded-lg"></div>
     <div className="h-4 w-full bg-[#141313] rounded-lg mt-2"></div>
   </div>
 );

@@ -16,8 +16,7 @@ import {
 } from '@/store/watch/slice';
 import { setAnimeId } from '@/store/anime/slice';
 import EpisodesButton from '@/components/watch/episodes-button';
-
-import { extractEpisode } from '@/src/lib/utils/index';
+import { extractEpisode, parseData } from '@/src/lib/utils/index';
 import Episodes from '@/components/watch/episodes';
 import progressBar, { LoadingVideo } from '@/components/shared/loading';
 import { NextSeo } from 'next-seo';
@@ -68,7 +67,7 @@ export const getServerSideProps: GetServerSideProps = async context => {
 
   return {
     props: {
-      animeList: JSON.parse(JSON.stringify(data)),
+      animeList: parseData(data),
       initialReduxState: store.getState(),
     },
   };
@@ -166,9 +165,9 @@ const WatchAnime: NextPage<WatchAnimeProps> = ({
   return (
     <DefaultLayout footer={false}>
       <NextSeo
-        title={`Watch ${title} Episode - ${extractEpisode(
-          episodeId
-        )} English Subbed on AnimeHi`}
+        title={`Watch ${title} Episode - ${
+          currentEpisode?.number || episodes?.length
+        } English Subbed on AnimeHi`}
         description={animeList?.description}
         openGraph={{
           images: [
@@ -188,23 +187,19 @@ const WatchAnime: NextPage<WatchAnimeProps> = ({
 
       <Section>
         <div className="grid grid-cols-1 md:grid-cols-1 xl:grid-cols-5 gap-2 h-full w-full">
-          {videoLoading ? (
-            <LoadingVideo classname="h-7 h-7 md:h-12 md:w-12" />
-          ) : (
-            <VideoPlayer
-              malId={animeList?.malId}
-              poster={currentEpisode?.image}
-              episodeId={episodeId}
-              image={animeList?.image || animeList?.cover}
-              className="col-span-full"
-              title={title}
-              episodeNumber={currentEpisode?.number || episodes?.length}
-              nextEpisode={nextEpisode}
-              prevEpisode={prevEpisode}
-              color={animeList?.color}
-            />
-          )}
-
+          <VideoPlayer
+            malId={animeList?.malId}
+            poster={currentEpisode?.image}
+            episodeId={episodeId}
+            image={animeList?.image || animeList?.cover}
+            className="col-span-full"
+            title={title}
+            episodeNumber={currentEpisode?.number || episodes?.length}
+            nextEpisode={nextEpisode}
+            prevEpisode={prevEpisode}
+            color={animeList?.color}
+            isLoading={videoLoading}
+          />
           <div className="row-start-2 row-end-5 col-start-1 col-end-5 xl:col-start-1 xl:col-end-2	md:row-start-2 md:row-end-2 xl:row-start-1 xl:row-end-1 h-full pb-3">
             <DetailLinks
               animeId={animeList?.id}
@@ -214,11 +209,8 @@ const WatchAnime: NextPage<WatchAnimeProps> = ({
             <div className="bg-background-700 p-4 w-full text-white text-xs">
               List of episode :
             </div>
-
-            <div className="flex flex-col bg-background-700 md:bg-[#000000eb] overflow-auto min-h-full h-full md:min-h-[650px] md:h-[650px]">
-              {episodesLoading && (
-                <LoadingVideo classname="h-5 h-5 md:h-8 md:w-8" />
-              )}
+            <div className="flex flex-col bg-background-700 md:bg-[#000000eb] overflow-auto min-h-full h-full md:min-h-[617px] md:h-[617px]">
+              {episodesLoading && <LoadingVideo classname="h-8 w-8" />}
               {episodes?.length > 25 ? (
                 <EpisodesButton
                   watchPage={true}

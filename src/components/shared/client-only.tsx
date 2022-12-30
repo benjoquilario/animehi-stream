@@ -6,6 +6,7 @@ const ClientOnly = ({ children }: { children: React.ReactNode }) => {
   useEffect(() => {
     setHasMounted(true);
   }, []);
+
   return hasMounted ? <React.Fragment>{children}</React.Fragment> : null;
 };
 

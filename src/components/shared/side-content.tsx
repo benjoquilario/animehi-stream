@@ -6,14 +6,10 @@ type SideContentProps = {
   info?: string | number | boolean | ReactNode;
 };
 
-const SideContent = ({
-  classes,
-  title,
-  info,
-}: SideContentProps): JSX.Element => (
-  <li className={`${classes}`}>
-    <div className="text-white text-base">{title}</div>
-    <div className="text-slate-300 italic text-sm">{info}</div>
+const SideContent = (props: SideContentProps): JSX.Element => (
+  <li className={`${props.classes}`}>
+    <div className="text-white text-base">{props.title}</div>
+    <div className="text-slate-300 italic text-sm">{props.info}</div>
   </li>
 );
 

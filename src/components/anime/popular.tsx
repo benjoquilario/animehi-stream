@@ -12,8 +12,8 @@ export type PopularProps = {
   isLoading: boolean;
 };
 
-const Popular = ({ popularSeason, isLoading }: PopularProps): JSX.Element =>
-  !isLoading ? (
+const Popular = (props: PopularProps): JSX.Element =>
+  !props.isLoading ? (
     <div className="block w-full">
       <h2 className="mb-2 px-4 text-base md:text-[20px] uppercase font-semibold text-white">
         Most Popular Anime
@@ -21,7 +21,7 @@ const Popular = ({ popularSeason, isLoading }: PopularProps): JSX.Element =>
 
       <div className="bg-background-700">
         <ul>
-          {popularSeason?.results?.map((anime, index) => (
+          {props.popularSeason?.results?.map((anime, index) => (
             <ColumnSection
               data={anime}
               genres={anime.genres as string[]}
