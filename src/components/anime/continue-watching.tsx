@@ -46,7 +46,7 @@ const ContinueWatching = () => {
   };
 
   const removeItem = (animeId?: string) => {
-    typeof window !== 'undefined' && storage.remove({ animeId: animeId });
+    typeof window !== 'undefined' && storage.remove({ id: animeId });
     const list =
       typeof window !== 'undefined' && storage.find<RecentType>().reverse();
 
@@ -67,7 +67,7 @@ const ContinueWatching = () => {
       </div>
       <Swiper
         breakpoints={breakpoints}
-        spaceBetween={10}
+        spaceBetween={8}
         freeMode={true}
         pagination={{
           clickable: true,
@@ -75,11 +75,11 @@ const ContinueWatching = () => {
         modules={[FreeMode, Pagination]}
         className="mySwiper"
       >
-        {recentWatched?.map(recently => (
-          <SwiperSlide key={recently.animeId}>
+        {recentWatched?.map((recently, index) => (
+          <SwiperSlide key={index}>
             <WatchCard
-              onClick={() => removeItem(recently.animeId)}
-              animeId={recently.animeId}
+              onClick={() => removeItem(recently.id)}
+              id={recently.id}
               title={recently.title}
               image={recently.image}
               color={recently.color}

@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react';
+import React, { useMemo } from 'react';
 import Link from 'next/link';
 import { Options } from '@popperjs/core';
 import { base64SolidImage } from '@/src/lib/utils/image';
@@ -12,18 +12,22 @@ import Genre from './genre';
 import Icon from './icon';
 import { FaThumbsUp, FaPlay } from 'react-icons/fa';
 import { AiFillClockCircle } from 'react-icons/ai';
-import { useDispatch } from '@/store/store';
-import { useRouter } from 'next/router';
+import { BsEmojiSmile } from 'react-icons/bs';
 import { IAnimeInfo } from '@consumet/extensions/dist/models/types';
 import { title } from '@/lib/helper';
+import dayjs from '@/lib/utils/time';
 
 export type ThumbnailProps = {
   data: IAnimeInfo | EnimeType;
   isRecent: boolean;
   episodeNumber?: number;
   episodeId?: string;
+  episodePoster?: string;
   image?: string;
   genres?: string[];
+  description?: string;
+  episodeTitle?: string;
+  createdAt?: string;
 };
 
 const popupOptions: Partial<Options> = {
@@ -50,7 +54,20 @@ const popupOptions: Partial<Options> = {
 };
 
 const Thumbnail = (props: ThumbnailProps): JSX.Element => {
-  const { data, isRecent, episodeId, episodeNumber, image, genres } = props;
+  const {
+    data,
+    isRecent,
+    episodeId,
+    episodeNumber,
+    episodePoster,
+    image,
+    genres,
+    description,
+    episodeTitle,
+    createdAt,
+  } = props;
+
+  const episodeDate = useMemo(() => dayjs(createdAt).fromNow(), [createdAt]);
 
   return (
     <Popup
@@ -97,7 +114,7 @@ const Thumbnail = (props: ThumbnailProps): JSX.Element => {
                   <Link
                     href={`/watch/${
                       data.anilistId || data.id
-                    }?episode=${episodeId}-enime`}
+                    }?episode=${episodeId}`}
                   >
                     <a
                       aria-label={`Play - ${title(
@@ -115,7 +132,7 @@ const Thumbnail = (props: ThumbnailProps): JSX.Element => {
             </div>
           </div>
 
-          <Link href={`/anime/${data.id}`}>
+          <Link href={`/anime/${data.anilistId}`}>
             <a
               style={{ color: `${data.color ? data.color : '#fff'}` }}
               className={classNames(
@@ -132,22 +149,53 @@ const Thumbnail = (props: ThumbnailProps): JSX.Element => {
     >
       <Image
         layout="fill"
-        src={`${image}`}
+        src={`${episodePoster || image}`}
         objectFit="cover"
         placeholder="blur"
         blurDataURL={`data:image/svg+xml;base64,${base64SolidImage(
           `${data.color}`
         )}`}
         className=""
-        alt={`Anime - ${title(data.title as TitleType)}`}
+        alt={`Episode - ${episodeTitle || title(data.title as TitleType)}`}
         containerclassname="relative w-full h-full transition-opacity"
       />
       <div className="absolute inset-0 bg-black opacity-60 z-100"></div>
       <div className="absolute inset-0 text-white p-4 flex justify-center flex-col">
-        <h2 className="text-2xl">{title(data.title as TitleType)}</h2>
-        <p className="line-clamp-4 text-sm">
-          {stripHtml(`${data.description}`)}
-        </p>
+        {isRecent ? (
+          <h2 className="text-2xl">
+            Episode {episodeNumber} :
+            {episodeTitle || title(data.title as TitleType)}
+          </h2>
+        ) : (
+          <div className="flex justify-between items-center">
+            <h2 className="text-2xl">{data.status}</h2>
+            <div className="text-primary flex items-center">
+              <BsEmojiSmile className="h-8 w-8" />
+              <span className="ml-2 text-lg text-white font-semibold">
+                {/* @ts-ignore */}
+                {data.rating}%
+              </span>
+            </div>
+          </div>
+        )}
+
+        {createdAt && <span className="text-sm -mt-1">{episodeDate}</span>}
+        {isRecent && (
+          <p className="line-clamp-4 text-sm">
+            {stripHtml(
+              `${description ? description : 'No Episode Description'}`
+            ) || stripHtml(`${data.description}` || 'No Description')}
+          </p>
+        )}
+        {!isRecent && (
+          <div className="flex items-center gap-2">
+            {/* @ts-ignore */}
+            <span>{data.type} Shows</span>
+            <span className="w-1.5 h-1.5 bg-primary rounded-full inline-block"></span>
+            {/* @ts-ignore */}
+            <span>{data.episodes} Episodes</span>
+          </div>
+        )}
         <div className="hidden mr-2 md:flex flex-wrap gap-2 mt-2">
           {genres?.map(genre => (
             <div className="flex items-center gap-2" key={genre}>
@@ -156,14 +204,27 @@ const Thumbnail = (props: ThumbnailProps): JSX.Element => {
             </div>
           ))}
         </div>
-        <div className="flex space-x-2">
-          <Icon icon={FaPlay} text={`${data.format}`} />
-          <Icon
-            icon={AiFillClockCircle}
-            text={`${data.duration || 24} Min/Ep`}
-          />
-          <Icon icon={FaThumbsUp} text={`${data.popularity}`} />
-        </div>
+        {isRecent ? (
+          <div className="flex space-x-2">
+            <Icon icon={FaPlay} text={`${data.format}`} />
+            <Icon
+              icon={AiFillClockCircle}
+              text={`${data.duration || 24} Min/Ep`}
+            />
+            <Icon icon={FaThumbsUp} text={`${data.popularity}`} />
+          </div>
+        ) : (
+          <div className="flex flex-col text-base">
+            {/* @ts-ignore */}
+            <span>- {data.title.english}</span>
+            {/* @ts-ignore */}
+            <span>- {data.title.romaji}</span>
+            {/* @ts-ignore */}
+            <span>- {data.title.native}</span>
+            {/* @ts-ignore */}
+            <span>- {data.title.userPreferred}</span>
+          </div>
+        )}
       </div>
     </Popup>
   );

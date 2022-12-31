@@ -1,23 +1,34 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useMemo } from 'react';
 import classNames from 'classnames';
 import { AiFillDatabase } from 'react-icons/ai';
 import { useDispatch, useSelector } from '@/store/store';
 import { setEpisodeId, setServer } from '@/store/watch/slice';
-import { EpisodesType, RecentType } from '@/src/../types/types';
+import {
+  EpisodesType,
+  RecentType,
+  TitleType,
+  NextAiringEpisode,
+} from '@/src/../types/types';
 import { TbPlayerTrackNext, TbPlayerTrackPrev } from 'react-icons/tb';
 import Button from '@/components/shared/button';
 import Storage from '@/src/lib/utils/storage';
 import OPlayer from '@/components/player/op-player';
 import { LoadingVideo } from '@/components/shared/loading';
+import { IAnimeInfo } from '@consumet/extensions/dist/models/types';
+import { title } from '@/lib/helper';
+import dayjs from '@/lib/utils/time';
 
 type VideoProps = {
-  malId: number;
+  data: IAnimeInfo;
+  id: string;
+  color: string;
+  title: string;
+  image: string;
+  nextAiringEpisode: NextAiringEpisode;
+  animeTitle: string;
   poster: string;
   episodeId: string;
-  image: string;
-  title: string;
   className: string;
-  color: string;
   episodeNumber: number;
   nextEpisode: EpisodesType;
   prevEpisode: EpisodesType;
@@ -26,17 +37,20 @@ type VideoProps = {
 
 const Video = (props: VideoProps): JSX.Element => {
   const {
-    malId,
-    poster,
-    episodeId,
+    data,
+    id,
+    color,
     image,
     title,
-    color,
+    nextAiringEpisode,
+    poster,
+    episodeId,
     className,
     episodeNumber,
     nextEpisode,
     prevEpisode,
     isLoading,
+    animeTitle,
   } = props;
 
   const dispatch = useDispatch();
@@ -52,56 +66,61 @@ const Video = (props: VideoProps): JSX.Element => {
 
     const list =
       typeof window !== 'undefined' &&
-      storage.findOne<RecentType>({ animeId: animeId });
+      storage.findOne<RecentType>({ id: animeId });
 
-    if (list)
+    if (list) {
       typeof window !== 'undefined' &&
         storage.update(list, {
-          animeId,
-          title,
-          episodeNumber,
-          image,
-          episodeId,
           color,
+          image,
+          animeTitle,
+          episodeNumber,
+          episodeId,
+          id,
         });
-    else
+      console.log(episodeNumber);
+    } else {
       typeof window !== 'undefined' &&
         storage.create({
-          animeId,
+          color,
+          image,
           title,
           episodeNumber,
-          image,
           episodeId,
-          color,
+          id,
         });
-
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [animeId, episodeId]);
+  console.log(episodeNumber);
 
-  return (
+  const nextAiringScheduleTime = useMemo(() => {
+    if (!nextAiringEpisode?.airingTime) return;
+
+    return dayjs.unix(nextAiringEpisode?.airingTime).fromNow();
+  }, [nextAiringEpisode?.airingTime]);
+
+  return !isLoading ? (
     <div
       className={classNames(
         'flex flex-col col-start-1 col-end-6 md:col-start-1 xl:col-start-2 md:col-end-6 w-full',
         className
       )}
     >
-      {!isLoading ? (
-        <div className="relative">
-          <OPlayer
-            episodeNumber={episodeNumber}
-            malId={malId}
-            poster={poster}
-          />
-        </div>
-      ) : (
-        <LoadingVideo classname="w-10 h-10 md:h-12 md:w-12" />
-      )}
+      <div className="relative">
+        <OPlayer
+          episodeNumber={episodeNumber}
+          malId={data?.malId as number}
+          poster={poster}
+        />
+      </div>
+
       <div className="grid grid-cols-1 md:grid-cols-[auto_1fr] bg-black pt-5 px-3 gap-3">
         <div className="bg-background-700 py-2 px-6">
           <div className="text-center text-white text-xs my-2">
             <p>You are watching</p>
             <Button type="button" className="text-primary mb-2 bg-none">
-              {title} Episode {episodeNumber}
+              {`${animeTitle} Episode ${episodeNumber}`}
             </Button>
             <p>
               Click <b>Episode</b> again or Switch to alternate
@@ -110,26 +129,30 @@ const Video = (props: VideoProps): JSX.Element => {
           </div>
         </div>
         <div className="mt-2 flex justify-between items-start w-full">
-          <div className="flex items-center text-white gap-2">
-            <AiFillDatabase className="text-white h-4 h-4" />
-            <h4 className="uppercase text-xs md:text-sm font-semibold">
-              providers:
-            </h4>
-            <Button
-              disabled={server === 'server 1' ? true : false}
-              // onClick={handleChangeProvider}
-              onClick={() => dispatch(setServer('server 1'))}
-              className="bg-primary p-2 text-xs rounded-md uppercase font-semibold"
-            >
-              server 1
-            </Button>
-            {/* <button
-              disabled={server === 'server 2' ? true : false}
-              onClick={() => dispatch(setServer('server 2'))}
-              className="bg-[#6A55FA] p-2 text-xs rounded-md uppercase font-semibold"
-            >
-              server 2
-            </button> */}
+          <div className="flex flex-col items-start text-white gap-2">
+            <div className="flex items-center text-white gap-2">
+              <AiFillDatabase className="text-white h-4 h-4" />
+              <h4 className="uppercase text-xs md:text-sm font-semibold">
+                providers:
+              </h4>
+              <Button
+                disabled={server === 'server 1' ? true : false}
+                // onClick={handleChangeProvider}
+                onClick={() => dispatch(setServer('server 1'))}
+                className="bg-primary p-2 text-xs rounded-md uppercase font-semibold"
+              >
+                server 1
+              </Button>
+            </div>
+            {nextAiringEpisode && (
+              <div className="text-sm text-primary flex flex-col">
+                <span className="font-semibold">Next Episode</span>
+                <span>
+                  Episode {nextAiringEpisode?.episode}: (
+                  {nextAiringScheduleTime})
+                </span>
+              </div>
+            )}
           </div>
           <div>
             <div className="flex gap-2">
@@ -154,6 +177,8 @@ const Video = (props: VideoProps): JSX.Element => {
         </div>
       </div>
     </div>
+  ) : (
+    <LoadingVideo classname="w-10 h-10 md:h-12 md:w-12" />
   );
 };
 

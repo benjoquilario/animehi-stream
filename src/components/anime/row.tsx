@@ -1,4 +1,3 @@
-import { TitleType } from '@/src/../types/types';
 import ColumnSection from '@/components/shared/column-section';
 import { IAnimeInfo, IAnimeResult, ISearch } from '@consumet/extensions';
 import React from 'react';

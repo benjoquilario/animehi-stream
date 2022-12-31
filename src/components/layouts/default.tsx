@@ -1,6 +1,5 @@
 import Header from '../header/header';
 import Footer from './footer';
-import HTMLHead from './head';
 
 export interface IDefaultProps {
   children: React.ReactNode;

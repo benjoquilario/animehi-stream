@@ -1,5 +1,5 @@
 import React from 'react';
-import { genreList } from '@/src/lib/utils/config';
+import { genreList } from '@/lib/constant';
 
 const Genres = () => {
   return (

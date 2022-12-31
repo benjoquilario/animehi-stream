@@ -1,7 +1,6 @@
 import { NextSeo } from 'next-seo';
 import { META } from '@consumet/extensions';
 import { GetServerSideProps, InferGetServerSidePropsType } from 'next';
-import { IAnimeInfo } from '@consumet/extensions/dist/models/types';
 import progressBar, { EpisodeLoading } from '@/components/shared/loading';
 import { base64SolidImage } from '@/src/lib/utils/image';
 import Genre from '@/components/shared/genre';
@@ -30,19 +29,18 @@ export const getServerSideProps: GetServerSideProps = async ({ params }) => {
   const anilist = new META.Anilist();
   id = typeof id === 'string' ? id : id?.join('');
 
-  const data: IAnimeInfo = await anilist.fetchAnilistInfoById(id as string);
+  const data = await anilist.fetchAnilistInfoById(id as string);
 
-  if (!data || !id) {
+  if (!data)
     return {
       notFound: true,
     };
-  }
-
-  return {
-    props: {
-      animeList: parseData(data),
-    },
-  };
+  else
+    return {
+      props: {
+        animeList: parseData(data),
+      },
+    };
 };
 
 const Anime = ({

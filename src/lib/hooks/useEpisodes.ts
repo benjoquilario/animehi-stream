@@ -1,9 +1,9 @@
 import useSWR from 'swr';
-import { BASE_URL } from '@/src/lib/utils/config';
+import { CONSUMET_URL } from '@/src/lib/constant';
 
 const useEpisodes = (id: string) => {
   const fetcher = async (episodeId: string) =>
-    fetch(`${BASE_URL}/meta/anilist/episodes/${episodeId}`).then(res =>
+    fetch(`${CONSUMET_URL}/meta/anilist/episodes/${episodeId}`).then(res =>
       res.json()
     );
 

@@ -1,18 +1,7 @@
 import React, { useEffect, useMemo } from 'react';
-import 'swiper/css';
-import 'swiper/css/pagination';
-import 'swiper/css/navigation';
-import { Swiper, SwiperSlide } from 'swiper/react';
-import { Autoplay, Pagination, Navigation } from 'swiper';
-import Banner, { BannerResult } from '@/components/anime/banner';
 import progressBar from '@/components/shared/loading';
-import {
-  IAnimeInfo,
-  IAnimeResult,
-} from '@consumet/extensions/dist/models/types';
-import { TYPE, FORMAT, SORT } from '@/src/lib/utils/config';
+import { TYPE, FORMAT, SORT } from '@/src/lib/constant';
 import RecentRelease from '@/components/anime/recentRelease';
-import { TitleType } from '@/src/../types/types';
 import Popular from '@/components/anime/popular';
 import { getSeason } from '../lib/utils';
 import { useDispatch } from '@/store/store';
@@ -20,22 +9,13 @@ import { resetStates } from '@/store/watch/slice';
 import Row from '@/components/anime/row';
 import useMedia from '@/hooks/useMedia';
 import Genres from '@/components/anime/genres';
-import { LoadingBanner } from '@/components/shared/loading';
 import AiringScheduling from '@/components/anime/airing-schedule';
 import DefaultLayout from '@/components/layouts/default';
 import ClientOnly from '@/components/shared/client-only';
 import ContinueWatching from '@/components/anime/continue-watching';
-
-export interface IRecentResults extends IAnimeResult {
-  episodeNumber: number;
-  image: string;
-  title: TitleType;
-  color: string;
-  episodeId: string;
-}
+import Banner from '@/components/anime/banner';
 
 const HomePage = () => {
-  progressBar.finish();
   const dispatch = useDispatch();
   const currentSeason = useMemo(getSeason, []);
 
@@ -97,30 +77,7 @@ const HomePage = () => {
     <ClientOnly>
       <DefaultLayout>
         <div className="w-full h-full bg-center bg-top overflow-hidden bg-cover px-0 md:px-[3%]">
-          {!trendingAnimeLoading ? (
-            <Swiper
-              spaceBetween={30}
-              centeredSlides={true}
-              autoplay={{
-                delay: 2500,
-                disableOnInteraction: false,
-              }}
-              pagination={{
-                clickable: true,
-              }}
-              navigation={true}
-              modules={[Autoplay, Pagination, Navigation]}
-              className="mySwiper"
-            >
-              {trendingAnime?.results?.map((anime: IAnimeInfo, idx: number) => (
-                <SwiperSlide key={idx}>
-                  <Banner animeList={anime as BannerResult} />
-                </SwiperSlide>
-              ))}
-            </Swiper>
-          ) : (
-            <LoadingBanner />
-          )}
+          <Banner animeList={trendingAnime} isLoading={trendingAnimeLoading} />
         </div>
         <main className="mt-[40px] px-[3%]">
           <div className="flex flex-col space-y-6 md:grid lg:grid-cols-1 xl:grid-cols-[1fr_310px] 2xl:grid-cols-[1fr_340px] md:gap-4">
@@ -157,7 +114,6 @@ const HomePage = () => {
               <Genres />
             </div>
           </div>
-          {/* <Row title="Popular" anime={popular} isLoading={false} /> */}
         </main>
       </DefaultLayout>
     </ClientOnly>

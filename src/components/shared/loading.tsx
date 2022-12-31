@@ -31,7 +31,7 @@ export const EpisodeLoading = () => (
 
 export const LoadingVideo = ({ classname }: { classname: string }) => {
   return (
-    <div className="flex flex-col col-start-1 col-end-6 md:col-start-1 xl:col-start-2 md:col-end-6 w-full justify-center items-center h-[304px] md:h-[550px] min-h-[394px] md:min-h-[550px]">
+    <div className="flex flex-col col-start-1 col-end-6 md:col-start-1 xl:col-start-2 md:col-end-6 w-full justify-center items-center h-[280px] md:h-[500px] min-h-[280px] md:min-h-[550px]">
       <div className="w-full flex justify-center items-center">
         <ImSpinner2
           className={classNames('animate-spin text-white', classname)}

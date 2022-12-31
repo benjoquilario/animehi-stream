@@ -13,6 +13,7 @@ import {
   resetSources,
   setEpisodes,
   setTotalEpisodes,
+  setEnimeSouces,
 } from '@/store/watch/slice';
 import { setAnimeId } from '@/store/anime/slice';
 import EpisodesButton from '@/components/watch/episodes-button';
@@ -24,6 +25,7 @@ import DetailLinks from '@/components/shared/detail-links';
 import { IAnimeInfo, META } from '@consumet/extensions';
 import { IAnimeResult } from '@consumet/extensions/dist/models/types';
 import useEpisodes from '@/hooks/useEpisodes';
+import { title } from '@/lib/helper';
 import useVideoSource from '@/hooks/useVideoSource';
 import { EpisodesType } from '@/src/../types/types';
 import DefaultLayout from '@/components/layouts/default';
@@ -89,18 +91,14 @@ const WatchAnime: NextPage<WatchAnimeProps> = ({
     store.watch.episodeId,
     store.watch.provider,
   ]);
-
   const { data: episodes, isLoading: episodesLoading } = useEpisodes(animeId);
-
-  const title = useMemo(
-    () => animeList?.title?.english || animeList?.title?.romaji,
-    [animeList?.title?.english, animeList?.title?.romaji]
-  );
 
   const currentEpisode = useMemo(
     () => episodes?.find((episode: EpisodesType) => episode?.id === episodeId),
     [episodeId, episodes]
   );
+
+  console.log(animeList);
 
   const currentEpisodeIndex = useMemo(
     () =>
@@ -158,15 +156,19 @@ const WatchAnime: NextPage<WatchAnimeProps> = ({
       dispatch(resetSources());
     }
 
-    dispatch(setSources(sources));
+    if (episodeId.includes('episode')) dispatch(setSources(sources));
+    else dispatch(setEnimeSouces(videoSource));
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dispatch, videoLoading]);
 
   return (
     <DefaultLayout footer={false}>
       <NextSeo
-        title={`Watch ${title} Episode - ${
-          currentEpisode?.number || episodes?.length
+        title={`Watch ${title(animeList?.title)} Episode - ${
+          currentEpisode?.number ||
+          animeList?.nextAiringEpisode?.episode ||
+          animeList?.totalEpisodes
         } English Subbed on AnimeHi`}
         description={animeList?.description}
         openGraph={{
@@ -174,12 +176,12 @@ const WatchAnime: NextPage<WatchAnimeProps> = ({
             {
               type: 'large',
               url: `${animeList?.cover}`,
-              alt: `Banner Image for ${title}`,
+              alt: `Banner Image for ${title(animeList?.title)}`,
             },
             {
               type: 'small',
               url: `${animeList?.cover}`,
-              alt: `Cover Image for ${title}`,
+              alt: `Cover Image for ${title(animeList?.title)}`,
             },
           ],
         }}
@@ -188,23 +190,34 @@ const WatchAnime: NextPage<WatchAnimeProps> = ({
       <Section>
         <div className="grid grid-cols-1 md:grid-cols-1 xl:grid-cols-5 gap-2 h-full w-full">
           <VideoPlayer
-            malId={animeList?.malId}
-            poster={currentEpisode?.image}
-            episodeId={episodeId}
+            data={animeList}
+            id={animeList?.id}
+            color={animeList?.color}
+            title={title(animeList.title)}
             image={animeList?.image || animeList?.cover}
+            animeTitle={title(animeList?.title)}
+            nextAiringEpisode={animeList?.nextAiringEpisode}
+            episodeId={episodeId}
+            poster={currentEpisode?.image}
             className="col-span-full"
-            title={title}
-            episodeNumber={currentEpisode?.number || episodes?.length}
+            episodeNumber={
+              currentEpisode?.number ||
+              animeList?.nextAiringEpisode?.episode ||
+              animeList?.totalEpisodes
+            }
             nextEpisode={nextEpisode}
             prevEpisode={prevEpisode}
-            color={animeList?.color}
             isLoading={videoLoading}
           />
           <div className="row-start-2 row-end-5 col-start-1 col-end-5 xl:col-start-1 xl:col-end-2	md:row-start-2 md:row-end-2 xl:row-start-1 xl:row-end-1 h-full pb-3">
             <DetailLinks
               animeId={animeList?.id}
-              animeTitle={title}
-              episodeNumber={currentEpisode?.number || episodes?.length}
+              animeTitle={title(animeList?.title)}
+              episodeNumber={
+                currentEpisode?.number ||
+                animeList?.nextAiringEpisode?.episode ||
+                animeList?.totalEpisodes
+              }
             />
             <div className="bg-background-700 p-4 w-full text-white text-xs">
               List of episode :
@@ -215,12 +228,20 @@ const WatchAnime: NextPage<WatchAnimeProps> = ({
                 <EpisodesButton
                   watchPage={true}
                   episodes={episodes}
-                  activeIndex={currentEpisode?.number || episodes?.length}
+                  activeIndex={
+                    currentEpisode?.number ||
+                    animeList?.nextAiringEpisode?.episode ||
+                    animeList?.totalEpisodes
+                  }
                   episodesClassName="grid grid-cols-2 md:grid-cols-1"
                 />
               ) : (
                 <Episodes
-                  activeIndex={currentEpisode?.number || episodes?.length}
+                  activeIndex={
+                    currentEpisode?.number ||
+                    episodes?.lengthanimeList?.nextAiringEpisode?.episode ||
+                    animeList?.totalEpisodes
+                  }
                   episodes={episodes}
                 />
               )}

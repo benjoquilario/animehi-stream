@@ -21,7 +21,8 @@ const ResultsCard = (props: ResultsCardProps): JSX.Element => (
               key={index}
               data={anime}
               isRecent={false}
-              image={anime.image || anime.cover}
+              image={anime.image}
+              episodePoster={anime.cover}
               genres={anime.genres}
             />
           ))}

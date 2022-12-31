@@ -1,7 +1,5 @@
 // credits to https://github.com/hoangvu12/Kaguya/blob/main/src/components/shared/Popup.tsx
 // Takes me days to understand how react-popper and how it works https://popper.js.org/
-// credits to hoangvu12 kaguya.live how i made this features this code is a copy paste from him.
-// I didn't just copy his code but I understand the flow and how it's works.
 import Portal from '@/components/shared/portal';
 import useDevice from '@/hooks/useDevice';
 import { Modifier, Options, Placement } from '@popperjs/core';

@@ -61,7 +61,7 @@ const Watchlist = () => {
                   <WatchCard
                     onClick={() => removeItem(list.id)}
                     key={list.id}
-                    animeId={list.id}
+                    id={list.id}
                     title={list.title as string}
                     image={list.image}
                     color={list.color}

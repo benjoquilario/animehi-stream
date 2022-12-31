@@ -24,7 +24,7 @@ export const EpisodeNumber = ({
     <div className="flex gap-2">
       <h2 className="text-white text-xs">{episode?.number}</h2>
       <p className="text-xs capitalize line-clamp-2 text-slate-300">
-        {episode?.title}
+        {episode?.title ? episode?.title : `Episode ${episode?.number}`}
       </p>
     </div>
   </>

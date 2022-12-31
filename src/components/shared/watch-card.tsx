@@ -13,8 +13,7 @@ type WatchCardProps = {
 } & RecentType;
 
 const WatchCard = (props: WatchCardProps) => {
-  const { animeId, title, image, color, episodeNumber, episodeId, onClick } =
-    props;
+  const { id, title, image, color, episodeNumber, episodeId, onClick } = props;
 
   return (
     <div className="col-span-1">
@@ -22,7 +21,7 @@ const WatchCard = (props: WatchCardProps) => {
         <div className="relative cursor-pointer rounded overflow-hidden">
           <div className="relative aspect-w-2 aspect-h-3">
             <div className="opacity-100">
-              <Link href={`/anime/${animeId}`}>
+              <Link href={`/anime/${id}`}>
                 <a aria-label={`${title}`}>
                   <Image
                     layout="fill"
@@ -39,7 +38,7 @@ const WatchCard = (props: WatchCardProps) => {
                 </a>
               </Link>
             </div>
-            <Link href={`/watch/${animeId}?episode=${episodeId}`}>
+            <Link href={`/watch/${id}?episode=${episodeId}`}>
               <a
                 aria-label={`Play - ${title} episode ${episodeNumber}`}
                 className="center-element flex justify-center items-center w-[101%] h-full opacity-0 hover:opacity-100 focus:opacity-100 hover:bg-[#1111117a] transition"
@@ -59,7 +58,7 @@ const WatchCard = (props: WatchCardProps) => {
           <h4 className="text-sm md:text-base font-bold text-white text-left">
             Episode {episodeNumber}
           </h4>
-          <Link href={`/anime/${animeId}`}>
+          <Link href={`/anime/${id}`}>
             <a
               style={{
                 color: `${color ? color : '#fff'}`,
@@ -77,4 +76,4 @@ const WatchCard = (props: WatchCardProps) => {
   );
 };
 
-export default WatchCard;
+export default React.memo(WatchCard);

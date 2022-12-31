@@ -2,8 +2,9 @@ import useSWR from 'swr';
 import Thumbnail from '@/components/shared/thumbnail';
 import React, { useState, useEffect } from 'react';
 import { EnimeType } from '@/src/../types/types';
-import Pagination from '../shared/pagination';
-import TitleName from '../shared/title-name';
+import Pagination from '@/components/shared/pagination';
+import TitleName from '@/components/shared/title-name';
+import { ENIME_URL } from '@/lib/constant';
 
 interface RecentResults {
   sources: {
@@ -13,7 +14,12 @@ interface RecentResults {
     url: string;
     website: string;
   }[];
+  createdAt: string;
+  number: number;
+  title: string;
+  description: string;
   anime: EnimeType;
+  image: string;
 }
 
 const RecentRelease = (): JSX.Element => {
@@ -21,7 +27,7 @@ const RecentRelease = (): JSX.Element => {
   const [pageNumber, setPageNumber] = useState(1);
 
   const fetcher = async (page: number) =>
-    fetch(`https://api.enime.moe/recent?page=${page}&perPage=12`).then(res =>
+    fetch(`${ENIME_URL}recent?page=${page}&perPage=12&language=JP`).then(res =>
       res.json()
     );
 
@@ -53,17 +59,38 @@ const RecentRelease = (): JSX.Element => {
       >
         {!data && !error
           ? Array.from(Array(12), (_, i) => <RecentLoading key={i} />)
-          : recent?.map(({ anime, sources }, index) => (
-              <Thumbnail
-                key={index}
-                episodeNumber={anime.currentEpisode}
-                data={anime}
-                isRecent={true}
-                image={anime.coverImage || anime.bannerImage}
-                episodeId={sources?.[0]?.id}
-                genres={anime.genre}
-              />
-            ))}
+          : recent?.map(
+              (
+                {
+                  anime,
+                  sources,
+                  number,
+                  description,
+                  image,
+                  title,
+                  createdAt,
+                },
+                index
+              ) => (
+                <Thumbnail
+                  key={index}
+                  episodeNumber={number}
+                  description={description}
+                  data={anime}
+                  isRecent={true}
+                  image={anime.coverImage || anime.bannerImage}
+                  episodePoster={
+                    (image && `https://images.weserv.nl/?url=${image}`) ||
+                    anime.bannerImage ||
+                    anime.coverImage
+                  }
+                  episodeTitle={title}
+                  episodeId={sources?.[0]?.id}
+                  genres={anime.genre}
+                  createdAt={createdAt}
+                />
+              )
+            )}
       </div>
     </div>
   );

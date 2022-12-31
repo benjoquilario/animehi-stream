@@ -1,4 +1,4 @@
-import { BASE_URL } from '@/src/lib/utils/config';
+import { CONSUMET_URL, ENIME_URL } from '@/src/lib/constant';
 import useSWR from 'swr';
 
 const useVideoSource = ({
@@ -10,7 +10,11 @@ const useVideoSource = ({
 }) => {
   const fetcher = async (episodeId: string, provider: string) =>
     fetch(
-      `${BASE_URL}/meta/anilist/watch/${episodeId}?provider=${provider}`
+      `${
+        episodeId.includes('episode')
+          ? `${CONSUMET_URL}/meta/anilist/watch/${episodeId}?provider=${provider}`
+          : `${ENIME_URL}source/${episodeId}`
+      }  `
     ).then(res => res.json());
 
   const { data, error } = useSWR([episodeId, provider], fetcher, {

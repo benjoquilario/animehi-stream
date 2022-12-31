@@ -10,7 +10,7 @@ import skipOpEd from '@/lib/player/plugin';
 type PlayerProps = {
   poster: string;
   episodeNumber: number;
-  malId: number;
+  malId?: number;
 };
 
 const OPlayer = (props: PlayerProps) => {

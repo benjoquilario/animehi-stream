@@ -1,7 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { BASE_URL } from '@/src/lib/utils/config';
+import { useState, useEffect } from 'react';
 import { META } from '@consumet/extensions';
-import useSWR from 'swr';
 import { IAnimeInfo, IAnimeResult, ISearch } from '@consumet/extensions';
 
 interface IUseMediaProps {

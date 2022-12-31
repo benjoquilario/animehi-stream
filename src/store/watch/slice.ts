@@ -1,7 +1,7 @@
-import { createSlice, current, Draft, PayloadAction } from '@reduxjs/toolkit';
-import { TitleType } from '@/src/../types/types';
-import { CORS_PROXY } from '@/src/lib/utils/config';
+import { createSlice, Draft, PayloadAction } from '@reduxjs/toolkit';
+import { CORS_PROXY } from '@/src/lib/constant';
 import { IAnimeResult, IVideo } from '@consumet/extensions/dist/models/types';
+import { EnimeSource } from 'types/types';
 
 export interface WatchState {
   animeList: IAnimeResult;
@@ -12,6 +12,7 @@ export interface IInitialState {
   episodeId: string;
   totalEpisodes: number;
   sources: IVideo[];
+  enimeSource: EnimeSource;
   currentSource: string;
   videoLink?: string;
   provider: string;
@@ -27,6 +28,14 @@ const initialState: IInitialState = {
   videoLink: '',
   provider: 'gogoanime',
   server: 'server 1',
+  enimeSource: {
+    id: '',
+    url: '',
+    referer: '',
+    priority: 1,
+    browser: true,
+    website: 'https://gogoanime.ar',
+  },
 };
 
 export const watchSlice = createSlice({
@@ -72,6 +81,18 @@ export const watchSlice = createSlice({
         }`;
       }
     },
+    setEnimeSouces: (
+      state: Draft<IInitialState>,
+      action: PayloadAction<EnimeSource>
+    ) => {
+      const enimeSources = action.payload;
+      if (!enimeSources) {
+        state.enimeSource = initialState.enimeSource;
+      } else {
+        state.enimeSource = enimeSources;
+        state.videoLink = `${CORS_PROXY}${state.enimeSource.url}`;
+      }
+    },
     resetSources: (state: Draft<IInitialState>) => {
       state.sources = initialState.sources;
       state.videoLink = initialState.videoLink;
@@ -97,5 +118,6 @@ export const {
   setTotalEpisodes,
   resetStates,
   setServer,
+  setEnimeSouces,
 } = watchSlice.actions;
 export default watchSlice.reducer;

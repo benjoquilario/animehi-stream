@@ -13,8 +13,14 @@ export interface EpisodesType {
   title: string;
 }
 
+export interface NextAiringEpisode {
+  airingTime: number;
+  timeUntilAiring: number;
+  episode: number;
+}
+
 export interface RecentType {
-  animeId?: string;
+  id?: string;
   episodeId?: string;
   episodeNumber?: number;
   image?: string;
@@ -90,4 +96,13 @@ export interface EnimeType {
   title: TitleType;
   updatedAt?: string;
   year?: number;
+}
+
+export interface EnimeSource {
+  id: string;
+  url: string;
+  referer: string;
+  priority: number;
+  browser: boolean;
+  website: string;
 }
