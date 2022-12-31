@@ -3,7 +3,7 @@ const nextConfig = {
   reactStrictMode: true,
   swcMinify: true,
   images: {
-    domains: ['s4.anilist.co', 'gogocdn.net'],
+    domains: ['s4.anilist.co', 'gogocdn.net', 'images.weserv.nl'],
   },
   i18n: {
     locales: ['en-US', 'fr', 'nl-NL', 'nl-BE'],
