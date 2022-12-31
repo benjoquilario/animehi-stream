@@ -37,10 +37,10 @@
   resolved "https://registry.yarnpkg.com/@badrap/bar-of-progress/-/bar-of-progress-0.2.2.tgz#4eb1a197f9727748cd9c9f5269339dd0bf6c1b0c"
   integrity sha512-Ig7MdFQM3OA7Ror5UB1ZutXNZFwxh6YExZvcd6EZloOgcXUR8PKNLH2wUVoeh92NMPnPWr6J/l9Mp+f3z7O7MQ==
 
-"@consumet/extensions@^1.2.11":
-  version "1.2.11"
-  resolved "https://registry.yarnpkg.com/@consumet/extensions/-/extensions-1.2.11.tgz#98cf6a8a069233d119f92113df6d6c5c786a2acf"
-  integrity sha512-wONo26xHn95/LyLymqhExTS/QmaY7Q6Quocx27kMq+gCNaJL1C8/Jjarw+TKmgNHlF81ZlC9+ZeLTAHEH9MeOA==
+"@consumet/extensions@1.3.0":
+  version "1.3.0"
+  resolved "https://registry.yarnpkg.com/@consumet/extensions/-/extensions-1.3.0.tgz#1f551d71ecbad37fcd15b08f95b4e79ed73f7cab"
+  integrity sha512-LyahnyArBswmS72zs9pqyZT8euQHtyVjycp+eRYQdjo+Hy6LKJNGPqIM0VdmTwQNsT0r1+NilWykdrnSU950LA==
   dependencies:
     ascii-url-encoder "^1.2.0"
     axios "^0.27.2"
@@ -255,10 +255,10 @@
     "@nodelib/fs.scandir" "2.1.5"
     fastq "^1.6.0"
 
-"@oplayer/core@^1.2.5":
-  version "1.2.5"
-  resolved "https://registry.yarnpkg.com/@oplayer/core/-/core-1.2.5.tgz#56b05a8874f7267c0b9cd5c154af6901f8c8a03e"
-  integrity sha512-w3fha/VsQWie14AHm86gU8mxcSTzIpJ2teFajfZvRHm/QYua1nhcKM7YDoR77VjwetWOShMrf4x0m88vS0Dh4g==
+"@oplayer/core@1.2.7":
+  version "1.2.7"
+  resolved "https://registry.yarnpkg.com/@oplayer/core/-/core-1.2.7.tgz#1bd41039f8f71e0b51656f963f2b30f5c5c19dff"
+  integrity sha512-V+OZ0xYnn85HIMM6SZyAtupSOd/ePL2EREkBmeu6xg91yWVCr04JP8GDmDrbNJnGDjVFG0LWJHRqu2yC8chS8Q==
 
 "@oplayer/hls@^1.2.4":
   version "1.2.4"

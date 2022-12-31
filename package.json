@@ -10,9 +10,9 @@
   },
   "dependencies": {
     "@badrap/bar-of-progress": "^0.2.2",
-    "@consumet/extensions": "^1.2.11",
+    "@consumet/extensions": "1.3.0",
     "@headlessui/react": "1.4.0",
-    "@oplayer/core": "^1.2.5",
+    "@oplayer/core": "1.2.7",
     "@oplayer/hls": "^1.2.4",
     "@oplayer/ui": "^1.2.7",
     "@popperjs/core": "^2.11.6",
