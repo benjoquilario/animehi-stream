@@ -98,8 +98,6 @@ const WatchAnime: NextPage<WatchAnimeProps> = ({
     [episodeId, episodes]
   );
 
-  console.log(animeList);
-
   const currentEpisodeIndex = useMemo(
     () =>
       episodes?.findIndex((episode: EpisodesType) => episode?.id === episodeId),
@@ -167,7 +165,7 @@ const WatchAnime: NextPage<WatchAnimeProps> = ({
       <NextSeo
         title={`Watch ${title(animeList?.title)} Episode - ${
           currentEpisode?.number ||
-          animeList?.nextAiringEpisode?.episode ||
+          animeList?.nextAiringEpisode?.episode - 1 ||
           animeList?.totalEpisodes
         } English Subbed on AnimeHi`}
         description={animeList?.description}
@@ -202,7 +200,7 @@ const WatchAnime: NextPage<WatchAnimeProps> = ({
             className="col-span-full"
             episodeNumber={
               currentEpisode?.number ||
-              animeList?.nextAiringEpisode?.episode ||
+              animeList?.nextAiringEpisode?.episode - 1 ||
               animeList?.totalEpisodes
             }
             nextEpisode={nextEpisode}
@@ -215,7 +213,7 @@ const WatchAnime: NextPage<WatchAnimeProps> = ({
               animeTitle={title(animeList?.title)}
               episodeNumber={
                 currentEpisode?.number ||
-                animeList?.nextAiringEpisode?.episode ||
+                animeList?.nextAiringEpisode?.episode - 1 ||
                 animeList?.totalEpisodes
               }
             />
@@ -230,7 +228,7 @@ const WatchAnime: NextPage<WatchAnimeProps> = ({
                   episodes={episodes}
                   activeIndex={
                     currentEpisode?.number ||
-                    animeList?.nextAiringEpisode?.episode ||
+                    animeList?.nextAiringEpisode?.episode - 1 ||
                     animeList?.totalEpisodes
                   }
                   episodesClassName="grid grid-cols-2 md:grid-cols-1"
@@ -239,7 +237,7 @@ const WatchAnime: NextPage<WatchAnimeProps> = ({
                 <Episodes
                   activeIndex={
                     currentEpisode?.number ||
-                    episodes?.lengthanimeList?.nextAiringEpisode?.episode ||
+                    animeList?.nextAiringEpisode?.episode - 1 ||
                     animeList?.totalEpisodes
                   }
                   episodes={episodes}
