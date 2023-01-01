@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo } from 'react';
 import progressBar from '@/components/shared/loading';
-import { TYPE, FORMAT, SORT } from '@/src/lib/constant';
+import { TYPE, FORMAT, SORT, SEASON } from '@/src/lib/constant';
 import RecentRelease from '@/components/anime/recentRelease';
 import Popular from '@/components/anime/popular';
 import { getSeason } from '../lib/utils';
@@ -23,7 +23,7 @@ const HomePage = () => {
     type: TYPE.ANIME,
     page: 1,
     perPage: 12,
-    season: currentSeason.season,
+    season: SEASON.FALL,
     format: FORMAT.TV,
     sort: SORT.TRENDING_DESC,
   });
@@ -33,10 +33,10 @@ const HomePage = () => {
       type: TYPE.ANIME,
       page: 1,
       perPage: 5,
-      season: currentSeason.season,
+      season: SEASON.FALL,
       format: FORMAT.TV,
       sort: SORT.POPULARITY_DESC,
-      year: currentSeason.year,
+      year: currentSeason.year - 1,
     }
   );
 
@@ -55,8 +55,8 @@ const HomePage = () => {
       perPage: 5,
       format: FORMAT.TV,
       sort: SORT.FAVORITES_SEASON,
-      season: currentSeason.season,
-      year: currentSeason.year,
+      season: SEASON.FALL,
+      year: currentSeason.year - 1,
     });
 
   const { data: favouritesAnime, isLoading: favouritesAnimeLoading } = useMedia(
