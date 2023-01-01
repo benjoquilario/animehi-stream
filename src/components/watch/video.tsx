@@ -78,7 +78,6 @@ const Video = (props: VideoProps): JSX.Element => {
           episodeId,
           id,
         });
-      console.log(episodeNumber);
     } else {
       typeof window !== 'undefined' &&
         storage.create({
@@ -92,7 +91,6 @@ const Video = (props: VideoProps): JSX.Element => {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [animeId, episodeId]);
-  console.log(episodeNumber);
 
   const nextAiringScheduleTime = useMemo(() => {
     if (!nextAiringEpisode?.airingTime) return;

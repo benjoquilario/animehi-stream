@@ -1,7 +1,6 @@
-import React, { useMemo } from 'react';
+import React from 'react';
 import Link from 'next/link';
 import Image from './image';
-import Genre from './genre';
 import classNames from 'classnames';
 import { base64SolidImage } from '@/src/lib/utils/image';
 import { TitleType } from 'types/types';
@@ -23,7 +22,7 @@ const ColumnSection = ({
 }: ColumnSectionProps) => (
   <li
     className={classNames(
-      'flex h-22 items-center py-2 px-4 odd:bg-background-800 even:bg-background-900',
+      'flex h-20 md:h-22 items-center py-2 px-4 odd:bg-background-800 even:bg-background-900',
       className
     )}
   >

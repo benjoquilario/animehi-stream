@@ -15,7 +15,7 @@ const Row = (props: RowProps): JSX.Element =>
     <div className="w-full">
       <div className="md:space-between flex flex-col items-center space-y-4 space-x-0 md:flex-row md:space-y-0 md:space-x-4">
         <div className="flex-1 bg-background-800 pt-4 w-full">
-          <TitleName title={props.title} />
+          <TitleName classNames="ml-4" title={props.title} />
           <ul className="w-full">
             {props.animeList?.results?.map((anime, index) => (
               <ColumnSection
