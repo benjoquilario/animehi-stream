@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, useMemo } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { META } from '@consumet/extensions';
 import { IAnimeResult } from '@consumet/extensions/dist/models/types';
 import Link from 'next/link';
@@ -8,18 +8,16 @@ import h from '../../../public/h.png';
 import Image from '../shared/image';
 import { FaRandom } from 'react-icons/fa';
 import {
-  AiOutlineFileSearch,
   AiFillHome,
   AiOutlineSearch,
   AiOutlineArrowRight,
 } from 'react-icons/ai';
 import { BsList } from 'react-icons/bs';
-import NavLink from '../shared/nav-links';
-import Button from '../shared/button';
-import Input from '../shared/input';
-import { debounce } from 'lodash';
-import ColumnSection from '../shared/column-section';
-import { TitleType } from 'types/types';
+import NavLink from '@/components/shared/nav-links';
+import Button from '@/components/shared/button';
+import Input from '@/components/shared/input';
+import debounce from 'lodash/debounce';
+import ColumnSection from '@/components/shared/column-section';
 import { isMobile } from 'react-device-detect';
 import useClickOutside from '@/hooks/useClickOutside';
 
@@ -102,7 +100,7 @@ const Header = () => {
 
       setResultsOpen(true);
       setSearchResults(search.results);
-    }, 350)
+    }, 400)
   ).current;
 
   useEffect(() => {
