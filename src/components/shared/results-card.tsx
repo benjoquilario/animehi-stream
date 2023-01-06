@@ -16,9 +16,9 @@ const ResultsCard = (props: ResultsCardProps): JSX.Element => (
     <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4 relative overflow-hidden">
       {props.isLoading
         ? Array.from(Array(12), (_, i) => <SkeletonLoading key={i} />)
-        : props.animeList?.map((anime, index) => (
+        : props.animeList?.map(anime => (
             <Thumbnail
-              key={index}
+              key={anime.id}
               data={anime}
               isRecent={false}
               image={anime.image}

@@ -12,10 +12,10 @@ export type CharactersProps = {
 const Characters = (props: CharactersProps): JSX.Element => (
   <div>
     <div className="relative grid grid-cols-fill-character lg:grid-cols-2 gap-2 w-full h-full">
-      {props.characters.slice(0, 10)?.map((character, index) => {
+      {props.characters.slice(0, 10)?.map(character => {
         return (
           <div
-            key={index}
+            key={character.id}
             className="bg-background-700 flex w-full h-[68px] rounded gap-4"
           >
             <div className="flex-1 grid grid-cols-[70px_auto] gap-3">

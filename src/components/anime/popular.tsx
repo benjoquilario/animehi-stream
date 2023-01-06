@@ -21,11 +21,11 @@ const Popular = (props: PopularProps): JSX.Element =>
 
       <div className="bg-background-700">
         <ul>
-          {props.popularSeason?.results?.map((anime, index) => (
+          {props.popularSeason?.results?.map(anime => (
             <ColumnSection
               data={anime}
               genres={anime.genres as string[]}
-              key={index}
+              key={anime.id}
             />
           ))}
           <li>

@@ -9,8 +9,8 @@ const Genres = () => {
           Genres
         </h2>
         <ul className="grid grid-cols-3 gap-1">
-          {genreList.map((genre, index) => (
-            <li className="text-sm p-1 text-white" key={index}>
+          {genreList.map(genre => (
+            <li className="text-sm p-1 text-white" key={genre}>
               {genre}
             </li>
           ))}

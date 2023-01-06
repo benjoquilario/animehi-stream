@@ -28,8 +28,8 @@ const Side = ({ data }: SideProps): JSX.Element => {
         title="Genres"
         info={
           <div className="flex flex-col">
-            {data.genres?.map((genre: string, index: number) => (
-              <span key={index}>{genre}</span>
+            {data.genres?.map(genre => (
+              <span key={genre}>{genre}</span>
             ))}
           </div>
         }
@@ -37,8 +37,8 @@ const Side = ({ data }: SideProps): JSX.Element => {
       <SideContent
         classes="text-xs mb-3"
         title="Studios"
-        info={data.studios?.map((studio: string, index: number) => (
-          <span key={index}>{studio}</span>
+        info={data.studios?.map(studio => (
+          <span key={studio}>{studio}</span>
         ))}
       />
       <SideContent

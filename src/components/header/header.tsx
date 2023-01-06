@@ -207,9 +207,9 @@ const Header = () => {
         <nav className="w-5/6 hidden md:block">
           <div>
             <ul className="text-slate-300 flex gap-4">
-              {LINKS.map((link, index) => (
+              {LINKS.map(link => (
                 <NavLink
-                  key={index}
+                  key={link.name}
                   href={link.href}
                   name={link.name}
                   icon={link.icon}

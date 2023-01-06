@@ -75,16 +75,16 @@ const ContinueWatching = () => {
         modules={[FreeMode, Pagination]}
         className="mySwiper"
       >
-        {recentWatched?.map((recently, index) => (
-          <SwiperSlide key={index}>
+        {recentWatched?.map(anime => (
+          <SwiperSlide key={anime.id}>
             <WatchCard
-              onClick={() => removeItem(recently.id)}
-              id={recently.id}
-              title={recently.title}
-              image={recently.image}
-              color={recently.color}
-              episodeNumber={recently.episodeNumber}
-              episodeId={recently.episodeId}
+              onClick={() => removeItem(anime.id)}
+              id={anime.id}
+              title={anime.title}
+              image={anime.image}
+              color={anime.color}
+              episodeNumber={anime.episodeNumber}
+              episodeId={anime.episodeId}
             />
           </SwiperSlide>
         ))}

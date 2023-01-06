@@ -16,8 +16,8 @@ const Episodes = ({ activeIndex, episodes }: EpisodesProps): JSX.Element => {
 
   return (
     <ul className="grid grid-cols-2 md:grid-cols-1">
-      {episodes?.map((episode, index) => (
-        <li key={index} className="odd:bg-[#0d0d0d] even:bg-[#111]">
+      {episodes?.map(episode => (
+        <li key={episode.id} className="odd:bg-[#0d0d0d] even:bg-[#111]">
           <Button
             onClick={() => dispatch(setEpisodeId(episode.id))}
             className={classNames(

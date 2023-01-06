@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo } from 'react';
 import progressBar from '@/components/shared/loading';
-import { TYPE, FORMAT, SORT, SEASON } from '@/src/lib/constant';
+import { TYPE, FORMAT, SORT } from '@/src/lib/constant';
 import RecentRelease from '@/components/anime/recentRelease';
 import Popular from '@/components/anime/popular';
 import { getSeason } from '../lib/utils';
@@ -16,6 +16,7 @@ import ContinueWatching from '@/components/anime/continue-watching';
 import Banner from '@/components/anime/banner';
 
 const HomePage = () => {
+  progressBar.finish();
   const dispatch = useDispatch();
   const currentSeason = useMemo(getSeason, []);
 
@@ -23,7 +24,7 @@ const HomePage = () => {
     type: TYPE.ANIME,
     page: 1,
     perPage: 12,
-    season: SEASON.FALL,
+    season: currentSeason.season,
     format: FORMAT.TV,
     sort: SORT.TRENDING_DESC,
   });
@@ -33,10 +34,10 @@ const HomePage = () => {
       type: TYPE.ANIME,
       page: 1,
       perPage: 5,
-      season: SEASON.FALL,
+      season: currentSeason.season,
       format: FORMAT.TV,
       sort: SORT.POPULARITY_DESC,
-      year: currentSeason.year - 1,
+      year: currentSeason.year,
     }
   );
 
@@ -55,8 +56,8 @@ const HomePage = () => {
       perPage: 5,
       format: FORMAT.TV,
       sort: SORT.FAVORITES_SEASON,
-      season: SEASON.FALL,
-      year: currentSeason.year - 1,
+      season: currentSeason.season,
+      year: currentSeason.year,
     });
 
   const { data: favouritesAnime, isLoading: favouritesAnimeLoading } = useMedia(

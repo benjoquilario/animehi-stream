@@ -60,20 +60,17 @@ const RecentRelease = (): JSX.Element => {
         {!data && !error
           ? Array.from(Array(12), (_, i) => <RecentLoading key={i} />)
           : recent?.map(
-              (
-                {
-                  anime,
-                  sources,
-                  number,
-                  description,
-                  image,
-                  title,
-                  createdAt,
-                },
-                index
-              ) => (
+              ({
+                anime,
+                sources,
+                number,
+                description,
+                image,
+                title,
+                createdAt,
+              }) => (
                 <Thumbnail
-                  key={index}
+                  key={sources?.[0]?.id}
                   episodeNumber={number}
                   description={description}
                   data={anime}

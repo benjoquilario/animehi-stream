@@ -44,8 +44,8 @@ const Banner = ({ animeList, isLoading }: BannerProps): JSX.Element =>
       modules={[Autoplay, Pagination, Navigation]}
       className="mySwiper"
     >
-      {animeList?.results?.map((anime, idx) => (
-        <SwiperSlide key={idx}>
+      {animeList?.results?.map(anime => (
+        <SwiperSlide key={anime.id}>
           <div className="relative w-full h-[326px] md:h-[450px] min-h-[326px] md:min-h-[450px] 2xl:h-[620px] 2xl:min-h-[620px]">
             <div className="relative flex items-center w-full h-full shrink-0">
               <span className="banner-linear absolute top-0 left-0 w-full h-[101%] z-[20]"></span>

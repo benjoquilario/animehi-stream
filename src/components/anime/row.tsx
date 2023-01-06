@@ -17,9 +17,9 @@ const Row = (props: RowProps): JSX.Element =>
         <div className="flex-1 bg-background-800 pt-4 w-full">
           <TitleName classNames="ml-4" title={props.title} />
           <ul className="w-full">
-            {props.animeList?.results?.map((anime, index) => (
+            {props.animeList?.results?.map(anime => (
               <ColumnSection
-                key={index}
+                key={anime.id}
                 data={anime}
                 genres={anime.genres as string[]}
               />

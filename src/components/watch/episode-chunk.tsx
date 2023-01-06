@@ -56,12 +56,12 @@ const EpisodeChunk = ({
       defaultOpen={open}
       panelClassName={classNames('flex flex-col')}
     >
-      {episodes.map((episode, index) => (
+      {episodes.map(episode => (
         <Episode
           animeId={animeId}
           watchPage={watchPage}
           episode={episode}
-          key={index}
+          key={episode.id}
           active={activeName === episode.number}
           onClick={() => onHandleChangeEpisode(episode?.id)}
         />

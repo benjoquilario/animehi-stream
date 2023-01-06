@@ -60,49 +60,48 @@ const OPlayer = (props: PlayerProps) => {
           }),
         })
         .then(() => {
-          if (malId) {
-            fetch(
+          (async () => {
+            if (!malId) return;
+
+            const res = await fetch(
               `https://api.aniskip.com/v2/skip-times/${malId}/${episodeNumber}?types=op&types=recap&types=mixed-op&types=ed&types=mixed-ed&episodeLength=0`
-            )
-              .then(res => res.json())
-              .then(res => {
-                res = res as AniSkip;
+            );
 
-                const highlights: Highlight[] = [];
-                let opDuration = [],
-                  edDuration = [];
+            let data = await res.json();
+            data = data as AniSkip;
 
-                if (res.statusCode === 200) {
-                  for (let result of res.results) {
-                    if (result.skipType === 'op' || result.skipType === 'ed') {
-                      const { startTime, endTime } = result.interval;
+            const highlights: Highlight[] = [];
+            let opDuration = [],
+              edDuration = [];
 
-                      if (startTime) {
-                        highlights.push({
-                          time: startTime,
-                          text: result.skipType === 'op' ? 'OP' : 'ED',
-                        });
-                        if (result.skipType === 'op')
-                          opDuration.push(startTime);
-                        else edDuration.push(startTime);
-                      }
+            if (data.statusCode === 200) {
+              for (let result of data.results) {
+                if (result.skipType === 'op' || result.skipType === 'ed') {
+                  const { startTime, endTime } = result.interval;
 
-                      if (endTime) {
-                        highlights.push({
-                          time: endTime,
-                          text: result.skipType === 'op' ? 'OP' : 'ED',
-                        });
-                        if (result.skipType === 'op') opDuration.push(endTime);
-                        else edDuration.push(endTime);
-                      }
-                    }
+                  if (startTime) {
+                    highlights.push({
+                      time: startTime,
+                      text: result.skipType === 'op' ? 'OP' : 'ED',
+                    });
+                    if (result.skipType === 'op') opDuration.push(startTime);
+                    else edDuration.push(startTime);
+                  }
+
+                  if (endTime) {
+                    highlights.push({
+                      time: endTime,
+                      text: result.skipType === 'op' ? 'OP' : 'ED',
+                    });
+                    if (result.skipType === 'op') opDuration.push(endTime);
+                    else edDuration.push(endTime);
                   }
                 }
-
-                playerRef.current?.emit('opedchange', [opDuration, edDuration]);
-                playerRef.current?.plugins.ui.highlight(highlights);
-              });
-          }
+              }
+            }
+            playerRef.current?.emit('opedchange', [opDuration, edDuration]);
+            playerRef.current?.plugins.ui.highlight(highlights);
+          })();
         });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
