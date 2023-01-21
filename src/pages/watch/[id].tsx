@@ -31,6 +31,7 @@ import { EpisodesType } from '@/src/../types/types';
 import DefaultLayout from '@/components/layouts/default';
 import Section from '@/components/shared/section';
 import React, { useEffect, useRef, useMemo } from 'react';
+import DubButton from '@/components/shared/dub-button';
 
 const VideoPlayer = dynamic(() => import('@/components/watch/video'), {
   ssr: false,
@@ -86,12 +87,18 @@ const WatchAnime: NextPage<WatchAnimeProps> = ({
   const router = useRouter();
   const dispatch = useDispatch();
   const routerRef = useRef(router);
+  const dub = useSelector(store => store.watch.dub);
   const [animeId, episodeId, provider] = useSelector(store => [
     store.anime.animeId,
     store.watch.episodeId,
     store.watch.provider,
   ]);
-  const { data: episodes, isLoading: episodesLoading } = useEpisodes(animeId);
+  const { data: episodes, isLoading: episodesLoading } = useEpisodes(
+    animeId,
+    dub
+  );
+
+  console.log(episodes, dub);
 
   const currentEpisode = useMemo(
     () => episodes?.find((episode: EpisodesType) => episode?.id === episodeId),
@@ -218,7 +225,8 @@ const WatchAnime: NextPage<WatchAnimeProps> = ({
               }
             />
             <div className="bg-background-700 p-4 w-full text-white text-xs">
-              List of episode :
+              <span>List of episode :</span>
+              <DubButton dub={dub} />
             </div>
             <div className="flex flex-col bg-background-700 md:bg-[#000000eb] overflow-auto min-h-full h-full md:min-h-[617px] md:h-[617px]">
               {episodesLoading && <LoadingVideo classname="h-8 w-8" />}

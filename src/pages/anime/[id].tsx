@@ -21,7 +21,9 @@ import Side from '@/components/anime/side';
 import ResultsCard from '@/components/shared/results-card';
 import WatchLink from '@/components/shared/watch-link';
 import ClientOnly from '@/components/shared/client-only';
+import { useSelector } from '@/store/store';
 import React, { useState, useMemo, useCallback } from 'react';
+import DubButton from '@/components/shared/dub-button';
 
 export const getServerSideProps: GetServerSideProps = async ({ params }) => {
   let id = params!.id;
@@ -49,8 +51,13 @@ const Anime = ({
   const router = useRouter();
   const recentWatched = new Storage('recentWatched');
   const watchList = new Storage('watchedList');
+  const dub = useSelector(store => store.watch.dub);
   const [showMore, setShowMore] = useState<boolean>(false);
-  const { data: episodes, isLoading, isError } = useEpisodes(animeList?.id);
+  const {
+    data: episodes,
+    isLoading,
+    isError,
+  } = useEpisodes(animeList?.id, dub);
 
   const handleWatchedList = useCallback(() => {
     const storage = new Storage('watchedList');
@@ -82,15 +89,6 @@ const Anime = ({
   const existedEpisode =
     typeof window !== 'undefined' &&
     recentWatched.has({ animeId: animeList?.id });
-
-  // console.log(existedWatched);
-
-  // const existedStored = useMemo(
-  //   () => watchListStore?.find(x => x.id === animeList.id),
-  //   [watchListStore, animeList]
-  // );
-
-  // console.log(existedStored);
 
   const lastEpisodes = useMemo(
     () => !isLoading && episodes?.[episodes?.length - 1]?.id,
@@ -263,17 +261,22 @@ const Anime = ({
             ) : (
               <div className="w-full">
                 <TitleName title="Episodes" />
-                <EpisodesButton
-                  episodesClassName={classNames(
-                    'grid items-start bg-background-700',
-                    episodes?.length > 50
-                      ? 'grid-cols-2 md:grid-cols-5'
-                      : 'grid-cols-1'
-                  )}
-                  episodes={episodes}
-                  watchPage={false}
-                  animeId={animeList?.id}
-                />
+                <DubButton dub={dub} />
+                {episodes.length === 0 ? (
+                  <div className="text-white">No Dub</div>
+                ) : (
+                  <EpisodesButton
+                    episodesClassName={classNames(
+                      'grid items-start bg-background-700',
+                      episodes?.length > 50
+                        ? 'grid-cols-2 md:grid-cols-5'
+                        : 'grid-cols-1'
+                    )}
+                    episodes={episodes}
+                    watchPage={false}
+                    animeId={animeList?.id}
+                  />
+                )}
               </div>
             )}
             <div className="w-full mt-4">

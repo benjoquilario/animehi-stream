@@ -1,9 +1,9 @@
-import React, { type ReactNode } from 'react';
+import React from 'react';
 
 type SideContentProps = {
   classes: string;
   title: string;
-  info?: string | number | boolean | ReactNode;
+  info?: string | number | boolean | React.ReactNode;
 };
 
 const SideContent = (props: SideContentProps): JSX.Element => (

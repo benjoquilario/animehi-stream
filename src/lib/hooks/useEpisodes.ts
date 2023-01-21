@@ -1,13 +1,13 @@
 import useSWR from 'swr';
 import { CONSUMET_URL } from '@/src/lib/constant';
 
-const useEpisodes = (id: string) => {
-  const fetcher = async (episodeId: string) =>
-    fetch(`${CONSUMET_URL}/meta/anilist/episodes/${episodeId}`).then(res =>
-      res.json()
+const useEpisodes = (id: string, dub: boolean) => {
+  const fetcher = async (episodeId: string, dub: boolean) =>
+    fetch(`${CONSUMET_URL}/meta/anilist/episodes/${episodeId}?dub=${dub}`).then(
+      res => res.json()
     );
 
-  const { data, error } = useSWR(id, fetcher, {
+  const { data, error } = useSWR([id, dub], fetcher, {
     revalidateOnFocus: false,
   });
 

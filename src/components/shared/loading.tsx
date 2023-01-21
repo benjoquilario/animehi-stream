@@ -9,13 +9,13 @@ export const LoadingBanner = () => {
         <div className="pl-[3%] md:pl-0 w-[80%] md:w-[40%] h-[396px] md:h-[430px] min-h-[396px] md:min-h-[430px] 2xl:h-[620px] 2xl:min-h-[620px] animate-pulse flex flex-col justify-center">
           <div className="mt-2 w-[60%] h-[30px] md:h-[60px] bg-[#141313] rounded-lg"></div>
           <div className="mt-2 w-full h-[28px] md:h-[64px] bg-[#141313] rounded-lg "></div>
-          <div className="hidden md:block mt-2 w-[80%] bg-black h-4 bg-[#141313] rounded-lg"></div>
+          <div className="hidden md:block mt-2 w-[80%] h-4 bg-[#141313] rounded-lg"></div>
           <div className="flex gap-2">
             <div className="mt-2 w-[135px] h-[45px] bg-[#141313] rounded-lg"></div>
             <div className="mt-2 w-[135px] h-[45px] bg-[#141313] rounded-lg"></div>
           </div>
         </div>
-        <div className="absolute md:relative w-full animate-pulse h-full md:h-[305px] w-full md:w-[60%] bg-[#111] md:bg-[#141313] rounded-lg mt-4"></div>
+        <div className="absolute md:relative animate-pulse h-full md:h-[305px] w-full md:w-[60%] bg-[#111] md:bg-[#141313] rounded-lg mt-4"></div>
       </div>
     </div>
   );

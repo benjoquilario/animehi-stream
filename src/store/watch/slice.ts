@@ -17,6 +17,7 @@ export interface IInitialState {
   videoLink?: string;
   provider: string;
   server: string;
+  dub: boolean;
 }
 
 const initialState: IInitialState = {
@@ -28,6 +29,7 @@ const initialState: IInitialState = {
   videoLink: '',
   provider: 'gogoanime',
   server: 'server 1',
+  dub: false,
   enimeSource: {
     id: '',
     url: '',
@@ -81,6 +83,12 @@ export const watchSlice = createSlice({
         }`;
       }
     },
+    toggleDub: (
+      state: Draft<IInitialState>,
+      action: PayloadAction<boolean>
+    ) => {
+      state.dub = action.payload;
+    },
     setEnimeSouces: (
       state: Draft<IInitialState>,
       action: PayloadAction<EnimeSource>
@@ -119,5 +127,6 @@ export const {
   resetStates,
   setServer,
   setEnimeSouces,
+  toggleDub,
 } = watchSlice.actions;
 export default watchSlice.reducer;
