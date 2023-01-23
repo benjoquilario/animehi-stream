@@ -4,7 +4,6 @@ import {
   NextPage,
 } from 'next';
 import { useRouter } from 'next/router';
-import dynamic from 'next/dynamic';
 import { initialiseStore, useDispatch, useSelector } from '@/store/store';
 import {
   setEpisodeId,
@@ -32,10 +31,7 @@ import DefaultLayout from '@/components/layouts/default';
 import Section from '@/components/shared/section';
 import React, { useEffect, useRef, useMemo } from 'react';
 import DubButton from '@/components/shared/dub-button';
-
-const VideoPlayer = dynamic(() => import('@/components/watch/video'), {
-  ssr: false,
-});
+import VideoPlayer from '@/components/watch/video';
 
 export const getServerSideProps: GetServerSideProps = async context => {
   const store = initialiseStore();
