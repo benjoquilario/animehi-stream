@@ -45,7 +45,7 @@ const OPlayer = (props: PlayerProps) => {
               '<img class="animate-spin text-white h-12 h-12" src="/loading.svg">',
           },
         }),
-        hls(),
+        hls({ matcher: () => true }),
       ])
       .create();
   }, []);
