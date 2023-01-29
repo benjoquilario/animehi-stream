@@ -24,7 +24,7 @@ export interface RecentType {
   episodeId?: string;
   episodeNumber?: number;
   image?: string;
-  title?: string | TitleType;
+  animeTitle?: string | TitleType;
   color?: string;
 }
 
