@@ -98,7 +98,7 @@ export const watchSlice = createSlice({
         state.enimeSource = initialState.enimeSource;
       } else {
         state.enimeSource = enimeSources;
-        state.videoLink = state.enimeSource.url;
+        state.videoLink = CORS_PROXY + state.enimeSource.url;
       }
     },
     resetSources: (state: Draft<IInitialState>) => {

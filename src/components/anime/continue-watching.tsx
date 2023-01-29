@@ -80,7 +80,7 @@ const ContinueWatching = () => {
             <WatchCard
               onClick={() => removeItem(anime.id)}
               id={anime.id}
-              title={anime.title}
+              animeTitle={anime.animeTitle}
               image={anime.image}
               color={anime.color}
               episodeNumber={anime.episodeNumber}

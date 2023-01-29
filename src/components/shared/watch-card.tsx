@@ -13,7 +13,8 @@ type WatchCardProps = {
 } & RecentType;
 
 const WatchCard = (props: WatchCardProps) => {
-  const { id, title, image, color, episodeNumber, episodeId, onClick } = props;
+  const { id, animeTitle, image, color, episodeNumber, episodeId, onClick } =
+    props;
 
   return (
     <div className="col-span-1">
@@ -22,7 +23,7 @@ const WatchCard = (props: WatchCardProps) => {
           <div className="relative aspect-w-2 aspect-h-3">
             <div className="opacity-100">
               <Link href={`/anime/${id}`}>
-                <a aria-label={`${title}`}>
+                <a aria-label={`${animeTitle}`}>
                   <Image
                     layout="fill"
                     src={`${image}`}
@@ -32,7 +33,7 @@ const WatchCard = (props: WatchCardProps) => {
                       color as string
                     )}`}
                     className="rounded-lg"
-                    alt={`Anime - ${title}`}
+                    alt={`Anime - ${animeTitle}`}
                     containerclassname="relative w-full h-full hover:opacity-70 transition-opacity"
                   />
                 </a>
@@ -40,7 +41,7 @@ const WatchCard = (props: WatchCardProps) => {
             </div>
             <Link href={`/watch/${id}?episode=${episodeId}`}>
               <a
-                aria-label={`Play - ${title} episode ${episodeNumber}`}
+                aria-label={`Play - ${animeTitle} episode ${episodeNumber}`}
                 className="center-element flex justify-center items-center w-[101%] h-full opacity-0 hover:opacity-100 focus:opacity-100 hover:bg-[#1111117a] transition"
               >
                 <div className="text-primary text-center flex flex-col items-center">
@@ -67,7 +68,7 @@ const WatchCard = (props: WatchCardProps) => {
                 'line-clamp-2 w-full h-auto text-left text-sm md:text-base hover:text-white font-semibold'
               )}
             >
-              {title as string}
+              {animeTitle as string}
             </a>
           </Link>
         </div>

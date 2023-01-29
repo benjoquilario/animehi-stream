@@ -42,7 +42,7 @@ const OPlayer = (props: PlayerProps) => {
           },
           icons: {
             loadingIndicator:
-              '<img class="animate-spin text-white h-12 h-12" src="/loading.svg">',
+              '<img class="animate-spin text-white h-12" src="/loading.svg">',
           },
         }),
         hls({ matcher: () => true }),

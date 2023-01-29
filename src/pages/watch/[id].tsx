@@ -94,8 +94,6 @@ const WatchAnime: NextPage<WatchAnimeProps> = ({
     dub
   );
 
-  console.log(episodes, dub);
-
   const currentEpisode = useMemo(
     () => episodes?.find((episode: EpisodesType) => episode?.id === episodeId),
     [episodeId, episodes]
@@ -194,7 +192,6 @@ const WatchAnime: NextPage<WatchAnimeProps> = ({
             data={animeList}
             id={animeList?.id}
             color={animeList?.color}
-            title={title(animeList.title)}
             image={animeList?.image || animeList?.cover}
             animeTitle={title(animeList?.title)}
             nextAiringEpisode={animeList?.nextAiringEpisode}

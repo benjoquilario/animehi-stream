@@ -69,9 +69,9 @@ const Video = (props: VideoProps): JSX.Element => {
     if (list) {
       typeof window !== 'undefined' &&
         storage.update(list, {
+          animeTitle,
           color,
           image,
-          animeTitle,
           episodeNumber,
           episodeId,
           id,
@@ -79,9 +79,9 @@ const Video = (props: VideoProps): JSX.Element => {
     } else {
       typeof window !== 'undefined' &&
         storage.create({
+          animeTitle,
           color,
           image,
-          title,
           episodeNumber,
           episodeId,
           id,
@@ -110,11 +110,11 @@ const Video = (props: VideoProps): JSX.Element => {
       />
 
       {!isLoading ? (
-        <div className='grid grid-cols-1 md:grid-cols-[auto_1fr] bg-black pt-5 px-3 gap-3'>
-          <div className='bg-background-700 py-2 px-6'>
-            <div className='text-center text-white text-xs my-2'>
+        <div className="grid grid-cols-1 md:grid-cols-[auto_1fr] bg-black pt-5 px-3 gap-3">
+          <div className="bg-background-700 py-2 px-6">
+            <div className="text-center text-white text-xs my-2">
               <p>You are watching</p>
-              <Button type='button' className='text-primary mb-2 bg-none'>
+              <Button type="button" className="text-primary mb-2 bg-none">
                 {`${animeTitle} Episode ${episodeNumber}`}
               </Button>
               <p>
@@ -123,25 +123,25 @@ const Video = (props: VideoProps): JSX.Element => {
               <p>provider in case of error.</p>
             </div>
           </div>
-          <div className='mt-2 flex justify-between items-start w-full'>
-            <div className='flex flex-col items-start text-white gap-2'>
-              <div className='flex items-center text-white gap-2'>
-                <AiFillDatabase className='text-white h-4 h-4' />
-                <h4 className='uppercase text-xs md:text-sm font-semibold'>
+          <div className="mt-2 flex justify-between items-start w-full">
+            <div className="flex flex-col items-start text-white gap-2">
+              <div className="flex items-center text-white gap-2">
+                <AiFillDatabase className="text-white h-4" />
+                <h4 className="uppercase text-xs md:text-sm font-semibold">
                   providers:
                 </h4>
                 <Button
                   disabled={server === 'server 1' ? true : false}
                   // onClick={handleChangeProvider}
                   onClick={() => dispatch(setServer('server 1'))}
-                  className='bg-primary p-2 text-xs rounded-md uppercase font-semibold'
+                  className="bg-primary p-2 text-xs rounded-md uppercase font-semibold"
                 >
                   server 1
                 </Button>
               </div>
               {nextAiringEpisode && (
-                <div className='text-sm text-primary flex flex-col'>
-                  <span className='font-semibold'>Next Episode</span>
+                <div className="text-sm text-primary flex flex-col">
+                  <span className="font-semibold">Next Episode</span>
                   <span>
                     Episode {nextAiringEpisode?.episode}: (
                     {nextAiringScheduleTime})
@@ -150,21 +150,21 @@ const Video = (props: VideoProps): JSX.Element => {
               )}
             </div>
             <div>
-              <div className='flex gap-2'>
+              <div className="flex gap-2">
                 {episodeNumber !== 1 ? (
                   <Button
                     onClick={() => dispatch(setEpisodeId(prevEpisode?.id))}
-                    className='text-white text-xs hover:text-primary transition'
+                    className="text-white text-xs hover:text-primary transition"
                   >
-                    <TbPlayerTrackPrev className='h-5 w-5 md:h-7 md:w-7' />
+                    <TbPlayerTrackPrev className="h-5 w-5 md:h-7 md:w-7" />
                   </Button>
                 ) : null}
                 {episodeNumber !== totalEpisodes ? (
                   <Button
                     onClick={() => dispatch(setEpisodeId(nextEpisode?.id))}
-                    className='text-white text-xs hover:text-primary transition'
+                    className="text-white text-xs hover:text-primary transition"
                   >
-                    <TbPlayerTrackNext className='h-5 w-5 md:h-7 md:w-7' />
+                    <TbPlayerTrackNext className="h-5 w-5 md:h-7 md:w-7" />
                   </Button>
                 ) : null}
               </div>
@@ -172,7 +172,7 @@ const Video = (props: VideoProps): JSX.Element => {
           </div>
         </div>
       ) : (
-        <LoadingVideo classname='w-10 h-10 md:h-12 md:w-12' />
+        <LoadingVideo classname="w-10 h-10 md:h-12 md:w-12" />
       )}
     </div>
   );
