@@ -20,7 +20,6 @@ type VideoProps = {
   data: IAnimeInfo;
   id: string;
   color: string;
-  title: string;
   image: string;
   nextAiringEpisode: NextAiringEpisode;
   animeTitle: string;
@@ -39,7 +38,6 @@ const Video = (props: VideoProps): JSX.Element => {
     id,
     color,
     image,
-    title,
     nextAiringEpisode,
     poster,
     episodeId,
