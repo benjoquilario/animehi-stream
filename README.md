@@ -1,7 +1,7 @@
 <p align="center">
   <div align="center">
     <a href="https://animehi-stream.vercel.app/">
-      <img alt="public/animehi.svg" width="49" height="52" />
+      <img alt="AnimeH" src="public/animehi.svg" width="49" height="52" />
     </a>
     <a href="https://animehi-stream.vercel.app/" style="margin-left: -10px">
       <img alt="AnimeHi" src="public/h.png" width="65" height="52" />
