@@ -2,9 +2,9 @@ import React, { useRef, useEffect } from 'react';
 import Player from '@oplayer/core';
 import ui from '@oplayer/ui';
 import hls from '@oplayer/hls';
-import { Highlight } from '@oplayer/ui/dist/types';
+import type { Highlight } from '@oplayer/ui';
 import { useSelector } from '@/store/store';
-import { AniSkip } from 'types/types';
+import type { AniSkip } from 'types/types';
 import skipOpEd from '@/lib/player/plugin';
 
 type PlayerProps = {
@@ -100,7 +100,8 @@ const OPlayer = (props: PlayerProps) => {
               }
             }
             playerRef.current?.emit('opedchange', [opDuration, edDuration]);
-            playerRef.current?.plugins.ui.highlight(highlights);
+            // @ts-expect-error
+            playerRef.current?.plugins?.ui?.highlight(highlights);
           })();
         });
     }

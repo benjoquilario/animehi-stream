@@ -1,5 +1,3 @@
-import React from 'react';
-
 type SideContentProps = {
   classes: string;
   title: string;

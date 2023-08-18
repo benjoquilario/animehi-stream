@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Storage from '@/src/lib/utils/storage';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { RecentType } from 'types/types';
@@ -6,9 +6,9 @@ import 'swiper/css';
 import 'swiper/css/free-mode';
 import 'swiper/css/pagination';
 import { FreeMode, Pagination } from 'swiper';
-import Button from '../shared/button';
-import TitleName from '../shared/title-name';
-import WatchCard from '../shared/watch-card';
+import Button from '@/components/shared/button';
+import TitleName from '@/components/shared/title-name';
+import WatchCard from '@/components/shared/watch-card';
 import { BsFillTrashFill } from 'react-icons/bs';
 
 const breakpoints = {

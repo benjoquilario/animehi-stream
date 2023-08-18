@@ -1,8 +1,7 @@
 import { useState } from 'react';
 import { stripHtml } from '@/src/lib/utils/index';
 import Image from '@/components/shared/image';
-import { IAnimeInfo, IAnimeResult } from '@consumet/extensions';
-import { TitleType } from 'types/types';
+import type { TitleType } from 'types/types';
 
 type WatchDetailsProps = {
   image: string;

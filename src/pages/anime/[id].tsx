@@ -12,7 +12,7 @@ import Characters from '@/components/anime/characters';
 import useEpisodes from '@/hooks/useEpisodes';
 import Image from '@/components/shared/image';
 import TitleName from '@/components/shared/title-name';
-import { RecentType } from 'types/types';
+import type { RecentType } from 'types/types';
 import { useRouter } from 'next/router';
 import DefaultLayout from '@/components/layouts/default';
 import Button from '@/components/shared/button';
@@ -22,8 +22,8 @@ import ResultsCard from '@/components/shared/results-card';
 import WatchLink from '@/components/shared/watch-link';
 import ClientOnly from '@/components/shared/client-only';
 import { useSelector } from '@/store/store';
-import React, { useState, useMemo, useCallback } from 'react';
 import DubButton from '@/components/shared/dub-button';
+import React, { useState, useMemo, useCallback } from 'react';
 
 export const getServerSideProps: GetServerSideProps = async ({ params }) => {
   let id = params!.id;
@@ -53,11 +53,7 @@ const Anime = ({
   const watchList = new Storage('watchedList');
   const dub = useSelector(store => store.watch.dub);
   const [showMore, setShowMore] = useState<boolean>(false);
-  const {
-    data: episodes,
-    isLoading,
-    isError,
-  } = useEpisodes(animeList?.id, dub);
+  const { data: episodes, isLoading } = useEpisodes(animeList?.id, dub);
 
   const handleWatchedList = useCallback(() => {
     const storage = new Storage('watchedList');
@@ -255,7 +251,6 @@ const Anime = ({
             </div>
           </div>
           <div className="grid grid-cols-1 space-y-6">
-            {isError ? <div>Error</div> : null}
             {isLoading ? (
               <EpisodeLoading />
             ) : (

@@ -1,7 +1,7 @@
 import React from 'react';
 import Link from 'next/link';
 import { PlayIcon } from '@heroicons/react/outline';
-import { RecentType } from 'types/types';
+import type { RecentType } from 'types/types';
 
 type WatchLinkProps = {
   isExist: boolean;
