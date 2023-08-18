@@ -12,9 +12,9 @@
     "@badrap/bar-of-progress": "^0.2.2",
     "@consumet/extensions": "1.3.0",
     "@headlessui/react": "1.4.0",
-    "@oplayer/core": "1.2.7",
-    "@oplayer/hls": "^1.2.7",
-    "@oplayer/ui": "^1.2.16",
+    "@oplayer/core": "1.2.28",
+    "@oplayer/hls": "1.2.22",
+    "@oplayer/ui": "1.2.30",
     "@popperjs/core": "^2.11.6",
     "@reduxjs/toolkit": "^1.9.1",
     "@tailwindcss/aspect-ratio": "^0.4.2",
@@ -28,7 +28,7 @@
     "eslint": "8.28.0",
     "eslint-config-next": "13.0.5",
     "framer-motion": "^7.10.3",
-    "hls.js": "^1.3.1",
+    "hls.js": "1.4.10",
     "next": "12.2.5",
     "next-seo": "^5.15.0",
     "react": "18.2.0",
@@ -51,6 +51,6 @@
     "lodash": "^4.17.21",
     "postcss": "^8.4.21",
     "tailwind-scrollbar-hide": "^1.1.7",
-    "tailwindcss": "^3.2.4"
+    "tailwindcss": "3.3.3"
   }
 }
