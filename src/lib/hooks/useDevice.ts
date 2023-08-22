@@ -1,7 +1,7 @@
-import { isMobile, isDesktop } from 'react-device-detect';
+import { isMobile, isDesktop } from "react-device-detect"
 
 const useDevice = () => {
-  return { isMobile, isDesktop };
-};
+  return { isMobile, isDesktop }
+}
 
-export default useDevice;
+export default useDevice

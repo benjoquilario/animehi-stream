@@ -1,8 +1,8 @@
 const getJSON = async function (url: string): Promise<any> {
-  const res = await fetch(url);
-  const data = await res.json();
+  const res = await fetch(url)
+  const data = await res.json()
 
-  return data;
-};
+  return data
+}
 
-export default getJSON;
+export default getJSON

@@ -1,26 +1,26 @@
-import React from 'react';
-import { RecentType } from 'types/types';
-import Link from 'next/link';
-import Image from './image';
-import { base64SolidImage } from '@/src/lib/utils/image';
-import { PlayIcon } from '@heroicons/react/outline';
-import classNames from 'classnames';
-import Button from './button';
-import { MdBookmarkRemove } from 'react-icons/md';
+import React from "react"
+import { RecentType } from "types/types"
+import Link from "next/link"
+import Image from "./image"
+import { base64SolidImage } from "@/src/lib/utils/image"
+import { PlayIcon } from "@heroicons/react/outline"
+import classNames from "classnames"
+import Button from "./button"
+import { MdBookmarkRemove } from "react-icons/md"
 
 type WatchCardProps = {
-  onClick?: () => void;
-} & RecentType;
+  onClick?: () => void
+} & RecentType
 
 const WatchCard = (props: WatchCardProps) => {
   const { id, animeTitle, image, color, episodeNumber, episodeId, onClick } =
-    props;
+    props
 
   return (
     <div className="col-span-1">
       <div className="relative">
-        <div className="relative cursor-pointer rounded overflow-hidden">
-          <div className="relative aspect-w-2 aspect-h-3">
+        <div className="relative cursor-pointer overflow-hidden rounded">
+          <div className="aspect-h-3 aspect-w-2 relative">
             <div className="opacity-100">
               <Link href={`/anime/${id}`}>
                 <a aria-label={`${animeTitle}`}>
@@ -42,9 +42,9 @@ const WatchCard = (props: WatchCardProps) => {
             <Link href={`/watch/${id}?episode=${episodeId}`}>
               <a
                 aria-label={`Play - ${animeTitle} episode ${episodeNumber}`}
-                className="center-element flex justify-center items-center w-[101%] h-full opacity-0 hover:opacity-100 focus:opacity-100 hover:bg-[#1111117a] transition"
+                className="center-element flex h-full w-[101%] items-center justify-center opacity-0 transition hover:bg-[#1111117a] hover:opacity-100 focus:opacity-100"
               >
-                <div className="text-primary text-center flex flex-col items-center">
+                <div className="flex flex-col items-center text-center text-primary">
                   <PlayIcon className="h-11 w-11 md:h-16 md:w-16" />
                 </div>
               </a>
@@ -52,20 +52,20 @@ const WatchCard = (props: WatchCardProps) => {
           </div>
           <Button
             onClick={onClick}
-            className="absolute top-1 right-1 z-50 text-white hover:text-primary transition"
+            className="absolute right-1 top-1 z-50 text-white transition hover:text-primary"
           >
             <MdBookmarkRemove className="h-7 w-7" />
           </Button>
-          <h4 className="text-sm md:text-base font-bold text-white text-left">
+          <h4 className="text-left text-sm font-bold text-white md:text-base">
             Episode {episodeNumber}
           </h4>
           <Link href={`/anime/${id}`}>
             <a
               style={{
-                color: `${color ? color : '#fff'}`,
+                color: `${color ? color : "#fff"}`,
               }}
               className={classNames(
-                'line-clamp-2 w-full h-auto text-left text-sm md:text-base hover:text-white font-semibold'
+                "line-clamp-2 h-auto w-full text-left text-sm font-semibold hover:text-white md:text-base"
               )}
             >
               {animeTitle as string}
@@ -74,7 +74,7 @@ const WatchCard = (props: WatchCardProps) => {
         </div>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default React.memo(WatchCard);
+export default React.memo(WatchCard)

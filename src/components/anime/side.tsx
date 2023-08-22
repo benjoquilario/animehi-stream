@@ -1,12 +1,12 @@
-import React from 'react';
-import SideContent from '@/components/shared/side-content';
-import { IAnimeInfo } from '@consumet/extensions/dist/models/types';
-import { TitleType } from 'types/types';
-import { title } from '@/lib/helper';
+import React from "react"
+import SideContent from "@/components/shared/side-content"
+import { IAnimeInfo } from "@consumet/extensions/dist/models/types"
+import { TitleType } from "types/types"
+import { title } from "@/lib/helper"
 
 type SideProps = {
-  data: IAnimeInfo;
-};
+  data: IAnimeInfo
+}
 
 const Side = ({ data }: SideProps): JSX.Element => {
   return (
@@ -28,18 +28,14 @@ const Side = ({ data }: SideProps): JSX.Element => {
         title="Genres"
         info={
           <div className="flex flex-col">
-            {data.genres?.map(genre => (
-              <span key={genre}>{genre}</span>
-            ))}
+            {data.genres?.map((genre) => <span key={genre}>{genre}</span>)}
           </div>
         }
       />
       <SideContent
         classes="text-xs mb-3"
         title="Studios"
-        info={data.studios?.map(studio => (
-          <span key={studio}>{studio}</span>
-        ))}
+        info={data.studios?.map((studio) => <span key={studio}>{studio}</span>)}
       />
       <SideContent
         classes="text-xs mb-3"
@@ -68,7 +64,7 @@ const Side = ({ data }: SideProps): JSX.Element => {
         />
       ) : null}
     </React.Fragment>
-  );
-};
+  )
+}
 
-export default React.memo(Side);
+export default React.memo(Side)

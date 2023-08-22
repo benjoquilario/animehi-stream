@@ -1,30 +1,30 @@
-import React, { useRef, useEffect } from 'react';
-import Player from '@oplayer/core';
-import ui from '@oplayer/ui';
-import hls from '@oplayer/hls';
-import type { Highlight } from '@oplayer/ui';
-import { useSelector } from '@/store/store';
-import type { AniSkip } from 'types/types';
-import skipOpEd from '@/lib/player/plugin';
+import React, { useRef, useEffect } from "react"
+import Player from "@oplayer/core"
+import ui from "@oplayer/ui"
+import hls from "@oplayer/hls"
+import type { Highlight } from "@oplayer/ui"
+import { useSelector } from "@/store/store"
+import type { AniSkip } from "types/types"
+import skipOpEd from "@/lib/player/plugin"
 
 type PlayerProps = {
-  poster: string;
-  episodeNumber: number;
-  malId?: number;
-};
+  poster: string
+  episodeNumber: number
+  malId?: number
+}
 
 const OPlayer = (props: PlayerProps) => {
-  const { poster, episodeNumber, malId } = props;
-  const videoLink = useSelector(store => store.watch.videoLink);
-  const playerContainerRef = useRef<HTMLDivElement | null>(null);
+  const { poster, episodeNumber, malId } = props
+  const videoLink = useSelector((store) => store.watch.videoLink)
+  const playerContainerRef = useRef<HTMLDivElement | null>(null)
 
-  const playerRef = useRef<Player>();
+  const playerRef = useRef<Player>()
   const imagePoster = !poster
     ? undefined
-    : `https://images.weserv.nl/?url=${poster}`;
+    : `https://images.weserv.nl/?url=${poster}`
 
   useEffect(() => {
-    if (playerRef.current) return;
+    if (playerRef.current) return
     playerRef.current = Player.make(
       playerContainerRef.current as HTMLDivElement,
       {
@@ -34,7 +34,7 @@ const OPlayer = (props: PlayerProps) => {
       .use([
         skipOpEd(),
         ui({
-          theme: { primaryColor: '#6a55fa' },
+          theme: { primaryColor: "#6a55fa" },
           pictureInPicture: true,
           subtitle: {
             source: [],
@@ -47,8 +47,8 @@ const OPlayer = (props: PlayerProps) => {
         }),
         hls({ matcher: () => true }),
       ])
-      .create();
-  }, []);
+      .create()
+  }, [])
 
   useEffect(() => {
     if (videoLink) {
@@ -60,59 +60,59 @@ const OPlayer = (props: PlayerProps) => {
           }),
         })
         .then(() => {
-          (async () => {
-            if (!malId) return;
+          ;(async () => {
+            if (!malId) return
 
             const res = await fetch(
               `https://api.aniskip.com/v2/skip-times/${malId}/${episodeNumber}?types=op&types=recap&types=mixed-op&types=ed&types=mixed-ed&episodeLength=0`
-            );
+            )
 
-            let data = await res.json();
-            data = data as AniSkip;
+            let data = await res.json()
+            data = data as AniSkip
 
-            const highlights: Highlight[] = [];
+            const highlights: Highlight[] = []
             let opDuration = [],
-              edDuration = [];
+              edDuration = []
 
             if (data.statusCode === 200) {
               for (let result of data.results) {
-                if (result.skipType === 'op' || result.skipType === 'ed') {
-                  const { startTime, endTime } = result.interval;
+                if (result.skipType === "op" || result.skipType === "ed") {
+                  const { startTime, endTime } = result.interval
 
                   if (startTime) {
                     highlights.push({
                       time: startTime,
-                      text: result.skipType === 'op' ? 'OP' : 'ED',
-                    });
-                    if (result.skipType === 'op') opDuration.push(startTime);
-                    else edDuration.push(startTime);
+                      text: result.skipType === "op" ? "OP" : "ED",
+                    })
+                    if (result.skipType === "op") opDuration.push(startTime)
+                    else edDuration.push(startTime)
                   }
 
                   if (endTime) {
                     highlights.push({
                       time: endTime,
-                      text: result.skipType === 'op' ? 'OP' : 'ED',
-                    });
-                    if (result.skipType === 'op') opDuration.push(endTime);
-                    else edDuration.push(endTime);
+                      text: result.skipType === "op" ? "OP" : "ED",
+                    })
+                    if (result.skipType === "op") opDuration.push(endTime)
+                    else edDuration.push(endTime)
                   }
                 }
               }
             }
-            playerRef.current?.emit('opedchange', [opDuration, edDuration]);
+            playerRef.current?.emit("opedchange", [opDuration, edDuration])
             // @ts-expect-error
-            playerRef.current?.plugins?.ui?.highlight(highlights);
-          })();
-        });
+            playerRef.current?.plugins?.ui?.highlight(highlights)
+          })()
+        })
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [videoLink]);
+  }, [videoLink])
 
   return (
-    <div className="relative w-full aspect-video">
-      <div className="w-full h-full p-0 m-0" ref={playerContainerRef} />
+    <div className="aspect-video relative w-full">
+      <div className="m-0 h-full w-full p-0" ref={playerContainerRef} />
     </div>
-  );
-};
+  )
+}
 
-export default React.memo(OPlayer);
+export default React.memo(OPlayer)

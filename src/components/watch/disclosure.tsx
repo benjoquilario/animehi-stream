@@ -1,14 +1,14 @@
-import { Disclosure as HeadlessDisclosure } from '@headlessui/react';
-import classNames from 'classnames';
-import React, { PropsWithChildren } from 'react';
+import { Disclosure as HeadlessDisclosure } from "@headlessui/react"
+import classNames from "classnames"
+import React, { PropsWithChildren } from "react"
 
 type DisclosureProps = {
-  button: JSX.Element;
-  className?: string;
-  panelClassName?: string;
-  buttonClassName?: string;
-  defaultOpen?: boolean;
-};
+  button: JSX.Element
+  className?: string
+  panelClassName?: string
+  buttonClassName?: string
+  defaultOpen?: boolean
+}
 
 const Disclosure = (props: PropsWithChildren<DisclosureProps>): JSX.Element => {
   return (
@@ -20,13 +20,13 @@ const Disclosure = (props: PropsWithChildren<DisclosureProps>): JSX.Element => {
       {({ open }) => (
         <>
           <HeadlessDisclosure.Button
-            className={classNames('mt-1 px-3 block', props.buttonClassName)}
+            className={classNames("mt-1 block px-3", props.buttonClassName)}
           >
             {props.button}
           </HeadlessDisclosure.Button>
 
           <HeadlessDisclosure.Panel
-            className={classNames(props.panelClassName, !open && 'hidden')}
+            className={classNames(props.panelClassName, !open && "hidden")}
             static
           >
             {props.children}
@@ -34,7 +34,7 @@ const Disclosure = (props: PropsWithChildren<DisclosureProps>): JSX.Element => {
         </>
       )}
     </HeadlessDisclosure>
-  );
-};
+  )
+}
 
-export default React.memo(Disclosure);
+export default React.memo(Disclosure)

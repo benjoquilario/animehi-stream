@@ -1,13 +1,13 @@
-import React from 'react';
-import { AiOutlineArrowRight, AiOutlineArrowLeft } from 'react-icons/ai';
-import Button from '@/components/shared/button';
+import React from "react"
+import { AiOutlineArrowRight, AiOutlineArrowLeft } from "react-icons/ai"
+import Button from "@/components/shared/button"
 
 type PaginationProps = {
-  pageNumber: number;
-  setPageNumber: (number: number) => void;
-  hasNextPage?: boolean;
-  className: string;
-};
+  pageNumber: number
+  setPageNumber: (number: number) => void
+  hasNextPage?: boolean
+  className: string
+}
 
 const Pagination = ({
   pageNumber,
@@ -16,7 +16,7 @@ const Pagination = ({
   className,
 }: PaginationProps) => {
   return (
-    <div className="flex gap-3 items-center">
+    <div className="flex items-center gap-3">
       {pageNumber !== 1 ? (
         <Button
           onClick={() => setPageNumber(pageNumber - 1)}
@@ -36,7 +36,7 @@ const Pagination = ({
         </Button>
       ) : null}
     </div>
-  );
-};
+  )
+}
 
-export default Pagination;
+export default Pagination

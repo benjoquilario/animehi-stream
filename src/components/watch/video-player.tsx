@@ -150,7 +150,7 @@ export default React.memo(VideoPlayer);
 */
 
 const ArtPlyr = () => {
-  return <div>Plyr</div>;
-};
+  return <div>Plyr</div>
+}
 
-export default ArtPlyr;
+export default ArtPlyr

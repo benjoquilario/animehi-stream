@@ -6,7 +6,9 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "preview": "next build && next start",
+    "prettier": "prettier --write ."
   },
   "dependencies": {
     "@badrap/bar-of-progress": "^0.2.2",
@@ -25,8 +27,6 @@
     "classnames": "^2.3.2",
     "concurrently": "^7.6.0",
     "dayjs": "^1.11.7",
-    "eslint": "8.28.0",
-    "eslint-config-next": "13.0.5",
     "framer-motion": "^7.10.3",
     "hls.js": "1.4.10",
     "next": "12.2.5",
@@ -47,9 +47,16 @@
   "devDependencies": {
     "@heroicons/react": "1.0.6",
     "@types/react-show-more-text": "^1.4.2",
+    "@typescript-eslint/parser": "^6.4.1",
     "autoprefixer": "^10.4.13",
+    "eslint": "^8.47.0",
+    "eslint-config-next": "^13.4.19",
+    "eslint-config-prettier": "^9.0.0",
+    "eslint-plugin-react": "^7.33.2",
     "lodash": "^4.17.21",
     "postcss": "^8.4.21",
+    "prettier": "^3.0.2",
+    "prettier-plugin-tailwindcss": "^0.5.3",
     "tailwind-scrollbar-hide": "^1.1.7",
     "tailwindcss": "3.3.3"
   }

@@ -1,66 +1,66 @@
-import { NextSeo } from 'next-seo';
-import { META } from '@consumet/extensions';
-import { GetServerSideProps, InferGetServerSidePropsType } from 'next';
-import progressBar, { EpisodeLoading } from '@/components/shared/loading';
-import { base64SolidImage } from '@/src/lib/utils/image';
-import Genre from '@/components/shared/genre';
-import { stripHtml, parseData } from '@/src/lib/utils/index';
-import classNames from 'classnames';
-import InfoItem from '@/components/shared/info-item';
-import EpisodesButton from '@/components/watch/episodes-button';
-import Characters from '@/components/anime/characters';
-import useEpisodes from '@/hooks/useEpisodes';
-import Image from '@/components/shared/image';
-import TitleName from '@/components/shared/title-name';
-import type { RecentType } from 'types/types';
-import { useRouter } from 'next/router';
-import DefaultLayout from '@/components/layouts/default';
-import Button from '@/components/shared/button';
-import Storage from '@/src/lib/utils/storage';
-import Side from '@/components/anime/side';
-import ResultsCard from '@/components/shared/results-card';
-import WatchLink from '@/components/shared/watch-link';
-import ClientOnly from '@/components/shared/client-only';
-import { useSelector } from '@/store/store';
-import DubButton from '@/components/shared/dub-button';
-import React, { useState, useMemo, useCallback } from 'react';
+import { NextSeo } from "next-seo"
+import { META } from "@consumet/extensions"
+import { GetServerSideProps, InferGetServerSidePropsType } from "next"
+import progressBar, { EpisodeLoading } from "@/components/shared/loading"
+import { base64SolidImage } from "@/src/lib/utils/image"
+import Genre from "@/components/shared/genre"
+import { stripHtml, parseData } from "@/src/lib/utils/index"
+import classNames from "classnames"
+import InfoItem from "@/components/shared/info-item"
+import EpisodesButton from "@/components/watch/episodes-button"
+import Characters from "@/components/anime/characters"
+import useEpisodes from "@/hooks/useEpisodes"
+import Image from "@/components/shared/image"
+import TitleName from "@/components/shared/title-name"
+import type { RecentType } from "types/types"
+import { useRouter } from "next/router"
+import DefaultLayout from "@/components/layouts/default"
+import Button from "@/components/shared/button"
+import Storage from "@/src/lib/utils/storage"
+import Side from "@/components/anime/side"
+import ResultsCard from "@/components/shared/results-card"
+import WatchLink from "@/components/shared/watch-link"
+import ClientOnly from "@/components/shared/client-only"
+import { useSelector } from "@/store/store"
+import DubButton from "@/components/shared/dub-button"
+import React, { useState, useMemo, useCallback } from "react"
 
 export const getServerSideProps: GetServerSideProps = async ({ params }) => {
-  let id = params!.id;
+  let id = params!.id
 
-  const anilist = new META.Anilist();
-  id = typeof id === 'string' ? id : id?.join('');
+  const anilist = new META.Anilist()
+  id = typeof id === "string" ? id : id?.join("")
 
-  const data = await anilist.fetchAnilistInfoById(id as string);
+  const data = await anilist.fetchAnilistInfoById(id as string)
 
   if (!data)
     return {
       notFound: true,
-    };
+    }
   else
     return {
       props: {
         animeList: parseData(data),
       },
-    };
-};
+    }
+}
 
 const Anime = ({
   animeList,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
-  const router = useRouter();
-  const recentWatched = new Storage('recentWatched');
-  const watchList = new Storage('watchedList');
-  const dub = useSelector(store => store.watch.dub);
-  const [showMore, setShowMore] = useState<boolean>(false);
-  const { data: episodes, isLoading } = useEpisodes(animeList?.id, dub);
+  const router = useRouter()
+  const recentWatched = new Storage("recentWatched")
+  const watchList = new Storage("watchedList")
+  const dub = useSelector((store) => store.watch.dub)
+  const [showMore, setShowMore] = useState<boolean>(false)
+  const { data: episodes, isLoading } = useEpisodes(animeList?.id, dub)
 
   const handleWatchedList = useCallback(() => {
-    const storage = new Storage('watchedList');
+    const storage = new Storage("watchedList")
 
-    if (storage.has({ id: animeList?.id })) return;
+    if (storage.has({ id: animeList?.id })) return
 
-    typeof window !== 'undefined' &&
+    typeof window !== "undefined" &&
       storage.create({
         id: animeList?.id,
         title: animeList?.title?.romaji || animeList?.title?.english,
@@ -70,26 +70,26 @@ const Anime = ({
         type: animeList?.type,
         duration: animeList?.popularity,
         genres: animeList?.genres,
-      });
+      })
 
-    return router.push('/watchlist');
-  }, [animeList, router]);
+    return router.push("/watchlist")
+  }, [animeList, router])
 
   const existedWatched =
-    typeof window !== 'undefined' && watchList.findOne({ id: animeList?.id });
+    typeof window !== "undefined" && watchList.findOne({ id: animeList?.id })
 
   const currentWatchEpisode =
-    typeof window !== 'undefined' &&
-    recentWatched.findOne<RecentType>({ animeId: animeList?.id });
+    typeof window !== "undefined" &&
+    recentWatched.findOne<RecentType>({ animeId: animeList?.id })
 
   const existedEpisode =
-    typeof window !== 'undefined' &&
-    recentWatched.has({ animeId: animeList?.id });
+    typeof window !== "undefined" &&
+    recentWatched.has({ animeId: animeList?.id })
 
   const lastEpisodes = useMemo(
     () => !isLoading && episodes?.[episodes?.length - 1]?.id,
     [episodes, isLoading]
-  );
+  )
 
   return (
     <DefaultLayout>
@@ -101,14 +101,14 @@ const Anime = ({
         openGraph={{
           images: [
             {
-              type: 'large',
+              type: "large",
               url: `${animeList?.cover}`,
               alt: `Banner Image for ${
                 animeList?.title?.english || animeList?.title?.romaji
               }`,
             },
             {
-              type: 'small',
+              type: "small",
               url: `${animeList?.cover}`,
               alt: `Cover Image for ${
                 animeList?.title?.english || animeList?.title?.romaji
@@ -119,7 +119,7 @@ const Anime = ({
       />
 
       <div className="overflow-hidden">
-        <div className="relative z-0 w-full h-[200px] md:h-[400px]">
+        <div className="relative z-0 h-[200px] w-full md:h-[400px]">
           <Image
             src={animeList?.cover ?? undefined}
             alt={animeList?.title?.romaji}
@@ -133,11 +133,11 @@ const Anime = ({
             containerclassname="relative w-full h-full"
           />
 
-          <div className="absolute top-0 left-0 bg-banner-shadow h-full w-full"></div>
+          <div className="absolute left-0 top-0 h-full w-full bg-banner-shadow"></div>
         </div>
-        <div className="bg-background-700 px-[4%] grid grid-cols-1 justify-items-center gap-[70px] md:grid-cols-[228px_1fr] md:gap-[18px] pb-7">
-          <div className="min-w-[155px] w-[155px] md:w-full md:min-w-full h-auto">
-            <div className="min-w-full w-full h-[196px] block mt-[-88px] md:mt-[-69px] md:h-[300px]">
+        <div className="grid grid-cols-1 justify-items-center gap-[70px] bg-background-700 px-[4%] pb-7 md:grid-cols-[228px_1fr] md:gap-[18px]">
+          <div className="h-auto w-[155px] min-w-[155px] md:w-full md:min-w-full">
+            <div className="mt-[-88px] block h-[196px] w-full min-w-full md:mt-[-69px] md:h-[300px]">
               <Image
                 containerclassname="relative w-full min-w-full h-full"
                 className="rounded-lg"
@@ -153,8 +153,8 @@ const Anime = ({
               />
             </div>
           </div>
-          <div className="grid text-white py-4 w-full z-10 mt-[-69px]">
-            <div className="flex items-center gap-2 mb-7">
+          <div className="z-10 mt-[-69px] grid w-full py-4 text-white">
+            <div className="mb-7 flex items-center gap-2">
               <ClientOnly>
                 <WatchLink
                   isExist={existedEpisode}
@@ -168,48 +168,48 @@ const Anime = ({
                 disabled={existedWatched ? true : false}
                 onClick={handleWatchedList}
                 style={{
-                  backgroundColor: `${animeList?.color || '#000'}`,
+                  backgroundColor: `${animeList?.color || "#000"}`,
                 }}
-                className="text-xs md:text-sm transition duration-300 flex items-center px-3 py-2 rounded-md gap-x-1 hover:opacity-80"
+                className="flex items-center gap-x-1 rounded-md px-3 py-2 text-xs transition duration-300 hover:opacity-80 md:text-sm"
                 type="button"
               >
                 <ClientOnly>
-                  {existedWatched ? 'Watching' : 'Add to WatchList'}
+                  {existedWatched ? "Watching" : "Add to WatchList"}
                 </ClientOnly>
               </Button>
             </div>
             <h1
               style={{ color: `${animeList?.color}` }}
-              className="mb-2 text-2xl md:text-3xl font-semibold"
+              className="mb-2 text-2xl font-semibold md:text-3xl"
             >
               {animeList?.title.english}
             </h1>
-            <div className="mr-2 flex flex-wrap gap-2 mt-2">
+            <div className="mr-2 mt-2 flex flex-wrap gap-2">
               {animeList?.genres.map((genre: string) => (
                 <div className="flex items-center gap-2" key={genre}>
                   <Genre genre={genre} />
                   <span
                     style={{
-                      backgroundColor: `${animeList?.color || '#000'}`,
+                      backgroundColor: `${animeList?.color || "#000"}`,
                     }}
-                    className={`w-1.5 h-1.5 rounded-full inline-block`}
+                    className={`inline-block h-1.5 w-1.5 rounded-full`}
                   ></span>
                 </div>
               ))}
             </div>
-            <p className="leading-6 text-sm md:text-base text-slate-300 font-extralight mt-2">
+            <p className="mt-2 text-sm font-extralight leading-6 text-slate-300 md:text-base">
               {showMore
                 ? stripHtml(animeList?.description)
                 : stripHtml(animeList?.description?.substring(0, 485))}
               <Button
                 type="button"
-                className="shadow-lg text-white text-xs p-1 transform transition duration-300 ease-out hover:scale-105"
+                className="transform p-1 text-xs text-white shadow-lg transition duration-300 ease-out hover:scale-105"
                 onClick={() => setShowMore(!showMore)}
               >
-                {showMore ? 'Show less' : 'Show more'}
+                {showMore ? "Show less" : "Show more"}
               </Button>
             </p>
-            <div className="hidden md:flex flex-row gap-x-8 overflow-x-auto md:gap-x-16 [&>*]:shrink-0 mt-4">
+            <div className="mt-4 hidden flex-row gap-x-8 overflow-x-auto md:flex md:gap-x-16 [&>*]:shrink-0">
               <InfoItem
                 title="Country"
                 info={`${animeList?.countryOfOrigin}`}
@@ -226,26 +226,26 @@ const Anime = ({
             </div>
           </div>
         </div>
-        <div className="px-[4%] grid grid-cols-none md:grid-cols-[238px_auto] md:mt-[20px] md:gap-[18px]">
+        <div className="grid grid-cols-none px-[4%] md:mt-[20px] md:grid-cols-[238px_auto] md:gap-[18px]">
           <div className="block">
-            <div className="bg-background-700 my-2 p-3 rounded">
-              <p className="text-white text-base">
-                Score:{' '}
-                <span className="text-slate-300 italic text-sm">
+            <div className="my-2 rounded bg-background-700 p-3">
+              <p className="text-base text-white">
+                Score:{" "}
+                <span className="text-sm italic text-slate-300">
                   {animeList?.rating}
                 </span>
               </p>
             </div>
-            <div className="bg-background-700 my-2 p-3 rounded">
-              <p className="text-white text-base">
-                Popularity:{' '}
-                <span className="text-slate-300 italic text-sm">
+            <div className="my-2 rounded bg-background-700 p-3">
+              <p className="text-base text-white">
+                Popularity:{" "}
+                <span className="text-sm italic text-slate-300">
                   {animeList?.popularity}
                 </span>
               </p>
             </div>
-            <div className="bg-background-700 my-2 p-3 rounded">
-              <ul className="grid grid-cols-2  w-full md:grid-cols-1">
+            <div className="my-2 rounded bg-background-700 p-3">
+              <ul className="grid w-full  grid-cols-2 md:grid-cols-1">
                 <Side data={animeList} />
               </ul>
             </div>
@@ -262,10 +262,10 @@ const Anime = ({
                 ) : (
                   <EpisodesButton
                     episodesClassName={classNames(
-                      'grid items-start bg-background-700',
+                      "grid items-start bg-background-700",
                       episodes?.length > 50
-                        ? 'grid-cols-2 md:grid-cols-5'
-                        : 'grid-cols-1'
+                        ? "grid-cols-2 md:grid-cols-5"
+                        : "grid-cols-1"
                     )}
                     episodes={episodes}
                     watchPage={false}
@@ -274,7 +274,7 @@ const Anime = ({
                 )}
               </div>
             )}
-            <div className="w-full mt-4">
+            <div className="mt-4 w-full">
               <TitleName title="Characters & Voice Actors" />
               <Characters
                 color={animeList?.color}
@@ -295,7 +295,7 @@ const Anime = ({
         </div>
       </div>
     </DefaultLayout>
-  );
-};
+  )
+}
 
-export default Anime;
+export default Anime

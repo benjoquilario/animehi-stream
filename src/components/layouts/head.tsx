@@ -1,4 +1,4 @@
-import Head from 'next/head';
+import Head from "next/head"
 
 const HTMLHead = () => {
   return (
@@ -6,7 +6,7 @@ const HTMLHead = () => {
       <meta charSet="UTF-8" />
       <meta httpEquiv="X-UA-Compatible" />
     </Head>
-  );
-};
+  )
+}
 
-export default HTMLHead;
+export default HTMLHead

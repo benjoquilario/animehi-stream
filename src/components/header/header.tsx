@@ -1,133 +1,133 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { META } from '@consumet/extensions';
-import { IAnimeResult } from '@consumet/extensions/dist/models/types';
-import Link from 'next/link';
-import classNames from 'classnames';
-import logo from '../../../public/animehi.svg';
-import h from '../../../public/h.png';
-import Image from '../shared/image';
-import { FaRandom } from 'react-icons/fa';
+import React, { useState, useEffect, useRef } from "react"
+import { META } from "@consumet/extensions"
+import { IAnimeResult } from "@consumet/extensions/dist/models/types"
+import Link from "next/link"
+import classNames from "classnames"
+import logo from "../../../public/animehi.svg"
+import h from "../../../public/h.png"
+import Image from "../shared/image"
+import { FaRandom } from "react-icons/fa"
 import {
   AiFillHome,
   AiOutlineSearch,
   AiOutlineArrowRight,
-} from 'react-icons/ai';
-import { BsList } from 'react-icons/bs';
-import NavLink from '@/components/shared/nav-links';
-import Button from '@/components/shared/button';
-import Input from '@/components/shared/input';
-import debounce from 'lodash/debounce';
-import ColumnSection from '@/components/shared/column-section';
-import { isMobile } from 'react-device-detect';
-import useClickOutside from '@/hooks/useClickOutside';
+} from "react-icons/ai"
+import { BsList } from "react-icons/bs"
+import NavLink from "@/components/shared/nav-links"
+import Button from "@/components/shared/button"
+import Input from "@/components/shared/input"
+import debounce from "lodash/debounce"
+import ColumnSection from "@/components/shared/column-section"
+import { isMobile } from "react-device-detect"
+import useClickOutside from "@/hooks/useClickOutside"
 
 const LINKS = [
   {
-    href: '/',
-    name: 'Home',
+    href: "/",
+    name: "Home",
     icon: AiFillHome,
-    className: 'flex gap-1 items-center hover:text-white transition text-sm',
+    className: "flex gap-1 items-center hover:text-white transition text-sm",
   },
   {
-    href: '/',
-    name: 'Random',
+    href: "/",
+    name: "Random",
     icon: FaRandom,
-    className: 'flex gap-1 items-center hover:text-white transition text-sm',
+    className: "flex gap-1 items-center hover:text-white transition text-sm",
   },
   {
-    href: '/watchlist',
-    name: 'Watch List',
+    href: "/watchlist",
+    name: "Watch List",
     icon: BsList,
-    className: 'flex gap-1 items-center hover:text-white transition text-sm',
+    className: "flex gap-1 items-center hover:text-white transition text-sm",
   },
-];
+]
 
 const Header = () => {
-  const anilist = new META.Anilist();
-  const [isFixed, setIsFixed] = useState(false);
-  const [isSearchOpen, setIsSearchOpen] = useState(false);
-  const [resultsOpen, setResultsOpen] = useState(false);
-  const searchRef = useRef<HTMLInputElement | null>(null);
-  const ref = useRef<HTMLDivElement | null>(null);
-  const [searchResults, setSearchResults] = useState<IAnimeResult[] | []>([]);
-  const [query, setQuery] = useState('');
+  const anilist = new META.Anilist()
+  const [isFixed, setIsFixed] = useState(false)
+  const [isSearchOpen, setIsSearchOpen] = useState(false)
+  const [resultsOpen, setResultsOpen] = useState(false)
+  const searchRef = useRef<HTMLInputElement | null>(null)
+  const ref = useRef<HTMLDivElement | null>(null)
+  const [searchResults, setSearchResults] = useState<IAnimeResult[] | []>([])
+  const [query, setQuery] = useState("")
 
   useEffect(() => {
-    const doc = document.documentElement;
+    const doc = document.documentElement
 
-    let currScroll: number;
-    let prevScroll = window.scrollY || doc.scrollTop;
-    let currDirection = 0;
-    let prevDirection = 0;
+    let currScroll: number
+    let prevScroll = window.scrollY || doc.scrollTop
+    let currDirection = 0
+    let prevDirection = 0
 
-    let threshold = 200;
-    let toggle: boolean;
+    let threshold = 200
+    let toggle: boolean
 
     const toggleHeader = () => {
-      if (currDirection === 2 && currScroll > threshold) setIsFixed(true);
-      else if (currDirection === 1) setIsFixed(false);
-      else toggle = false;
+      if (currDirection === 2 && currScroll > threshold) setIsFixed(true)
+      else if (currDirection === 1) setIsFixed(false)
+      else toggle = false
 
-      return toggle;
-    };
+      return toggle
+    }
 
     const checkScroll = () => {
-      currScroll = window.scrollY || doc.scrollTop;
+      currScroll = window.scrollY || doc.scrollTop
 
-      if (currScroll > prevScroll) currDirection = 2;
-      else currDirection = 1;
+      if (currScroll > prevScroll) currDirection = 2
+      else currDirection = 1
 
-      if (currDirection !== prevDirection) toggle = toggleHeader();
-      if (toggle) prevDirection = currDirection;
+      if (currDirection !== prevDirection) toggle = toggleHeader()
+      if (toggle) prevDirection = currDirection
 
-      prevScroll = currScroll;
-    };
+      prevScroll = currScroll
+    }
 
-    window.addEventListener('scroll', checkScroll);
+    window.addEventListener("scroll", checkScroll)
 
-    return () => window.removeEventListener('scroll', checkScroll);
-  });
+    return () => window.removeEventListener("scroll", checkScroll)
+  })
 
   useEffect(() => {
-    searchRef?.current?.focus();
-  }, [isSearchOpen]);
+    searchRef?.current?.focus()
+  }, [isSearchOpen])
 
   const debouncedSearch = useRef(
     debounce(async (query: string) => {
-      const search = await anilist.search(query, 1, 6);
+      const search = await anilist.search(query, 1, 6)
 
-      if (!query) return;
+      if (!query) return
 
-      setResultsOpen(true);
-      setSearchResults(search.results);
+      setResultsOpen(true)
+      setSearchResults(search.results)
     }, 400)
-  ).current;
+  ).current
 
   useEffect(() => {
     return () => {
-      debouncedSearch.cancel();
-    };
-  }, [debouncedSearch]);
+      debouncedSearch.cancel()
+    }
+  }, [debouncedSearch])
 
   const handleInputChange = async (
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
-    debouncedSearch(event.target.value);
-    setQuery(event.target.value);
-  };
+    debouncedSearch(event.target.value)
+    setQuery(event.target.value)
+  }
 
-  useClickOutside(ref, () => setResultsOpen(false));
+  useClickOutside(ref, () => setResultsOpen(false))
 
   return (
     <header
       className={classNames(
-        'fixed left-0 w-full z-50 h-[52px] md:h-[67px] 2xl:h-[80px] bg-background-800 bg-gradient-to-b from-[#000000b3] to-[#00000000] transition-all',
-        isFixed ? 'top-[-56px]' : 'top-0'
+        "fixed left-0 z-50 h-[52px] w-full bg-background-800 bg-gradient-to-b from-[#000000b3] to-[#00000000] transition-all md:h-[67px] 2xl:h-[80px]",
+        isFixed ? "top-[-56px]" : "top-0"
       )}
     >
-      <div className="flex items-center gap-4 h-[52px] md:h-[67px] 2xl:h-[80px] px-[3%] w-full mx-auto max-w-screen-2xl">
+      <div className="mx-auto flex h-[52px] w-full max-w-screen-2xl items-center gap-4 px-[3%] md:h-[67px] 2xl:h-[80px]">
         <Link href="/">
-          <a className="flex items-center text-white z-10">
+          <a className="z-10 flex items-center text-white">
             <div className="flex">
               <Image
                 containerclassname="relative h-[20px] w-[20px] md:h-[24px] md:w-[24px]"
@@ -144,20 +144,20 @@ const Header = () => {
                 alt="animehi"
               />
             </div>
-            <span className="text-sm md:text-[20px] 2xl:[30px] font-semibold uppercase">
+            <span className="2xl:[30px] text-sm font-semibold uppercase md:text-[20px]">
               AnimeHi
             </span>
           </a>
         </Link>
         <div
           className={classNames(
-            'absolute top-[52px] left-0 md:relative md:top-0 w-full xl:block',
-            isSearchOpen ? 'block' : 'hidden'
+            "absolute left-0 top-[52px] w-full md:relative md:top-0 xl:block",
+            isSearchOpen ? "block" : "hidden"
           )}
         >
           <div
             ref={ref}
-            className="relative w-full bg-background-900 p-2 rounded-none md:rounded-lg"
+            className="relative w-full rounded-none bg-background-900 p-2 md:rounded-lg"
           >
             <form>
               <div className="grid grid-cols-[34px_1fr] items-center">
@@ -165,7 +165,7 @@ const Header = () => {
                   <a>
                     <Button
                       type="submit"
-                      className="text-slate-300 flex justify-center items-center"
+                      className="flex items-center justify-center text-slate-300"
                       aria-label="submit anime search"
                     >
                       <AiOutlineSearch className="h-6 w-6" />
@@ -187,9 +187,9 @@ const Header = () => {
             </form>
 
             {resultsOpen && !isMobile ? (
-              <div className="absolute top-[40px] left-0 w-full rounded-lg">
+              <div className="absolute left-0 top-[40px] w-full rounded-lg">
                 <ul className="w-full">
-                  {searchResults?.map(result => (
+                  {searchResults?.map((result) => (
                     <ColumnSection
                       key={result.id}
                       data={result}
@@ -202,10 +202,10 @@ const Header = () => {
             ) : null}
           </div>
         </div>
-        <nav className="w-5/6 hidden md:block">
+        <nav className="hidden w-5/6 md:block">
           <div>
-            <ul className="text-slate-300 flex gap-4">
-              {LINKS.map(link => (
+            <ul className="flex gap-4 text-slate-300">
+              {LINKS.map((link) => (
                 <NavLink
                   key={link.name}
                   href={link.href}
@@ -217,13 +217,13 @@ const Header = () => {
             </ul>
           </div>
         </nav>
-        <div className="w-full md:w-1/6 flex justify-end">
+        <div className="flex w-full justify-end md:w-1/6">
           <div>
-            <ul className="text-white flex gap-2 items-center text-sm md:text-base">
+            <ul className="flex items-center gap-2 text-sm text-white md:text-base">
               <li className="block md:hidden">
                 <Button
                   onClick={() => setIsSearchOpen(!isSearchOpen)}
-                  className="text-slate-300 flex justify items-center"
+                  className="justify flex items-center text-slate-300"
                   aria-label="open search"
                 >
                   <AiOutlineSearch className="h-6 w-6" />
@@ -232,7 +232,7 @@ const Header = () => {
               <li>
                 <Button
                   type="button"
-                  className="flex items-center justify-center bg-[#6a55fa] h-8 md:h-9 w-20 rounded-md"
+                  className="flex h-8 w-20 items-center justify-center rounded-md bg-[#6a55fa] md:h-9"
                   aria-label="click to sign in"
                 >
                   <span>Sign in</span>
@@ -246,7 +246,7 @@ const Header = () => {
         </div>
       </div>
     </header>
-  );
-};
+  )
+}
 
-export default Header;
+export default Header

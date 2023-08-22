@@ -108,7 +108,7 @@ export default React.memo(PlyrComponent);
 */
 
 const Plyr = () => {
-  return <div>Plyr</div>;
-};
+  return <div>Plyr</div>
+}
 
-export default Plyr;
+export default Plyr

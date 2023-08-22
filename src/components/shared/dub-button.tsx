@@ -1,11 +1,11 @@
-import React from 'react';
-import Button from './button';
-import classNames from 'classnames';
-import { useDispatch } from '@/store/store';
-import { toggleDub } from '@/store/watch/slice';
+import React from "react"
+import Button from "./button"
+import classNames from "classnames"
+import { useDispatch } from "@/store/store"
+import { toggleDub } from "@/store/watch/slice"
 
 const DubButton = ({ dub }: { dub: boolean }) => {
-  const dispatch = useDispatch();
+  const dispatch = useDispatch()
 
   return (
     <div className="flex gap-2">
@@ -13,8 +13,8 @@ const DubButton = ({ dub }: { dub: boolean }) => {
         onClick={() => dispatch(toggleDub(false))}
         type="button"
         className={classNames(
-          'text-white text-sm py-2 px-3',
-          dub ? '' : 'bg-primary'
+          "px-3 py-2 text-sm text-white",
+          dub ? "" : "bg-primary"
         )}
       >
         Sub
@@ -23,14 +23,14 @@ const DubButton = ({ dub }: { dub: boolean }) => {
         onClick={() => dispatch(toggleDub(true))}
         type="button"
         className={classNames(
-          'text-white text-sm py-2 px-3',
-          dub ? 'bg-primary' : ''
+          "px-3 py-2 text-sm text-white",
+          dub ? "bg-primary" : ""
         )}
       >
         Dub
       </Button>
     </div>
-  );
-};
+  )
+}
 
-export default DubButton;
+export default DubButton

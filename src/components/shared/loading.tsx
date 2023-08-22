@@ -1,51 +1,51 @@
-import ProgressBar from '@badrap/bar-of-progress';
-import classNames from 'classnames';
-import { ImSpinner2 } from 'react-icons/im';
+import ProgressBar from "@badrap/bar-of-progress"
+import classNames from "classnames"
+import { ImSpinner2 } from "react-icons/im"
 
 export const LoadingBanner = () => {
   return (
-    <div className="relative h-[326px] md:h-[430px] min-h-[326px] md:min-h-[430px] 2xl:h-[620px] 2xl:min-h-[620px] bg-black overflow-hidden w-full flex justify-center items-center mt-2">
+    <div className="relative mt-2 flex h-[326px] min-h-[326px] w-full items-center justify-center overflow-hidden bg-black md:h-[430px] md:min-h-[430px] 2xl:h-[620px] 2xl:min-h-[620px]">
       <div className="flex w-full items-center justify-between gap-4">
-        <div className="pl-[3%] md:pl-0 w-[80%] md:w-[40%] h-[396px] md:h-[430px] min-h-[396px] md:min-h-[430px] 2xl:h-[620px] 2xl:min-h-[620px] animate-pulse flex flex-col justify-center">
-          <div className="mt-2 w-[60%] h-[30px] md:h-[60px] bg-[#141313] rounded-lg"></div>
-          <div className="mt-2 w-full h-[28px] md:h-[64px] bg-[#141313] rounded-lg "></div>
-          <div className="hidden md:block mt-2 w-[80%] h-4 bg-[#141313] rounded-lg"></div>
+        <div className="flex h-[396px] min-h-[396px] w-[80%] animate-pulse flex-col justify-center pl-[3%] md:h-[430px] md:min-h-[430px] md:w-[40%] md:pl-0 2xl:h-[620px] 2xl:min-h-[620px]">
+          <div className="mt-2 h-[30px] w-[60%] rounded-lg bg-[#141313] md:h-[60px]"></div>
+          <div className="mt-2 h-[28px] w-full rounded-lg bg-[#141313] md:h-[64px] "></div>
+          <div className="mt-2 hidden h-4 w-[80%] rounded-lg bg-[#141313] md:block"></div>
           <div className="flex gap-2">
-            <div className="mt-2 w-[135px] h-[45px] bg-[#141313] rounded-lg"></div>
-            <div className="mt-2 w-[135px] h-[45px] bg-[#141313] rounded-lg"></div>
+            <div className="mt-2 h-[45px] w-[135px] rounded-lg bg-[#141313]"></div>
+            <div className="mt-2 h-[45px] w-[135px] rounded-lg bg-[#141313]"></div>
           </div>
         </div>
-        <div className="absolute md:relative animate-pulse h-full md:h-[305px] w-full md:w-[60%] bg-[#111] md:bg-[#141313] rounded-lg mt-4"></div>
+        <div className="absolute mt-4 h-full w-full animate-pulse rounded-lg bg-[#111] md:relative md:h-[305px] md:w-[60%] md:bg-[#141313]"></div>
       </div>
     </div>
-  );
-};
+  )
+}
 
 export const EpisodeLoading = () => (
-  <div className="flex flex-col w-full justify-center items-center">
-    <div className="w-full flex justify-start items-center mt-4">
-      <ImSpinner2 className="animate-spin text-white h-10 w-10" />
+  <div className="flex w-full flex-col items-center justify-center">
+    <div className="mt-4 flex w-full items-center justify-start">
+      <ImSpinner2 className="h-10 w-10 animate-spin text-white" />
     </div>
   </div>
-);
+)
 
 export const LoadingVideo = ({ classname }: { classname: string }) => {
   return (
-    <div className="flex flex-col col-start-1 col-end-6 md:col-start-1 xl:col-start-2 md:col-end-6 w-full justify-center items-center h-[280px] md:h-[500px] min-h-[280px] md:min-h-[550px]">
-      <div className="w-full flex justify-center items-center">
+    <div className="col-start-1 col-end-6 flex h-[280px] min-h-[280px] w-full flex-col items-center justify-center md:col-start-1 md:col-end-6 md:h-[500px] md:min-h-[550px] xl:col-start-2">
+      <div className="flex w-full items-center justify-center">
         <ImSpinner2
-          className={classNames('animate-spin text-white', classname)}
+          className={classNames("animate-spin text-white", classname)}
         />
       </div>
     </div>
-  );
-};
+  )
+}
 
 const progressBar = new ProgressBar({
   size: 4,
-  color: '#6a55fa',
-  className: 'z-50',
+  color: "#6a55fa",
+  className: "z-50",
   delay: 100,
-});
+})
 
-export default progressBar;
+export default progressBar

@@ -1,22 +1,22 @@
-import React from 'react';
+import React from "react"
 
 type ButtonProps = {
-  type?: 'button' | 'submit' | 'reset';
-  className?: string;
-  children?: React.ReactNode;
-} & React.HTMLProps<HTMLButtonElement>;
+  type?: "button" | "submit" | "reset"
+  className?: string
+  children?: React.ReactNode
+} & React.HTMLProps<HTMLButtonElement>
 
 const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
   (props, ref) => {
-    const { type, className, children, ...buttonProps } = props;
+    const { type, className, children, ...buttonProps } = props
     return (
       <button ref={ref} type={type} className={className} {...buttonProps}>
         {children}
       </button>
-    );
+    )
   }
-);
+)
 
-Button.displayName = 'Button';
+Button.displayName = "Button"
 
-export default React.memo(Button);
+export default React.memo(Button)

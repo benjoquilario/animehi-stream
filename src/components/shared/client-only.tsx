@@ -1,13 +1,13 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState } from "react"
 
 const ClientOnly = ({ children }: { children: React.ReactNode }) => {
-  const [hasMounted, setHasMounted] = useState(false);
+  const [hasMounted, setHasMounted] = useState(false)
 
   useEffect(() => {
-    setHasMounted(true);
-  }, []);
+    setHasMounted(true)
+  }, [])
 
-  return hasMounted ? <React.Fragment>{children}</React.Fragment> : null;
-};
+  return hasMounted ? <React.Fragment>{children}</React.Fragment> : null
+}
 
-export default ClientOnly;
+export default ClientOnly

@@ -135,7 +135,7 @@
 
 @layer base {
   html {
-    font-family: 'Source Sans Pro', sans-serif;
+    font-family: "Source Sans Pro", sans-serif;
   }
 
   body {
@@ -147,7 +147,7 @@
   }
 
   button:focus-visible {
-    @apply outline-2 outline outline-[#6a55fa];
+    @apply outline outline-2 outline-[#6a55fa];
   }
 
   a:focus {
@@ -155,6 +155,6 @@
   }
 
   a:focus-visible {
-    @apply outline-2 outline outline-[#6a55fa];
+    @apply outline outline-2 outline-[#6a55fa];
   }
 }

@@ -1,18 +1,18 @@
-import React from 'react';
-import Link from 'next/link';
-import Image from './image';
-import classNames from 'classnames';
-import { base64SolidImage } from '@/src/lib/utils/image';
-import { TitleType } from 'types/types';
-import { IAnimeInfo, IAnimeResult } from '@consumet/extensions';
-import { title } from '@/lib/helper';
+import React from "react"
+import Link from "next/link"
+import Image from "./image"
+import classNames from "classnames"
+import { base64SolidImage } from "@/src/lib/utils/image"
+import { TitleType } from "types/types"
+import { IAnimeInfo, IAnimeResult } from "@consumet/extensions"
+import { title } from "@/lib/helper"
 
 type ColumnSectionProps = {
-  data: IAnimeInfo | IAnimeResult;
-  isGenres?: boolean;
-  className?: string;
-  genres?: string[];
-};
+  data: IAnimeInfo | IAnimeResult
+  isGenres?: boolean
+  className?: string
+  genres?: string[]
+}
 
 const ColumnSection = ({
   data,
@@ -22,7 +22,7 @@ const ColumnSection = ({
 }: ColumnSectionProps) => (
   <li
     className={classNames(
-      'flex h-20 md:h-22 items-center py-2 px-4 odd:bg-background-800 even:bg-background-900',
+      "md:h-22 flex h-20 items-center px-4 py-2 odd:bg-background-800 even:bg-background-900",
       className
     )}
   >
@@ -39,41 +39,41 @@ const ColumnSection = ({
         )}`}
       />
     </div>
-    <div className="pl-2 self-start">
+    <div className="self-start pl-2">
       <style jsx>{`
         .hover-text:hover {
-          color: ${data.color ? data.color : '#6a55fa'};
+          color: ${data.color ? data.color : "#6a55fa"};
         }
       `}</style>
       <Link href={`/anime/${data.id}`}>
         <a
           className={classNames(
-            'hover-text text-base font-semibold text-white transition duration-300 line-clamp-1'
+            "hover-text line-clamp-1 text-base font-semibold text-white transition duration-300"
           )}
         >
           {title(data.title as TitleType)}
         </a>
       </Link>
-      <div className="flex line-clamp-1 items-center space-x-2 text-sm text-slate-300">
+      <div className="line-clamp-1 flex items-center space-x-2 text-sm text-slate-300">
         <span>{data.type}</span>
-        <span className="w-1.5 h-1.5 bg-primary rounded-full inline-block"></span>
+        <span className="inline-block h-1.5 w-1.5 rounded-full bg-primary"></span>
         <span>{data.releaseDate}</span>
-        <span className="w-1.5 h-1.5 bg-primary rounded-full inline-block"></span>
+        <span className="inline-block h-1.5 w-1.5 rounded-full bg-primary"></span>
         <span>{data.status}</span>
       </div>
 
       {isGenres ? (
         <div className="line-clamp-1 items-center space-x-2 text-sm text-slate-300">
-          {genres?.map(genre => (
+          {genres?.map((genre) => (
             <React.Fragment key={genre}>
               <span>{genre}</span>
-              <span className="w-1.5 h-1.5 bg-primary rounded-full inline-block"></span>
+              <span className="inline-block h-1.5 w-1.5 rounded-full bg-primary"></span>
             </React.Fragment>
           ))}
         </div>
       ) : null}
     </div>
   </li>
-);
+)
 
-export default React.memo(ColumnSection);
+export default React.memo(ColumnSection)

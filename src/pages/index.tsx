@@ -1,24 +1,24 @@
-import React, { useEffect, useMemo } from 'react';
-import progressBar from '@/components/shared/loading';
-import { TYPE, FORMAT, SORT } from '@/src/lib/constant';
-import RecentRelease from '@/components/anime/recentRelease';
-import Popular from '@/components/anime/popular';
-import { getSeason } from '../lib/utils';
-import { useDispatch } from '@/store/store';
-import { resetStates } from '@/store/watch/slice';
-import Row from '@/components/anime/row';
-import useMedia from '@/hooks/useMedia';
-import Genres from '@/components/anime/genres';
-import AiringScheduling from '@/components/anime/airing-schedule';
-import DefaultLayout from '@/components/layouts/default';
-import ClientOnly from '@/components/shared/client-only';
-import ContinueWatching from '@/components/anime/continue-watching';
-import Banner from '@/components/anime/banner';
+import React, { useEffect, useMemo } from "react"
+import progressBar from "@/components/shared/loading"
+import { TYPE, FORMAT, SORT } from "@/src/lib/constant"
+import RecentRelease from "@/components/anime/recentRelease"
+import Popular from "@/components/anime/popular"
+import { getSeason } from "../lib/utils"
+import { useDispatch } from "@/store/store"
+import { resetStates } from "@/store/watch/slice"
+import Row from "@/components/anime/row"
+import useMedia from "@/hooks/useMedia"
+import Genres from "@/components/anime/genres"
+import AiringScheduling from "@/components/anime/airing-schedule"
+import DefaultLayout from "@/components/layouts/default"
+import ClientOnly from "@/components/shared/client-only"
+import ContinueWatching from "@/components/anime/continue-watching"
+import Banner from "@/components/anime/banner"
 
 const HomePage = () => {
-  progressBar.finish();
-  const dispatch = useDispatch();
-  const currentSeason = useMemo(getSeason, []);
+  progressBar.finish()
+  const dispatch = useDispatch()
+  const currentSeason = useMemo(getSeason, [])
 
   const { data: trendingAnime, isLoading: trendingAnimeLoading } = useMedia({
     type: TYPE.ANIME,
@@ -27,7 +27,7 @@ const HomePage = () => {
     season: currentSeason.season,
     format: FORMAT.TV,
     sort: SORT.TRENDING_DESC,
-  });
+  })
 
   const { data: popularThisSeason, isLoading: popularSeasonLoading } = useMedia(
     {
@@ -39,7 +39,7 @@ const HomePage = () => {
       sort: SORT.POPULARITY_DESC,
       year: currentSeason.year,
     }
-  );
+  )
 
   const { data: popularAnime, isLoading: popularAnimeLoading } = useMedia({
     type: TYPE.ANIME,
@@ -47,7 +47,7 @@ const HomePage = () => {
     perPage: 10,
     format: FORMAT.TV,
     sort: SORT.POPULARITY_DESC,
-  });
+  })
 
   const { data: favouritesThisSeason, isLoading: favouritesSeasonLoading } =
     useMedia({
@@ -58,7 +58,7 @@ const HomePage = () => {
       sort: SORT.FAVORITES_SEASON,
       season: currentSeason.season,
       year: currentSeason.year,
-    });
+    })
 
   const { data: favouritesAnime, isLoading: favouritesAnimeLoading } = useMedia(
     {
@@ -68,24 +68,24 @@ const HomePage = () => {
       format: FORMAT.TV,
       sort: SORT.FAVORITES_SEASON,
     }
-  );
+  )
 
   useEffect(() => {
-    dispatch(resetStates());
-  }, [dispatch]);
+    dispatch(resetStates())
+  }, [dispatch])
 
   return (
     <ClientOnly>
       <DefaultLayout>
-        <div className="w-full h-full bg-center bg-top overflow-hidden bg-cover px-0 md:px-[3%]">
+        <div className="h-full w-full overflow-hidden bg-cover bg-center bg-top px-0 md:px-[3%]">
           <Banner animeList={trendingAnime} isLoading={trendingAnimeLoading} />
         </div>
         <main className="mt-[40px] px-[3%]">
-          <div className="flex flex-col space-y-6 md:grid lg:grid-cols-1 xl:grid-cols-[1fr_310px] 2xl:grid-cols-[1fr_340px] md:gap-4">
-            <div className="space-y-6 w-full overflow-hidden">
+          <div className="flex flex-col space-y-6 md:grid md:gap-4 lg:grid-cols-1 xl:grid-cols-[1fr_310px] 2xl:grid-cols-[1fr_340px]">
+            <div className="w-full space-y-6 overflow-hidden">
               <ContinueWatching />
               <RecentRelease />
-              <div className="flex flex-col md:flex-row gap-2">
+              <div className="flex flex-col gap-2 md:flex-row">
                 <Row
                   season={currentSeason.season}
                   animeList={popularThisSeason}
@@ -118,7 +118,7 @@ const HomePage = () => {
         </main>
       </DefaultLayout>
     </ClientOnly>
-  );
-};
+  )
+}
 
-export default HomePage;
+export default HomePage

@@ -1,15 +1,15 @@
-import { chunk } from '@/src/lib/utils/index';
-import { EpisodesType } from '@/src/../types/types';
-import EpisodeChunk from './episode-chunk';
-import React from 'react';
+import { chunk } from "@/src/lib/utils/index"
+import { EpisodesType } from "@/src/../types/types"
+import EpisodeChunk from "./episode-chunk"
+import React from "react"
 
 type EpisodesButtonProps = {
-  episodes: EpisodesType[];
-  activeIndex?: number;
-  episodesClassName?: string;
-  watchPage: boolean;
-  animeId?: string;
-};
+  episodes: EpisodesType[]
+  activeIndex?: number
+  episodesClassName?: string
+  watchPage: boolean
+  animeId?: string
+}
 
 const Episodes = ({
   episodes,
@@ -20,12 +20,12 @@ const Episodes = ({
 }: EpisodesButtonProps): JSX.Element => (
   <ul className={episodesClassName}>
     {chunk<EpisodesType>(episodes, 50).map((episode, index) => {
-      const firstEpisode = episode[0];
-      const lastEpisode = episode[episode.length - 1];
+      const firstEpisode = episode[0]
+      const lastEpisode = episode[episode.length - 1]
 
       const isOpen = episode.some(
-        episode => episode.number - 1 === activeIndex
-      );
+        (episode) => episode.number - 1 === activeIndex
+      )
 
       return (
         <li
@@ -43,9 +43,9 @@ const Episodes = ({
             className="transition"
           />
         </li>
-      );
+      )
     })}
   </ul>
-);
+)
 
-export default React.memo(Episodes);
+export default React.memo(Episodes)

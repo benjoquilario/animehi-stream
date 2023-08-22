@@ -1,16 +1,16 @@
-import React, { SVGProps } from 'react';
-import Link, { LinkProps } from 'next/link';
+import React, { SVGProps } from "react"
+import Link, { LinkProps } from "next/link"
 
 type NavLinksProps = {
-  icon: React.FC<SVGProps<any>>;
-  name: string;
-  className?: string;
-  iconClassName?: string;
-} & LinkProps;
+  icon: React.FC<SVGProps<any>>
+  name: string
+  className?: string
+  iconClassName?: string
+} & LinkProps
 
 const NavLink = (props: NavLinksProps) => {
-  const { icon, className, iconClassName, name, ...linkProps } = props;
-  const Icon = icon;
+  const { icon, className, iconClassName, name, ...linkProps } = props
+  const Icon = icon
 
   return (
     <li>
@@ -23,7 +23,7 @@ const NavLink = (props: NavLinksProps) => {
         </a>
       </Link>
     </li>
-  );
-};
+  )
+}
 
-export default NavLink;
+export default NavLink
