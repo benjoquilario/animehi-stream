@@ -1,0 +1,160 @@
+/* @import url('https://fonts.googleapis.com/css2?family=Fira+Sans:wght@400;500;600;700&display=swap'); */
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer components {
+  .line-clamp-2 {
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    display: -webkit-box;
+    line-height: 17px;
+    overflow: hidden;
+  }
+
+  .line-clamp-1 {
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 1;
+    display: -webkit-box;
+    line-height: 17px;
+    overflow: hidden;
+  }
+
+  .line-clamp-4 {
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 4;
+    display: -webkit-box;
+    line-height: 17px;
+    overflow: hidden;
+  }
+
+  .center-element {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+
+  ::-webkit-scrollbar {
+    width: 8px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: #000;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: #100f0f;
+    border-radius: 100vh;
+    /* border: 2px solid #152232; */
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: #181616;
+  }
+
+  .banner-linear {
+    background: linear-gradient(
+      -90deg,
+      rgba(0, 0, 0, 0) 0,
+      rgba(0, 0, 0, 0.15) 0,
+      rgba(0, 0, 0, 0.9) 80%
+    );
+  }
+}
+
+.swiper-pagination-bullet-active {
+  background-color: white !important;
+}
+
+.swiper-pagination {
+  display: none;
+}
+
+.swiper-button-prev {
+  display: none !important;
+}
+.swiper-button-next {
+  display: none !important;
+}
+
+:root {
+  --plyr-color-main: #6a55fa;
+}
+
+.plyr__controls .plyr__progress__container {
+  flex: 1 1;
+  min-width: 0;
+  position: absolute;
+  bottom: 40px;
+  width: 100%;
+  padding-left: 5px !important;
+  padding-right: 5px !important;
+  margin-left: 0 !important;
+  margin-right: 0 !important;
+  left: 0 !important;
+}
+
+.plyr__volume {
+  align-items: center;
+  display: flex;
+  max-width: 110px;
+  min-width: 80px;
+  position: relative;
+  margin-right: auto !important;
+  width: 20%;
+}
+
+.plyr__controls .plyr__controls__item:first-child {
+  margin-left: 0;
+  margin-right: 0 !important;
+}
+
+/* .episodename {
+  position: absolute;
+  left: 50%;
+  -webkit-transform: translate(-50%);
+  transform: translate(-50%);
+  cursor: default;
+} */
+
+.plyr--full-ui {
+  height: 100%;
+  max-height: 100%;
+}
+
+/*
+.video {
+  width: 100%;
+  min-height: 100vh;
+  position: absolute;
+  opacity: 1;
+  transition: opacity 300ms ease 0s;
+} */
+
+@layer base {
+  html {
+    font-family: "Source Sans Pro", sans-serif;
+  }
+
+  body {
+    @apply bg-black;
+  }
+
+  button:focus {
+    @apply outline-0;
+  }
+
+  button:focus-visible {
+    @apply outline outline-2 outline-[#6a55fa];
+  }
+
+  a:focus {
+    @appy @apply outline-0;
+  }
+
+  a:focus-visible {
+    @apply outline outline-2 outline-[#6a55fa];
+  }
+}

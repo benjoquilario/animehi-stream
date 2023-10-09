@@ -1,10 +1,10 @@
 <p align="center">
   <div align="center">
     <a href="https://animehi-stream.vercel.app/">
-      <img alt="AnimeHi" src="https://animehi-stream.vercel.app/_next/static/media/animehi.9fc8dd87.svg" width="49" height="52" />
+      <img alt="AnimeH" src="public/animehi.svg" width="49" height="52" />
     </a>
     <a href="https://animehi-stream.vercel.app/" style="margin-left: -10px">
-      <img alt="AnimeHi" src="https://animehi-stream.vercel.app/_next/image?url=%2F_next%2Fstatic%2Fmedia%2Fh.0c186236.png&w=1920&q=75" width="65" height="52" />
+      <img alt="AnimeHi" src="public/h.png" width="65" height="52" />
     </a>
   </div>
     <h3 align="center">AnimeHi - Watch animes without ads</h3>
@@ -96,13 +96,12 @@ Credits to the person who made the logo [Vergel](https://github.com/vergelmacaya
 - All time favorite Anime list
 - Favorite this seasonm
 - Airing Scheduled
--
 - Fully Responsive
 - ...enough talk [see it yourself](https://animehi-stream.vercel.app/)
 
 ### Coming Features
 
-- Authorization system
+- Authorization system with anilist
 - <s>Watch list</s> ✅
 - <s>Recently Watching</s> ✅
 - PWA
@@ -127,3 +126,7 @@ Your ideas, translations, design changes, code cleaning, real heavy code changes
 - Portfolio: [@benjoquilario](https://benjoquilario.me)
 
 Please give this repository a ⭐️ if you liked this app. It seems like a little thing, but it helps a lot with the motivation.
+
+### License
+
+Licensed under [AG](./LICENSE.md)

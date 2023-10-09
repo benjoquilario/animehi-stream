@@ -1,12 +1,13 @@
 {
   "name": "animehi",
-  "version": "1.0.0",
+  "version": "1.2.0",
   "private": true,
   "scripts": {
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
+<<<<<<< HEAD
     "preview": "next build && next start"
   },
   "dependencies": {
@@ -31,8 +32,35 @@
     "next": "13.5.3",
     "next-themes": "^0.2.1",
     "rate-limiter-flexible": "^3.0.0",
+=======
+    "preview": "next build && next start",
+    "prettier": "prettier --write ."
+  },
+  "dependencies": {
+    "@badrap/bar-of-progress": "^0.2.2",
+    "@consumet/extensions": "1.3.0",
+    "@headlessui/react": "1.4.0",
+    "@oplayer/core": "1.2.28",
+    "@oplayer/hls": "1.2.22",
+    "@oplayer/ui": "1.2.30",
+    "@popperjs/core": "^2.11.6",
+    "@reduxjs/toolkit": "^1.9.1",
+    "@tailwindcss/aspect-ratio": "^0.4.2",
+    "@types/lodash": "^4.14.191",
+    "@types/node": "18.11.9",
+    "@types/react": "18.0.25",
+    "@types/react-dom": "18.0.9",
+    "classnames": "^2.3.2",
+    "concurrently": "^7.6.0",
+    "dayjs": "^1.11.7",
+    "framer-motion": "^7.10.3",
+    "hls.js": "1.4.10",
+    "next": "12.2.5",
+    "next-seo": "^5.15.0",
+>>>>>>> acb100751ed9164d69eea380ae006c2854ab946c
     "react": "18.2.0",
     "react-dom": "18.2.0",
+<<<<<<< HEAD
     "react-icons": "^4.11.0",
     "swiper": "^9.1.0",
     "tailwind-merge": "^1.14.0",
@@ -53,6 +81,32 @@
     "prettier": "^3.0.3",
     "prettier-plugin-tailwindcss": "^0.5.4",
     "prisma": "^5.3.1",
+=======
+    "react-error-boundary": "^3.1.4",
+    "react-icons": "^4.7.1",
+    "react-popper": "^2.3.0",
+    "react-redux": "^8.0.5",
+    "react-show-more-text": "^1.6.2",
+    "sharp": "^0.31.3",
+    "swiper": "^8.4.6",
+    "swr": "^1.3.0",
+    "typescript": "4.9.3"
+  },
+  "devDependencies": {
+    "@heroicons/react": "1.0.6",
+    "@types/react-show-more-text": "^1.4.2",
+    "@typescript-eslint/parser": "^6.4.1",
+    "autoprefixer": "^10.4.13",
+    "eslint": "^8.47.0",
+    "eslint-config-next": "^13.4.19",
+    "eslint-config-prettier": "^9.0.0",
+    "eslint-plugin-react": "^7.33.2",
+    "lodash": "^4.17.21",
+    "postcss": "^8.4.21",
+    "prettier": "^3.0.2",
+    "prettier-plugin-tailwindcss": "^0.5.3",
+    "tailwind-scrollbar-hide": "^1.1.7",
+>>>>>>> acb100751ed9164d69eea380ae006c2854ab946c
     "tailwindcss": "3.3.3"
   }
 }

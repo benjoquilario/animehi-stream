@@ -1,4 +1,8 @@
 {
+<<<<<<< HEAD
+=======
+  "$schema": "https://json.schemastore.org/eslintrc",
+>>>>>>> acb100751ed9164d69eea380ae006c2854ab946c
   "root": true,
   "extends": [
     "next/core-web-vitals",
@@ -15,7 +19,11 @@
   "settings": {
     "tailwindcss": {
       "callees": ["cn"],
+<<<<<<< HEAD
       "config": "tailwind.config.ts"
+=======
+      "config": "tailwind.config.js"
+>>>>>>> acb100751ed9164d69eea380ae006c2854ab946c
     },
     "next": {
       "rootDir": true
@@ -27,4 +35,8 @@
       "parser": "@typescript-eslint/parser"
     }
   ]
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> acb100751ed9164d69eea380ae006c2854ab946c
