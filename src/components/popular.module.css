@@ -1,0 +1,11 @@
+.overlay::before {
+  content: "";
+  z-index: 2;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  top: 20%;
+  background: #000;
+  background: linear-gradient(180deg, rgba(0, 0, 0, 0) 0, #000 100%);
+}
