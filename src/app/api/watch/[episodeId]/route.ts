@@ -11,27 +11,27 @@ export async function GET(
   const referer = headersList.get("referer")
   const episodeId = params.episodeId
 
-  let cachedVal
+  // let cachedVal
 
-  if (redis) {
-    try {
-      const ipAddress = headers().get("x-forwarded-for")
-      await rateLimiterRedis.consume(ipAddress)
-    } catch (error) {
-      return NextResponse.json(
-        {
-          error: `Too Many Requests, retry after`,
-        },
-        { status: 429 }
-      )
-    }
-    cachedVal = await redis.get(episodeId)
-  }
+  // if (redis) {
+  //   try {
+  //     const ipAddress = headers().get("x-forwarded-for")
+  //     await rateLimiterRedis.consume(ipAddress)
+  //   } catch (error) {
+  //     return NextResponse.json(
+  //       {
+  //         error: `Too Many Requests, retry after`,
+  //       },
+  //       { status: 429 }
+  //     )
+  //   }
+  //   cachedVal = await redis.get(episodeId)
+  // }
 
-  if (cachedVal) {
-    console.log("Watch Cached Hit")
-    return new Response(cachedVal)
-  }
+  // if (cachedVal) {
+  //   console.log("Watch Cached Hit")
+  //   return new Response(cachedVal)
+  // }
 
   const response = await fetch(`${url}/watch/${episodeId}`, {
     next: { revalidate: 60 }, // Revalidate every 60 seconds
@@ -44,7 +44,7 @@ export async function GET(
 
   const stringifyResult = JSON.stringify(watch)
 
-  await redis.setex(episodeId, 3600, stringifyResult)
+  // await redis.setex(episodeId, 3600, stringifyResult)
 
   return NextResponse.json(watch)
 }

@@ -3,6 +3,7 @@ import Popular from "@/components/popular"
 import { Watch as VideoPlayer } from "@/components/player/watch"
 import { AspectRatio } from "@/components/ui/aspect-ratio"
 import Episodes from "@/components/player/episodes"
+import Server from "@/components/server"
 
 type Params = {
   params: {
@@ -33,6 +34,7 @@ export default async function Watch({ params: { params } }: Params) {
             <AspectRatio ratio={16 / 9}>
               <VideoPlayer animeId={animeId} sourcesPromise={sourcesPromise} />
             </AspectRatio>
+            <Server />
             {animeResponse ? (
               <Episodes
                 animeId={animeId}

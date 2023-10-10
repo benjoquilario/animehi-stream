@@ -27,13 +27,18 @@ export default function Episodes({
 
   return (
     <div className="mt-4">
-      <div className="flex items-center justify-between">
+      <div className="mb-2 flex items-center justify-between">
         <h3>Episode List</h3>
         <div>
           <Input type="text" placeholder="ep. number" />
         </div>
       </div>
-      <ScrollArea className="max-h-[25rem] w-full rounded-md">
+      <ScrollArea
+        className={cn(
+          "h-[25rem] max-h-[25rem] w-full rounded-md",
+          fullEpisodes.length > 18 ? "h-[25rem]" : "h-[10rem]"
+        )}
+      >
         <div className="episode-grid relative py-3 pr-3">
           {fullEpisodes.map((episode) => (
             <Link
@@ -43,8 +48,8 @@ export default function Episodes({
                 className: cn(
                   "border-l-2 border-primary",
                   currentEpisode?.number === episode.number
-                    ? "bg-primary"
-                    : "bg-secondary"
+                    ? "!bg-primary"
+                    : "!bg-secondary"
                 ),
               })}
               href={`/watch/${animeId}/${episode.id}`}

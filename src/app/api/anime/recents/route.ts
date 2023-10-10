@@ -4,27 +4,27 @@ import { redis, rateLimiterRedis } from "@/lib/redis"
 import { headers } from "next/headers"
 
 export async function GET(req: Request) {
-  let cachedVal
+  // let cachedVal
 
-  if (redis) {
-    try {
-      const ipAddress = headers().get("x-forwarded-for")
-      await rateLimiterRedis.consume(ipAddress)
-    } catch (error) {
-      return NextResponse.json(
-        {
-          error: `Too Many Requests, retry after`,
-        },
-        { status: 429 }
-      )
-    }
-    cachedVal = await redis.get("recents")
-  }
+  // if (redis) {
+  //   try {
+  //     const ipAddress = headers().get("x-forwarded-for")
+  //     await rateLimiterRedis.consume(ipAddress)
+  //   } catch (error) {
+  //     return NextResponse.json(
+  //       {
+  //         error: `Too Many Requests, retry after`,
+  //       },
+  //       { status: 429 }
+  //     )
+  //   }
+  //   cachedVal = await redis.get("recents")
+  // }
 
-  if (cachedVal) {
-    console.log("ANIME RECENTS HIT")
-    return new Response(cachedVal)
-  }
+  // if (cachedVal) {
+  //   console.log("ANIME RECENTS HIT")
+  //   return new Response(cachedVal)
+  // }
 
   const response = await fetch(`${url}/recent-episodes`, {
     next: { revalidate: 60 },
@@ -35,6 +35,6 @@ export async function GET(req: Request) {
   const recents = await response.json()
 
   const stringifyResult = JSON.stringify(recents)
-  await redis.setex("recents", 3600, stringifyResult)
+  // await redis.setex("recents", 3600, stringifyResult)
   return NextResponse.json(recents)
 }

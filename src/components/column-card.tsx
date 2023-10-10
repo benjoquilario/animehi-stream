@@ -40,7 +40,7 @@ export default function Column({ className, data, rank }: ColumnProps) {
           className={cn(
             "line-clamp-2 text-base font-semibold transition duration-300 hover:text-primary"
           )}
-          href={`/anime/`}
+          href={`/watch/${data.id}/${data.id}-episode-1`}
         >
           {data.title}
         </Link>

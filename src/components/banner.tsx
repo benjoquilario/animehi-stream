@@ -10,8 +10,9 @@ import { Swiper, SwiperSlide } from "swiper/react"
 // @ts-expect-error
 import { Autoplay } from "swiper"
 import { spotlight } from "@/lib/spotlight"
-import { Button } from "./ui/button"
+import { Button, buttonVariants } from "./ui/button"
 import { BsFillPlayFill } from "react-icons/bs"
+import Link from "next/link"
 
 const Banner = () => {
   return (
@@ -46,10 +47,13 @@ const Banner = () => {
                     <p className="mx-0 my-3 line-clamp-2 w-full max-w-lg pr-6 text-left text-sm text-muted-foreground md:line-clamp-3">
                       {anime.description}
                     </p>
-                    <Button>
+                    <Link
+                      href={`/watch/${anime.id}/${anime.episode}`}
+                      className={buttonVariants()}
+                    >
                       <BsFillPlayFill className="h-6 w-6" />
                       Play Now
-                    </Button>
+                    </Link>
                   </div>
                 </div>
               </div>
