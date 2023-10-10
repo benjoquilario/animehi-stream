@@ -8,7 +8,7 @@ import type {
 
 export const url = "https://api.consumet.org/anime/gogoanime"
 
-const publicUrl = "http://localhost:3000"
+const publicUrl = process.env.NEXT_PUBLIC_APP_URL
 
 export async function recent() {
   const response = await fetch(`${publicUrl}/api/anime/recents`, {

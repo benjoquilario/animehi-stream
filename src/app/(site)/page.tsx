@@ -15,6 +15,7 @@ export default async function Home() {
   const popularAnime =
     popularSettled.status === "fulfilled" ? popularSettled.value : null
 
+
   return (
     <>
       <section>
@@ -32,6 +33,7 @@ export default async function Home() {
             <h3 className="w-full pb-6 pt-2.5 text-left text-2xl font-semibold">
               Recently Updated
             </h3>
+
             <ul className="relative grid grid-cols-3 gap-3 overflow-hidden md:grid-cols-4 lg:grid-cols-6">
               {recentEpisodes?.results?.map((data) => (
                 <li
