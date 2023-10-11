@@ -18,12 +18,12 @@ export default function Column({ className, data, rank }: ColumnProps) {
         className
       )}
     >
-      <div className="absolute left-0 flex h-[38px] w-[38px] cursor-default items-center justify-center rounded border border-[#666] text-center text-[#666] transition hover:bg-slate-50 hover:text-slate-700">
+      <div className="absolute left-0 flex h-[38px] w-[38px] cursor-default items-center justify-center rounded border-2 border-l-primary text-center transition">
         <span className="text-lg">{rank}</span>
       </div>
 
       <div className="w-12 shrink-0">
-        <div className="relative h-[72px] w-[48px]">
+        <div className="relative h-[72px] w-[48px] rounded-sm">
           <Image
             sizes="(max-width: 768px) 100vw,
                           (max-width: 1200px) 50vw,
@@ -44,16 +44,15 @@ export default function Column({ className, data, rank }: ColumnProps) {
         >
           {data.title}
         </Link>
-        {/* {isGenres ? (
-          <div className="line-clamp-1 items-center space-x-2 text-sm text-slate-300">
-            {genres?.map((genre) => (
-              <React.Fragment key={genre}>
-                <span>{genre}</span>
-                <span className="inline-block h-1.5 w-1.5 rounded-full bg-primary"></span>
-              </React.Fragment>
-            ))}
-          </div>
-        ) : null} */}
+
+        <div className="line-clamp-1 items-center space-x-2 text-sm text-slate-300">
+          {data.genres?.map((genre) => (
+            <React.Fragment key={genre}>
+              <span>{genre}</span>
+              <span className="inline-block h-1.5 w-1.5 rounded-full bg-primary"></span>
+            </React.Fragment>
+          ))}
+        </div>
       </div>
     </li>
   )

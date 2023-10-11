@@ -5,29 +5,71 @@ import Player from "@oplayer/core"
 import OUI, { type Highlight, type MenuBar } from "@oplayer/ui"
 import OHls from "@oplayer/hls"
 import { skipOpEd } from "@/lib/plugins"
-import { useRef, useState, useEffect, useCallback } from "react"
-import type { SourcesResponse, Source } from "types/types"
+import { useRef, useState, useEffect, useCallback, useMemo } from "react"
+import type { SourcesResponse, Source, Episode } from "types/types"
 import { useRouter } from "next/navigation"
 import { notFound } from "next/navigation"
+import { AspectRatio } from "../ui/aspect-ratio"
+import Server from "../server"
 
 type Ctx = {
   ui: ReturnType<typeof OUI>
   hls: ReturnType<typeof OHls>
 }
 
-const plugins = [skipOpEd(), OUI(), OHls()]
+const plugins = [
+  skipOpEd(),
+  OUI({
+    autoFocus: true,
+    screenshot: true,
+    theme: {
+      primaryColor: "#6d28d9",
+    },
+  }),
+  OHls(),
+]
 
 type WatchProps = {
   sourcesPromise: Promise<SourcesResponse | undefined>
+  episodes?: Episode[]
   animeId: string
+  episodeId: string
+  episodeNumber: string
 }
 
-export function Watch({ sourcesPromise, animeId }: WatchProps) {
+export function OPlayer({
+  sourcesPromise,
+  animeId,
+  episodes,
+  episodeNumber,
+  episodeId,
+}: WatchProps) {
   const playerRef = useRef<Player<Ctx>>()
   const lst = useRef()
   const router = useRouter()
   const [sources, setSources] = useState<Source[] | undefined>(undefined)
-  const [lastEpisode, setLastEpisode] = useState(lst.current ? lst.current : 1)
+
+  const currentEpisode = useMemo(
+    () => episodes?.find((episode) => episode.id === episodeId),
+    [episodes, episodeId]
+  )
+
+  const isNextEpisode = useMemo(
+    () => currentEpisode?.number === episodes?.length,
+    [currentEpisode, episodes]
+  )
+
+  const isPrevEpisode = useMemo(
+    () => currentEpisode?.number === 1,
+    [currentEpisode]
+  )
+
+  console.log(isNextEpisode, isPrevEpisode)
+
+  const currentEpisodeIndex = useMemo(
+    () => episodes?.findIndex((episode) => episode.id === episodeId),
+    [episodes, episodeId]
+  )
 
   function getSelectedSrc(selectedQuality: string): Promise<Source> {
     return new Promise((resolve, reject) => {
@@ -39,10 +81,25 @@ export function Watch({ sourcesPromise, animeId }: WatchProps) {
     })
   }
 
-  const handleNextEpisode = useCallback(() => {
-    setLastEpisode(lastEpisode + 1)
-    router.push(`/watch/${animeId}/${animeId}-episode-${lastEpisode + 1}`)
-  }, [])
+  function handleNextEpisode() {
+    if (currentEpisode?.number === episodes?.length) return
+
+    router.push(
+      `/watch/${animeId}/${animeId}-episode-${
+        Number(currentEpisode?.number) + 1
+      }`
+    )
+  }
+
+  function handlePrevEpisode() {
+    if (currentEpisode?.number === 1) return
+
+    router.push(
+      `/watch/${animeId}/${animeId}-episode-${
+        Number(currentEpisode?.number) - 1
+      }`
+    )
+  }
 
   useEffect(() => {
     if (!sourcesPromise) return
@@ -54,6 +111,10 @@ export function Watch({ sourcesPromise, animeId }: WatchProps) {
       playbackRate: 1,
     })
       .use(plugins)
+      .on("ended", () => {
+        handleNextEpisode()
+      })
+      .on("aut")
       .create() as Player<Ctx>
 
     return () => {
@@ -100,13 +161,18 @@ export function Watch({ sourcesPromise, animeId }: WatchProps) {
       .catch((err) => console.log(err))
   }, [sources, playerRef.current])
 
-  useEffect(() => {
-    lst.current = lastEpisode as unknown as undefined
-  }, [lastEpisode])
-
   return (
     <>
-      <div id="oplayer" className="w-full bg-secondary" />
+      <AspectRatio ratio={16 / 9}>
+        <div id="oplayer" className="w-full bg-secondary" />
+      </AspectRatio>
+      <Server
+        nextEpisode={handleNextEpisode}
+        prevEpisode={handlePrevEpisode}
+        isPrevEpisode={isPrevEpisode}
+        isNextEpisode={isNextEpisode}
+        currentEpisodeIndex={Number(currentEpisodeIndex) + 1}
+      />
     </>
   )
 }

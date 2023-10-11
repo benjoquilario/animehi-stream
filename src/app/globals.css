@@ -23,7 +23,6 @@
     --border: 215 27.9% 16.9%;
     --input: 215 27.9% 16.9%;
     --ring: 263.4 70% 50.4%;
-    --radius: 0.3rem;
   }
 
   .dark {
@@ -110,4 +109,33 @@
   opacity: 1;
   background: #6a55fa;
   margin: 0;
+}
+
+#nprogress {
+  pointer-events: none !important;
+}
+
+#nprogress .bar {
+  background-color: #6d28d9 !important;
+  position: fixed !important;
+  z-index: 99999 !important;
+  top: 0 !important;
+  left: 0 !important;
+  width: 100% !important;
+  height: 3px !important;
+}
+
+#nprogress .peg {
+  display: block !important;
+  position: absolute !important;
+  right: 0px !important;
+  width: 100px !important;
+  height: 100% !important;
+  box-shadow:
+    0 0 10px #6d28d9,
+    0 0 5px #6d28d9 !important;
+  opacity: 1 !important;
+  -webkit-transform: rotate(3deg) translate(0px, -4px) !important;
+  -ms-transform: rotate(3deg) translate(0px, -4px) !important;
+  transform: rotate(3deg) translate(0px, -4px) !important;
 }

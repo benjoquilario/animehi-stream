@@ -4,6 +4,7 @@ import { Inter as FontSans, Outfit } from "next/font/google"
 import { cn } from "@/lib/utils"
 import ThemeProvider from "@/components/theme-provider"
 import Script from "next/script"
+import NextTopLoader from "nextjs-toploader"
 
 const fontSans = Outfit({
   subsets: ["latin"],
@@ -26,6 +27,7 @@ export default function RootLayout({
         className={cn("min-h-screen font-sans antialiased", fontSans.variable)}
       >
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+          <NextTopLoader height={4} color="#6d28d9" />
           {children}
         </ThemeProvider>
         <Script

@@ -34,7 +34,7 @@ export async function GET(req: Request) {
 
   const recents = await response.json()
 
-  const stringifyResult = JSON.stringify(recents)
+  // const stringifyResult = JSON.stringify(recents)
   // await redis.setex("recents", 3600, stringifyResult)
   return NextResponse.json(recents)
 }
