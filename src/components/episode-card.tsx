@@ -38,7 +38,7 @@ export default function EpisodeCard({ data }: EpisodeCardProps) {
           </div>
         </div>
         <Link
-          href={`/watch/${data.id}/${data.episodeId}`}
+          href={`/watch/${data.id}/${data.episodeId}/${data.episodeNumber}`}
           aria-label={data.episodeId}
           className="absolute inset-0 flex items-center justify-center bg-black/60 text-primary opacity-0 transition-opacity hover:opacity-100"
           // href={`/watch/${data.anime.anilistId}/${data.anime.slug}/${data.number}`}

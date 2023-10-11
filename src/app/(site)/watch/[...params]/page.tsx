@@ -1,9 +1,12 @@
 import { animeInfo, popular, watch } from "@/lib/consumet"
 import Popular from "@/components/popular"
-import { Watch as VideoPlayer } from "@/components/player/watch"
+import { OPlayer } from "@/components/player/oplayer"
 import { AspectRatio } from "@/components/ui/aspect-ratio"
-import Episodes from "@/components/player/episodes"
+import Episodes from "@/components/episode/episodes"
 import Server from "@/components/server"
+import { Episode } from "types/types"
+import Details from "@/components/details"
+import Sharethis from "@/components/sharethis"
 
 type Params = {
   params: {
@@ -12,7 +15,7 @@ type Params = {
 }
 
 export default async function Watch({ params: { params } }: Params) {
-  const [animeId, episodeId] = params as string[]
+  const [animeId, episodeId, episodeNumber] = params as string[]
 
   const [animeSettled, popularSettled] = await Promise.allSettled([
     animeInfo(animeId),
@@ -31,19 +34,26 @@ export default async function Watch({ params: { params } }: Params) {
       <div className="relative flex w-full max-w-full flex-col">
         <div className="flex flex-col md:space-x-4 xl:flex-row">
           <div className="mt-5 flex-1">
-            <AspectRatio ratio={16 / 9}>
-              <VideoPlayer animeId={animeId} sourcesPromise={sourcesPromise} />
-            </AspectRatio>
-            <Server />
+            <OPlayer
+              animeId={animeId}
+              sourcesPromise={sourcesPromise}
+              episodeNumber={episodeNumber}
+              episodeId={episodeId}
+              episodes={animeResponse?.episodes}
+            />
             {animeResponse ? (
-              <Episodes
-                animeId={animeId}
-                fullEpisodes={animeResponse.episodes}
-                episodeId={episodeId}
-              />
+              <>
+                <Episodes
+                  animeId={animeId}
+                  fullEpisodes={animeResponse.episodes}
+                  episodeId={episodeId}
+                />
+                <Details data={animeResponse} />
+              </>
             ) : (
               <div>Loading Episodes</div>
             )}
+            <Sharethis />
           </div>
 
           <Popular popularAnime={popularAnime?.results} />

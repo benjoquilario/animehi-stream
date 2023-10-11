@@ -8,6 +8,7 @@ import { Button, buttonVariants } from "../ui/button"
 import { ScrollArea } from "../ui/scroll-area"
 import Link from "next/link"
 import { Input } from "../ui/input"
+import { Badge } from "../ui/badge"
 
 type EpisodesProps = {
   fullEpisodes: Episode[]
@@ -28,7 +29,9 @@ export default function Episodes({
   return (
     <div className="mt-4">
       <div className="mb-2 flex items-center justify-between">
-        <h3>Episode List</h3>
+        <h3>
+          Episode List <Badge>{fullEpisodes.length}</Badge>
+        </h3>
         <div>
           <Input type="text" placeholder="ep. number" />
         </div>
@@ -36,7 +39,7 @@ export default function Episodes({
       <ScrollArea
         className={cn(
           "h-[25rem] max-h-[25rem] w-full rounded-md",
-          fullEpisodes.length > 18 ? "h-[25rem]" : "h-[10rem]"
+          fullEpisodes.length > 18 ? "h-[25rem]" : "h-[7rem]"
         )}
       >
         <div className="episode-grid relative py-3 pr-3">
@@ -49,7 +52,7 @@ export default function Episodes({
                   "border-l-2 border-primary",
                   currentEpisode?.number === episode.number
                     ? "!bg-primary"
-                    : "!bg-secondary"
+                    : "!hover:bg-secondary/80 !bg-secondary"
                 ),
               })}
               href={`/watch/${animeId}/${episode.id}`}

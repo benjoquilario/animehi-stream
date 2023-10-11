@@ -14,7 +14,7 @@ export default function SiteHeader() {
             <div className="relative h-[20px] w-[20px] md:h-[24px] md:w-[24px]">
               <Image fill src="/animehi.svg" alt="animehi" priority />
             </div>
-            <span className="2xl:[30px] text-sm font-semibold uppercase md:text-[20px]">
+            <span className="text-sm font-semibold uppercase md:text-[20px] 2xl:text-[30px]">
               nimeHi
             </span>
           </div>

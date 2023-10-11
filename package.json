@@ -25,6 +25,7 @@
     "@types/node": "20.6.0",
     "@types/react": "18.2.21",
     "@types/react-dom": "18.2.7",
+    "@vidstack/react": "^0.6.13",
     "artplayer": "^5.0.9",
     "artplayer-plugin-hls-quality": "^2.0.0",
     "class-variance-authority": "^0.7.0",
@@ -33,6 +34,7 @@
     "ioredis": "^5.3.2",
     "next": "13.5.3",
     "next-themes": "^0.2.1",
+    "nextjs-toploader": "^1.4.2",
     "rate-limiter-flexible": "^3.0.0",
     "react": "18.2.0",
     "react-dom": "18.2.0",
@@ -42,6 +44,7 @@
     "tailwind-merge": "^1.14.0",
     "tailwindcss-animate": "^1.0.7",
     "typescript": "5.2.2",
+    "vidstack": "^0.6.13",
     "zustand": "4.4.1"
   },
   "devDependencies": {
