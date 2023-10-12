@@ -10,6 +10,7 @@
     "preview": "next build && next start"
   },
   "dependencies": {
+    "@consumet/extensions": "^1.5.2",
     "@oplayer/core": "^1.2.31",
     "@oplayer/hls": "^1.2.23",
     "@oplayer/plugins": "^1.0.8",
@@ -25,6 +26,8 @@
     "@types/node": "20.6.0",
     "@types/react": "18.2.21",
     "@types/react-dom": "18.2.7",
+    "@upstash/ratelimit": "^0.4.4",
+    "@vercel/kv": "^0.2.3",
     "@vidstack/react": "^0.6.13",
     "artplayer": "^5.0.9",
     "artplayer-plugin-hls-quality": "^2.0.0",

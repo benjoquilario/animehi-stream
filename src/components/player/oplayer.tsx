@@ -64,8 +64,6 @@ export function OPlayer({
     [currentEpisode]
   )
 
-  console.log(isNextEpisode, isPrevEpisode)
-
   const currentEpisodeIndex = useMemo(
     () => episodes?.findIndex((episode) => episode.id === episodeId),
     [episodes, episodeId]

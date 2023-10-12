@@ -1,12 +1,10 @@
 import { animeInfo, popular, watch } from "@/lib/consumet"
 import Popular from "@/components/popular"
 import { OPlayer } from "@/components/player/oplayer"
-import { AspectRatio } from "@/components/ui/aspect-ratio"
 import Episodes from "@/components/episode/episodes"
-import Server from "@/components/server"
-import { Episode } from "types/types"
 import Details from "@/components/details"
 import Sharethis from "@/components/sharethis"
+import { mediaInfoQuery } from "@/lib/graphql"
 
 type Params = {
   params: {

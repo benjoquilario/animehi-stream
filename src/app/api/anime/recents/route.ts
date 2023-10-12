@@ -1,40 +1,42 @@
 import { NextResponse } from "next/server"
 import { url } from "@/lib/consumet"
-import { redis, rateLimiterRedis } from "@/lib/redis"
+import { kv } from "@vercel/kv"
+import { Ratelimit } from "@upstash/ratelimit"
 import { headers } from "next/headers"
 
 export async function GET(req: Request) {
-  // let cachedVal
+  let cachedVal
+  if (kv) {
+    const ipAddress = headers().get("x-forwarded-for")
+    const ratelimit = new Ratelimit({
+      redis: kv,
+      limiter: Ratelimit.fixedWindow(50, "30 s"),
+    })
+    const { success } = await ratelimit.limit(ipAddress ?? "anonymous")
 
-  // if (redis) {
-  //   try {
-  //     const ipAddress = headers().get("x-forwarded-for")
-  //     await rateLimiterRedis.consume(ipAddress)
-  //   } catch (error) {
-  //     return NextResponse.json(
-  //       {
-  //         error: `Too Many Requests, retry after`,
-  //       },
-  //       { status: 429 }
-  //     )
-  //   }
-  //   cachedVal = await redis.get("recents")
-  // }
+    if (!success) {
+      return "You have reached your request limit please try again."
+    }
 
-  // if (cachedVal) {
-  //   console.log("ANIME RECENTS HIT")
-  //   return new Response(cachedVal)
-  // }
+    cachedVal = await kv.get("recents")
+  }
 
-  const response = await fetch(`${url}/recent-episodes`, {
-    next: { revalidate: 60 },
-  })
+  if (cachedVal) {
+    console.log("recents anime hit")
+
+    return NextResponse.json(cachedVal)
+  }
+
+  const response = await fetch(`${url}/recent-episodes`)
 
   if (!response.ok) throw new Error("Failed to fetch recent episodes.")
 
   const recents = await response.json()
 
-  // const stringifyResult = JSON.stringify(recents)
-  // await redis.setex("recents", 3600, stringifyResult)
+  if (recents) {
+    const stringifyResult = JSON.stringify(recents)
+    await kv.setex("recents", 60 * 60 * 2, stringifyResult)
+  }
+
   return NextResponse.json(recents)
 }

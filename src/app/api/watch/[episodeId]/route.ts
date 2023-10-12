@@ -2,49 +2,34 @@ import { url } from "@/lib/consumet"
 import { redis, rateLimiterRedis } from "@/lib/redis"
 import { NextResponse } from "next/server"
 import { headers } from "next/headers"
+import { kv } from "@vercel/kv"
+import { Ratelimit } from "@upstash/ratelimit"
 
 export async function GET(
   req: Request,
   { params }: { params: { episodeId: string } }
 ) {
-  const headersList = headers()
-  const referer = headersList.get("referer")
   const episodeId = params.episodeId
 
-  // let cachedVal
+  if (kv) {
+    const ipAddress = headers().get("x-forwarded-for")
+    const ratelimit = new Ratelimit({
+      redis: kv,
+      limiter: Ratelimit.fixedWindow(50, "30 s"),
+    })
+    const { success } = await ratelimit.limit(ipAddress ?? "anonymous")
 
-  // if (redis) {
-  //   try {
-  //     const ipAddress = headers().get("x-forwarded-for")
-  //     await rateLimiterRedis.consume(ipAddress)
-  //   } catch (error) {
-  //     return NextResponse.json(
-  //       {
-  //         error: `Too Many Requests, retry after`,
-  //       },
-  //       { status: 429 }
-  //     )
-  //   }
-  //   cachedVal = await redis.get(episodeId)
-  // }
+    if (!success) {
+      return "You have reached your request limit please try again."
+    }
+  }
 
-  // if (cachedVal) {
-  //   console.log("Watch Cached Hit")
-  //   return new Response(cachedVal)
-  // }
-
-  const response = await fetch(`${url}/watch/${episodeId}`, {
-    next: { revalidate: 60 }, // Revalidate every 60 seconds
-  })
+  const response = await fetch(`${url}/watch/${episodeId}`)
 
   if (!response.ok) throw new Error("Failed to fetch anime informations")
   const watch = await response.json()
 
-  const watchReferer = watch.headers.Referer
-
-  const stringifyResult = JSON.stringify(watch)
-
-  // await redis.setex(episodeId, 3600, stringifyResult)
+  // const watchReferer = watch.headers.Referer
 
   return NextResponse.json(watch)
 }
