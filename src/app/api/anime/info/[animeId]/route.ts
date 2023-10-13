@@ -1,51 +1,49 @@
 import { NextResponse } from "next/server"
-import { animeInfo, url } from "@/lib/consumet"
-import { redis, rateLimiterRedis } from "@/lib/redis"
+import { url } from "@/lib/consumet"
 import { headers } from "next/headers"
+import { kv } from "@vercel/kv"
+import { Ratelimit } from "@upstash/ratelimit"
 
 export async function GET(
   req: Request,
   { params }: { params: { animeId: string } }
 ) {
   const animeId = params.animeId
-  // let cachedVal
+  let cachedVal
 
   if (!animeId)
     return NextResponse.json("Missing animeId for /anime/info", { status: 422 })
 
-  // if (redis) {
-  //   try {
-  //     const ipAddress = headers().get("x-forwarded-for")
-  //     await rateLimiterRedis.consume(ipAddress)
-  //   } catch (error) {
-  //     return NextResponse.json(
-  //       {
-  //         error: `Too Many Requests, retry after`,
-  //       },
-  //       { status: 429 }
-  //     )
-  //   }
-  //   cachedVal = await redis.get(animeId)
-  // }
+  if (kv) {
+    const ipAddress = headers().get("x-forwarded-for")
+    const ratelimit = new Ratelimit({
+      redis: kv,
+      limiter: Ratelimit.fixedWindow(50, "30 s"),
+    })
 
-  // if (cachedVal) {
-  //   console.log("ANIME CACHE HIT")
+    const { success } = await ratelimit.limit(ipAddress ?? "anonymous")
 
-  //   return new Response(cachedVal)
-  // }
+    if (!success) {
+      return "You have reached your request limit please try again."
+    }
 
-  const response = await fetch(`${url}/info/${animeId}`, {
-    next: { revalidate: 60 }, // Revalidate every 60 seconds
-  })
+    cachedVal = await kv.get(animeId)
+  }
+
+  if (cachedVal) {
+    return NextResponse.json(cachedVal)
+  }
+
+  const response = await fetch(`${url}/info/${animeId}`)
 
   if (!response.ok) throw new Error("Failed to fetch anime information")
 
   const anime = await response.json()
 
-  // if (anime) {
-  //   const stringifyResult = JSON.stringify(anime)
-  //   await redis.setex(animeId, 3600, stringifyResult)
-  // }
+  if (anime) {
+    const stringifyResult = JSON.stringify(anime)
+    await kv.setex(animeId, 60 * 60 * 2, stringifyResult)
+  }
 
   return NextResponse.json(anime)
 }

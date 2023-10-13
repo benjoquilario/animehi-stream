@@ -21,9 +21,7 @@ export async function recent() {
 }
 
 export async function popular() {
-  const response = await fetch(`${publicUrl}/api/anime/trending`, {
-    cache: "no-cache",
-  })
+  const response = await fetch(`${publicUrl}/api/anime/trending`)
 
   if (!response.ok) throw new Error("Failed to fetch top airing")
 
@@ -32,7 +30,7 @@ export async function popular() {
 
 export async function animeInfo(animeId: string) {
   const response = await fetch(`${publicUrl}/api/anime/info/${animeId}`, {
-    cache: "no-cache",
+    next: { revalidate: 5 * 60 },
   })
 
   if (!response.ok) throw new Error("Failed to fetch anime informations")
