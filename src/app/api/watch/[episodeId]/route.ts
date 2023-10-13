@@ -11,25 +11,21 @@ export async function GET(
 ) {
   const episodeId = params.episodeId
 
-  if (kv) {
-    const ipAddress = headers().get("x-forwarded-for")
-    const ratelimit = new Ratelimit({
-      redis: kv,
-      limiter: Ratelimit.fixedWindow(50, "30 s"),
-    })
-    const { success } = await ratelimit.limit(ipAddress ?? "anonymous")
+  const ipAddress = headers().get("x-forwarded-for")
+  const ratelimit = new Ratelimit({
+    redis: kv,
+    limiter: Ratelimit.slidingWindow(20, "20 s"),
+  })
+  const { success } = await ratelimit.limit(ipAddress ?? "anonymous")
 
-    if (!success) {
-      return "You have reached your request limit please try again."
-    }
+  if (success) {
+    const response = await fetch(`${url}/watch/${episodeId}`)
+
+    if (!response.ok) throw new Error("Failed to fetch anime informations")
+    const watch = await response.json()
+
+    // const watchReferer = watch.headers.Referer
+
+    return NextResponse.json(watch)
   }
-
-  const response = await fetch(`${url}/watch/${episodeId}`)
-
-  if (!response.ok) throw new Error("Failed to fetch anime informations")
-  const watch = await response.json()
-
-  // const watchReferer = watch.headers.Referer
-
-  return NextResponse.json(watch)
 }
