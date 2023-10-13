@@ -14,36 +14,32 @@ export async function GET(
   if (!animeId)
     return NextResponse.json("Missing animeId for /anime/info", { status: 422 })
 
-  if (kv) {
-    const ipAddress = headers().get("x-forwarded-for")
-    const ratelimit = new Ratelimit({
-      redis: kv,
-      limiter: Ratelimit.fixedWindow(50, "30 s"),
-    })
+  const ipAddress = headers().get("x-forwarded-for")
+  const ratelimit = new Ratelimit({
+    redis: kv,
+    limiter: Ratelimit.slidingWindow(20, "20 s"),
+  })
 
-    const { success } = await ratelimit.limit(ipAddress ?? "anonymous")
+  const { success } = await ratelimit.limit(ipAddress ?? "anonymous")
 
-    if (!success) {
-      return "You have reached your request limit please try again."
+  if (success) {
+    cachedVal = await kv.get(animeId)
+
+    if (cachedVal) {
+      return NextResponse.json(cachedVal)
     }
 
-    cachedVal = await kv.get(animeId)
+    const response = await fetch(`${url}/info/${animeId}`)
+
+    if (!response.ok) throw new Error("Failed to fetch anime information")
+
+    const anime = await response.json()
+
+    if (anime) {
+      const stringifyResult = JSON.stringify(anime)
+      await kv.setex(animeId, 60 * 60 * 3, stringifyResult)
+    }
+
+    return NextResponse.json(anime)
   }
-
-  if (cachedVal) {
-    return NextResponse.json(cachedVal)
-  }
-
-  const response = await fetch(`${url}/info/${animeId}`)
-
-  if (!response.ok) throw new Error("Failed to fetch anime information")
-
-  const anime = await response.json()
-
-  if (anime) {
-    const stringifyResult = JSON.stringify(anime)
-    await kv.setex(animeId, 60 * 60 * 2, stringifyResult)
-  }
-
-  return NextResponse.json(anime)
 }
