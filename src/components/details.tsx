@@ -1,3 +1,5 @@
+"use client"
+
 import Image from "next/image"
 import { AnimeInfoResponse } from "types/types"
 
@@ -7,14 +9,14 @@ type DetailsProps = {
 
 const Details = ({ data }: DetailsProps) => {
   return (
-    <div className="mt-4 w-full">
+    <div className="mb-3 mt-4 w-full">
       <div className="flex gap-4">
         <div className="w-40">
           <div className="relative h-56 w-full rounded-md">
             <Image
               className="rounded-md"
-              fill
-              style={{ objectFit: "cover" }}
+              width={250}
+              height={400}
               src={data.image}
               alt={data.title}
             />
@@ -43,7 +45,7 @@ const Details = ({ data }: DetailsProps) => {
               </div>
               <div>
                 <span>
-                  Total Episodes:{" "}
+                  Genres:{" "}
                   {data.genres.map((genre) => (
                     <span key={genre} className="text-primary">
                       {genre},

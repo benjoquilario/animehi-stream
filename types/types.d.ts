@@ -41,6 +41,14 @@ interface Episode {
   url: string
 }
 
+interface Search {
+  id: string
+  title: string
+  image: string
+  releaseDate?: string // or null
+  subOrDub: string // or "dub"
+}
+
 interface SourcesResponse {
   headers?: {
     Referer: string

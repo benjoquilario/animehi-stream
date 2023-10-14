@@ -52,7 +52,7 @@ export default function Episodes({
                   "border-l-2 border-primary",
                   currentEpisode?.number === episode.number
                     ? "!bg-primary"
-                    : "!hover:bg-secondary/80 !bg-secondary"
+                    : "!bg-secondary hover:bg-secondary/80"
                 ),
               })}
               href={`/watch/${animeId}/${episode.id}`}

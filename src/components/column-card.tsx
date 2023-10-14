@@ -1,5 +1,5 @@
 import React from "react"
-import Image from "next/image"
+// import Image from "next/image"
 import Link from "next/link"
 import { cn } from "@/lib/utils"
 import type { Popular } from "types/types"
@@ -24,13 +24,11 @@ export default function Column({ className, data, rank }: ColumnProps) {
 
       <div className="w-12 shrink-0">
         <div className="relative h-[72px] w-[48px] rounded-sm">
-          <Image
-            sizes="(max-width: 768px) 100vw,
-                          (max-width: 1200px) 50vw,
-                          33vw"
+          <img
             src={data.image}
             alt={data.title}
-            fill
+            width={48}
+            height={72}
             style={{ objectFit: "cover" }}
           />
         </div>

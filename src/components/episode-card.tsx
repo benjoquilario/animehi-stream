@@ -1,5 +1,5 @@
 import Link from "next/link"
-import Image from "next/image"
+// import Image from "next/image"
 import { PlayIcon } from "@radix-ui/react-icons"
 import type { RecentEpisode } from "types/types"
 import { cn } from "@/lib/utils"
@@ -26,14 +26,12 @@ export default function EpisodeCard({ data }: EpisodeCardProps) {
         </div>
         <div className="absolute h-full w-full">
           <div className="relative h-full w-full">
-            <Image
+            <img
               style={{ objectFit: "cover" }}
-              fill
               src={data.image}
               alt={data.title}
-              sizes="(max-width: 768px) 100vw,
-                          (max-width: 1200px) 50vw,
-                          33vw"
+              width={180}
+              height={200}
             />
           </div>
         </div>

@@ -3,12 +3,13 @@ import type {
   ConsumetResponse,
   Popular,
   RecentEpisode,
+  Search,
   SourcesResponse,
 } from "types/types"
 
 export const url = "https://api.consumet.org/anime/gogoanime"
 
-const publicUrl = process.env.NEXT_PUBLIC_APP_URL
+export const publicUrl = process.env.NEXT_PUBLIC_APP_URL
 
 export async function recent() {
   const response = await fetch(`${publicUrl}/api/anime/recents`, {
@@ -46,4 +47,18 @@ export async function watch(episodeId: string) {
   if (!response.ok) throw new Error("Failed to fetch anime informations")
 
   return (await response.json()) as SourcesResponse
+}
+
+export async function search({
+  query,
+  page = 1,
+}: {
+  query: string
+  page?: number
+}) {
+  const response = await fetch(`${url}/${query}?page=${page}`)
+
+  if (!response.ok) throw new Error("Failed to fetch search.")
+
+  return (await response.json()) as ConsumetResponse<Search>
 }
