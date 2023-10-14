@@ -1,5 +1,8 @@
+"use client"
+
 import type { Popular } from "types/types"
 import Column from "./column-card"
+import { motion } from "framer-motion"
 
 type PopularProps = {
   popularAnime?: Popular[]
@@ -7,7 +10,14 @@ type PopularProps = {
 
 export default function Popular({ popularAnime }: PopularProps) {
   return (
-    <div className="w-80 pt-5">
+    <motion.div
+      key="trending"
+      initial={{ y: 20, opacity: 0 }}
+      whileInView={{ y: 0, opacity: 1 }}
+      transition={{ duration: 0.5 }}
+      viewport={{ once: true }}
+      className="w-80 pt-5"
+    >
       <div className="block w-full">
         <h3 className="mb-2 pr-4 text-2xl font-semibold">Trending Anime</h3>
         <div className="bg-background">
@@ -23,6 +33,6 @@ export default function Popular({ popularAnime }: PopularProps) {
           </ul>
         </div>
       </div>
-    </div>
+    </motion.div>
   )
 }
