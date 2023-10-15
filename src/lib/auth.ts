@@ -45,7 +45,6 @@ export const authOptions: NextAuthOptions = {
         params: {
           scope: "",
           response_type: "code",
-          redirect_uri: "https://anilist.co/api/v2/oauth/pin",
         },
       },
       token: "https://anilist.co/api/v2/oauth/token",
