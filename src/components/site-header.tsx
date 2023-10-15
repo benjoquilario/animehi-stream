@@ -37,16 +37,16 @@ export default function SiteHeader() {
           <Combobox />
 
           <Button
-            onClick={() => {
-              signIn("anilist").then(() => {
-                console.log("Login Successfull")
-              })
-            }}
+            // onClick={() => {
+            //   signIn("anilist").then(() => {
+            //     console.log("Login Successfull")
+            //   })
+            // }}
             size="sm"
           >
             Sign in
           </Button>
-          <Button onClick={() => signOut()}>Log out</Button>
+          {/* <Button onClick={() => signOut()}>Log out</Button> */}
         </div>
       </div>
     </header>
