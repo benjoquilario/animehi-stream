@@ -7,6 +7,8 @@ import type {
   SourcesResponse,
 } from "types/types"
 
+// import { ISearch,  } from "@consumet/extensions/dist/models/types"
+
 export const url = "https://api.consumet.org/anime/gogoanime"
 
 export const publicUrl = process.env.NEXT_PUBLIC_APP_URL

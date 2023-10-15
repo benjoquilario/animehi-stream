@@ -22,13 +22,13 @@ export default function SiteFooter() {
                   </span>
                 </div>
               </Link>
-              <p className="mt-1 text-xs italic text-muted-foreground/70">
+              <p className="mt-1 max-w-md text-xs italic text-muted-foreground/70">
                 This site does not store any files on our server, we only linked
                 to the media which is hosted on 3rd party services.
               </p>
             </div>
             <nav className="" aria-label="others links">
-              <ul>
+              <ul className="flex flex-col gap-1">
                 <li className="text-muted-foreground/80 hover:text-muted-foreground">
                   <Link href="/popular">This Season</Link>
                 </li>
@@ -48,7 +48,8 @@ export default function SiteFooter() {
 
           <div className="xlitems-center mb-1 flex flex-col items-start justify-between xl:flex-row">
             <p className="text-xs text-muted-foreground/70 xl:text-sm">
-              © 2023 animehi | Website Made by Benjo Quilario
+              © 2023 animehi. All Right Reserved | Made by Benjo Quilario
+              Powered by Anilist and Consumet API for video sources.
             </p>
             <div className="flex items-center gap-2">
               <Link href="/">

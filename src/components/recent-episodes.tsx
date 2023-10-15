@@ -11,6 +11,8 @@ type RecentEpisodesProps = {
 import EpisodeCard from "./episode-card"
 
 const RecentEpisodes = ({ recentEpisodes }: RecentEpisodesProps) => {
+  console.log(recentEpisodes)
+
   return (
     <div className="flex-1">
       <div className="mt-4 flex flex-col items-start rounded-md py-2">
@@ -35,7 +37,7 @@ const RecentEpisodes = ({ recentEpisodes }: RecentEpisodesProps) => {
               key={data.episodeId}
               className="col-span-1 overflow-hidden rounded-md"
             >
-              <EpisodeCard data={data} />
+              <EpisodeCard animeResult={data} />
             </li>
           ))}
         </ul>
