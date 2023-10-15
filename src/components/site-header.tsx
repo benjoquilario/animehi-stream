@@ -1,9 +1,9 @@
+"use client"
+
 import Link from "next/link"
 import Image from "next/image"
 import { Button, buttonVariants } from "./ui/button"
-import { Badge } from "./ui/badge"
-import { AiOutlineSearch } from "react-icons/ai"
-import ThemeToggle from "./theme-toggle"
+import { signIn, signOut } from "next-auth/react"
 import Combobox from "./combobox"
 
 export default function SiteHeader() {
@@ -35,9 +35,18 @@ export default function SiteHeader() {
         </nav>
         <div className="flex items-center space-x-3">
           <Combobox />
-          <Link href="/" className={buttonVariants({ size: "sm" })}>
+
+          <Button
+            onClick={() => {
+              signIn("anilist").then(() => {
+                console.log("Login Successfull")
+              })
+            }}
+            size="sm"
+          >
             Sign in
-          </Link>
+          </Button>
+          <Button onClick={() => signOut()}>Log out</Button>
         </div>
       </div>
     </header>

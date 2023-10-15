@@ -2,8 +2,6 @@ import { NextResponse } from "next/server"
 import { url } from "@/lib/consumet"
 import { redis, rateLimiterRedis } from "@/lib/redis"
 import { headers } from "next/headers"
-import { kv } from "@vercel/kv"
-import { Ratelimit } from "@upstash/ratelimit"
 
 export async function GET(
   req: Request,
@@ -14,14 +12,6 @@ export async function GET(
 
   if (!animeId)
     return NextResponse.json("Missing animeId for /anime/info", { status: 422 })
-
-  // const ipAddress = headers().get("x-forwarded-for")
-  // const ratelimit = new Ratelimit({
-  //   redis: kv,
-  //   limiter: Ratelimit.slidingWindow(20, "20 s"),
-  // })
-
-  // const { success } = await ratelimit.limit(ipAddress ?? "anonymous")
 
   if (redis) {
     try {
