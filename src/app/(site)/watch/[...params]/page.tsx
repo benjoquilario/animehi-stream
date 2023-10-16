@@ -5,6 +5,7 @@ import Episodes from "@/components/episode/episodes"
 import Details from "@/components/details"
 import Sharethis from "@/components/sharethis"
 import type { Metadata } from "next"
+import ArtPlayerComponent from "@/components/player/art-player"
 
 type Params = {
   params: {
@@ -89,6 +90,7 @@ export default async function Watch({ params: { params } }: Params) {
               episodeId={episodeId}
               episodes={animeResponse?.episodes}
             />
+            {/* <ArtPlayerComponent sourcesPromise={sourcesPromise} /> */}
             {animeResponse ? (
               <>
                 <Episodes
