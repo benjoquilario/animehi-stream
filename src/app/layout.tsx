@@ -13,6 +13,7 @@ const fontSans = Outfit({
 })
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://animehi-stream.vercel.app"),
   title: {
     default: "AnimeHi - Watch animes without ads",
     template: `%s - AnimeHi`,

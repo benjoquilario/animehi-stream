@@ -16,7 +16,7 @@ export default function Popular({ popularAnime }: PopularProps) {
       whileInView={{ y: 0, opacity: 1 }}
       transition={{ duration: 0.5 }}
       viewport={{ once: true }}
-      className="w-80 pt-5"
+      className="w-full pt-5 md:w-80"
     >
       <div className="block w-full">
         <h3 className="mb-2 pr-4 text-2xl font-semibold">Trending Anime</h3>
