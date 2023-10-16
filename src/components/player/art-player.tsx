@@ -41,7 +41,7 @@ const ArtPlayerComponent = ({ sourcesPromise }: WatchProps) => {
     setUrl(selectedSrc.url)
   }, [sources])
 
-  const option = {
+  const option: Option = {
     url: url,
     autoplay: true,
     autoSize: false,
@@ -54,6 +54,7 @@ const ArtPlayerComponent = ({ sourcesPromise }: WatchProps) => {
     pip: true,
     airplay: true,
     lock: true,
+    container: "",
   }
 
   function getInstance(art: Artplayer) {
