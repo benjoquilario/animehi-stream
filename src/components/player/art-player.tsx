@@ -6,56 +6,57 @@ import { type Player } from "artplayer/types/player"
 import type Artplayer from "artplayer/types/artplayer"
 import { VideoPlayer } from "./artplayer/art-player"
 import Option from "artplayer/types/option"
+import { AspectRatio } from "../ui/aspect-ratio"
 
 import type { Source, SourcesResponse } from "types/types"
 
 type WatchProps = {
   sourcesPromise: Promise<SourcesResponse | undefined>
+  data: SourcesResponse
 }
 
 import { notFound } from "next/navigation"
+import { useWatchStore } from "@/store"
 
-const ArtPlayerComponent = ({ sourcesPromise }: WatchProps) => {
-  const [url, setUrl] = useState("")
-  const [sources, setSources] = useState<Source[] | undefined>(undefined)
-
-  function getSelectedSrc(selectedQuality?: string): string {
-    const selectedSrc = sources?.find(
-      (src) => src.quality === selectedQuality
-    ) as Source
-    if (!selectedSrc) return ""
-
-    return selectedSrc.url
-  }
+const ArtPlayerComponent = ({ sourcesPromise, data }: WatchProps) => {
+  const [url, setUrl] = useWatchStore((store) => [store.url, store.setUrl])
+  const [sources, setSources] = useWatchStore((store) => [
+    store.sources,
+    store.setSources,
+  ])
+  const [isLoading, setIsLoading] = useState(false)
 
   useEffect(() => {
-    if (!sourcesPromise) return
+    function compiler() {
+      try {
+        setIsLoading(true)
+        if (!sourcesPromise) return
 
-    sourcesPromise.then((res) => (res ? setSources(res.sources) : notFound()))
+        sourcesPromise.then((res) =>
+          res ? setSources(res.sources) : notFound()
+        )
 
-    const selectedSrc = sources?.find(
-      (src) => src.quality === "default"
-    ) as Source
-    if (!selectedSrc) return
+        const selectedSrc = sources?.find(
+          (src) => src.quality === "default"
+        ) as Source
+        if (!selectedSrc) return
 
-    setUrl(selectedSrc.url)
+        setUrl(selectedSrc.url)
+        setIsLoading(false)
+      } catch (error) {
+        setIsLoading(false)
+      }
+    }
+
+    compiler()
+
+    return () => {
+      setSources(undefined)
+      setUrl("")
+    }
   }, [sources])
 
-  const option: Option = {
-    url: url,
-    autoplay: true,
-    autoSize: false,
-    fullscreen: true,
-    autoOrientation: true,
-    //  icons: icons,
-    setting: true,
-    screenshot: true,
-    hotkey: true,
-    pip: true,
-    airplay: true,
-    lock: true,
-    container: "",
-  }
+  console.log(sources)
 
   function getInstance(art: Artplayer) {
     art.on("video:ended", () => {
@@ -63,7 +64,20 @@ const ArtPlayerComponent = ({ sourcesPromise }: WatchProps) => {
     })
   }
 
-  return <VideoPlayer option={option} getInstance={getInstance} />
+  return (
+    <AspectRatio ratio={16 / 9}>
+      {url ? (
+        <div className="h-full w-full">
+          <VideoPlayer
+            sourcesPromise={sourcesPromise}
+            getInstance={getInstance}
+          />
+        </div>
+      ) : (
+        <div>Loading...</div>
+      )}
+    </AspectRatio>
+  )
 }
 
 export default ArtPlayerComponent

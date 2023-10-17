@@ -2,11 +2,13 @@ import { NextResponse } from "next/server"
 import { url } from "@/lib/consumet"
 import { redis, rateLimiterRedis } from "@/lib/redis"
 import { headers } from "next/headers"
+import { ANIME } from "@consumet/extensions"
 
 export async function GET(
   req: Request,
   { params }: { params: { animeId: string } }
 ) {
+  const gogo = new ANIME.Gogoanime()
   const animeId = params.animeId
   let cachedVal
 
@@ -31,11 +33,11 @@ export async function GET(
     return new Response(cachedVal)
   }
 
-  const response = await fetch(`${url}/info/${animeId}`)
+  // const response = await fetch(`${url}/info/${animeId}`)
 
-  if (!response.ok) throw new Error("Failed to fetch anime information")
+  // if (!response.ok) throw new Error("Failed to fetch anime information")
 
-  const anime = await response.json()
+  const anime = await gogo.fetchAnimeInfo(animeId)
 
   if (anime) {
     const stringifyResult = JSON.stringify(anime)

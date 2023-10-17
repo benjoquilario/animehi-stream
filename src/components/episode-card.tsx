@@ -1,10 +1,7 @@
 import Link from "next/link"
 // import Image from "next/image"
-import { PlayIcon } from "@radix-ui/react-icons"
 import type { RecentEpisode } from "types/types"
-import { cn } from "@/lib/utils"
 import { BsFillPlayFill } from "react-icons/bs"
-import type { IAnimeResult } from "@consumet/extensions/dist/models/types"
 
 type EpisodeCardProps = {
   animeResult: RecentEpisode
@@ -37,7 +34,7 @@ export default function EpisodeCard({ animeResult }: EpisodeCardProps) {
           </div>
         </div>
         <Link
-          href={`/watch/${animeResult.id}/${animeResult.episodeId}`}
+          href={`/watch/${animeResult.id}/${animeResult.episodeId}/${animeResult.episodeNumber}`}
           aria-label={animeResult.episodeId}
           className="absolute inset-0 flex items-center justify-center bg-black/60 text-primary opacity-0 transition-opacity hover:opacity-100"
           // href={`/watch/${data.anime.anilistId}/${data.anime.slug}/${data.number}`}

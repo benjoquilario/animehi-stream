@@ -5,8 +5,10 @@ import { Ratelimit } from "@upstash/ratelimit"
 
 import { redis, rateLimiterRedis } from "@/lib/redis"
 import { headers } from "next/headers"
+import { ANIME } from "@consumet/extensions"
 
 export async function GET(req: Request) {
+  const gogo = new ANIME.Gogoanime()
   let cachedVal
 
   // const ipAddress = headers().get("x-forwarded-for")
@@ -35,13 +37,15 @@ export async function GET(req: Request) {
     return new Response(cachedVal)
   }
 
-  const response = await fetch(`${url}/recent-episodes`)
+  // const response = await fetch(`${url}/recent-episodes`)
 
-  if (!response.ok) throw new Error("Failed to fetch recent episodes.")
+  // if (!response.ok) throw new Error("Failed to fetch recent episodes.")
 
-  const recents = await response.json()
+  // const recents = await response.json()
+  const recents = await gogo.fetchRecentEpisodes()
 
   if (recents) {
+    console.log("MISS")
     const stringifyResult = JSON.stringify(recents)
     await redis.setex("recents", 60 * 60 * 3, stringifyResult)
   }

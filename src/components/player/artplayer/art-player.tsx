@@ -5,14 +5,24 @@ import Hls from "hls.js"
 import { useRef, useEffect } from "react"
 import Artplayer from "artplayer"
 import artplayerPluginHlsQuality from "artplayer-plugin-hls-quality"
+import { useWatchStore } from "@/store"
+import type { SourcesResponse } from "types/types"
+import { notFound } from "next/navigation"
 
 type ArtPlayerProps = {
-  option: Option
+  option?: Option
   getInstance: (...args: any) => void
+  sourcesPromise: Promise<SourcesResponse | undefined>
 }
 
-const VideoPlayer = ({ option, getInstance, ...rest }: ArtPlayerProps) => {
+const VideoPlayer = ({
+  option,
+  getInstance,
+  sourcesPromise,
+  ...rest
+}: ArtPlayerProps) => {
   const artRef = useRef<HTMLDivElement | null>(null)
+  const url = useWatchStore((store) => store.url)
 
   function playM3u8(video: HTMLMediaElement, url: string, art: any) {
     if (Hls.isSupported()) {
@@ -30,10 +40,23 @@ const VideoPlayer = ({ option, getInstance, ...rest }: ArtPlayerProps) => {
   }
 
   useEffect(() => {
+    if (!artRef.current) return
+
     const art = new Artplayer({
       ...option,
-      // @ts-expect-error
       container: artRef.current,
+      url: url,
+      autoplay: true,
+      autoSize: false,
+      fullscreen: true,
+      autoOrientation: true,
+      //  icons: icons,
+      setting: true,
+      screenshot: true,
+      hotkey: true,
+      pip: true,
+      airplay: true,
+      lock: true,
       type: "m3u8",
       customType: {
         m3u8: playM3u8,
@@ -64,7 +87,7 @@ const VideoPlayer = ({ option, getInstance, ...rest }: ArtPlayerProps) => {
     }
   }, [])
 
-  return <div ref={artRef} {...rest} />
+  return <div className="h-full" ref={artRef} {...rest} />
 }
 
 export { VideoPlayer }

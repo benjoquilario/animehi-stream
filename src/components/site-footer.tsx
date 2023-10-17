@@ -7,18 +7,21 @@ import ThemeToggle from "./theme-toggle"
 export default function SiteFooter() {
   return (
     <>
-      <footer className="flex w-full flex-col px-[3%]">
-        <Separator className="my-8" />
+      <footer className="mt-8 flex w-full flex-col bg-[#111827] px-[3%] pt-9">
         <div className="flex flex-col">
           <div className="mb-5 flex flex-col items-start justify-between gap-5 xl:flex-row xl:items-center">
             <div>
               <Link href="/">
                 <div className="flex">
-                  <div className="relative h-[20px] w-[20px] md:h-[24px] md:w-[24px]">
+                  <div className="relative h-[24px] w-[24px] md:h-[28px] md:w-[28px]">
                     <Image fill src="/animehi.svg" alt="animehi" priority />
                   </div>
-                  <span className="2xl:[30px] text-sm font-semibold uppercase md:text-[20px]">
-                    nimeHi
+                  <span className="text-base font-semibold uppercase md:text-[28px] 2xl:text-[32px]">
+                    nime
+                    <span className="text-[28px] font-extrabold md:text-[35px]">
+                      H
+                    </span>
+                    i
                   </span>
                 </div>
               </Link>
@@ -28,7 +31,7 @@ export default function SiteFooter() {
               </p>
             </div>
             <nav className="" aria-label="others links">
-              <ul className="flex flex-col gap-1">
+              <ul className="flex gap-3">
                 <li className="text-muted-foreground/80 hover:text-muted-foreground">
                   <Link href="/popular">This Season</Link>
                 </li>
@@ -48,8 +51,8 @@ export default function SiteFooter() {
 
           <div className="xlitems-center mb-1 flex flex-col items-start justify-between xl:flex-row">
             <p className="text-xs text-muted-foreground/70 xl:text-sm">
-              © 2023 animehi. All Right Reserved | Made by Benjo Quilario
-              Powered by Anilist and Consumet API for video sources.
+              © 2023 animehi. Made by Benjo Quilario Powered by Consumet API
+              for video sources.
             </p>
             <div className="flex items-center gap-2">
               <Link href="/">

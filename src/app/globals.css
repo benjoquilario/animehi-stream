@@ -139,3 +139,53 @@
   -ms-transform: rotate(3deg) translate(0px, -4px) !important;
   transform: rotate(3deg) translate(0px, -4px) !important;
 }
+
+#oplayer {
+  width: 100%;
+  aspect-ratio: 16/9;
+}
+
+.backward {
+  left: 25%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.forward {
+  right: 25%;
+  top: 50%;
+  transform: translate(50%, -50%);
+}
+
+.backward,
+.forward {
+  transition:
+    0.4s opacity,
+    0.4s visibility;
+}
+
+[data-ctrl-hidden="true"] .forward,
+[data-ctrl-hidden="true"] .backward {
+  visibility: hidden;
+  opacity: 0;
+}
+
+.backward,
+.forward {
+  width: 3em;
+  color: #fff;
+  position: absolute;
+  background: none;
+  outline: none;
+  border: none;
+}
+
+.backward:active svg {
+  transform: rotate(-45deg);
+  transition: 0.1s transform;
+}
+
+.forward:active svg {
+  transform: rotate(45deg);
+  transition: 0.1s transform;
+}

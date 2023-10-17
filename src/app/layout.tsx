@@ -5,6 +5,7 @@ import { cn } from "@/lib/utils"
 import ThemeProvider from "@/components/theme-provider"
 import Script from "next/script"
 import NextTopLoader from "nextjs-toploader"
+import { Toaster } from "@/components/ui/toaster"
 import AuthContext from "@/components/auth-context"
 
 const fontSans = Outfit({
@@ -73,11 +74,12 @@ export default function RootLayout({
         className={cn("min-h-screen font-sans antialiased", fontSans.variable)}
       >
         <AuthContext>
-          <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+          <ThemeProvider attribute="class" defaultTheme="dark" enableSystem>
             <NextTopLoader height={4} color="#6d28d9" />
             {children}
           </ThemeProvider>
         </AuthContext>
+        <Toaster />
         <Script
           type="text/javascript"
           src="https://platform-api.sharethis.com/js/sharethis.js#property=651ea0ee6ee9de001217ae58&product=inline-share-buttons"

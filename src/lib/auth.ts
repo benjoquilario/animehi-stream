@@ -1,9 +1,12 @@
 import type { DefaultSession } from "@auth/core/types"
 import { PrismaAdapter } from "@next-auth/prisma-adapter"
 import db from "./db"
+import bcrypt from "bcrypt"
 import type { NextAuthOptions } from "next-auth"
 import { publicUrl } from "./consumet"
 import { ApolloClient, InMemoryCache, gql } from "@apollo/client"
+import CredentialsProvider from "next-auth/providers/credentials"
+import { credentialsValidator } from "@/lib/validations/credentials"
 
 const defaultOptions = {
   watchQuery: {
@@ -34,6 +37,7 @@ declare module "next-auth" {
 }
 
 export const authOptions: NextAuthOptions = {
+  // @ts-expect-error // I'm using prisma accelerate
   adapter: PrismaAdapter(db),
   providers: [
     {
@@ -61,7 +65,43 @@ export const authOptions: NextAuthOptions = {
         }
       },
     },
+    CredentialsProvider({
+      name: "credentials",
+      credentials: {
+        email: { label: "email", type: "text" },
+        password: { label: "password", type: "password" },
+      },
+      async authorize(credentials) {
+        const cred = await credentialsValidator.parseAsync(credentials)
+        if (!cred.email || !cred?.password) {
+          throw new Error("Invalid Credentials")
+        }
+
+        const user = await db.user.findUnique({
+          where: {
+            email: cred.email,
+          },
+        })
+
+        if (!user || !user?.password) throw new Error("Invalid Credentials")
+
+        const isPasswordCorrect = await bcrypt.compare(
+          cred.password,
+          user.password
+        )
+
+        if (!isPasswordCorrect) throw new Error("Invalid credentials")
+
+        return {
+          id: user.id,
+          image: user.image,
+          email: user.email,
+          name: user.userName,
+        }
+      },
+    }),
   ],
+  debug: process.env.NODE_ENV === "development",
   secret: process.env.NEXTAUTH_SECRET,
   session: {
     //Sets the session to use JSON Web Token
@@ -72,7 +112,7 @@ export const authOptions: NextAuthOptions = {
       return { ...token, ...user }
     },
     async session({ session, token, user }) {
-      // @ts-expect-error
+      //@ts-ignore
       session.user = token
       return session
     },

@@ -55,7 +55,7 @@ export default function Episodes({
                     : "!bg-secondary hover:bg-secondary/80"
                 ),
               })}
-              href={`/watch/${animeId}/${episode.id}`}
+              href={`/watch/${animeId}/${episode.id}/${episode.number}`}
             >
               Ep. {episode.number}
             </Link>

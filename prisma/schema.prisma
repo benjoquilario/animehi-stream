@@ -16,10 +16,14 @@ model User {
   email           String? @unique
   emailVerified   DateTime?
   image           String?
-  hashedPassword  String?
+  password        String?
   createdAt       DateTime @default(now())
   updatedAt       DateTime @updatedAt
+  userName        String?
   sessions        Session[]
+  watchlists      Watchlist[]
+  continueWatching ContinueWatching[]
+  bookMarks       Bookmark[]
 
   accounts        Account[]
 }
@@ -44,10 +48,45 @@ model Account {
 }
 
 model Session {
-  id              String @id @default(auto()) @map("_id") @db.ObjectId
-  sessionToken String   @unique
-  userId       String @db.ObjectId
+  id           String     @id @default(auto()) @map("_id") @db.ObjectId
+  sessionToken String     @unique
+  userId       String     @db.ObjectId
   expires      DateTime
-  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user         User       @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
+model Watchlist {
+  id           String     @id @default(auto()) @map("_id") @db.ObjectId
+  animeId      String
+  image        String
+  title        String
+  episodeNumber Int?
+  episodeId    String?
+  createdAt    DateTime   @default(now())
+
+  userId       String     @db.ObjectId
+  user         User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Bookmark {
+
+  id           String     @id @default(auto()) @map("_id") @db.ObjectId
+  animeId      String
+  image        String
+  title        String
+
+  createdAt    DateTime   @default(now())
+  userId       String     @db.ObjectId
+  user         User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model ContinueWatching {
+  id           String     @id @default(auto()) @map("_id") @db.ObjectId
+  animeId      String
+  image        String
+  title        String
+  createdAt   DateTime @default(now())
+
+  userId       String     @db.ObjectId
+  user         User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+}

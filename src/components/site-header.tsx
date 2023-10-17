@@ -1,12 +1,13 @@
-"use client"
-
 import Link from "next/link"
 import Image from "next/image"
-import { Button, buttonVariants } from "./ui/button"
-import { signIn, signOut } from "next-auth/react"
 import Combobox from "./combobox"
+import AuthForm from "./auth-form"
+import { getSession } from "@/lib/session"
+import { getCurrentUser } from "@/lib/current-user"
 
-export default function SiteHeader() {
+export default async function SiteHeader() {
+  const session = await getCurrentUser()
+
   return (
     <header className="fixed left-0 top-0 z-[99999] h-[52px] w-full bg-background shadow-sm transition-all md:h-[64px] 2xl:h-[75px]">
       <div className="mx-auto flex h-[52px] w-full max-w-screen-2xl items-center justify-between gap-4 px-[2%] md:h-[64px] 2xl:h-[75px]">
@@ -35,17 +36,7 @@ export default function SiteHeader() {
         </nav>
         <div className="flex items-center space-x-3">
           <Combobox />
-
-          <Button
-            onClick={() => {
-              signIn("anilist").then(() => {
-                console.log("Login Successfull")
-              })
-            }}
-            size="sm"
-          >
-            Sign in
-          </Button>
+          <AuthForm />
           {/* <Button onClick={() => signOut()}>Log out</Button> */}
         </div>
       </div>

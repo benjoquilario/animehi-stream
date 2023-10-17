@@ -27,7 +27,7 @@ export default function Popular({ popularAnime }: PopularProps) {
                 key={data.id}
                 data={data}
                 rank={index + 1}
-                className="pl-14"
+                className="pl-2"
               />
             ))}
           </ul>

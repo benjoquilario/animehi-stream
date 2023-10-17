@@ -63,6 +63,15 @@ interface Source {
   quality: string
 }
 
+interface Bookmark {
+  id: string
+  image: string
+  createdAt: Date
+  animeId: string
+  title: string
+  userId: string
+}
+
 export interface EpisodesType {
   description: string
   id: string

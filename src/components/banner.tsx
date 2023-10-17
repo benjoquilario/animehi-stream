@@ -48,7 +48,7 @@ const Banner = () => {
                       {anime.description}
                     </p>
                     <Link
-                      href={`/watch/${anime.id}/${anime.episode}`}
+                      href={`/watch/${anime.id}/${anime.episode}/1`}
                       className={buttonVariants()}
                     >
                       <BsFillPlayFill className="h-6 w-6" />

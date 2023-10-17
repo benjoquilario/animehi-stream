@@ -4,28 +4,29 @@ import { NextResponse } from "next/server"
 import { headers } from "next/headers"
 import { kv } from "@vercel/kv"
 import { Ratelimit } from "@upstash/ratelimit"
+import { ANIME } from "@consumet/extensions"
 
 export async function GET(
   req: Request,
   { params }: { params: { episodeId: string } }
 ) {
+  const gogo = new ANIME.Gogoanime()
   const episodeId = params.episodeId
 
-  const ipAddress = headers().get("x-forwarded-for")
-  const ratelimit = new Ratelimit({
-    redis: kv,
-    limiter: Ratelimit.slidingWindow(20, "20 s"),
-  })
-  const { success } = await ratelimit.limit(ipAddress ?? "anonymous")
-
-  if (success) {
-    const response = await fetch(`${url}/watch/${episodeId}`)
-
-    if (!response.ok) throw new Error("Failed to fetch anime informations")
-    const watch = await response.json()
-
-    // const watchReferer = watch.headers.Referer
-
-    return NextResponse.json(watch)
+  if (redis) {
+    try {
+      const ipAddress = headers().get("x-forwarded-for")
+      await rateLimiterRedis.consume(ipAddress)
+    } catch (error) {
+      return NextResponse.json(`Too Many Requests, retry after`, {
+        status: 429,
+      })
+    }
   }
+
+  const watch = await gogo.fetchEpisodeSources(episodeId)
+
+  // const watchReferer = watch.headers.Referer
+
+  return NextResponse.json(watch)
 }

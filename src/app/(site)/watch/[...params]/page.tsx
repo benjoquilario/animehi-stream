@@ -6,6 +6,10 @@ import Details from "@/components/details"
 import Sharethis from "@/components/sharethis"
 import type { Metadata } from "next"
 import ArtPlayerComponent from "@/components/player/art-player"
+import { notFound } from "next/navigation"
+import { getSession } from "../../../../lib/session"
+import db from "@/lib/db"
+import Server from "@/components/server"
 
 type Params = {
   params: {
@@ -65,6 +69,9 @@ export async function generateMetadata({
 
 export default async function Watch({ params: { params } }: Params) {
   const [animeId, episodeId, episodeNumber] = params as string[]
+  const session = await getSession()
+
+  if (!animeId || !episodeId || !episodeNumber) notFound()
 
   const [animeSettled, popularSettled] = await Promise.allSettled([
     animeInfo(animeId),
@@ -76,7 +83,36 @@ export default async function Watch({ params: { params } }: Params) {
   const animeResponse =
     animeSettled.status === "fulfilled" ? animeSettled.value : null
 
+  if (!popularAnime || !animeResponse) notFound()
+
   const sourcesPromise = watch(episodeId)
+
+  if (session) {
+    try {
+      const isEpisodeIdExist = await db.watchlist.findFirst({
+        where: {
+          episodeId,
+        },
+      })
+
+      if (isEpisodeIdExist) throw new Error("Episode Already Exist")
+
+      if (animeResponse) {
+        await db.watchlist.create({
+          data: {
+            episodeId,
+            episodeNumber: Number(episodeNumber),
+            image: animeResponse.image,
+            title: animeResponse.title,
+            animeId,
+            userId: session.user.id,
+          },
+        })
+      }
+    } catch (error) {
+      console.log("Error", error)
+    }
+  }
 
   return (
     <div className="w-full px-[2%]">
@@ -84,13 +120,21 @@ export default async function Watch({ params: { params } }: Params) {
         <div className="flex flex-col md:space-x-4 xl:flex-row">
           <div className="mt-5 flex-1">
             <OPlayer
+              animeResult={animeResponse}
               animeId={animeId}
               sourcesPromise={sourcesPromise}
               episodeNumber={episodeNumber}
               episodeId={episodeId}
               episodes={animeResponse?.episodes}
-            />
-            {/* <ArtPlayerComponent sourcesPromise={sourcesPromise} /> */}
+              image={animeResponse?.image}
+            >
+              <Server
+                episodeId={episodeId}
+                animeResult={animeResponse}
+                episodes={animeResponse?.episodes}
+                animeId={animeId}
+              />
+            </OPlayer>
             {animeResponse ? (
               <>
                 <Episodes
