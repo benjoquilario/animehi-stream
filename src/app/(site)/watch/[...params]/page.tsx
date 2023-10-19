@@ -7,7 +7,6 @@ import Sharethis from "@/components/sharethis"
 import type { Metadata } from "next"
 import { notFound } from "next/navigation"
 import { getSession } from "../../../../lib/session"
-import db from "@/lib/db"
 import Server from "@/components/server"
 import { createViewCounter, createWatchlist, increment } from "@/app/actions"
 import { Suspense } from "react"
@@ -75,6 +74,7 @@ export default async function Watch({ params: { params } }: Params) {
   if (!animeId || !episodeNumber) notFound()
 
   const animeResponse = await animeInfo(animeId)
+  const popularResponse = await popular()
 
   if (!animeResponse) notFound()
 
@@ -148,9 +148,8 @@ export default async function Watch({ params: { params } }: Params) {
             )}
             <Sharethis />
           </div>
-          <Suspense>
-            <Popular />
-          </Suspense>
+
+          <Popular popularResults={popularResponse.results} />
         </div>
       </div>
     </div>
