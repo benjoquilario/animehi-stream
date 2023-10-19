@@ -1,28 +1,40 @@
+"use client"
+
+import { useMemo, useState } from "react"
 import type { AnimeInfoResponse } from "types/types"
 import { BsCheckCircleFill } from "react-icons/bs"
 
 import type { Bookmark as BookmarkT } from "@prisma/client"
-import { getCurrentUser } from "@/lib/current-user"
 
 type BookmarkProps = {
   animeResult: AnimeInfoResponse | null
-  bookmarks?: BookmarkT[]
+  bookMarks?: BookmarkT[]
+  userId?: string
   children: React.ReactNode
 }
 
-export default async function Bookmark({
+export default function Bookmark({
   animeResult,
+  bookMarks,
+  userId,
   children,
 }: BookmarkProps) {
-  const currentUser = await getCurrentUser()
+  const [bookmarks] = useState(bookMarks)
 
-  const isAnimeExist = currentUser?.bookMarks.some(
-    (bookmark) => bookmark.animeId === animeResult?.id
+  const isAnimeExist = useMemo(
+    () =>
+      bookmarks?.some(
+        (bookmark) =>
+          bookmark.animeId === animeResult?.id && bookmark.userId === userId
+      ),
+    [bookmarks]
   )
+
+  console.log(bookmarks)
 
   return (
     <>
-      {currentUser ? (
+      {bookMarks ? (
         isAnimeExist ? (
           <div className="flex h-3 items-center gap-1 bg-background px-2 text-sm text-primary hover:bg-background">
             <BsCheckCircleFill className="h-5 w-5" /> Bookmarked

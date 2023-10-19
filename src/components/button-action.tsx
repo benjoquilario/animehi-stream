@@ -28,21 +28,13 @@ const ButtonAction = ({
   const handleNextEpisode = () => {
     if (currentEpisode?.number === episodes?.length) return
 
-    router.push(
-      `/watch/${animeId}/${animeId}-episode-${
-        Number(currentEpisode?.number) + 1
-      }/${Number(currentEpisode?.number) + 1}`
-    )
+    router.push(`/watch/${animeId}/${Number(currentEpisode?.number) + 1}`)
   }
 
   const handlePrevEpisode = () => {
     if (currentEpisode?.number === 1) return
 
-    router.push(
-      `/watch/${animeId}/${animeId}-episode-${
-        Number(currentEpisode?.number) - 1
-      }/${Number(currentEpisode?.number) - 1}`
-    )
+    router.push(`/watch/${animeId}/${Number(currentEpisode?.number) - 1}`)
   }
 
   const currentEpisodeIndex = useMemo(
@@ -62,23 +54,28 @@ const ButtonAction = ({
 
   return (
     <>
-      <Button
-        onClick={handlePrevEpisode}
-        disabled={isPrevEpisode}
-        className="flex h-3 items-center gap-1 bg-background px-2 text-sm hover:bg-background"
-      >
-        <AiFillBackward className="h-5 w-5" />
-        Prev episode
-      </Button>
-      <Button
-        onClick={handleNextEpisode}
-        disabled={isNextEpisode}
-        className="flex h-3 items-center gap-1 bg-background px-2 text-sm hover:bg-background"
-      >
-        Next episode
-        <AiFillForward className="h-5 w-5" />
-      </Button>
-      {children}
+      <div className="text-sm">
+        Auto Next <button className="text-primary">Off</button>
+      </div>
+      <div className="flex items-center">
+        <Button
+          onClick={handlePrevEpisode}
+          disabled={isPrevEpisode}
+          className="flex h-3 items-center gap-1 bg-background px-2 text-sm hover:bg-background"
+        >
+          <AiFillBackward className="h-5 w-5" />
+          <span className="none md:block">Prev episode</span>
+        </Button>
+        <Button
+          onClick={handleNextEpisode}
+          disabled={isNextEpisode}
+          className="flex h-3 items-center gap-1 bg-background px-2 text-sm hover:bg-background"
+        >
+          <span className="none md:block">Next episode</span>
+          <AiFillForward className="h-5 w-5" />
+        </Button>
+        {children}
+      </div>
     </>
   )
 }

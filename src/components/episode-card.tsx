@@ -1,7 +1,7 @@
 import Link from "next/link"
-// import Image from "next/image"
 import type { RecentEpisode } from "types/types"
 import { BsFillPlayFill } from "react-icons/bs"
+import Image from "./ui/image"
 
 type EpisodeCardProps = {
   animeResult: RecentEpisode
@@ -23,24 +23,19 @@ export default function EpisodeCard({ animeResult }: EpisodeCardProps) {
           </div>
         </div>
         <div className="absolute h-full w-full">
-          <div className="relative h-full w-full">
-            <img
-              style={{ objectFit: "cover" }}
-              src={animeResult.image}
-              alt={animeResult.title}
-              width={180}
-              height={200}
-            />
-          </div>
+          <Image
+            style={{ objectFit: "cover" }}
+            src={animeResult.image}
+            alt={animeResult.title}
+            width={180}
+            height={200}
+            className="relative h-full w-full"
+          />
         </div>
         <Link
-          href={`/watch/${animeResult.id}/${animeResult.episodeId}/${animeResult.episodeNumber}`}
+          href={`/watch/${animeResult.id}/${animeResult.episodeNumber}`}
           aria-label={animeResult.episodeId}
           className="absolute inset-0 flex items-center justify-center bg-black/60 text-primary opacity-0 transition-opacity hover:opacity-100"
-          // href={`/watch/${data.anime.anilistId}/${data.anime.slug}/${data.number}`}
-          // aria-label={`Play - ${
-          //   data.anime.title.english || data.anime.title.romaji
-          // } - Episode ${data.number}`}
         >
           <BsFillPlayFill className="h-12 w-12" />
         </Link>

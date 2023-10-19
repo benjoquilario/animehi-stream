@@ -13,6 +13,8 @@ import { spotlight } from "@/lib/spotlight"
 import { Button, buttonVariants } from "./ui/button"
 import { BsFillPlayFill } from "react-icons/bs"
 import Link from "next/link"
+import Image from "./ui/image"
+import ViewCounter from "./view-counter"
 
 const Banner = () => {
   return (
@@ -32,14 +34,14 @@ const Banner = () => {
             <SwiperSlide id="slider" key={anime.id}>
               <div className="absolute inset-0 h-full w-full ">
                 <div className="absolute inset-0 overflow-hidden">
-                  <div className={styles.overlay}>
-                    <img
-                      src={anime.banner}
-                      className="absolute h-full w-full"
-                      style={{ objectFit: "cover" }}
-                      alt="naruto"
-                    />
-                  </div>
+                  <Image
+                    containerClassName={styles.overlay}
+                    src={anime.banner}
+                    className="absolute h-full w-full"
+                    style={{ objectFit: "cover" }}
+                    alt={anime.title}
+                    fill
+                  />
                   <div className="absolute bottom-[50px] top-[auto] z-[100] w-full max-w-[800px] pl-[2%] md:bottom-[109px]">
                     <h2 className="mx-0 mb-2 line-clamp-2 w-full max-w-lg text-lg font-bold sm:text-2xl md:text-5xl">
                       {anime.title}
@@ -48,7 +50,7 @@ const Banner = () => {
                       {anime.description}
                     </p>
                     <Link
-                      href={`/watch/${anime.id}/${anime.episode}/1`}
+                      href={`/watch/${anime.id}/1`}
                       className={buttonVariants()}
                     >
                       <BsFillPlayFill className="h-6 w-6" />

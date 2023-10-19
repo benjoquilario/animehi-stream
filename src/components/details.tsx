@@ -1,6 +1,6 @@
 "use client"
 
-import Image from "next/image"
+import Image from "./ui/image"
 import { AnimeInfoResponse } from "types/types"
 
 type DetailsProps = {
@@ -10,17 +10,16 @@ type DetailsProps = {
 const Details = ({ data }: DetailsProps) => {
   return (
     <div className="mb-3 mt-4 w-full">
-      <div className="flex gap-4">
+      <div className="flex flex-col gap-4 md:flex-row">
         <div className="w-40">
-          <div className="relative h-56 w-full rounded-md">
-            <Image
-              className="rounded-md"
-              width={250}
-              height={400}
-              src={data.image}
-              alt={data.title}
-            />
-          </div>
+          <Image
+            containerClassName="relative h-56 w-full rounded-md"
+            className="rounded-md"
+            width={250}
+            height={400}
+            src={data.image}
+            alt={data.title}
+          />
         </div>
 
         <div className="flex flex-1 flex-col gap-2">
@@ -44,7 +43,7 @@ const Details = ({ data }: DetailsProps) => {
                 <span>Sub Or Dub: {data.subOrDub}</span>
               </div>
               <div>
-                <span>
+                <span className="flex flex-wrap">
                   Genres:{" "}
                   {data.genres.map((genre) => (
                     <span key={genre} className="text-primary">

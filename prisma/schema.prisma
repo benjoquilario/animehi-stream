@@ -56,20 +56,21 @@ model Session {
 }
 
 model Watchlist {
-  id           String     @id @default(auto()) @map("_id") @db.ObjectId
-  animeId      String
-  image        String
-  title        String
+  id            String     @id @default(auto()) @map("_id") @db.ObjectId
+  animeId       String
+  image         String
+  title         String
   episodeNumber Int?
-  episodeId    String?
-  createdAt    DateTime   @default(now())
+  episodeId     String?
+  nextEpisode   String?
+  prevEpisode   String?
+  createdAt     DateTime   @default(now())
 
   userId       String     @db.ObjectId
   user         User       @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model Bookmark {
-
   id           String     @id @default(auto()) @map("_id") @db.ObjectId
   animeId      String
   image        String
@@ -85,8 +86,18 @@ model ContinueWatching {
   animeId      String
   image        String
   title        String
-  createdAt   DateTime @default(now())
+  createdAt    DateTime    @default(now())
 
   userId       String     @db.ObjectId
   user         User       @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
+
+model ViewCounter {
+  id           String   @id @default(auto()) @map("_id") @db.ObjectId
+  view         Int      @default(0)
+  createdAt    DateTime @default(now())
+  animeId      String
+  title        String
+  image        String
+}
+

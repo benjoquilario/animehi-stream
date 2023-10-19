@@ -1,15 +1,13 @@
-import { Button } from "./ui/button"
-
 import type { AnimeInfoResponse, Episode } from "types/types"
-import Bookmark from "./bookmark"
-import { memo } from "react"
+import { Button } from "./ui/button"
 import ButtonAction from "./button-action"
 import { getCurrentUser } from "@/lib/current-user"
 import BookmarkForm from "./bookmark-form"
+import { Suspense } from "react"
 
 type ServerProps = {
   episodes?: Episode[]
-
+  episodeNumber: string
   animeResult: AnimeInfoResponse | null
   episodeId: string
   animeId: string
@@ -20,31 +18,31 @@ export default async function Server({
   animeResult,
   episodeId,
   animeId,
+  episodeNumber,
 }: ServerProps) {
   const currentUser = await getCurrentUser()
 
   return (
     <div className="mt-2 flex flex-col gap-2">
       <div className="flex items-center justify-between">
-        <div className="text-sm">
-          Auto Next <span className="text-primary">Off</span>
-        </div>
-        <div className="flex items-center">
-          <ButtonAction
-            animeId={animeId}
-            episodeId={episodeId}
-            episodes={episodes}
-          >
-            <Bookmark animeResult={animeResult}>
-              <BookmarkForm animeResult={animeResult} />
-            </Bookmark>
-          </ButtonAction>
-        </div>
+        <ButtonAction
+          animeId={animeId}
+          episodeId={episodeId}
+          episodes={episodes}
+        >
+          <Suspense>
+            <BookmarkForm
+              userId={currentUser?.id}
+              bookmarks={currentUser?.bookMarks}
+              animeResult={animeResult}
+            />
+          </Suspense>
+        </ButtonAction>
       </div>
       <div className="flex flex-col items-center gap-4 bg-[#111827] md:flex-row">
         <div className="w-full bg-secondary px-5 py-3 text-center text-sm md:w-80">
           You are watching
-          <div className="font-semibold">Episode 2</div>
+          <div className="font-semibold">Episode {episodeNumber}</div>
           If current server doesnt work please try other servers beside
         </div>
         <div className="flex-1 pb-2 md:pb-0">

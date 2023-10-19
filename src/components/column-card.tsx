@@ -1,8 +1,7 @@
-import React from "react"
-// import Image from "next/image"
 import Link from "next/link"
 import { cn } from "@/lib/utils"
 import type { Popular } from "types/types"
+import Image from "./ui/image"
 
 type ColumnProps = {
   className?: string
@@ -17,18 +16,17 @@ export default function Column({ className, data, rank }: ColumnProps) {
     >
       <Link
         className="relative flex w-full pl-2 pr-4 transition hover:bg-secondary"
-        href={`/watch/${data.id}/${data.id}-episode-1/1`}
+        href={`/watch/${data.id}/1`}
       >
         <div className="w-[54px] shrink-0">
-          <div className="relative h-[76px] w-[56px] rounded-sm">
-            <img
-              src={data.image}
-              alt={data.title}
-              width={56}
-              height={76}
-              style={{ objectFit: "cover" }}
-            />
-          </div>
+          <Image
+            containerClassName="relative h-[76px] w-[56px] rounded-sm"
+            src={data.image}
+            alt={data.title}
+            width={56}
+            height={72}
+            style={{ objectFit: "cover" }}
+          />
         </div>
         <div className="mt-2 self-start pl-2">
           <div className="flex items-center space-x-1">

@@ -3,54 +3,98 @@ import db from "@/lib/db"
 import { type Register } from "@/lib/validations/credentials"
 import bcrypt from "bcrypt"
 import { getCurrentUser } from "@/lib/current-user"
+import { getSession } from "@/lib/session"
 
-type SaveWatchList = {
+export async function increment(animeId: string) {
+  const data = await db.viewCounter.findFirst({
+    where: {
+      animeId,
+    },
+  })
+
+  if (!data) return
+
+  const view = data.view
+
+  await db.viewCounter.update({
+    where: {
+      id: data.id,
+    },
+    data: {
+      view: view + 1,
+    },
+  })
+
+  return
+}
+
+type CreateWatchList = {
   animeId: string
   image: string
   title: string
+  episodeNumber: string
+  nextEpisode: string
 }
 
-export const saveWatchList = async ({
+export async function createWatchlist({
   animeId,
   image,
   title,
-}: SaveWatchList) => {
-  const currentUser = await getCurrentUser()
+  episodeNumber,
+  nextEpisode,
+}: CreateWatchList) {
+  const session = await getSession()
 
-  if (!currentUser) throw new Error("Unauthenticated")
+  if (!session) throw new Error("Unauthenticated")
+
+  const isEpisodeIdExist = await db.watchlist.findFirst({
+    where: {
+      episodeId: `${animeId}-episode-${episodeNumber}`,
+    },
+  })
+
+  if (isEpisodeIdExist) return
 
   await db.watchlist.create({
     data: {
-      animeId,
+      episodeId: `${animeId}-episode-${episodeNumber}`,
+      episodeNumber: Number(episodeNumber),
       image,
       title,
-      userId: currentUser.id,
+      animeId,
+      userId: session.user.id,
+      nextEpisode,
     },
   })
+
+  return
 }
 
-export const register = async ({
-  confirmPassword,
-  password,
-  userName,
-  email,
-}: Register) => {
-  const isEmailExist = await db.user.findFirst({
-    where: { email },
-  })
-
-  if (isEmailExist) throw new Error("User already exist")
-
-  const hashedPassword = await bcrypt.hash(password, 12)
-
-  if (password !== confirmPassword) {
-    throw new Error("The passwords did not match")
-  }
-
-  await db.user.create({
-    data: {
-      email,
-      password: hashedPassword,
+export async function createViewCounter({
+  animeId,
+  image,
+  title,
+}: {
+  animeId: string
+  image: string
+  title: string
+}) {
+  const isAnimeIdExist = await db.viewCounter.findFirst({
+    where: {
+      animeId: animeId,
     },
   })
+
+  if (isAnimeIdExist) return
+
+  await db.viewCounter.create({
+    data: {
+      image,
+      title,
+      animeId,
+      view: 1,
+    },
+  })
+
+  return
 }

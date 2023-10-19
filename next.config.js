@@ -4,7 +4,17 @@ const nextConfig = {
     serverActions: true,
   },
   images: {
-    domains: ["s4.anilist.co", "gogocdn.net", "images.weserv.nl"],
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "s4.anilist.co",
+      },
+      {
+        protocol: "https",
+        hostname: "gogocdn.net",
+      },
+    ],
+    unoptimized: true,
   },
 }
 

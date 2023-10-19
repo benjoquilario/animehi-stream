@@ -108,7 +108,7 @@ export default function Combobox() {
                     handleSelect(() => {
                       startTransition(() => {
                         setQuery("")
-                        router.push(`/watch/${item.id}/${item.id}-episode-1`)
+                        router.push(`/watch/${item.id}/${item.id}-episode-1/1`)
                       })
                     })
                   }

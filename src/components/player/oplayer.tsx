@@ -5,7 +5,7 @@ import Player from "@oplayer/core"
 import OUI, { type Highlight, type MenuBar } from "@oplayer/ui"
 import OHls from "@oplayer/hls"
 import { skipOpEd } from "@/lib/plugins"
-import { useRef, useState, useEffect, useCallback, useMemo } from "react"
+import { useRef, useState, useEffect } from "react"
 import type {
   SourcesResponse,
   Source,
@@ -15,9 +15,9 @@ import type {
 import { useRouter } from "next/navigation"
 import { notFound } from "next/navigation"
 import { AspectRatio } from "../ui/aspect-ratio"
-// import { chromecast } from "@oplayer/plugins"
 import { useSession } from "next-auth/react"
 import { publicUrl } from "@/lib/consumet"
+import { useWatchStore } from "@/store"
 
 type Ctx = {
   ui: ReturnType<typeof OUI>
@@ -45,7 +45,6 @@ const plugins = [
       })
     },
   }),
-  // chromecast,
 ]
 
 type WatchProps = {
@@ -74,6 +73,7 @@ export function OPlayer({
   const lst = useRef()
   const router = useRouter()
   const [sources, setSources] = useState<Source[] | undefined>(undefined)
+  const isAutoNext = useWatchStore((store) => store.isAutoNext)
 
   const getSelectedSrc = (selectedQuality: string): Promise<Source> => {
     return new Promise((resolve, reject) => {
@@ -89,6 +89,8 @@ export function OPlayer({
     if (!sourcesPromise) return
 
     sourcesPromise.then((res) => (res ? setSources(res.sources) : notFound()))
+
+    console.log(sources)
 
     playerRef.current = Player.make("#oplayer", {
       autoplay: true,
@@ -129,7 +131,9 @@ export function OPlayer({
           clearInterval(intervalId)
         })
       })
-      .on("timeupdate", ({ payload }) => {})
+      .on("timeupdate", ({ payload }) => {
+        console.log("timeupdate")
+      })
       .create() as Player<Ctx>
 
     return () => {

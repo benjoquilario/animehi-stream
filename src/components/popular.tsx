@@ -2,27 +2,22 @@
 
 import type { Popular } from "types/types"
 import Column from "./column-card"
-import { motion } from "framer-motion"
+import Section from "./section"
 
 type PopularProps = {
-  popularAnime?: Popular[]
+  popularResults?: Popular[]
 }
 
-export default function Popular({ popularAnime }: PopularProps) {
+export default function Popular({ popularResults }: PopularProps) {
   return (
-    <motion.div
-      key="trending"
-      initial={{ y: 20, opacity: 0 }}
-      whileInView={{ y: 0, opacity: 1 }}
-      transition={{ duration: 0.5 }}
-      viewport={{ once: true }}
-      className="w-full pt-5 md:w-80"
-    >
+    <Section className="w-full pt-5 md:w-80">
       <div className="block w-full">
-        <h3 className="mb-2 pr-4 text-2xl font-semibold">Trending Anime</h3>
+        <h3 className="mb-2 border-l-2 border-primary pr-4 text-2xl font-semibold">
+          Most Popular
+        </h3>
         <div className="bg-background">
           <ul className="">
-            {popularAnime?.map((data, index) => (
+            {popularResults?.map((data, index) => (
               <Column
                 key={data.id}
                 data={data}
@@ -33,6 +28,6 @@ export default function Popular({ popularAnime }: PopularProps) {
           </ul>
         </div>
       </div>
-    </motion.div>
+    </Section>
   )
 }

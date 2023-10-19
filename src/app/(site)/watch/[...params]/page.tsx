@@ -5,11 +5,12 @@ import Episodes from "@/components/episode/episodes"
 import Details from "@/components/details"
 import Sharethis from "@/components/sharethis"
 import type { Metadata } from "next"
-import ArtPlayerComponent from "@/components/player/art-player"
 import { notFound } from "next/navigation"
 import { getSession } from "../../../../lib/session"
 import db from "@/lib/db"
 import Server from "@/components/server"
+import { createViewCounter, createWatchlist, increment } from "@/app/actions"
+import { Suspense } from "react"
 
 type Params = {
   params: {
@@ -68,51 +69,46 @@ export async function generateMetadata({
 }
 
 export default async function Watch({ params: { params } }: Params) {
-  const [animeId, episodeId, episodeNumber] = params as string[]
+  const [animeId, episodeNumber] = params as string[]
   const session = await getSession()
 
-  if (!animeId || !episodeId || !episodeNumber) notFound()
+  if (!animeId || !episodeNumber) notFound()
 
-  const [animeSettled, popularSettled] = await Promise.allSettled([
-    animeInfo(animeId),
-    popular(),
-  ])
+  const animeResponse = await animeInfo(animeId)
 
-  const popularAnime =
-    popularSettled.status === "fulfilled" ? popularSettled.value : null
-  const animeResponse =
-    animeSettled.status === "fulfilled" ? animeSettled.value : null
+  if (!animeResponse) notFound()
 
-  if (!popularAnime || !animeResponse) notFound()
+  if (animeId && episodeNumber) {
+    await createViewCounter({
+      animeId,
+      title: animeResponse.title ?? animeResponse.otherName,
+      image: animeResponse.image,
+    })
+  }
 
-  const sourcesPromise = watch(episodeId)
+  const sourcesPromise = watch(`${animeId}-episode-${episodeNumber}`)
+
+  const nextEpisode = (): string => {
+    if (Number(episodeNumber) === animeResponse.episodes?.length) return ""
+
+    const nextEpisodeNumber = animeResponse.episodes.findIndex(
+      (episode) => episode.number === Number(episodeNumber)
+    )
+
+    return String(nextEpisodeNumber)
+  }
 
   if (session) {
-    try {
-      const isEpisodeIdExist = await db.watchlist.findFirst({
-        where: {
-          episodeId,
-        },
-      })
-
-      if (isEpisodeIdExist) throw new Error("Episode Already Exist")
-
-      if (animeResponse) {
-        await db.watchlist.create({
-          data: {
-            episodeId,
-            episodeNumber: Number(episodeNumber),
-            image: animeResponse.image,
-            title: animeResponse.title,
-            animeId,
-            userId: session.user.id,
-          },
-        })
-      }
-    } catch (error) {
-      console.log("Error", error)
-    }
+    await createWatchlist({
+      animeId,
+      episodeNumber,
+      title: animeResponse.title ?? animeResponse.otherName,
+      image: animeResponse.image,
+      nextEpisode: nextEpisode(),
+    })
   }
+
+  await increment(animeId)
 
   return (
     <div className="w-full px-[2%]">
@@ -124,23 +120,26 @@ export default async function Watch({ params: { params } }: Params) {
               animeId={animeId}
               sourcesPromise={sourcesPromise}
               episodeNumber={episodeNumber}
-              episodeId={episodeId}
+              episodeId={`${animeId}-episode-${episodeNumber}`}
               episodes={animeResponse?.episodes}
               image={animeResponse?.image}
             >
-              <Server
-                episodeId={episodeId}
-                animeResult={animeResponse}
-                episodes={animeResponse?.episodes}
-                animeId={animeId}
-              />
+              <Suspense>
+                <Server
+                  episodeId={`${animeId}-episode-${episodeNumber}`}
+                  animeResult={animeResponse}
+                  episodes={animeResponse?.episodes}
+                  animeId={animeId}
+                  episodeNumber={episodeNumber}
+                />
+              </Suspense>
             </OPlayer>
             {animeResponse ? (
               <>
                 <Episodes
                   animeId={animeId}
                   fullEpisodes={animeResponse.episodes}
-                  episodeId={episodeId}
+                  episodeId={`${animeId}-episode-${episodeNumber}`}
                 />
                 <Details data={animeResponse} />
               </>
@@ -149,8 +148,9 @@ export default async function Watch({ params: { params } }: Params) {
             )}
             <Sharethis />
           </div>
-
-          <Popular popularAnime={popularAnime?.results} />
+          <Suspense>
+            <Popular />
+          </Suspense>
         </div>
       </div>
     </div>

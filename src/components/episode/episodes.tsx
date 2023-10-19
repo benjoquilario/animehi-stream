@@ -2,13 +2,15 @@
 
 import type { Episode } from "types/types"
 import { chunk, cn } from "@/lib/utils"
-import EpisodeChunk from "./episode-chunk"
-import { useMemo, useState } from "react"
-import { Button, buttonVariants } from "../ui/button"
+import { useCallback, useMemo, useState } from "react"
 import { ScrollArea } from "../ui/scroll-area"
-import Link from "next/link"
-import { Input } from "../ui/input"
+
+import { Button } from "../ui/button"
 import { Badge } from "../ui/badge"
+import SearchEpisode from "../search-episode"
+import EpisodeList from "./episode-list"
+import Link from "next/link"
+import { AiOutlineSearch } from "react-icons/ai"
 
 type EpisodesProps = {
   fullEpisodes: Episode[]
@@ -21,9 +23,28 @@ export default function Episodes({
   episodeId,
   animeId,
 }: EpisodesProps) {
+  const [episodes, setEpisodes] = useState(fullEpisodes)
+  const [query, setQuery] = useState("")
+
   const currentEpisode = useMemo(
-    () => fullEpisodes?.find((episode: Episode) => episode?.id === episodeId),
-    [fullEpisodes]
+    () => episodes?.find((episode: Episode) => episode?.id === episodeId),
+    [episodes]
+  )
+
+  const handleSearchEpisode = useCallback(
+    (episodeNumber: string) => {
+      if (episodeNumber) {
+        const filterEpisode = fullEpisodes?.filter(
+          (episode) => episode.number === Number(episodeNumber)
+        )
+        setEpisodes(filterEpisode)
+      } else {
+        setEpisodes(fullEpisodes)
+      }
+
+      setQuery(episodeNumber)
+    },
+    [episodes]
   )
 
   return (
@@ -32,8 +53,19 @@ export default function Episodes({
         <h3>
           Episode List <Badge>{fullEpisodes.length}</Badge>
         </h3>
-        <div>
-          <Input type="text" placeholder="ep. number" />
+        <div className="relative">
+          <form>
+            <SearchEpisode onChange={handleSearchEpisode} />
+
+            <Link href={`/watch/${animeId}/${query}`}>
+              <button
+                className="absolute right-[5px] top-[6px] text-muted-foreground/80"
+                type="submit"
+              >
+                <AiOutlineSearch className="h-6 w-6" />
+              </button>
+            </Link>
+          </form>
         </div>
       </div>
       <ScrollArea
@@ -42,25 +74,11 @@ export default function Episodes({
           fullEpisodes.length > 18 ? "h-[25rem]" : "h-[7rem]"
         )}
       >
-        <div className="episode-grid relative py-3 pr-3">
-          {fullEpisodes.map((episode) => (
-            <Link
-              key={episode.id}
-              className={buttonVariants({
-                variant: "secondary",
-                className: cn(
-                  "border-l-2 border-primary",
-                  currentEpisode?.number === episode.number
-                    ? "!bg-primary"
-                    : "!bg-secondary hover:bg-secondary/80"
-                ),
-              })}
-              href={`/watch/${animeId}/${episode.id}/${episode.number}`}
-            >
-              Ep. {episode.number}
-            </Link>
-          ))}
-        </div>
+        <EpisodeList
+          episodes={episodes}
+          currentEpisode={currentEpisode}
+          animeId={animeId}
+        />
       </ScrollArea>
     </div>
   )
