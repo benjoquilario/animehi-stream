@@ -23,8 +23,7 @@ export default function Column({ className, data, rank }: ColumnProps) {
             containerClassName="relative h-[76px] w-[56px] rounded-sm"
             src={data.image}
             alt={data.title}
-            width={56}
-            height={72}
+            fill
             style={{ objectFit: "cover" }}
           />
         </div>

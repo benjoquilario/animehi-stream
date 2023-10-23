@@ -11,6 +11,7 @@
     "update-deps": "npx --yes npm-check-updates -u && pnpm",
     "preview": "next build && next start",
     "prettier": "prettier -write .",
+    "studio": "prisma studio",
     "postinstall": "prisma generate --no-engine"
   },
   "dependencies": {
@@ -63,7 +64,8 @@
     "server-only": "^0.0.1",
     "sharp": "^0.32.6",
     "sonner": "^1.0.3",
-    "swiper": "^9.1.0",
+    "swiper": "^10.3.1",
+    "swr": "^2.2.4",
     "tailwind-merge": "^1.14.0",
     "tailwindcss-animate": "^1.0.7",
     "typescript": "5.2.2",

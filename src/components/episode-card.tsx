@@ -2,6 +2,8 @@ import Link from "next/link"
 import type { RecentEpisode } from "types/types"
 import { BsFillPlayFill } from "react-icons/bs"
 import Image from "./ui/image"
+import { increment } from "@/app/actions"
+import { useSession } from "next-auth/react"
 
 type EpisodeCardProps = {
   animeResult: RecentEpisode

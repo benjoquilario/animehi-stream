@@ -1,6 +1,5 @@
 import { animeInfo, popular, watch, publicUrl } from "@/lib/consumet"
 import Popular from "@/components/popular"
-import { OPlayer } from "@/components/player/oplayer"
 import Episodes from "@/components/episode/episodes"
 import Details from "@/components/details"
 import Sharethis from "@/components/sharethis"
@@ -10,6 +9,8 @@ import { getSession } from "../../../../lib/session"
 import Server from "@/components/server"
 import { createViewCounter, createWatchlist, increment } from "@/app/actions"
 import { Suspense } from "react"
+import ArtPlayerComponent from "@/components/player/art-player"
+import VideoPlayer from "@/components/player/oplayer/ssr"
 
 type Params = {
   params: {
@@ -78,18 +79,27 @@ export default async function Watch({ params: { params } }: Params) {
 
   if (!animeResponse) notFound()
 
-  if (animeId && episodeNumber) {
-    await createViewCounter({
-      animeId,
-      title: animeResponse.title ?? animeResponse.otherName,
-      image: animeResponse.image,
-    })
-  }
+  await createViewCounter({
+    animeId,
+    title: animeResponse.title ?? animeResponse.otherName,
+    image: animeResponse.image,
+  })
 
   const sourcesPromise = watch(`${animeId}-episode-${episodeNumber}`)
 
   const nextEpisode = (): string => {
-    if (Number(episodeNumber) === animeResponse.episodes?.length) return ""
+    if (Number(episodeNumber) === animeResponse.episodes?.length)
+      return episodeNumber
+
+    const nextEpisodeNumber = animeResponse.episodes.findIndex(
+      (episode) => episode.number === Number(episodeNumber)
+    )
+
+    return String(nextEpisodeNumber + 2)
+  }
+
+  const prevEpisode = (): string => {
+    if (Number(episodeNumber) === 1) return episodeNumber
 
     const nextEpisodeNumber = animeResponse.episodes.findIndex(
       (episode) => episode.number === Number(episodeNumber)
@@ -105,6 +115,7 @@ export default async function Watch({ params: { params } }: Params) {
       title: animeResponse.title ?? animeResponse.otherName,
       image: animeResponse.image,
       nextEpisode: nextEpisode(),
+      prevEpisode: prevEpisode(),
     })
   }
 
@@ -115,25 +126,26 @@ export default async function Watch({ params: { params } }: Params) {
       <div className="relative flex w-full max-w-full flex-col">
         <div className="flex flex-col md:space-x-4 xl:flex-row">
           <div className="mt-5 flex-1">
-            <OPlayer
-              animeResult={animeResponse}
-              animeId={animeId}
-              sourcesPromise={sourcesPromise}
-              episodeNumber={episodeNumber}
-              episodeId={`${animeId}-episode-${episodeNumber}`}
-              episodes={animeResponse?.episodes}
-              image={animeResponse?.image}
-            >
-              <Suspense>
-                <Server
-                  episodeId={`${animeId}-episode-${episodeNumber}`}
-                  animeResult={animeResponse}
-                  episodes={animeResponse?.episodes}
-                  animeId={animeId}
-                  episodeNumber={episodeNumber}
-                />
-              </Suspense>
-            </OPlayer>
+            <Suspense fallback={<div>Loading...</div>}>
+              <VideoPlayer
+                animeId={animeId}
+                nextEpisode={nextEpisode()}
+                prevEpisode={prevEpisode()}
+                sourcesPromise={sourcesPromise}
+                episodeId={`${animeId}-episode-${episodeNumber}`}
+                episodeNumber={episodeNumber}
+              />
+            </Suspense>
+            {/* <VideoPlayer animeId={animeId} episodeNumber={episodeNumber} /> */}
+            <Suspense>
+              <Server
+                episodeId={`${animeId}-episode-${episodeNumber}`}
+                animeResult={animeResponse}
+                episodes={animeResponse?.episodes}
+                animeId={animeId}
+                episodeNumber={episodeNumber}
+              />
+            </Suspense>
             {animeResponse ? (
               <>
                 <Episodes

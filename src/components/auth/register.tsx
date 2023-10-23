@@ -1,7 +1,3 @@
-"use client"
-
-import { signIn } from "next-auth/react"
-
 import {
   Form,
   FormControl,
@@ -12,8 +8,10 @@ import {
 } from "@/components/ui/form"
 import { useRouter } from "next/navigation"
 import { Input } from "../ui/input"
-import { toast } from "sonner"
-import { Register, registerValidator } from "@/lib/validations/credentials"
+import {
+  Register as RegisterT,
+  registerValidator,
+} from "@/lib/validations/credentials"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useEffect } from "react"
@@ -23,7 +21,7 @@ import { useAuthStore } from "@/store"
 
 const Register = () => {
   const router = useRouter()
-  const form = useForm<Register>({
+  const form = useForm<RegisterT>({
     resolver: zodResolver(registerValidator),
   })
   const setIsAuthOpen = useAuthStore((store) => store.setIsAuthOpen)
@@ -41,7 +39,7 @@ const Register = () => {
     password,
     confirmPassword,
     userName,
-  }: Register) {
+  }: RegisterT) {
     const res = await fetch("/api/register", {
       method: "POST",
       headers: {

@@ -43,16 +43,18 @@ const AuthForm = () => {
       ) : (
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="ghost" className="relative h-8 w-8 rounded-full">
-              <Avatar className="h-8 w-8">
-                <AvatarImage src="/01.png" />
-                <AvatarFallback>
-                  <div className="h-full w-full animate-pulse"></div>
-                </AvatarFallback>
-              </Avatar>
+            <Button
+              variant="ghost"
+              className="relative h-8 w-8 rounded-full bg-primary hover:bg-primary/90"
+            >
+              <div className="h-8 w-8"></div>
             </Button>
           </DropdownMenuTrigger>
-          <DropdownMenuContent className="w-56" align="end" forceMount>
+          <DropdownMenuContent
+            className="mr-4 mt-4 w-64"
+            align="start"
+            forceMount
+          >
             <DropdownMenuLabel className="font-normal">
               <div className="flex flex-col space-y-1">
                 <p className="text-sm font-medium leading-none">

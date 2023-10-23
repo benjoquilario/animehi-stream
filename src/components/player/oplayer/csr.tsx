@@ -14,10 +14,11 @@ import type {
 } from "types/types"
 import { useRouter } from "next/navigation"
 import { notFound } from "next/navigation"
-import { AspectRatio } from "../ui/aspect-ratio"
+import { AspectRatio } from "@/components/ui/aspect-ratio"
 import { useSession } from "next-auth/react"
 import { publicUrl } from "@/lib/consumet"
 import { useWatchStore } from "@/store"
+import { updateWatchlist } from "@/app/actions"
 
 type Ctx = {
   ui: ReturnType<typeof OUI>
@@ -47,26 +48,22 @@ const plugins = [
   }),
 ]
 
-type WatchProps = {
+export type WatchProps = {
   sourcesPromise: Promise<SourcesResponse | undefined>
-  episodes?: Episode[]
-  animeId: string
   episodeId: string
+  nextEpisode: string
+  prevEpisode: string
+  animeId: string
   episodeNumber: string
-  image?: string
-  animeResult: AnimeInfoResponse | null
-  children: React.ReactNode
 }
 
-export function OPlayer({
+export default function OPlayer({
   sourcesPromise,
-  animeId,
-  episodes,
-  episodeNumber,
   episodeId,
-  animeResult,
-  image,
-  children,
+  nextEpisode,
+  prevEpisode,
+  animeId,
+  episodeNumber,
 }: WatchProps) {
   const { data: session } = useSession()
   const playerRef = useRef<Player<Ctx>>()
@@ -90,49 +87,35 @@ export function OPlayer({
 
     sourcesPromise.then((res) => (res ? setSources(res.sources) : notFound()))
 
-    console.log(sources)
+    const updateWatchlistDb = async () => {
+      await updateWatchlist({
+        episodeId,
+        nextEpisode,
+        prevEpisode,
+        episodeNumber,
+        animeId,
+      })
+    }
 
     playerRef.current = Player.make("#oplayer", {
       autoplay: true,
       playbackRate: 1,
     })
       .use(plugins)
-      .on("ended", () => {
-        console.log("Ended")
+      .on("ended", async () => {
+        await updateWatchlistDb()
       })
-      .on("playing", () => {
-        if (!session) return
+      .on("timeupdate", ({ payload }) => {})
+      .on("pause", async () => {
+        console.log("Playing Pause")
 
-        const oplayer = playerRef.current
-
-        const intervalId = setInterval(async () => {
-          await fetch(`${publicUrl}/api/user/watchlist`, {
-            method: "PUT",
-            body: JSON.stringify({
-              id: session.user.id,
-              episodeId,
-              animeId,
-              episodeNumber: Number(episodeNumber),
-              image,
-            }),
-          })
-        }, 5000)
-
-        oplayer?.on("pause", () => {
-          clearInterval(intervalId)
-        })
-        oplayer?.on("ended", () => {
-          clearInterval(intervalId)
-        })
-        oplayer?.on("destroy", () => {
-          clearInterval(intervalId)
-        })
-        oplayer?.on("abort", () => {
-          clearInterval(intervalId)
-        })
+        await updateWatchlistDb()
       })
-      .on("timeupdate", ({ payload }) => {
-        console.log("timeupdate")
+      .on("destroy", async () => {
+        await updateWatchlistDb()
+      })
+      .on("abort", async () => {
+        await updateWatchlistDb()
       })
       .create() as Player<Ctx>
 
@@ -206,11 +189,8 @@ export function OPlayer({
   }, [sources, playerRef.current])
 
   return (
-    <>
-      <AspectRatio ratio={16 / 9}>
-        <div id="oplayer" />
-      </AspectRatio>
-      {children}
-    </>
+    <AspectRatio ratio={16 / 9}>
+      <div id="oplayer" />
+    </AspectRatio>
   )
 }

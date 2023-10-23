@@ -7,14 +7,12 @@ import "swiper/css"
 import "swiper/css/pagination"
 import "swiper/css/navigation"
 import { Swiper, SwiperSlide } from "swiper/react"
-// @ts-expect-error
-import { Autoplay } from "swiper"
+import { Autoplay } from "swiper/modules"
 import { spotlight } from "@/lib/spotlight"
 import { Button, buttonVariants } from "./ui/button"
 import { BsFillPlayFill } from "react-icons/bs"
 import Link from "next/link"
 import Image from "./ui/image"
-import ViewCounter from "./view-counter"
 
 const Banner = () => {
   return (

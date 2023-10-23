@@ -47,11 +47,11 @@ const Login = () => {
     })
 
     if (response?.ok) {
-      router.refresh()
       setIsAuthOpen(false)
       toast.success("Signed in successfully")
     }
 
+    router.refresh()
     toast.dismiss()
   }
 

@@ -1,17 +1,19 @@
 import { getCurrentUser } from "@/lib/current-user"
 import { NextResponse } from "next/server"
 import db from "@/lib/db"
+import { getSession } from "next-auth/react"
 
 export async function POST(req: Request) {
   const body = await req.json()
-  const currentUser = await getCurrentUser()
+  const session = await getSession()
 
   const { image, animeId, title } = body
 
-  if (!currentUser) return NextResponse.json("Unauthenticated", { status: 401 })
+  if (!session) return NextResponse.json("Unauthenticated", { status: 401 })
 
-  const isAnimeExist = await db.bookmark.findFirst({
+  const isAnimeExist = await db.bookmark.findFirstOrThrow({
     where: {
+      userId: session.user.id,
       animeId,
     },
   })
@@ -24,7 +26,7 @@ export async function POST(req: Request) {
       animeId,
       image,
       title,
-      userId: currentUser.id,
+      userId: session.user.id,
     },
   })
 

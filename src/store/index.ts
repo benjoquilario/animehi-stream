@@ -19,11 +19,12 @@ interface WatchInitialStore {
   isAutoNext: boolean
   enableAutoNext: () => void
   disabledAutoNext: () => void
+  resetSources: () => void
 }
 
 export const useWatchStore = create<WatchInitialStore>((set) => ({
-  url: "",
-  setUrl: (arg: string) => set({ url: arg }),
+  url: "https://example.com/404",
+  setUrl: (arg: string) => set(() => ({ url: arg })),
   isAutoNext: false,
   enableAutoNext: () => {
     set(() => ({ isAutoNext: true }))
@@ -32,5 +33,6 @@ export const useWatchStore = create<WatchInitialStore>((set) => ({
     set(() => ({ isAutoNext: false }))
   },
   sources: undefined,
+  resetSources: () => set({ sources: [] }),
   setSources: (arg: Source[] | undefined) => set({ sources: arg }),
 }))

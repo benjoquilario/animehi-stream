@@ -22,6 +22,11 @@ export default async function Server({
 }: ServerProps) {
   const currentUser = await getCurrentUser()
 
+  const checkBookmarkExist = currentUser?.bookMarks.some(
+    (bookmark) =>
+      bookmark.animeId === animeResult?.id && bookmark.userId === currentUser.id
+  )
+
   return (
     <div className="mt-2 flex flex-col gap-2">
       <div className="flex items-center justify-between">
@@ -35,6 +40,7 @@ export default async function Server({
               userId={currentUser?.id}
               bookmarks={currentUser?.bookMarks}
               animeResult={animeResult}
+              checkBookmarkExist={checkBookmarkExist}
             />
           </Suspense>
         </ButtonAction>

@@ -34,6 +34,7 @@ type CreateWatchList = {
   title: string
   episodeNumber: string
   nextEpisode: string
+  prevEpisode: string
 }
 
 export async function createWatchlist({
@@ -42,30 +43,42 @@ export async function createWatchlist({
   title,
   episodeNumber,
   nextEpisode,
+  prevEpisode,
 }: CreateWatchList) {
   const session = await getSession()
 
-  if (!session) throw new Error("Unauthenticated")
+  if (!session) return
 
-  const isEpisodeIdExist = await db.watchlist.findFirst({
+  const checkEpisode = await db.watchlist.findFirst({
     where: {
-      episodeId: `${animeId}-episode-${episodeNumber}`,
-    },
-  })
-
-  if (isEpisodeIdExist) return
-
-  await db.watchlist.create({
-    data: {
-      episodeId: `${animeId}-episode-${episodeNumber}`,
-      episodeNumber: Number(episodeNumber),
-      image,
-      title,
       animeId,
       userId: session.user.id,
-      nextEpisode,
     },
   })
+
+  if (checkEpisode) {
+    return null
+  } else
+    await db.user.update({
+      where: {
+        id: session.user.id,
+      },
+      data: {
+        watchlists: {
+          create: [
+            {
+              episodeId: `${animeId}-episode-${episodeNumber}`,
+              episodeNumber: Number(episodeNumber),
+              image,
+              title,
+              animeId,
+              nextEpisode,
+              prevEpisode,
+            },
+          ],
+        },
+      },
+    })
 
   return
 }
@@ -93,6 +106,91 @@ export async function createViewCounter({
       title,
       animeId,
       view: 1,
+    },
+  })
+
+  return
+}
+
+type UpdateWatchlist = {
+  episodeId: string
+  episodeNumber: string
+  nextEpisode: string
+  prevEpisode: string
+  animeId: string
+}
+
+export async function updateWatchlist({
+  episodeId,
+  episodeNumber,
+  nextEpisode,
+  prevEpisode,
+  animeId,
+}: UpdateWatchlist) {
+  const session = await getSession()
+
+  if (!session) return
+
+  const checkAnime = await db.watchlist.findFirst({
+    where: {
+      animeId,
+      userId: session.user.id,
+    },
+  })
+
+  if (checkAnime)
+    await db.watchlist.update({
+      where: {
+        id: checkAnime.id,
+        userId: session.user.id,
+      },
+      data: {
+        episodeId,
+        nextEpisode,
+        prevEpisode,
+        episodeNumber: Number(episodeNumber),
+      },
+    })
+
+  return
+}
+
+export async function createBookmark({
+  animeId,
+  image,
+  title,
+}: {
+  animeId: string
+  image: string
+  title: string
+}) {
+  const session = await getSession()
+
+  if (!session) return
+
+  const checkAnime = await db.bookmark.findFirst({
+    where: {
+      userId: session.user.id,
+      animeId,
+    },
+  })
+
+  if (checkAnime) return
+
+  await db.user.update({
+    where: {
+      id: session.user.id,
+    },
+    data: {
+      bookMarks: {
+        create: [
+          {
+            animeId,
+            image,
+            title,
+          },
+        ],
+      },
     },
   })
 
