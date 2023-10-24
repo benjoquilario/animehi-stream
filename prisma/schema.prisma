@@ -61,10 +61,13 @@ model Watchlist {
   image         String
   title         String
   episodeNumber Int?
+  timeWatched   Int?      @default(0)
+  duration      Int?       @default(0)
   episodeId     String?
   nextEpisode   String?
   prevEpisode   String?
   createdAt     DateTime   @default(now())
+  updatedAt     DateTime   @updatedAt
 
   userId       String     @db.ObjectId
   user         User       @relation(fields: [userId], references: [id], onDelete: Cascade)

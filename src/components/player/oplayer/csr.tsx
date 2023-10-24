@@ -57,14 +57,15 @@ export type WatchProps = {
   episodeNumber: string
 }
 
-export default function OPlayer({
-  sourcesPromise,
-  episodeId,
-  nextEpisode,
-  prevEpisode,
-  animeId,
-  episodeNumber,
-}: WatchProps) {
+export default function OPlayer(props: WatchProps) {
+  const {
+    sourcesPromise,
+    episodeId,
+    nextEpisode,
+    prevEpisode,
+    animeId,
+    episodeNumber,
+  } = props
   const { data: session } = useSession()
   const playerRef = useRef<Player<Ctx>>()
   const lst = useRef()
@@ -98,24 +99,26 @@ export default function OPlayer({
     }
 
     playerRef.current = Player.make("#oplayer", {
-      autoplay: true,
+      autoplay: isAutoNext,
       playbackRate: 1,
     })
       .use(plugins)
-      .on("ended", async () => {
-        await updateWatchlistDb()
+      .on("ended", () => {
+        updateWatchlistDb()
       })
-      .on("timeupdate", ({ payload }) => {})
-      .on("pause", async () => {
+      .on("timeupdate", ({ payload }) => {
+        console.log("Timeupdate")
+      })
+      .on("pause", () => {
         console.log("Playing Pause")
 
-        await updateWatchlistDb()
+        updateWatchlistDb()
       })
-      .on("destroy", async () => {
-        await updateWatchlistDb()
+      .on("destroy", () => {
+        updateWatchlistDb()
       })
-      .on("abort", async () => {
-        await updateWatchlistDb()
+      .on("abort", () => {
+        updateWatchlistDb()
       })
       .create() as Player<Ctx>
 

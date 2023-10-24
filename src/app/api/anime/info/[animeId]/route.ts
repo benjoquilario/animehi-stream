@@ -30,6 +30,7 @@ export async function GET(
   cachedVal = await redis.get(animeId)
 
   if (cachedVal) {
+    console.log("anime info hits")
     return new Response(cachedVal)
   }
 

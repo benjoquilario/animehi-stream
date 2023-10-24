@@ -29,7 +29,7 @@ export async function GET(req: Request) {
   // cachedVal = await redis.get("trendings")
 
   if (cachedVal) {
-    console.log("recents anime hit")
+    console.log("trending anime hit")
 
     return new Response(cachedVal)
   }

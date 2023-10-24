@@ -13,6 +13,8 @@ export default async function VideoPlayer(props: WatchProps) {
     episodeNumber,
   } = props
 
+  // const watchHistory = await animeWatchById(animeId)
+
   return (
     <OPlayer
       sourcesPromise={sourcesPromise}

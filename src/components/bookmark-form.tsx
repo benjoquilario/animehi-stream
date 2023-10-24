@@ -60,8 +60,6 @@ const BookmarkForm = ({
     return toast.dismiss()
   }
 
-  console.log(checkBookmarkExist)
-
   if (!session && !isBookmark) {
     return (
       <Button

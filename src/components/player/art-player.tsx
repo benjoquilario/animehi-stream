@@ -41,14 +41,14 @@ const ArtPlayerComponent = ({ animeId, episodeNumber }: WatchProps) => {
     [sources]
   )
 
-  useEffect(() => {
-    setSources(sources)
-    const selectedSrc = sources?.find(
-      (src: Source) => src.quality === "default"
-    ) as Source
+  // useEffect(() => {
+  //   setSources(sources)
+  //   const selectedSrc = sources?.find(
+  //     (src: Source) => src.quality === "default"
+  //   ) as Source
 
-    setUrl(selectedSrc?.url)
-  }, [sourceVideo])
+  //   setUrl(selectedSrc?.url)
+  // }, [sourceVideo])
 
   function getInstance(art: Artplayer) {
     art.on("video:ended", () => {

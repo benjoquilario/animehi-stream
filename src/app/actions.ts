@@ -149,6 +149,7 @@ export async function updateWatchlist({
         nextEpisode,
         prevEpisode,
         episodeNumber: Number(episodeNumber),
+        updatedAt: new Date(),
       },
     })
 

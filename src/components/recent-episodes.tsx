@@ -14,11 +14,12 @@ export default function RecentEpisodes({
   recentEpisodes,
 }: RecentEpisodesProps) {
   return (
-    <Section>
-      <h3 className="w-full border-l-2 border-primary pb-6 pt-2.5 text-left text-2xl font-semibold">
+    <Section sectionName="recent">
+      <h3 className="w-full pb-6 pt-2.5 text-left text-2xl font-semibold">
+        <span className="h-full w-2 bg-primary"></span>
         Recently Updated
       </h3>
-      <ul className="relative grid grid-cols-3 gap-3 overflow-hidden md:grid-cols-4 lg:grid-cols-6">
+      <ul className="relative grid grid-cols-3 gap-3 overflow-hidden md:grid-cols-4 lg:grid-cols-5">
         {recentEpisodes?.map((result) => (
           <li
             key={result.episodeId}

@@ -1,5 +1,4 @@
 import { animeInfo, popular, watch, publicUrl } from "@/lib/consumet"
-import Popular from "@/components/popular"
 import Episodes from "@/components/episode/episodes"
 import Details from "@/components/details"
 import Sharethis from "@/components/sharethis"
@@ -9,7 +8,6 @@ import { getSession } from "../../../../lib/session"
 import Server from "@/components/server"
 import { createViewCounter, createWatchlist, increment } from "@/app/actions"
 import { Suspense } from "react"
-import ArtPlayerComponent from "@/components/player/art-player"
 import VideoPlayer from "@/components/player/oplayer/ssr"
 
 type Params = {
@@ -68,6 +66,8 @@ export async function generateMetadata({
   }
 }
 
+export const dynamic = "force-dynamic"
+
 export default async function Watch({ params: { params } }: Params) {
   const [animeId, episodeNumber] = params as string[]
   const session = await getSession()
@@ -75,7 +75,6 @@ export default async function Watch({ params: { params } }: Params) {
   if (!animeId || !episodeNumber) notFound()
 
   const animeResponse = await animeInfo(animeId)
-  const popularResponse = await popular()
 
   if (!animeResponse) notFound()
 
@@ -122,48 +121,40 @@ export default async function Watch({ params: { params } }: Params) {
   await increment(animeId)
 
   return (
-    <div className="w-full px-[2%]">
-      <div className="relative flex w-full max-w-full flex-col">
-        <div className="flex flex-col md:space-x-4 xl:flex-row">
-          <div className="mt-5 flex-1">
-            <Suspense fallback={<div>Loading...</div>}>
-              <VideoPlayer
-                animeId={animeId}
-                nextEpisode={nextEpisode()}
-                prevEpisode={prevEpisode()}
-                sourcesPromise={sourcesPromise}
-                episodeId={`${animeId}-episode-${episodeNumber}`}
-                episodeNumber={episodeNumber}
-              />
-            </Suspense>
-            {/* <VideoPlayer animeId={animeId} episodeNumber={episodeNumber} /> */}
-            <Suspense>
-              <Server
-                episodeId={`${animeId}-episode-${episodeNumber}`}
-                animeResult={animeResponse}
-                episodes={animeResponse?.episodes}
-                animeId={animeId}
-                episodeNumber={episodeNumber}
-              />
-            </Suspense>
-            {animeResponse ? (
-              <>
-                <Episodes
-                  animeId={animeId}
-                  fullEpisodes={animeResponse.episodes}
-                  episodeId={`${animeId}-episode-${episodeNumber}`}
-                />
-                <Details data={animeResponse} />
-              </>
-            ) : (
-              <div>Loading Episodes</div>
-            )}
-            <Sharethis />
-          </div>
-
-          <Popular popularResults={popularResponse.results} />
-        </div>
-      </div>
+    <div className="mt-5 flex-1">
+      <Suspense fallback={<div>Loading...</div>}>
+        <VideoPlayer
+          animeId={animeId}
+          nextEpisode={nextEpisode()}
+          prevEpisode={prevEpisode()}
+          sourcesPromise={sourcesPromise}
+          episodeId={`${animeId}-episode-${episodeNumber}`}
+          episodeNumber={episodeNumber}
+        />
+      </Suspense>
+      {/* <VideoPlayer animeId={animeId} episodeNumber={episodeNumber} /> */}
+      <Suspense>
+        <Server
+          episodeId={`${animeId}-episode-${episodeNumber}`}
+          animeResult={animeResponse}
+          episodes={animeResponse?.episodes}
+          animeId={animeId}
+          episodeNumber={episodeNumber}
+        />
+      </Suspense>
+      {animeResponse ? (
+        <>
+          <Episodes
+            animeId={animeId}
+            fullEpisodes={animeResponse.episodes}
+            episodeId={`${animeId}-episode-${episodeNumber}`}
+          />
+          <Details data={animeResponse} />
+        </>
+      ) : (
+        <div>Loading Episodes</div>
+      )}
+      <Sharethis />
     </div>
   )
 }

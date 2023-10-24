@@ -6,12 +6,17 @@ import { motion } from "framer-motion"
 type SectionProps = {
   children: React.ReactNode
   className?: string
+  sectionName: string
 }
 
-export default function Section({ children, className }: SectionProps) {
+export default function Section({
+  children,
+  className,
+  sectionName,
+}: SectionProps) {
   return (
     <motion.div
-      key="trending"
+      key={sectionName}
       initial={{ y: 20, opacity: 0 }}
       whileInView={{ y: 0, opacity: 1 }}
       transition={{ duration: 0.5 }}

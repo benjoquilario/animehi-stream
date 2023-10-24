@@ -119,12 +119,12 @@ const VideoPlayer = ({ animeId, episodeNumber, ...rest }: ArtPlayerProps) => {
 
   return (
     <div>
-      {isLoading ? (
-        <div>Loading...</div>
-      ) : (
+      {!isLoading && url ? (
         <AspectRatio ratio={16 / 9}>
           <div className="h-full" ref={artRef} {...rest} />
         </AspectRatio>
+      ) : (
+        <div>Loading...</div>
       )}
     </div>
   )

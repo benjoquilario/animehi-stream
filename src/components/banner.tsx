@@ -33,7 +33,7 @@ const Banner = () => {
               <div className="absolute inset-0 h-full w-full ">
                 <div className="absolute inset-0 overflow-hidden">
                   <Image
-                    containerClassName={styles.overlay}
+                    containerClassName={`${styles.overlay} h-full w-full relative`}
                     src={anime.banner}
                     className="absolute h-full w-full"
                     style={{ objectFit: "cover" }}

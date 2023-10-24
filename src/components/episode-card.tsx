@@ -1,6 +1,8 @@
+"use client"
+
 import Link from "next/link"
 import type { RecentEpisode } from "types/types"
-import { BsFillPlayFill } from "react-icons/bs"
+import { BsFillPlayFill, BsPlayFill } from "react-icons/bs"
 import Image from "./ui/image"
 import { increment } from "@/app/actions"
 import { useSession } from "next-auth/react"
@@ -16,12 +18,10 @@ export default function EpisodeCard({ animeResult }: EpisodeCardProps) {
         <div className="absolute left-0 top-0 rounded text-xs font-semibold">
           HD
         </div>
-        <div className="absolute bottom-0 left-0 z-20 flex w-full justify-between shadow-lg">
-          <div className="rounded-tr-md bg-red-800 p-1 text-xs font-semibold md:font-bold">
-            Ep {animeResult.episodeNumber}
-          </div>
-          <div className="rounded-tl-md rounded-tr bg-[#ffc107] p-1 text-xs font-semibold md:font-bold">
-            SUB
+        <div className="absolute bottom-2 left-2 z-[80] flex w-full justify-between shadow-lg">
+          <div className="flex items-center">
+            <BsPlayFill />
+            <h2>Episode {animeResult.episodeNumber}</h2>
           </div>
         </div>
         <div className="absolute h-full w-full">
@@ -37,10 +37,11 @@ export default function EpisodeCard({ animeResult }: EpisodeCardProps) {
         <Link
           href={`/watch/${animeResult.id}/${animeResult.episodeNumber}`}
           aria-label={animeResult.episodeId}
-          className="absolute inset-0 flex items-center justify-center bg-black/60 text-primary opacity-0 transition-opacity hover:opacity-100"
+          className="absolute inset-0 z-50 flex items-center justify-center bg-background/70 text-primary opacity-0 transition-opacity hover:opacity-100"
         >
           <BsFillPlayFill className="h-12 w-12" />
         </Link>
+        <div className="absolute bottom-0 z-30 h-1/4 w-full bg-gradient-to-t from-background/80 from-25% to-transparent transition-all duration-300 ease-out group-hover:to-background/40"></div>
       </div>
       <div>
         <h3 className="line-clamp-2 text-center text-xs font-semibold leading-5 md:text-sm">
