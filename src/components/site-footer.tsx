@@ -7,7 +7,8 @@ import ThemeToggle from "./theme-toggle"
 export default function SiteFooter() {
   return (
     <>
-      <footer className="mt-8 flex w-full flex-col bg-[#111827] px-[3%] pt-9">
+      <footer className="mt-8 flex w-full flex-col px-[3%] pt-9">
+        <Separator className="my-4" />
         <div className="flex flex-col">
           <div className="mb-5 flex flex-col items-start justify-between gap-5 xl:flex-row xl:items-center">
             <div>
@@ -47,12 +48,10 @@ export default function SiteFooter() {
               </ul>
             </nav>
           </div>
-          <Separator className="my-2" />
 
-          <div className="xlitems-center mb-1 flex flex-col items-start justify-between xl:flex-row">
+          <div className="mb-1 mt-3 flex flex-col items-start justify-between xl:flex-row xl:items-center">
             <p className="text-xs text-muted-foreground/70 xl:text-sm">
-              © 2023 animehi. Made by Benjo Quilario Powered by Consumet API
-              for video sources.
+              © 2023 animehi. Made by Benjo Quilario.
             </p>
             <div className="flex items-center gap-2">
               <Link href="/">

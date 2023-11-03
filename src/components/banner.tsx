@@ -12,9 +12,15 @@ import { spotlight } from "@/lib/spotlight"
 import { Button, buttonVariants } from "./ui/button"
 import { BsFillPlayFill } from "react-icons/bs"
 import Link from "next/link"
-import Image from "./ui/image"
+import NextImage from "./ui/image"
+import { extractId, stripHtml } from "@/lib/utils"
+import { Seasonal } from "types/types"
 
-const Banner = () => {
+type BannerProps = {
+  trendings?: Seasonal[]
+}
+
+const Banner = ({ trendings }: BannerProps) => {
   return (
     <div className="relative">
       <div className="w-full max-w-full p-0">
@@ -28,27 +34,29 @@ const Banner = () => {
           modules={[Autoplay]}
           className="mySwiper"
         >
-          {spotlight.map((anime) => (
-            <SwiperSlide id="slider" key={anime.id}>
+          {trendings?.slice(0, 9).map((trending) => (
+            <SwiperSlide id="slider" key={trending.id}>
               <div className="absolute inset-0 h-full w-full ">
                 <div className="absolute inset-0 overflow-hidden">
-                  <Image
-                    containerClassName={`${styles.overlay} h-full w-full relative`}
-                    src={anime.banner}
+                  <NextImage
+                    containerclassname={`${styles.overlay} h-full w-full relative`}
+                    src={trending.bannerImage}
                     className="absolute h-full w-full"
                     style={{ objectFit: "cover" }}
-                    alt={anime.title}
+                    alt={trending.title.english || trending.title.romaji}
                     fill
                   />
                   <div className="absolute bottom-[50px] top-[auto] z-[100] w-full max-w-[800px] pl-[2%] md:bottom-[109px]">
                     <h2 className="mx-0 mb-2 line-clamp-2 w-full max-w-lg text-lg font-bold sm:text-2xl md:text-5xl">
-                      {anime.title}
+                      {trending.title.english || trending.title.romaji}
                     </h2>
                     <p className="mx-0 my-3 line-clamp-2 w-full max-w-lg pr-6 text-left text-sm text-muted-foreground md:line-clamp-3">
-                      {anime.description}
+                      {stripHtml(trending.description)}
                     </p>
                     <Link
-                      href={`/watch/${anime.id}/1`}
+                      href={`${extractId(trending.mappings)}/${
+                        trending.currentEpisode
+                      }`}
                       className={buttonVariants()}
                     >
                       <BsFillPlayFill className="h-6 w-6" />

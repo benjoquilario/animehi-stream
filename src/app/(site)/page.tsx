@@ -1,33 +1,35 @@
 import Banner from "@/components/banner"
-import { popular, recent } from "@/lib/consumet"
-import Popular from "@/components/popular"
+import { recent, seasonal } from "@/lib/consumet"
 import RecentEpisodes from "@/components/recent-episodes"
 import { Suspense } from "react"
 import Sharethis from "@/components/sharethis"
 import ContinueWatching from "@/components/continue-watching"
 import { getSession } from "@/lib/session"
 import MostView from "@/components/most-view"
+import NewestComments from "@/components/comments/newest-comments"
+import Seasonal from "@/components/seasonal"
+
+export const dynamic = "force-dynamic"
 
 export default async function Home() {
-  const [recentSettled, popularSettled] = await Promise.allSettled([
+  const [recentSettled, seasonSettled] = await Promise.allSettled([
     recent(),
-    popular(),
+    seasonal(),
   ])
 
-  const recentEpisodes =
+  const recentResponse =
     recentSettled.status === "fulfilled" ? recentSettled.value : null
-  const popularResults =
-    popularSettled.status === "fulfilled" ? popularSettled.value : null
+  const seasonalResponse =
+    seasonSettled.status === "fulfilled" ? seasonSettled.value : null
 
   const session = await getSession()
-
   return (
     <>
       <section>
-        <Banner />
+        <Banner trendings={seasonalResponse?.trending} />
       </section>
       <section className="w-full px-[2%]">
-        <div className="flex flex-col md:space-x-4 xl:flex-row">
+        <div className="flex flex-col md:space-x-4">
           <div className="relative flex-1 overflow-hidden">
             {session ? (
               <>
@@ -46,13 +48,20 @@ export default async function Home() {
               </p>
               <Sharethis />
             </div>
-            <RecentEpisodes recentEpisodes={recentEpisodes?.results} />
-          </div>
-          <div>
+
             <Suspense>
-              <MostView />
+              <NewestComments />
             </Suspense>
-            <Popular popularResults={popularResults?.results} />
+            <Seasonal seasonalResults={seasonalResponse} />
+            <div className="flex flex-col md:space-x-4 xl:flex-row">
+              <RecentEpisodes recentEpisodes={recentResponse?.results} />
+              <div className="flex flex-row sm:flex-col xl:flex-col">
+                <Suspense>
+                  <MostView />
+                </Suspense>
+                {/* <Popular popularResults={popularResults?.results} /> */}
+              </div>
+            </div>
           </div>
         </div>
       </section>

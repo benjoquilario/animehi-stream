@@ -14,6 +14,7 @@ export async function POST(req: Request) {
   if (isEmailExist) throw new Error("User already exist")
 
   const hashedPassword = await bcrypt.hash(password, 12)
+  const randomNumber = Math.floor(Math.random() * 6) + 1
 
   if (password !== confirmPassword) {
     throw new Error("The passwords did not match")
@@ -24,6 +25,7 @@ export async function POST(req: Request) {
       email,
       password: hashedPassword,
       userName,
+      image: `/avatar-${randomNumber}.png`,
     },
   })
 

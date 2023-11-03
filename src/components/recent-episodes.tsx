@@ -15,8 +15,7 @@ export default function RecentEpisodes({
 }: RecentEpisodesProps) {
   return (
     <Section sectionName="recent">
-      <h3 className="w-full pb-6 pt-2.5 text-left text-2xl font-semibold">
-        <span className="h-full w-2 bg-primary"></span>
+      <h3 className="w-full pb-6 pt-2.5 text-left text-2xl font-semibold text-primary">
         Recently Updated
       </h3>
       <ul className="relative grid grid-cols-3 gap-3 overflow-hidden md:grid-cols-4 lg:grid-cols-5">

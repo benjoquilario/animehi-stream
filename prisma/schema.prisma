@@ -24,6 +24,7 @@ model User {
   watchlists      Watchlist[]
   continueWatching ContinueWatching[]
   bookMarks       Bookmark[]
+  comments        Comment[]
 
   accounts        Account[]
 }
@@ -102,5 +103,19 @@ model ViewCounter {
   animeId      String
   title        String
   image        String
+  latestEpisodeNumber   Int?
 }
 
+
+model Comment {
+  id           String   @id @default(auto()) @map("_id") @db.ObjectId
+  comment      String
+  createdAt    DateTime @default(now())
+  animeId      String
+  episodeId    String
+  updatedAt    DateTime   @updatedAt
+  episodeNumber String
+
+  userId       String     @db.ObjectId
+  user         User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+}

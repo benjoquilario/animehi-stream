@@ -61,17 +61,19 @@ const ButtonAction = ({
         <Button
           onClick={handlePrevEpisode}
           disabled={isPrevEpisode}
+          aria-label="previous episode"
           className="flex h-3 items-center gap-1 bg-background px-2 text-sm hover:bg-background"
         >
           <AiFillBackward className="h-5 w-5" />
-          <span className="none md:block">Prev episode</span>
+          <span className="hidden md:block">Prev episode</span>
         </Button>
         <Button
           onClick={handleNextEpisode}
           disabled={isNextEpisode}
+          aria-label="next episode"
           className="flex h-3 items-center gap-1 bg-background px-2 text-sm hover:bg-background"
         >
-          <span className="none md:block">Next episode</span>
+          <span className="hidden md:block">Next episode</span>
           <AiFillForward className="h-5 w-5" />
         </Button>
         {children}

@@ -1,53 +1,53 @@
 "use client"
 
 import React from "react"
-import type { ViewCounter } from "@prisma/client"
 import Link from "next/link"
-import { cn } from "@/lib/utils"
-import NextImage from "./ui/image"
-import { AiFillEye } from "react-icons/ai"
+import NextImage from "@/components/ui/image"
 import { FaClosedCaptioning } from "react-icons/fa"
+import { Seasonal } from "types/types"
+import { extractId } from "@/lib/utils"
 
-type MostViewCardProps = {
-  result: ViewCounter
-  className?: string
-  rank: number
+type ColumnCardProps = {
+  result: Seasonal
 }
 
-export default function MostViewCard({
-  result,
-  className,
-  rank,
-}: MostViewCardProps) {
+const ColumnCard = ({ result }: ColumnCardProps) => {
   return (
     <>
       <div>
-        <Link href={`/watch/${result.animeId}/${result.latestEpisodeNumber}`}>
+        <Link href={`${extractId(result.mappings)}/${result.currentEpisode}`}>
           <NextImage
             containerclassname="relative w-[60px] h-[75px]"
             fill
-            src={result.image}
-            alt={result.title}
+            src={result.coverImage}
+            alt={result.title.english || result.title.romaji}
             className="rounded-lg"
             style={{ objectFit: "cover" }}
           />
         </Link>
       </div>
       <div className="flex-1 px-3">
-        <h3 className="mb-1 line-clamp-2">{result.title}</h3>
+        <h3 className="mb-1 line-clamp-2">
+          {result.title.english || result.title.romaji}
+        </h3>
         <div className="overflow-hidden">
           <div className="flex flex-wrap items-center gap-1">
             <div className="flex items-center gap-1 rounded-lg bg-primary px-2 py-1 text-xs">
-              <FaClosedCaptioning /> {result.latestEpisodeNumber ?? 1}
+              <FaClosedCaptioning /> {result.currentEpisode ?? 1}
             </div>
             <div className="flex items-center gap-1 rounded-lg bg-secondary px-2 py-1 text-xs">
-              {result.latestEpisodeNumber ?? 1}
+              {result.currentEpisode ?? 1}
             </div>
             <span className="mx-1 inline-block h-1 w-1 rounded-full bg-primary"></span>
-            <div className="text-sm text-muted-foreground/70">TV</div>
+            <div className="text-sm text-muted-foreground/70">
+              {result.format}
+            </div>
           </div>
         </div>
       </div>
+      <div></div>
     </>
   )
 }
+
+export default ColumnCard

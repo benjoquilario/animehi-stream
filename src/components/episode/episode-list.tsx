@@ -25,10 +25,10 @@ const EpisodeList = ({
           className={buttonVariants({
             variant: "secondary",
             className: cn(
-              "border-l-2 border-primary",
+              "rounded-xl border-l-2 border-primary",
               currentEpisode?.number === episode.number
-                ? "!bg-primary"
-                : "!bg-secondary hover:bg-secondary/80"
+                ? "!bg-primary hover:!bg-primary/80"
+                : "!bg-secondary hover:!bg-secondary/80"
             ),
           })}
           href={`/watch/${animeId}/${episode.number}`}

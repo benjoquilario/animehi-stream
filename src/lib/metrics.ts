@@ -72,3 +72,24 @@ export const mostView = cache(async () => {
 
   return data
 })
+
+export const getNewestComments = cache(async () => {
+  const comments = await db.comment.findMany({
+    take: 10,
+    orderBy: {
+      createdAt: "desc",
+    },
+    include: {
+      user: {
+        select: {
+          id: true,
+          userName: true,
+          image: true,
+          email: true,
+        },
+      },
+    },
+  })
+
+  return comments
+})

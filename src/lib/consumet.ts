@@ -4,6 +4,7 @@ import type {
   Popular,
   RecentEpisode,
   Search,
+  SeasonalResponse,
   SourcesResponse,
 } from "types/types"
 import { cache } from "react"
@@ -11,6 +12,7 @@ import { cache } from "react"
 // import { ISearch,  } from "@consumet/extensions/dist/models/types"
 
 export const url = "https://api.consumet.org/anime/gogoanime"
+export const url2 = "https://api-consumet-animehi.vercel.app/anime/gogoanime"
 
 export const publicUrl = process.env.NEXT_PUBLIC_APP_URL
 
@@ -64,4 +66,14 @@ export const search = cache(async function search({
   if (!response.ok) throw new Error("Failed to fetch search.")
 
   return (await response.json()) as ConsumetResponse<Search>
+})
+
+export const seasonal = cache(async function seasonal() {
+  const response = await fetch(`${publicUrl}/api/anime/seasonal`, {
+    cache: "no-cache",
+  })
+
+  if (!response.ok) throw new Error("Failed to fetch seasonal.")
+
+  return (await response.json()) as SeasonalResponse
 })

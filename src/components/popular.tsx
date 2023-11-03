@@ -12,10 +12,10 @@ export default function Popular({ popularResults }: PopularProps) {
   return (
     <Section sectionName="popular" className="w-full pt-5 md:w-80">
       <div className="block w-full">
-        <h3 className="mb-2 border-l-2 border-primary pr-4 text-2xl font-semibold">
+        <h2 className="mb-2 pr-4 text-2xl font-semibold text-primary">
           Most Popular
-        </h3>
-        <div className="bg-background">
+        </h2>
+        <div className="bg-background/80">
           <ul className="">
             {popularResults?.map((data, index) => (
               <Column

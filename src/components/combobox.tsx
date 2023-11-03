@@ -76,6 +76,7 @@ export default function Combobox() {
         variant="outline"
         className="relative h-9 w-9 p-0 xl:h-10 xl:w-60 xl:justify-start xl:px-3 xl:py-2"
         onClick={() => setIsOpen(true)}
+        aria-label="Search anime"
       >
         <AiOutlineSearch className="h-6 w-6" />
         <span className="hidden xl:inline-flex">Search anime...</span>

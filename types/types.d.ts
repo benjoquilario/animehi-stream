@@ -72,6 +72,53 @@ interface Bookmark {
   userId: string
 }
 
+interface CommentsT<T> {
+  animeId: string
+  comment: string
+  createdAt: Date
+  episodeId: string
+  id: string
+  userId: string
+  updatedAt: Date
+  user: T
+}
+
+interface Mappings {
+  id: string
+  providerId: string
+  providerType: string
+  similarity: number
+}
+
+interface Seasonal {
+  id: string
+  coverImage: string
+  bannerImage: string
+  title: {
+    romaji: string
+    english: string
+    native: string
+  }
+  format: string
+  totalEpisodes: number
+  currentEpisode: number
+  description: string
+  mappings: Mappings[]
+}
+
+interface SeasonalResponse {
+  trending: Seasonal[]
+  popular: Seasonal[]
+  top: Seasonal[]
+  seasonal: Seasonal[]
+}
+
+interface CommentsResult<T> {
+  comments: Array<CommentsT<T>>
+  hasNextPage: boolean | null
+  nextSkip: number | null
+}
+
 export interface EpisodesType {
   description: string
   id: string

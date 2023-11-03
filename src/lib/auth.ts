@@ -4,27 +4,8 @@ import db from "./db"
 import bcrypt from "bcrypt"
 import type { NextAuthOptions } from "next-auth"
 import { publicUrl } from "./consumet"
-import { ApolloClient, InMemoryCache, gql } from "@apollo/client"
 import CredentialsProvider from "next-auth/providers/credentials"
 import { credentialsValidator } from "@/lib/validations/credentials"
-
-const defaultOptions = {
-  watchQuery: {
-    fetchPolicy: "no-cache",
-    errorPolicy: "ignore",
-  },
-  query: {
-    fetchPolicy: "no-cache",
-    errorPolicy: "all",
-  },
-}
-
-const client = new ApolloClient({
-  uri: "https://graphql.anilist.co",
-  cache: new InMemoryCache(),
-  // @ts-expect-error
-  defaultOptions: defaultOptions,
-})
 
 export const providers = ["anilist"] as const
 
@@ -37,7 +18,6 @@ declare module "next-auth" {
 }
 
 export const authOptions: NextAuthOptions = {
-  // @ts-expect-error // I'm using prisma accelerate
   adapter: PrismaAdapter(db),
   providers: [
     {
@@ -101,7 +81,7 @@ export const authOptions: NextAuthOptions = {
       },
     }),
   ],
-  debug: process.env.NODE_ENV === "development",
+  debug: process.env.NODE_ENV !== "development",
   secret: process.env.NEXTAUTH_SECRET,
   session: {
     //Sets the session to use JSON Web Token

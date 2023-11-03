@@ -10,7 +10,7 @@ import "swiper/css/pagination"
 // import required modules
 import { Pagination } from "swiper/modules"
 import type { Watchlist } from "@prisma/client"
-import Image from "./ui/image"
+import NextImage from "./ui/image"
 import Link from "next/link"
 import { BsPlayFill } from "react-icons/bs"
 import {
@@ -35,25 +35,21 @@ const SwiperContinueWatching = (props: SwiperContinueWatchingProps) => {
       // }}
 
       breakpoints={{
-        320: {
-          slidesPerView: 1,
-          spaceBetween: 20,
+        300: {
+          slidesPerView: "auto",
+          spaceBetween: 15,
         },
-        480: {
-          slidesPerView: 1,
-          spaceBetween: 20,
-        },
-        640: {
-          slidesPerView: 2,
-          spaceBetween: 20,
-        },
-        768: {
+        940: {
           slidesPerView: 3,
+          spaceBetween: 15,
+        },
+        1199: {
+          slidesPerView: 4,
           spaceBetween: 20,
         },
-        1024: {
-          slidesPerView: 3,
-          spaceBetween: 30,
+        1599: {
+          slidesPerView: 5,
+          spaceBetween: 20,
         },
       }}
       modules={[Pagination]}
@@ -118,8 +114,8 @@ const SwiperContinueWatching = (props: SwiperContinueWatchingProps) => {
                 href={`/watch/${result.animeId}/${result.episodeNumber}`}
               >
                 <div className="absolute z-30 h-full w-full bg-gradient-to-t from-background/70 from-20% to-transparent transition-all duration-300 ease-out group-hover:to-background/40"></div>
-                <span className="absolute bottom-0 left-0 z-30 h-[2px] bg-red-600"></span>
-                <Image
+                {/* <span className="absolute bottom-0 left-0 z-30 h-[2px] bg-red-600"></span> */}
+                <NextImage
                   fill
                   src={result.image}
                   alt={result.title}

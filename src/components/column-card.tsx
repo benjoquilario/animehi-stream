@@ -1,7 +1,7 @@
 import Link from "next/link"
 import { cn } from "@/lib/utils"
 import type { Popular } from "types/types"
-import Image from "./ui/image"
+import NextImage from "./ui/image"
 
 type ColumnProps = {
   className?: string
@@ -15,12 +15,12 @@ export default function Column({ className, data, rank }: ColumnProps) {
       className={cn("md:h-22 relative mb-2 flex h-20 items-center", className)}
     >
       <Link
-        className="relative flex w-full pl-2 pr-4 transition hover:bg-secondary"
+        className="relative flex w-full pr-4 transition hover:bg-secondary"
         href={`/watch/${data.id}/1`}
       >
         <div className="w-[54px] shrink-0">
-          <Image
-            containerClassName="relative h-[76px] w-[56px] rounded-sm"
+          <NextImage
+            containerclassname="relative h-[76px] w-[56px] rounded-sm"
             src={data.image}
             alt={data.title}
             fill
@@ -34,6 +34,7 @@ export default function Column({ className, data, rank }: ColumnProps) {
             <span className="text-xs text-muted-foreground/80">TV</span>
           </div>
           <h3
+            title={data.title}
             className={cn(
               "line-clamp-2 text-base font-semibold leading-5 transition duration-300 hover:text-primary"
             )}

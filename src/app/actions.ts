@@ -4,8 +4,13 @@ import { type Register } from "@/lib/validations/credentials"
 import bcrypt from "bcrypt"
 import { getCurrentUser } from "@/lib/current-user"
 import { getSession } from "@/lib/session"
+import { headers } from "next/headers"
+import { Ratelimit } from "@upstash/ratelimit"
+import { redis } from "@/lib/redis"
+import { revalidatePath } from "next/cache"
+import { Redis } from "@upstash/redis"
 
-export async function increment(animeId: string) {
+export async function increment(animeId: string, latestEpisodeNumber: number) {
   const data = await db.viewCounter.findFirst({
     where: {
       animeId,
@@ -22,6 +27,7 @@ export async function increment(animeId: string) {
     },
     data: {
       view: view + 1,
+      latestEpisodeNumber,
     },
   })
 
@@ -87,10 +93,12 @@ export async function createViewCounter({
   animeId,
   image,
   title,
+  latestEpisodeNumber,
 }: {
   animeId: string
   image: string
   title: string
+  latestEpisodeNumber: number
 }) {
   const isAnimeIdExist = await db.viewCounter.findFirst({
     where: {
@@ -106,6 +114,7 @@ export async function createViewCounter({
       title,
       animeId,
       view: 1,
+      latestEpisodeNumber,
     },
   })
 
@@ -189,6 +198,58 @@ export async function createBookmark({
             animeId,
             image,
             title,
+          },
+        ],
+      },
+    },
+  })
+
+  return
+}
+
+export type AddComment = {
+  commentText: string
+  animeId: string
+  episodeNumber: string
+}
+
+export async function addComment(comment: AddComment) {
+  const ip = headers().get("x-forwarded-for")
+
+  const { commentText, animeId, episodeNumber } = comment
+
+  const ratelimit = new Ratelimit({
+    redis: Redis.fromEnv(),
+    limiter: Ratelimit.fixedWindow(5, "60s"),
+  })
+
+  const { success, reset } = await ratelimit.limit(
+    (ip ?? "anonymous") + "-addComment"
+  )
+
+  if (!success) {
+    console.log(
+      `ratelimit hit for addComment , reset in ${new Date(reset).toUTCString()}`
+    )
+    return
+  }
+
+  const session = await getSession()
+
+  if (!session) throw new Error("Not authenticated!")
+
+  await db.user.update({
+    where: {
+      id: session.user.id,
+    },
+    data: {
+      comments: {
+        create: [
+          {
+            animeId,
+            episodeId: `${animeId}-episode-${episodeNumber}`,
+            comment: commentText,
+            episodeNumber,
           },
         ],
       },

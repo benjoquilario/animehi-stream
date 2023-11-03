@@ -7,6 +7,7 @@ import Script from "next/script"
 import NextTopLoader from "nextjs-toploader"
 import { Toaster } from "@/components/ui/toaster"
 import AuthContext from "@/components/auth-context"
+import QueryProvider from "@/components/query-provider"
 
 const fontSans = Outfit({
   subsets: ["latin"],
@@ -76,7 +77,7 @@ export default function RootLayout({
         <AuthContext>
           <ThemeProvider attribute="class" defaultTheme="dark" enableSystem>
             <NextTopLoader height={4} color="#6d28d9" />
-            {children}
+            <QueryProvider>{children}</QueryProvider>
           </ThemeProvider>
         </AuthContext>
         <Toaster />

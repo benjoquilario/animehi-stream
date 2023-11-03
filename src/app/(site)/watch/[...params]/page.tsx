@@ -9,6 +9,10 @@ import Server from "@/components/server"
 import { createViewCounter, createWatchlist, increment } from "@/app/actions"
 import { Suspense } from "react"
 import VideoPlayer from "@/components/player/oplayer/ssr"
+import Popular from "@/components/popular"
+import { AspectRatio } from "@/components/ui/aspect-ratio"
+import Comments from "@/components/comments/comments"
+import MostView from "@/components/most-view"
 
 type Params = {
   params: {
@@ -75,6 +79,7 @@ export default async function Watch({ params: { params } }: Params) {
   if (!animeId || !episodeNumber) notFound()
 
   const animeResponse = await animeInfo(animeId)
+  const popularResponse = await popular()
 
   if (!animeResponse) notFound()
 
@@ -82,6 +87,7 @@ export default async function Watch({ params: { params } }: Params) {
     animeId,
     title: animeResponse.title ?? animeResponse.otherName,
     image: animeResponse.image,
+    latestEpisodeNumber: animeResponse.episodes.length,
   })
 
   const sourcesPromise = watch(`${animeId}-episode-${episodeNumber}`)
@@ -118,43 +124,65 @@ export default async function Watch({ params: { params } }: Params) {
     })
   }
 
-  await increment(animeId)
+  await increment(animeId, animeResponse.episodes.length)
 
   return (
-    <div className="mt-5 flex-1">
-      <Suspense fallback={<div>Loading...</div>}>
-        <VideoPlayer
-          animeId={animeId}
-          nextEpisode={nextEpisode()}
-          prevEpisode={prevEpisode()}
-          sourcesPromise={sourcesPromise}
-          episodeId={`${animeId}-episode-${episodeNumber}`}
-          episodeNumber={episodeNumber}
-        />
-      </Suspense>
-      {/* <VideoPlayer animeId={animeId} episodeNumber={episodeNumber} /> */}
-      <Suspense>
-        <Server
-          episodeId={`${animeId}-episode-${episodeNumber}`}
-          animeResult={animeResponse}
-          episodes={animeResponse?.episodes}
-          animeId={animeId}
-          episodeNumber={episodeNumber}
-        />
-      </Suspense>
-      {animeResponse ? (
-        <>
-          <Episodes
-            animeId={animeId}
-            fullEpisodes={animeResponse.episodes}
-            episodeId={`${animeId}-episode-${episodeNumber}`}
-          />
-          <Details data={animeResponse} />
-        </>
-      ) : (
-        <div>Loading Episodes</div>
-      )}
-      <Sharethis />
+    <div className="w-full px-[2%]">
+      <div className="relative flex w-full max-w-full flex-col">
+        <div className="flex flex-col xl:flex-row xl:space-x-4">
+          <div className="mt-5 flex-1">
+            <Suspense
+              fallback={
+                <div className="mt-5 flex-1">
+                  <AspectRatio
+                    ratio={16 / 9}
+                    className="flex items-center justify-center"
+                  >
+                    <div className="loader"></div>
+                  </AspectRatio>
+                </div>
+              }
+            >
+              <VideoPlayer
+                animeId={animeId}
+                nextEpisode={nextEpisode()}
+                prevEpisode={prevEpisode()}
+                sourcesPromise={sourcesPromise}
+                episodeId={`${animeId}-episode-${episodeNumber}`}
+                episodeNumber={episodeNumber}
+              />
+            </Suspense>
+            {/* <VideoPlayer animeId={animeId} episodeNumber={episodeNumber} /> */}
+            <Suspense>
+              <Server
+                episodeId={`${animeId}-episode-${episodeNumber}`}
+                animeResult={animeResponse}
+                episodes={animeResponse?.episodes}
+                animeId={animeId}
+                episodeNumber={episodeNumber}
+              />
+            </Suspense>
+            {animeResponse ? (
+              <>
+                <Episodes
+                  animeId={animeId}
+                  fullEpisodes={animeResponse.episodes}
+                  episodeId={`${animeId}-episode-${episodeNumber}`}
+                />
+                <Details data={animeResponse} />
+              </>
+            ) : (
+              <div>Loading Episodes</div>
+            )}
+            <Sharethis />
+
+            <Comments animeId={animeId} episodeNumber={episodeNumber} />
+          </div>
+          <Suspense>
+            <MostView />
+          </Suspense>
+        </div>
+      </div>
     </div>
   )
 }

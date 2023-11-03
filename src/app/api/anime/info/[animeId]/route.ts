@@ -1,49 +1,35 @@
 import { NextResponse } from "next/server"
-import { url } from "@/lib/consumet"
-import { redis, rateLimiterRedis } from "@/lib/redis"
+import { url2 } from "@/lib/consumet"
+import { redis } from "@/lib/redis"
 import { headers } from "next/headers"
-import { ANIME } from "@consumet/extensions"
+import { Ratelimit } from "@upstash/ratelimit"
+import { Redis } from "@upstash/redis"
 
 export async function GET(
   req: Request,
   { params }: { params: { animeId: string } }
 ) {
-  const gogo = new ANIME.Gogoanime()
   const animeId = params.animeId
   let cachedVal
 
   if (!animeId)
     return NextResponse.json("Missing animeId for /anime/info", { status: 422 })
 
-  if (redis) {
-    try {
-      const ipAddress = headers().get("x-forwarded-for")
-      await rateLimiterRedis.consume(ipAddress)
-    } catch (error) {
-      return NextResponse.json(`Too Many Requests, retry after`, {
-        status: 429,
-      })
-    }
-    cachedVal = await redis.get(animeId)
-  }
-
   cachedVal = await redis.get(animeId)
 
   if (cachedVal) {
     console.log("anime info hits")
-    return new Response(cachedVal)
+    return NextResponse.json(cachedVal)
   }
 
-  // const response = await fetch(`${url}/info/${animeId}`)
+  const response = await fetch(`${url2}/info/${animeId}`)
 
-  // if (!response.ok) throw new Error("Failed to fetch anime information")
+  if (!response.ok) throw new Error("Failed to fetch anime information")
 
-  const anime = await gogo.fetchAnimeInfo(animeId)
+  const anime = await response.json()
 
-  if (anime) {
-    const stringifyResult = JSON.stringify(anime)
-    await redis.setex(animeId, 60 * 60 * 3, stringifyResult)
-  }
+  const stringifyResult = JSON.stringify(anime)
+  await redis.setex(animeId, 60 * 60 * 3, stringifyResult)
 
   return NextResponse.json(anime)
 }

@@ -3,7 +3,7 @@
 import Link from "next/link"
 import type { RecentEpisode } from "types/types"
 import { BsFillPlayFill, BsPlayFill } from "react-icons/bs"
-import Image from "./ui/image"
+import NextImage from "./ui/image"
 import { increment } from "@/app/actions"
 import { useSession } from "next-auth/react"
 
@@ -25,7 +25,8 @@ export default function EpisodeCard({ animeResult }: EpisodeCardProps) {
           </div>
         </div>
         <div className="absolute h-full w-full">
-          <Image
+          <NextImage
+            containerclassname="relative"
             style={{ objectFit: "cover" }}
             src={animeResult.image}
             alt={animeResult.title}
@@ -44,7 +45,10 @@ export default function EpisodeCard({ animeResult }: EpisodeCardProps) {
         <div className="absolute bottom-0 z-30 h-1/4 w-full bg-gradient-to-t from-background/80 from-25% to-transparent transition-all duration-300 ease-out group-hover:to-background/40"></div>
       </div>
       <div>
-        <h3 className="line-clamp-2 text-center text-xs font-semibold leading-5 md:text-sm">
+        <h3
+          title={animeResult.title}
+          className="line-clamp-2 text-center text-xs font-semibold leading-5 md:text-sm"
+        >
           {animeResult.title}
         </h3>
       </div>

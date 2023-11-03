@@ -1,6 +1,6 @@
 "use client"
 
-import Image from "./ui/image"
+import NextImage from "./ui/image"
 import { AnimeInfoResponse } from "types/types"
 
 type DetailsProps = {
@@ -12,11 +12,11 @@ const Details = ({ data }: DetailsProps) => {
     <div className="mb-3 mt-4 w-full">
       <div className="flex flex-col gap-4 md:flex-row">
         <div className="w-40">
-          <Image
-            containerClassName="relative h-56 w-full rounded-md"
+          <NextImage
+            containerclassname="relative h-56 w-40 w-full rounded-md"
             className="rounded-md"
-            width={250}
-            height={400}
+            fill
+            style={{ objectFit: "cover" }}
             src={data.image}
             alt={data.title}
           />

@@ -1,7 +1,7 @@
 "use client"
 
 import React, { useCallback, useState } from "react"
-import NextImage, { ImageProps as NextImageProps } from "next/image"
+import Image, { ImageProps as NextImageProps } from "next/image"
 import { motion } from "framer-motion"
 
 const variants = {
@@ -15,38 +15,33 @@ const variants = {
 }
 
 interface ImageProps extends NextImageProps {
-  containerClassName?: string
+  containerclassname?: string
 }
 
-const Image: React.FC<ImageProps> = ({ onLoadingComplete, ...props }) => {
-  const { containerClassName } = props
+const NextImage: React.FC<ImageProps> = ({ onLoad, ...props }) => {
+  const { containerclassname } = props
 
   const [isLoaded, setIsLoaded] = useState(false)
 
-  const handleLoadingComplete: NextImageProps["onLoadingComplete"] =
-    useCallback(
-      (result: any) => {
-        setIsLoaded(true)
+  const handleLoadingComplete: NextImageProps["onLoad"] = useCallback(
+    (result: any) => {
+      setIsLoaded(true)
 
-        onLoadingComplete?.(result)
-      },
-      [onLoadingComplete]
-    )
+      onLoad?.(result)
+    },
+    [onLoad]
+  )
 
   return (
     <motion.div
       initial="hidden"
       variants={variants}
       animate={isLoaded ? "visible" : "hidden"}
-      className={containerClassName}
+      className={containerclassname}
     >
-      <NextImage
-        onLoadingComplete={handleLoadingComplete}
-        unoptimized
-        {...props}
-      />
+      <Image onLoad={handleLoadingComplete} unoptimized {...props} />
     </motion.div>
   )
 }
 
-export default React.memo(Image)
+export default React.memo(NextImage)
