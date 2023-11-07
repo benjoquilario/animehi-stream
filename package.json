@@ -12,7 +12,7 @@
     "preview": "next build && next start",
     "prettier": "prettier -write .",
     "studio": "prisma studio",
-    "postinstall": "prisma generate --no-engine"
+    "postinstall": "prisma generate"
   },
   "dependencies": {
     "@auth/core": "^0.16.1",
