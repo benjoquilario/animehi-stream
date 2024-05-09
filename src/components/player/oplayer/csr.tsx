@@ -55,6 +55,7 @@ export type WatchProps = {
   prevEpisode: string
   animeId: string
   episodeNumber: string
+  poster: string
 }
 
 export default function OPlayer(props: WatchProps) {
@@ -65,6 +66,7 @@ export default function OPlayer(props: WatchProps) {
     prevEpisode,
     animeId,
     episodeNumber,
+    poster,
   } = props
   const { data: session } = useSession()
   const playerRef = useRef<Player<Ctx>>()
@@ -148,7 +150,11 @@ export default function OPlayer(props: WatchProps) {
           .changeSource(
             getSelectedSrc(value).then((res) =>
               res
-                ? { src: res.url, title: episodeId.split("-").join(" ") }
+                ? {
+                    src: res.url,
+                    title: episodeId.split("-").join(" "),
+                    poster,
+                  }
                 : notFound()
             )
           )
@@ -186,7 +192,7 @@ export default function OPlayer(props: WatchProps) {
       .changeSource(
         getSelectedSrc("default").then((res) =>
           res
-            ? { src: res.url, title: episodeId.split("-").join(" ") }
+            ? { src: res.url, title: episodeId.split("-").join(" "), poster }
             : notFound()
         )
       )

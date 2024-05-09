@@ -11,10 +11,11 @@ import { cache } from "react"
 
 // import { ISearch,  } from "@consumet/extensions/dist/models/types"
 
-export const url = "https://api.consumet.org/anime/gogoanime"
-export const url2 = "https://api-consumet-animehi.vercel.app/anime/gogoanime"
+// export const url = "https://api.consumet.org/anime/gogoanime"
+// export const url2 = "https://consume-beige.vercel.app/anime/gogoanime"
 
 export const publicUrl = process.env.NEXT_PUBLIC_APP_URL
+export const animeApi = process.env.ANIME_API_URI
 
 export const recent = cache(async function recent() {
   const response = await fetch(`${publicUrl}/api/anime/recents`, {
@@ -44,6 +45,16 @@ export const animeInfo = cache(async function animeInfo(animeId: string) {
   return (await response.json()) as AnimeInfoResponse
 })
 
+export const anifyInfo = cache(async function anifyInfo(id: string) {
+  const response = await fetch(
+    `https://api.anify.tv/info/${id}?fields=[id,coverImage,relations,bannerImage]`
+  )
+
+  if (!response.ok) throw new Error("Failed to fetch anime informations")
+
+  return (await response.json()) as any
+})
+
 export const watch = cache(async function watch(episodeId: string) {
   const response = await fetch(`${publicUrl}/api/watch/${episodeId}`, {
     cache: "no-cache",
@@ -61,7 +72,9 @@ export const search = cache(async function search({
   query: string
   page?: number
 }) {
-  const response = await fetch(`${url}/${query}?page=${page}`)
+  const response = await fetch(
+    `${animeApi}/anime/gogoanime/${query}?page=${page}`
+  )
 
   if (!response.ok) throw new Error("Failed to fetch search.")
 

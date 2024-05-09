@@ -47,6 +47,12 @@ export function extractId(mappings: Mappings[]) {
   return "/"
 }
 
+export function extractGogoId(episodeId: string) {
+  const str = episodeId.slice(0, -1).replace("-episode-", "")
+
+  return str
+}
+
 export function filterAnime(mappings: Mappings[]) {
   const gogoanime = mappings.filter(
     (mapping) => mapping.providerId === "gogoanime"

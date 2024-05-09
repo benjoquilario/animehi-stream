@@ -11,6 +11,7 @@ type ServerProps = {
   animeResult: AnimeInfoResponse | null
   episodeId: string
   animeId: string
+  anilistId: string
 }
 
 export default async function Server({
@@ -19,6 +20,7 @@ export default async function Server({
   episodeId,
   animeId,
   episodeNumber,
+  anilistId,
 }: ServerProps) {
   const currentUser = await getCurrentUser()
 
@@ -34,6 +36,7 @@ export default async function Server({
           animeId={animeId}
           episodeId={episodeId}
           episodes={episodes}
+          anilistId={anilistId}
         >
           <Suspense>
             <BookmarkForm
@@ -41,6 +44,7 @@ export default async function Server({
               bookmarks={currentUser?.bookMarks}
               animeResult={animeResult}
               checkBookmarkExist={checkBookmarkExist}
+              anilistId={anilistId}
             />
           </Suspense>
         </ButtonAction>

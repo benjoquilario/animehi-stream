@@ -11,6 +11,7 @@ type ButtonActionProps = {
   episodeId: string
   animeId: string
   children: React.ReactNode
+  anilistId: string
 }
 
 const ButtonAction = ({
@@ -18,6 +19,7 @@ const ButtonAction = ({
   episodeId,
   animeId,
   children,
+  anilistId,
 }: ButtonActionProps) => {
   const router = useRouter()
   const currentEpisode = useMemo(
@@ -28,13 +30,17 @@ const ButtonAction = ({
   const handleNextEpisode = () => {
     if (currentEpisode?.number === episodes?.length) return
 
-    router.push(`/watch/${animeId}/${Number(currentEpisode?.number) + 1}`)
+    router.push(
+      `/watch/${animeId}/${Number(currentEpisode?.number) + 1}/${anilistId}`
+    )
   }
 
   const handlePrevEpisode = () => {
     if (currentEpisode?.number === 1) return
 
-    router.push(`/watch/${animeId}/${Number(currentEpisode?.number) - 1}`)
+    router.push(
+      `/watch/${animeId}/${Number(currentEpisode?.number) - 1}/${anilistId}`
+    )
   }
 
   const currentEpisodeIndex = useMemo(

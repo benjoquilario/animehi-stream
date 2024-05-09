@@ -22,7 +22,7 @@ export async function GET(req: Request) {
   ]
 
   const response = await fetch(
-    `https://api.anify.tv/seasonal?type=anime&fields=[id,%20mappings,%20title,%20coverImage,%20bannerImage,%20description,%20currentEpisode, %20totalEpisodes, %20format]`
+    `https://api.anify.tv/seasonal/anime?fields=[id,%20mappings,%20title,%20coverImage,%20bannerImage,%20description,%20currentEpisode, %20totalEpisodes, %20format]`
   )
 
   if (!response.ok) throw new Error("Failed to fetch recent episodes.")

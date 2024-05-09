@@ -69,7 +69,7 @@ model Watchlist {
   prevEpisode   String?
   createdAt     DateTime   @default(now())
   updatedAt     DateTime   @updatedAt
-
+  anilistId     String
   userId       String     @db.ObjectId
   user         User       @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
@@ -79,7 +79,7 @@ model Bookmark {
   animeId      String
   image        String
   title        String
-
+  anilistId    String
   createdAt    DateTime   @default(now())
   userId       String     @db.ObjectId
   user         User       @relation(fields: [userId], references: [id], onDelete: Cascade)
@@ -91,7 +91,7 @@ model ContinueWatching {
   image        String
   title        String
   createdAt    DateTime    @default(now())
-
+  anilistId    String
   userId       String     @db.ObjectId
   user         User       @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
@@ -103,6 +103,7 @@ model ViewCounter {
   animeId      String
   title        String
   image        String
+  anilistId    String
   latestEpisodeNumber   Int?
 }
 
@@ -112,6 +113,7 @@ model Comment {
   comment      String
   createdAt    DateTime @default(now())
   animeId      String
+  anilistId    String
   episodeId    String
   updatedAt    DateTime   @updatedAt
   episodeNumber String

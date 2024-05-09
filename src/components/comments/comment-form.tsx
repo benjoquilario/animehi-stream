@@ -31,11 +31,13 @@ type Inputs = z.infer<typeof commentSchema>
 type CommentFormProps = {
   animeId: string
   episodeNumber: string
+  anilistId: string
 }
 
 export default function CommentForm({
   animeId,
   episodeNumber,
+  anilistId,
 }: CommentFormProps) {
   const { data: session, status } = useSession()
   const buttonRef = useRef<HTMLButtonElement | null>(null)
@@ -62,6 +64,7 @@ export default function CommentForm({
       commentText: data.comment,
       animeId,
       episodeNumber,
+      anilistId,
     })
   }
 

@@ -41,6 +41,7 @@ type CreateWatchList = {
   episodeNumber: string
   nextEpisode: string
   prevEpisode: string
+  anilistId: string
 }
 
 export async function createWatchlist({
@@ -50,6 +51,7 @@ export async function createWatchlist({
   episodeNumber,
   nextEpisode,
   prevEpisode,
+  anilistId,
 }: CreateWatchList) {
   const session = await getSession()
 
@@ -80,6 +82,7 @@ export async function createWatchlist({
               animeId,
               nextEpisode,
               prevEpisode,
+              anilistId,
             },
           ],
         },
@@ -94,11 +97,13 @@ export async function createViewCounter({
   image,
   title,
   latestEpisodeNumber,
+  anilistId,
 }: {
   animeId: string
   image: string
   title: string
   latestEpisodeNumber: number
+  anilistId: string
 }) {
   const isAnimeIdExist = await db.viewCounter.findFirst({
     where: {
@@ -115,6 +120,7 @@ export async function createViewCounter({
       animeId,
       view: 1,
       latestEpisodeNumber,
+      anilistId,
     },
   })
 
@@ -169,10 +175,12 @@ export async function createBookmark({
   animeId,
   image,
   title,
+  anilistId,
 }: {
   animeId: string
   image: string
   title: string
+  anilistId: string
 }) {
   const session = await getSession()
 
@@ -198,6 +206,7 @@ export async function createBookmark({
             animeId,
             image,
             title,
+            anilistId,
           },
         ],
       },
@@ -211,12 +220,13 @@ export type AddComment = {
   commentText: string
   animeId: string
   episodeNumber: string
+  anilistId: string
 }
 
 export async function addComment(comment: AddComment) {
   const ip = headers().get("x-forwarded-for")
 
-  const { commentText, animeId, episodeNumber } = comment
+  const { commentText, animeId, episodeNumber, anilistId } = comment
 
   const ratelimit = new Ratelimit({
     redis: Redis.fromEnv(),
@@ -250,6 +260,7 @@ export async function addComment(comment: AddComment) {
             episodeId: `${animeId}-episode-${episodeNumber}`,
             comment: commentText,
             episodeNumber,
+            anilistId,
           },
         ],
       },

@@ -1,4 +1,4 @@
-import { animeInfo, popular, watch, publicUrl } from "@/lib/consumet"
+import { animeInfo, popular, watch, publicUrl, anifyInfo } from "@/lib/consumet"
 import Episodes from "@/components/episode/episodes"
 import Details from "@/components/details"
 import Sharethis from "@/components/sharethis"
@@ -73,13 +73,14 @@ export async function generateMetadata({
 export const dynamic = "force-dynamic"
 
 export default async function Watch({ params: { params } }: Params) {
-  const [animeId, episodeNumber] = params as string[]
+  const [animeId, episodeNumber, anilistId] = params as string[]
   const session = await getSession()
 
   if (!animeId || !episodeNumber) notFound()
 
   const animeResponse = await animeInfo(animeId)
-  const popularResponse = await popular()
+  // const popularResponse = await popular()
+  const anifyInfoResponse = await anifyInfo(anilistId)
 
   if (!animeResponse) notFound()
 
@@ -88,6 +89,7 @@ export default async function Watch({ params: { params } }: Params) {
     title: animeResponse.title ?? animeResponse.otherName,
     image: animeResponse.image,
     latestEpisodeNumber: animeResponse.episodes.length,
+    anilistId,
   })
 
   const sourcesPromise = watch(`${animeId}-episode-${episodeNumber}`)
@@ -121,6 +123,7 @@ export default async function Watch({ params: { params } }: Params) {
       image: animeResponse.image,
       nextEpisode: nextEpisode(),
       prevEpisode: prevEpisode(),
+      anilistId,
     })
   }
 
@@ -150,6 +153,7 @@ export default async function Watch({ params: { params } }: Params) {
                 sourcesPromise={sourcesPromise}
                 episodeId={`${animeId}-episode-${episodeNumber}`}
                 episodeNumber={episodeNumber}
+                poster={anifyInfoResponse.bannerImage}
               />
             </Suspense>
             {/* <VideoPlayer animeId={animeId} episodeNumber={episodeNumber} /> */}
@@ -159,6 +163,7 @@ export default async function Watch({ params: { params } }: Params) {
                 animeResult={animeResponse}
                 episodes={animeResponse?.episodes}
                 animeId={animeId}
+                anilistId={anilistId}
                 episodeNumber={episodeNumber}
               />
             </Suspense>
@@ -168,6 +173,7 @@ export default async function Watch({ params: { params } }: Params) {
                   animeId={animeId}
                   fullEpisodes={animeResponse.episodes}
                   episodeId={`${animeId}-episode-${episodeNumber}`}
+                  anilistId={anilistId}
                 />
                 <Details data={animeResponse} />
               </>
@@ -176,7 +182,11 @@ export default async function Watch({ params: { params } }: Params) {
             )}
             <Sharethis />
 
-            <Comments animeId={animeId} episodeNumber={episodeNumber} />
+            <Comments
+              animeId={animeId}
+              episodeNumber={episodeNumber}
+              anilistId={anilistId}
+            />
           </div>
           <Suspense>
             <MostView />

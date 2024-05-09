@@ -15,7 +15,12 @@ const ColumnCard = ({ result }: ColumnCardProps) => {
   return (
     <>
       <div>
-        <Link href={`${extractId(result.mappings)}/${result.currentEpisode}`}>
+        <Link
+          href={`${extractId(result.mappings)}/${result.currentEpisode}/${
+            result.id
+          }`}
+          aria-label={result.title.english ?? result.title.romaji}
+        >
           <NextImage
             containerclassname="relative w-[60px] h-[75px]"
             fill
@@ -27,7 +32,7 @@ const ColumnCard = ({ result }: ColumnCardProps) => {
         </Link>
       </div>
       <div className="flex-1 px-3">
-        <h3 className="mb-1 line-clamp-2">
+        <h3 className="mb-1 line-clamp-2 text-sm md:text-base">
           {result.title.english || result.title.romaji}
         </h3>
         <div className="overflow-hidden">

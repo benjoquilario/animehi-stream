@@ -10,13 +10,19 @@ import { useInfiniteQuery } from "@tanstack/react-query"
 import { publicUrl } from "@/lib/consumet"
 import { BsCaretDownFill } from "react-icons/bs"
 import { ImSpinner8 } from "react-icons/im"
+import { Badge } from "../ui/badge"
 
 type CommentsProps = {
   animeId: string
   episodeNumber: string
+  anilistId: string
 }
 
-export default function Comments({ animeId, episodeNumber }: CommentsProps) {
+export default function Comments({
+  animeId,
+  episodeNumber,
+  anilistId,
+}: CommentsProps) {
   const {
     data: comments,
     isLoading,
@@ -39,7 +45,11 @@ export default function Comments({ animeId, episodeNumber }: CommentsProps) {
       <h3 className="w-full pt-2.5 text-left text-2xl font-semibold">
         <span className="h-full w-2 bg-primary"></span>
         Comments
+        <Badge className="ml-2">Beta</Badge>
       </h3>
+      <div className="mt-2 w-full rounded-sm bg-destructive px-2 py-5 text-center sm:text-sm">
+        Respect others. Be nice. No spam. No hate speech.
+      </div>
       <div className="mt-2 rounded-lg bg-[#111827] p-4">
         {isLoading ? (
           <div className="relative flex items-center justify-center">
@@ -47,7 +57,11 @@ export default function Comments({ animeId, episodeNumber }: CommentsProps) {
           </div>
         ) : (
           <div>
-            <CommentForm animeId={animeId} episodeNumber={episodeNumber} />
+            <CommentForm
+              animeId={animeId}
+              episodeNumber={episodeNumber}
+              anilistId={anilistId}
+            />
 
             {comments?.pages.map(
               (page) =>

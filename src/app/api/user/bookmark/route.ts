@@ -7,7 +7,7 @@ export async function POST(req: Request) {
   const body = await req.json()
   const session = await getSession()
 
-  const { image, animeId, title } = body
+  const { image, animeId, title, anilistId } = body
 
   if (!session) return NextResponse.json("Unauthenticated", { status: 401 })
 
@@ -27,6 +27,7 @@ export async function POST(req: Request) {
       image,
       title,
       userId: session.user.id,
+      anilistId,
     },
   })
 

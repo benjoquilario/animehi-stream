@@ -4,7 +4,7 @@ import { NextResponse } from "next/server"
 export async function PUT(req: Request) {
   const body = await req.json()
 
-  const { episodeId, episodeNumber, id, image, animeId } = body
+  const { episodeId, episodeNumber, id, image, animeId, anilistId } = body
 
   if (!episodeId)
     return NextResponse.json("Episode is already there", { status: 200 })
@@ -19,6 +19,7 @@ export async function PUT(req: Request) {
       episodeNumber,
       image,
       animeId,
+      anilistId,
     },
   })
 

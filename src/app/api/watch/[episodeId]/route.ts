@@ -1,4 +1,4 @@
-import { url2 } from "@/lib/consumet"
+import { animeApi } from "@/lib/consumet"
 import { NextResponse } from "next/server"
 
 export async function GET(
@@ -7,7 +7,7 @@ export async function GET(
 ) {
   const episodeId = params.episodeId
 
-  const response = await fetch(`${url2}/watch/${episodeId}`)
+  const response = await fetch(`${animeApi}/anime/gogoanime/watch/${episodeId}`)
 
   if (!response.ok) throw new Error("Failed to fetch recent episodes.")
 

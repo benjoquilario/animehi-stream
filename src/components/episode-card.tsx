@@ -6,6 +6,7 @@ import { BsFillPlayFill, BsPlayFill } from "react-icons/bs"
 import NextImage from "./ui/image"
 import { increment } from "@/app/actions"
 import { useSession } from "next-auth/react"
+import { extractGogoId } from "@/lib/utils"
 
 type EpisodeCardProps = {
   animeResult: RecentEpisode
@@ -29,14 +30,16 @@ export default function EpisodeCard({ animeResult }: EpisodeCardProps) {
             containerclassname="relative"
             style={{ objectFit: "cover" }}
             src={animeResult.image}
-            alt={animeResult.title}
+            alt={animeResult.title.english ?? animeResult.title.romaji}
             width={180}
             height={200}
             className="relative h-full w-full"
           />
         </div>
         <Link
-          href={`/watch/${animeResult.id}/${animeResult.episodeNumber}`}
+          href={`/watch${extractGogoId(animeResult.episodeId)}/${
+            animeResult.episodeNumber
+          }/${animeResult.id}`}
           aria-label={animeResult.episodeId}
           className="absolute inset-0 z-50 flex items-center justify-center bg-background/70 text-primary opacity-0 transition-opacity hover:opacity-100"
         >
@@ -46,10 +49,10 @@ export default function EpisodeCard({ animeResult }: EpisodeCardProps) {
       </div>
       <div>
         <h3
-          title={animeResult.title}
+          title={animeResult.title.english ?? animeResult.title.romaji}
           className="line-clamp-2 text-center text-xs font-semibold leading-5 md:text-sm"
         >
-          {animeResult.title}
+          {animeResult.title.english ?? animeResult.title.romaji}
         </h3>
       </div>
     </>

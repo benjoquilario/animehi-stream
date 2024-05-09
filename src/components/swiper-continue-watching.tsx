@@ -74,7 +74,7 @@ const SwiperContinueWatching = (props: SwiperContinueWatchingProps) => {
                         </TooltipContent>
                       </Tooltip>
                     </TooltipProvider>
-                    <TooltipProvider>
+                    {/* <TooltipProvider>
                       <Tooltip>
                         <TooltipTrigger asChild>
                           <Link
@@ -88,8 +88,8 @@ const SwiperContinueWatching = (props: SwiperContinueWatchingProps) => {
                           <p>Next Episode</p>
                         </TooltipContent>
                       </Tooltip>
-                    </TooltipProvider>
-                    {Number(result.prevEpisode) !== 1 ? (
+                    </TooltipProvider> */}
+                    {/* {Number(result.prevEpisode) !== 1 ? (
                       <TooltipProvider>
                         <Tooltip>
                           <TooltipTrigger asChild>
@@ -105,7 +105,7 @@ const SwiperContinueWatching = (props: SwiperContinueWatchingProps) => {
                           </TooltipContent>
                         </Tooltip>
                       </TooltipProvider>
-                    ) : null}
+                    ) : null} */}
                   </div>
                 </div>
               </div>

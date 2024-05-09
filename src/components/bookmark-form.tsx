@@ -16,6 +16,7 @@ type BookmarkFormProps = {
   bookmarks?: BookmarkT[]
   userId?: string
   checkBookmarkExist?: boolean
+  anilistId: string
 }
 
 const BookmarkForm = ({
@@ -23,6 +24,7 @@ const BookmarkForm = ({
   bookmarks,
   userId,
   checkBookmarkExist,
+  anilistId,
 }: BookmarkFormProps) => {
   const router = useRouter()
   const [isLoading, setIsLoading] = useState(false)
@@ -43,6 +45,7 @@ const BookmarkForm = ({
           animeId: animeResult.id,
           image: animeResult.image,
           title: animeResult.title ?? animeResult.otherName,
+          anilistId,
         })
 
         setIsBookMark(true)

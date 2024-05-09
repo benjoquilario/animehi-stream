@@ -30,7 +30,7 @@ export async function PUT(req: Request) {
 export async function POST(req: Request) {
   const body = await req.json()
 
-  const { image, title, animeId } = body
+  const { image, title, animeId, anilistId } = body
 
   try {
     const isAnimeIdExist = await db.viewCounter.findFirst({
@@ -47,6 +47,7 @@ export async function POST(req: Request) {
         title,
         animeId,
         view: 1,
+        anilistId,
       },
     })
 

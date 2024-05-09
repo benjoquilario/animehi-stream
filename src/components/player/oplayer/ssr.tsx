@@ -11,6 +11,7 @@ export default async function VideoPlayer(props: WatchProps) {
     prevEpisode,
     animeId,
     episodeNumber,
+    poster,
   } = props
 
   // const watchHistory = await animeWatchById(animeId)
@@ -23,6 +24,7 @@ export default async function VideoPlayer(props: WatchProps) {
       prevEpisode={prevEpisode}
       animeId={animeId}
       episodeNumber={episodeNumber}
+      poster={poster}
     />
   )
 }

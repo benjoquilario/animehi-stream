@@ -1,9 +1,6 @@
 import { NextResponse } from "next/server"
-import { url2 } from "@/lib/consumet"
+import { animeApi } from "@/lib/consumet"
 import { redis } from "@/lib/redis"
-import { headers } from "next/headers"
-import { Ratelimit } from "@upstash/ratelimit"
-import { Redis } from "@upstash/redis"
 
 export async function GET(
   req: Request,
@@ -22,7 +19,7 @@ export async function GET(
     return NextResponse.json(cachedVal)
   }
 
-  const response = await fetch(`${url2}/info/${animeId}`)
+  const response = await fetch(`${animeApi}/anime/gogoanime/info/${animeId}`)
 
   if (!response.ok) throw new Error("Failed to fetch anime information")
 

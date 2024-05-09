@@ -16,12 +16,14 @@ type EpisodesProps = {
   fullEpisodes: Episode[]
   episodeId: string
   animeId: string
+  anilistId: string
 }
 
 export default function Episodes({
   fullEpisodes,
   episodeId,
   animeId,
+  anilistId,
 }: EpisodesProps) {
   const [episodes, setEpisodes] = useState(fullEpisodes)
   const [query, setQuery] = useState("")
@@ -78,6 +80,7 @@ export default function Episodes({
           episodes={episodes}
           currentEpisode={currentEpisode}
           animeId={animeId}
+          anilistId={anilistId}
         />
       </ScrollArea>
     </div>

@@ -82,7 +82,7 @@ export default function SwiperNewestComments({
                       </Avatar>
                       <div className="flex flex-col gap-1">
                         <Link href={`/accounts/`}>
-                          <h4 className="text-[15px] leading-6">
+                          <h4 className="text-[15px] leading-6 text-primary transition hover:underline">
                             {newestComment.user.userName}
                           </h4>
                         </Link>
@@ -93,14 +93,14 @@ export default function SwiperNewestComments({
                     </div>
                   </div>
                   <div className="flex-1">
-                    <p className="line-clamp-3 text-foreground/70">
-                      {newestComment.comment}
+                    <p className="line-clamp-3 italic text-foreground/70">
+                      "{newestComment.comment}"
                     </p>
                   </div>
                   <div className="mt-3 block overflow-hidden text-ellipsis">
                     <Link
-                      href={`/watch/${newestComment.animeId}/${newestComment.episodeNumber}`}
-                      className="line-clamp-1 text-primary"
+                      href={`/watch/${newestComment.animeId}/${newestComment.episodeNumber}/${newestComment.anilistId}`}
+                      className="line-clamp-1 text-primary hover:text-primary/90"
                     >
                       {newestComment.episodeId.split("-").join(" ")}
                     </Link>

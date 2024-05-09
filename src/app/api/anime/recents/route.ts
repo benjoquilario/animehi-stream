@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server"
-import { url } from "@/lib/consumet"
+import { animeApi } from "@/lib/consumet"
 import { redis } from "@/lib/redis"
 
 export async function GET(req: Request) {
@@ -13,7 +13,7 @@ export async function GET(req: Request) {
     return NextResponse.json(cachedVal)
   }
 
-  const response = await fetch(`${url}/recent-episodes`)
+  const response = await fetch(`${animeApi}/meta/anilist/recent-episodes`)
 
   if (!response.ok) throw new Error("Failed to fetch recent episodes.")
 

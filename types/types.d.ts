@@ -132,8 +132,16 @@ export interface RecentEpisode {
   episodeId: string
   episodeNumber: number
   image: string
-  title: string
+  title: {
+    romaji: string
+    english: string
+    native: string
+  }
+  episodeTitle: string
+  malId: string
+  imageHash: string
   url: string
+  type: string
 }
 
 export interface AniSkip {

@@ -10,12 +10,14 @@ type EpisodeListProps = {
   episodes: Episode[]
   currentEpisode?: Episode
   animeId: string
+  anilistId: string
 }
 
 const EpisodeList = ({
   episodes,
   currentEpisode,
   animeId,
+  anilistId,
 }: EpisodeListProps) => {
   return (
     <div className="episode-grid relative py-3 pr-3">
@@ -31,7 +33,7 @@ const EpisodeList = ({
                 : "!bg-secondary hover:!bg-secondary/80"
             ),
           })}
-          href={`/watch/${animeId}/${episode.number}`}
+          href={`/watch/${animeId}/${episode.number}/${anilistId}`}
         >
           Ep. {episode.number}
         </Link>
