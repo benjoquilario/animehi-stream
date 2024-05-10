@@ -23,11 +23,8 @@ export async function GET(req: Request) {
 
   const trendings = await response.json()
 
-  if (trendings) {
-    console.log("trendings miss")
-    const stringifyResult = JSON.stringify(trendings)
-    await redis.setex("trendings", 60 * 60 * 3, stringifyResult)
-  }
+  const stringifyResult = JSON.stringify(trendings)
+  await redis.setex("trendings", 60 * 60 * 3, stringifyResult)
 
   return NextResponse.json(trendings)
 }

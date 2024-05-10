@@ -20,11 +20,8 @@ export async function GET(req: Request) {
   const recents = await response.json()
   // const recents = await gogo.fetchRecentEpisodes()
 
-  if (recents) {
-    console.log("MISS")
-    const stringifyResult = JSON.stringify(recents)
-    await redis.setex("recents", 60 * 60 * 3, stringifyResult)
-  }
+  const stringifyResult = JSON.stringify(recents)
+  await redis.setex("recents", 60 * 60 * 3, stringifyResult)
 
   return NextResponse.json(recents)
 }

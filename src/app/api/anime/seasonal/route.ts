@@ -25,15 +25,12 @@ export async function GET(req: Request) {
     `https://api.anify.tv/seasonal/anime?fields=[id,%20mappings,%20title,%20coverImage,%20bannerImage,%20description,%20currentEpisode, %20totalEpisodes, %20format]`
   )
 
-  if (!response.ok) throw new Error("Failed to fetch recent episodes.")
+  if (!response.ok) throw new Error("Failed to fetch seasonal.")
 
   const seasonal = await response.json()
 
-  if (seasonal) {
-    console.log("trendings miss")
-    const stringifyResult = JSON.stringify(seasonal)
-    await redis.setex("seasonal", 60 * 60 * 3, stringifyResult)
-  }
+  const stringifyResult = JSON.stringify(seasonal)
+  await redis.setex("seasonal", 60 * 60 * 3, stringifyResult)
 
   return NextResponse.json(seasonal)
 }
