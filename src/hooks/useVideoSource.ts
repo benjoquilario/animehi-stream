@@ -1,9 +1,9 @@
 import useSWR from "swr"
-import { url } from "@/lib/consumet"
+import { animeApi } from "@/lib/consumet"
 
 const useVideoSource = ({ episodeId }: { episodeId?: string }) => {
   const fetcher = async (episodeId: string) =>
-    fetch(`${url}/watch/${episodeId}`).then((res) => res.json())
+    fetch(`${animeApi}/watch/${episodeId}`).then((res) => res.json())
 
   const { data, error } = useSWR([episodeId], fetcher, {
     revalidateOnFocus: false,
