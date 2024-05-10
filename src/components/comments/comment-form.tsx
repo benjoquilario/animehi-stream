@@ -19,6 +19,7 @@ import { ImSpinner8 } from "react-icons/im"
 import { useSession } from "next-auth/react"
 import { useMutation, useQueryClient } from "@tanstack/react-query"
 import { QUERY_KEYS } from "@/lib/queriesKeys"
+import { useAuthStore } from "@/store"
 
 const commentSchema = z.object({
   comment: z
@@ -39,6 +40,7 @@ export default function CommentForm({
   episodeNumber,
   anilistId,
 }: CommentFormProps) {
+  const setIsAuthOpen = useAuthStore((store) => store.setIsAuthOpen)
   const { data: session, status } = useSession()
   const buttonRef = useRef<HTMLButtonElement | null>(null)
   const queryClient = useQueryClient()
@@ -134,7 +136,16 @@ export default function CommentForm({
             </Form>
           </>
         ) : (
-          <p>You must be login to post a comment</p>
+          <p>
+            You must be{" "}
+            <button
+              className="text-primary"
+              onClick={() => setIsAuthOpen(true)}
+            >
+              login
+            </button>{" "}
+            to post a comment
+          </p>
         )}
       </div>
     </div>

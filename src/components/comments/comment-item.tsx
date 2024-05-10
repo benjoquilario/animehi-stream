@@ -15,7 +15,7 @@ export type CommentItemProps = {
 
 export default function CommentItem({ comment }: CommentItemProps) {
   return (
-    <div className="mb-2 flex w-full gap-2">
+    <div className="mb-6 flex w-full gap-2 hover:bg-background/90">
       <div>
         <Avatar>
           <AvatarImage
@@ -43,16 +43,16 @@ export default function CommentItem({ comment }: CommentItemProps) {
             </p>
           </div>
         </div>
-        <div className="flex gap-3">
-          <button className="flex items-center gap-1 text-sm">
-            <BsReplyAllFill />
+        <div className="flex gap-4">
+          <button className="flex items-center gap-1 text-base">
+            <BsReplyAllFill className="h-5 w-5" />
             Reply
           </button>
           <button>
-            <BiLike />
+            <BiLike className="h-5 w-5" />
           </button>
           <button>
-            <BiDislike />
+            <BiDislike className="h-5 w-5" />
           </button>
         </div>
       </div>

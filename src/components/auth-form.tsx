@@ -112,7 +112,7 @@ const AuthForm = () => {
         )}
 
         <Dialog open={isAuthOpen} onOpenChange={setIsAuthOpen}>
-          <DialogContent className="sm:max-w-[425px]">
+          <DialogContent className="pb-12 md:pb-6">
             <DialogHeader>
               <DialogTitle>
                 {!authType ? "Login" : "Create an account"}
@@ -124,13 +124,13 @@ const AuthForm = () => {
               </DialogDescription>
             </DialogHeader>
             {!authType ? <Login /> : <Register />}
-            <div className="absolute bottom-6 left-6">
+            <div className="absolute bottom-4 left-6">
               Don't have an account?
               <button
                 className="ml-2 text-primary"
                 onClick={() => setAuthType((authType) => !authType)}
               >
-                {authType ? "Sign Up" : "Sign In"}
+                {authType ? "Sign In" : "Sign Up"}
               </button>
             </div>
           </DialogContent>

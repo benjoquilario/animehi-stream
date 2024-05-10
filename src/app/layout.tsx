@@ -12,6 +12,7 @@ import QueryProvider from "@/components/query-provider"
 const fontSans = Outfit({
   subsets: ["latin"],
   variable: "--font-sans",
+  display: "swap",
 })
 
 export const metadata: Metadata = {

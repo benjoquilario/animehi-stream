@@ -11,6 +11,7 @@ import { publicUrl } from "@/lib/consumet"
 import { BsCaretDownFill } from "react-icons/bs"
 import { ImSpinner8 } from "react-icons/im"
 import { Badge } from "../ui/badge"
+import { LuMessageSquare } from "react-icons/lu"
 
 type CommentsProps = {
   animeId: string
@@ -42,15 +43,21 @@ export default function Comments({
 
   return (
     <div className="mt-4">
-      <h3 className="w-full pt-2.5 text-left text-2xl font-semibold">
-        <span className="h-full w-2 bg-primary"></span>
+      <h3 className="flex w-full items-center pt-2.5 text-left text-2xl font-semibold">
+        <div className="mr-2 h-8 w-2 rounded-md bg-primary"></div>
         Comments
         <Badge className="ml-2">Beta</Badge>
       </h3>
       <div className="mt-2 w-full rounded-sm bg-destructive px-2 py-5 text-center sm:text-sm">
         Respect others. Be nice. No spam. No hate speech.
       </div>
-      <div className="mt-2 rounded-lg bg-[#111827] p-4">
+
+      <div className="my-4 flex items-center gap-2">
+        <LuMessageSquare />
+
+        <span>Comments EP {episodeNumber}</span>
+      </div>
+      <div className="mt-2 rounded-lg">
         {isLoading ? (
           <div className="relative flex items-center justify-center">
             <div className="loader"></div>

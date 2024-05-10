@@ -30,8 +30,6 @@ export default function Bookmark({
     [bookmarks]
   )
 
-  console.log(bookmarks)
-
   return (
     <>
       {bookMarks ? (

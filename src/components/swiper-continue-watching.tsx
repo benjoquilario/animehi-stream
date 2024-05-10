@@ -27,6 +27,7 @@ type SwiperContinueWatchingProps = {
 
 const SwiperContinueWatching = (props: SwiperContinueWatchingProps) => {
   const { results } = props
+
   return (
     <Swiper
       slidesPerView={3}
@@ -111,7 +112,7 @@ const SwiperContinueWatching = (props: SwiperContinueWatchingProps) => {
               </div>
               <Link
                 className="group relative aspect-video w-full overflow-hidden rounded-md md:w-[320px]"
-                href={`/watch/${result.animeId}/${result.episodeNumber}`}
+                href={`/watch/${result.animeId}/${result.episodeNumber}/${result.anilistId}`}
               >
                 <div className="absolute z-30 h-full w-full bg-gradient-to-t from-background/70 from-20% to-transparent transition-all duration-300 ease-out group-hover:to-background/40"></div>
                 {/* <span className="absolute bottom-0 left-0 z-30 h-[2px] bg-red-600"></span> */}

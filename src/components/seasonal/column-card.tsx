@@ -31,7 +31,7 @@ const ColumnCard = ({ result }: ColumnCardProps) => {
           />
         </Link>
       </div>
-      <div className="flex-1 px-3">
+      <div className="flex-1 px-1 md:px-3">
         <h3 className="mb-1 line-clamp-2 text-sm md:text-base">
           {result.title.english || result.title.romaji}
         </h3>

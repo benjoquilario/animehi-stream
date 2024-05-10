@@ -3,8 +3,9 @@
 import type { Episode } from "types/types"
 import { memo } from "react"
 import Link from "next/link"
-import { buttonVariants } from "../ui/button"
+import { Button, buttonVariants } from "../ui/button"
 import { cn } from "@/lib/utils"
+import { useRouter } from "next/navigation"
 
 type EpisodeListProps = {
   episodes: Episode[]
@@ -19,10 +20,12 @@ const EpisodeList = ({
   animeId,
   anilistId,
 }: EpisodeListProps) => {
+  const router = useRouter()
+
   return (
     <div className="episode-grid relative py-3 pr-3">
       {episodes.map((episode) => (
-        <Link
+        <Button
           key={episode.id}
           className={buttonVariants({
             variant: "secondary",
@@ -33,10 +36,12 @@ const EpisodeList = ({
                 : "!bg-secondary hover:!bg-secondary/80"
             ),
           })}
-          href={`/watch/${animeId}/${episode.number}/${anilistId}`}
+          onClick={() =>
+            router.push(`/watch/${animeId}/${episode.number}/${anilistId}`)
+          }
         >
           Ep. {episode.number}
-        </Link>
+        </Button>
       ))}
     </div>
   )

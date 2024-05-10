@@ -58,7 +58,7 @@ export default async function Server({
         <div className="flex-1 pb-2 md:pb-0">
           <div className="">
             <Button size="sm" className="text-sm">
-              Server 1
+              Default
             </Button>
           </div>
         </div>
