@@ -18,9 +18,7 @@ export const publicUrl = process.env.NEXT_PUBLIC_APP_URL
 export const animeApi = process.env.ANIME_API_URI
 
 export const recent = cache(async function recent() {
-  const response = await fetch(`${publicUrl}/api/anime/recents`, {
-    cache: "no-cache",
-  })
+  const response = await fetch(`${publicUrl}/api/anime/recents`)
 
   if (!response.ok) throw new Error("Failed to fetch recent episodes.")
 
@@ -56,9 +54,7 @@ export const anifyInfo = cache(async function anifyInfo(id: string) {
 })
 
 export const watch = cache(async function watch(episodeId: string) {
-  const response = await fetch(`${publicUrl}/api/watch/${episodeId}`, {
-    cache: "no-cache",
-  })
+  const response = await fetch(`${publicUrl}/api/watch/${episodeId}`)
 
   if (!response.ok) throw new Error("Failed to fetch anime informations")
 
@@ -82,9 +78,7 @@ export const search = cache(async function search({
 })
 
 export const seasonal = cache(async function seasonal() {
-  const response = await fetch(`${publicUrl}/api/anime/seasonal`, {
-    cache: "no-cache",
-  })
+  const response = await fetch(`${publicUrl}/api/anime/seasonal`)
 
   if (!response.ok) throw new Error("Failed to fetch seasonal.")
 
