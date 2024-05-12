@@ -54,9 +54,9 @@ const Banner = ({ trendings }: BannerProps) => {
                       {stripHtml(trending.description)}
                     </p>
                     <Link
-                      href={`${extractId(trending.mappings)}/${
+                      href={`${extractId(trending.mappings)}/${trending.id}/${
                         trending.currentEpisode ?? 1
-                      }/${trending.id}`}
+                      }`}
                       className={buttonVariants()}
                     >
                       <BsFillPlayFill className="h-6 w-6" />

@@ -1,6 +1,6 @@
 "use client"
 
-import { RecentEpisode } from "types/types"
+import { AnifyRecentEpisode, RecentEpisode } from "types/types"
 import Sharethis from "./sharethis"
 // import ViewCounter from "./view-counter"
 import EpisodeCard from "./episode-card"
@@ -21,10 +21,7 @@ export default function RecentEpisodes({
       </h3>
       <ul className="relative grid grid-cols-3 gap-3 overflow-hidden md:grid-cols-4 lg:grid-cols-5">
         {recentEpisodes?.map((result) => (
-          <li
-            key={result.episodeId}
-            className="col-span-1 overflow-hidden rounded-md"
-          >
+          <li key={result.id} className="col-span-1 overflow-hidden rounded-md">
             <EpisodeCard animeResult={result} />
           </li>
         ))}

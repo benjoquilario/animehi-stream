@@ -72,16 +72,12 @@ export async function generateMetadata({
 export const dynamic = "force-dynamic"
 
 export default async function Watch({ params: { params } }: Params) {
-  const [animeId, episodeNumber, anilistId] = params as string[]
+  const [animeId, anilistId, episodeNumber] = params as string[]
   const session = await getSession()
-
-  if (!animeId || !episodeNumber) notFound()
 
   const animeResponse = await animeInfo(animeId)
   // const popularResponse = await popular()
   const anifyInfoResponse = await anifyInfo(anilistId)
-
-  if (!animeResponse) notFound()
 
   await createViewCounter({
     animeId,

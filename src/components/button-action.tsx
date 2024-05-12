@@ -31,7 +31,7 @@ const ButtonAction = ({
     if (currentEpisode?.number === episodes?.length) return
 
     router.push(
-      `/watch/${animeId}/${Number(currentEpisode?.number) + 1}/${anilistId}`
+      `/watch/${animeId}/${anilistId}/${Number(currentEpisode?.number) + 1}`
     )
   }
 
@@ -39,7 +39,7 @@ const ButtonAction = ({
     if (currentEpisode?.number === 1) return
 
     router.push(
-      `/watch/${animeId}/${Number(currentEpisode?.number) - 1}/${anilistId}`
+      `/watch/${animeId}/${anilistId}/${Number(currentEpisode?.number) - 1}`
     )
   }
 

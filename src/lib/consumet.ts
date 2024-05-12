@@ -1,4 +1,5 @@
 import type {
+  AnifyRecentEpisode,
   AnimeInfoResponse,
   ConsumetResponse,
   Popular,
@@ -17,13 +18,15 @@ import { cache } from "react"
 export const publicUrl = process.env.NEXT_PUBLIC_APP_URL
 export const animeApi = process.env.ANIME_API_URI
 
-export const recent = cache(async function recent() {
-  const response = await fetch(`${publicUrl}/api/anime/recents`)
+export async function recent() {
+  const response = await fetch(`${publicUrl}/api/anime/recents`, {
+    cache: "no-cache",
+  })
 
   if (!response.ok) throw new Error("Failed to fetch recent episodes.")
 
   return (await response.json()) as ConsumetResponse<RecentEpisode>
-})
+}
 
 export const popular = cache(async function popular() {
   const response = await fetch(`${publicUrl}/api/anime/trending`)
@@ -53,13 +56,15 @@ export const anifyInfo = cache(async function anifyInfo(id: string) {
   return (await response.json()) as any
 })
 
-export const watch = cache(async function watch(episodeId: string) {
-  const response = await fetch(`${publicUrl}/api/watch/${episodeId}`)
+export async function watch(episodeId: string) {
+  const response = await fetch(`${publicUrl}/api/watch/${episodeId}`, {
+    cache: "no-cache",
+  })
 
   if (!response.ok) throw new Error("Failed to fetch anime informations")
 
   return (await response.json()) as SourcesResponse
-})
+}
 
 export const search = cache(async function search({
   query,
@@ -77,10 +82,12 @@ export const search = cache(async function search({
   return (await response.json()) as ConsumetResponse<Search>
 })
 
-export const seasonal = cache(async function seasonal() {
-  const response = await fetch(`${publicUrl}/api/anime/seasonal`)
+export async function seasonal() {
+  const response = await fetch(`${publicUrl}/api/anime/seasonal`, {
+    cache: "no-cache",
+  })
 
   if (!response.ok) throw new Error("Failed to fetch seasonal.")
 
   return (await response.json()) as SeasonalResponse
-})
+}

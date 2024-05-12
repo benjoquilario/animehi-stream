@@ -127,6 +127,21 @@ export interface EpisodesType {
   title: string
 }
 
+export interface AnifyRecentEpisode {
+  id: string
+  coverImage: string
+  status: string
+  title: {
+    native: string
+    romaji: string
+    english: string
+  }
+  currentEpisode: 5
+  mappings: Mappings[]
+  color: "#f1c9f1"
+  averageRating: 7.44
+}
+
 export interface RecentEpisode {
   id: string
   episodeId: string

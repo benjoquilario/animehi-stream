@@ -11,7 +11,7 @@ export default async function SiteHeader() {
   return (
     <header className="fixed left-0 top-0 z-[99999] h-[52px] w-full bg-background shadow-sm transition-all md:h-[64px] 2xl:h-[75px]">
       <div className="mx-auto flex h-[52px] w-full max-w-screen-2xl items-center justify-between gap-4 px-[2%] md:h-[64px] 2xl:h-[75px]">
-        <Link href="/">
+        <Link href="/" className="p-1">
           <div className="flex">
             <div className="relative h-[24px] w-[24px] md:h-[28px] md:w-[28px]">
               <Image fill src="/animehi.svg" alt="animehi" priority />

@@ -37,7 +37,7 @@ const EpisodeList = ({
             ),
           })}
           onClick={() =>
-            router.push(`/watch/${animeId}/${episode.number}/${anilistId}`)
+            router.push(`/watch/${animeId}/${anilistId}/${episode.number}`)
           }
         >
           Ep. {episode.number}

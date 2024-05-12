@@ -1,9 +1,6 @@
 import { NextResponse } from "next/server"
 import { animeApi } from "@/lib/consumet"
 import { redis } from "@/lib/redis"
-import { headers } from "next/headers"
-import { Ratelimit } from "@upstash/ratelimit"
-import { Redis } from "@upstash/redis"
 // import { kv } from "@vercel/kv"
 
 export async function GET(req: Request) {

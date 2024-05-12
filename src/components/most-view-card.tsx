@@ -23,7 +23,7 @@ export default function MostViewCard({
     <>
       <div>
         <Link
-          href={`/watch/${result.animeId}/${result.latestEpisodeNumber}/${result.anilistId}`}
+          href={`/watch/${result.animeId}/${result.anilistId}/${result.latestEpisodeNumber}`}
         >
           <NextImage
             containerclassname="relative w-[60px] h-[75px]"

@@ -1,18 +1,25 @@
 "use client"
 
 import Link from "next/link"
-import type { RecentEpisode } from "types/types"
+import type { AnifyRecentEpisode, RecentEpisode } from "types/types"
 import { BsFillPlayFill, BsPlayFill } from "react-icons/bs"
 import NextImage from "./ui/image"
 import { increment } from "@/app/actions"
 import { useSession } from "next-auth/react"
-import { extractGogoId } from "@/lib/utils"
+import { extractGogoId, extractId } from "@/lib/utils"
 
 type EpisodeCardProps = {
   animeResult: RecentEpisode
 }
 
 export default function EpisodeCard({ animeResult }: EpisodeCardProps) {
+  const episodeNumber = animeResult.episodeId.split("-").slice(-1).join()
+  const animeId = animeResult.episodeId
+    .split("-")
+    .slice(0, -1)
+    .join("-")
+    .replace("-episode", "")
+
   return (
     <>
       <div className="relative mb-2 w-full overflow-hidden rounded-md pb-[140%]">
@@ -22,7 +29,7 @@ export default function EpisodeCard({ animeResult }: EpisodeCardProps) {
         <div className="absolute bottom-2 left-2 z-[80] flex w-full justify-between shadow-lg">
           <div className="flex items-center">
             <BsPlayFill />
-            <h2>Episode {animeResult.episodeNumber}</h2>
+            <h2>Episode {episodeNumber}</h2>
           </div>
         </div>
         <div className="absolute h-full w-full">
@@ -37,10 +44,8 @@ export default function EpisodeCard({ animeResult }: EpisodeCardProps) {
           />
         </div>
         <Link
-          href={`/watch${extractGogoId(animeResult.episodeId)}/${
-            animeResult.episodeNumber
-          }/${animeResult.id}`}
-          aria-label={animeResult.episodeId}
+          href={`/watch${animeId}/${animeResult.id}/${episodeNumber}`}
+          aria-label={animeResult.id}
           className="absolute inset-0 z-50 flex items-center justify-center bg-background/70 text-primary opacity-0 transition-opacity hover:opacity-100"
         >
           <BsFillPlayFill className="h-12 w-12" />

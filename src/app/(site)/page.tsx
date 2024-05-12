@@ -9,8 +9,6 @@ import MostView from "@/components/most-view"
 import NewestComments from "@/components/comments/newest-comments"
 import Seasonal from "@/components/seasonal"
 
-export const dynamic = "force-dynamic"
-
 export default async function Home() {
   const [recentSettled, seasonSettled] = await Promise.allSettled([
     recent(),
