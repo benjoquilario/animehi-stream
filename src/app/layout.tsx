@@ -76,7 +76,7 @@ export default function RootLayout({
         className={cn("min-h-screen font-sans antialiased", fontSans.variable)}
       >
         <AuthContext>
-          <ThemeProvider attribute="class" defaultTheme="dark" enableSystem>
+          <ThemeProvider attribute="class" defaultTheme="dark">
             <NextTopLoader height={4} color="#6d28d9" />
             <QueryProvider>{children}</QueryProvider>
           </ThemeProvider>

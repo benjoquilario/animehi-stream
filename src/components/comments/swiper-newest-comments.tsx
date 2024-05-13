@@ -67,7 +67,7 @@ export default function SwiperNewestComments({
         >
           {newestComments.map((newestComment) => (
             <SwiperSlide key={newestComment.id} className="py-8">
-              <div className="relative h-full max-w-[320px] rounded-lg bg-[#111827] p-4 text-sm">
+              <div className="relative h-full max-w-[320px] rounded-lg bg-secondary p-4 text-sm">
                 <div className="flex h-full w-full flex-col gap-1">
                   <div className="flex w-full flex-col items-start gap-1">
                     <div className="flex items-center gap-2">
@@ -93,13 +93,13 @@ export default function SwiperNewestComments({
                     </div>
                   </div>
                   <div className="flex-1">
-                    <p className="line-clamp-3 italic text-foreground/70">
+                    <p className="line-clamp-3 italic text-foreground/90">
                       "{newestComment.comment}"
                     </p>
                   </div>
                   <div className="mt-3 block overflow-hidden text-ellipsis">
                     <Link
-                      href={`/watch/${newestComment.animeId}/${newestComment.episodeNumber}/${newestComment.anilistId}`}
+                      href={`/watch/${newestComment.animeId}/${newestComment.anilistId}/${newestComment.episodeNumber}`}
                       className="line-clamp-1 text-primary hover:text-primary/90"
                     >
                       {newestComment.episodeId.split("-").join(" ")}

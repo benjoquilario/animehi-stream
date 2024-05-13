@@ -43,8 +43,8 @@ export default function Comments({
 
   return (
     <div className="mt-4">
-      <h3 className="flex w-full items-center pt-2.5 text-left text-2xl font-semibold">
-        <div className="mr-2 h-8 w-2 rounded-md bg-primary"></div>
+      <h3 className="flex w-full items-center pt-2.5 text-left text-base font-semibold md:text-2xl">
+        <div className="mr-2 h-6 w-2 rounded-md bg-primary md:h-8"></div>
         Comments
         <Badge className="ml-2">Beta</Badge>
       </h3>
@@ -70,14 +70,13 @@ export default function Comments({
               anilistId={anilistId}
             />
 
-            {comments?.pages.map(
-              (page) =>
-                page?.comments.map((comment: CommentsT<User>) => (
-                  <CommentItem
-                    key={comment.id}
-                    comment={comment as CommentsT<User>}
-                  />
-                ))
+            {comments?.pages.map((page) =>
+              page?.comments.map((comment: CommentsT<User>) => (
+                <CommentItem
+                  key={comment.id}
+                  comment={comment as CommentsT<User>}
+                />
+              ))
             )}
 
             {hasNextPage && (

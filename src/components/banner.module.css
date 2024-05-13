@@ -6,30 +6,30 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background: #030711;
+  background: var(--);
   background: -moz-linear-gradient(
     90deg,
-    #030711 0,
+    var(--) 0,
     rgba(5, 6, 10, 0.6) 40%,
     rgba(5, 6, 10, 0) 60%,
     rgba(5, 6, 10, 0) 80%,
-    #030711 100%
+    hsl(var(--background)) 100%
   );
   background: -webkit-linear-gradient(
     90deg,
-    #030711 0,
+    hsl(var(--background)) 0,
     rgba(5, 6, 10, 0.6) 40%,
     rgba(5, 6, 10, 0) 60%,
     rgba(5, 6, 10, 0) 80%,
-    #030711 100%
+    hsl(var(--background)) 100%
   );
   background: linear-gradient(
     90deg,
-    #030711 0,
+    hsl(var(--background)) 0,
     rgba(5, 6, 10, 0.6) 40%,
     rgba(5, 6, 10, 0) 60%,
     rgba(5, 6, 10, 0) 80%,
-    #030711 100%
+    hsl(var(--background)) 100%
   );
 }
 
@@ -41,24 +41,24 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background: #030711;
+  background: hsl(var(--background));
   background: -moz-linear-gradient(
     0deg,
-    #030711 0,
+    hsl(var(--background)) 0,
     rgba(5, 6, 10, 0) 50%,
-    #030711 100%
+    hsl(var(--background)) 100%
   );
   background: -webkit-linear-gradient(
     0deg,
-    #030711 0,
+    hsl(var(--background)) 0,
     rgba(5, 6, 10, 0) 50%,
-    #030711 100%
+    hsl(var(--background)) 100%
   );
   background: linear-gradient(
     0deg,
-    #030711 0,
+    hsl(var(--background)) 0,
     rgba(5, 6, 10, 0) 50%,
-    #030711 100%
+    hsl(var(--background)) 100%
   );
   z-index: 2;
 }

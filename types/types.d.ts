@@ -43,10 +43,17 @@ interface Episode {
 
 interface Search {
   id: string
+  anilistId: string
   title: string
   image: string
-  releaseDate?: string // or null
-  subOrDub: string // or "dub"
+  cover: string
+  releaseDate: number
+  description: string
+  genres: string[]
+  rating: number
+  status: string
+  mappings: Mappings[]
+  type: string
 }
 
 interface SourcesResponse {

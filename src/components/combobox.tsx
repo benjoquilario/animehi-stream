@@ -11,7 +11,7 @@ import {
   CommandList,
 } from "@/components/ui/command"
 import { AiOutlineSearch } from "react-icons/ai"
-import { cn } from "@/lib/utils"
+import { cn, extractId } from "@/lib/utils"
 import { Search } from "types/types"
 import { useDebounce } from "@/hooks/useDebounce"
 import { useRouter } from "next/navigation"
@@ -109,7 +109,9 @@ export default function Combobox() {
                     handleSelect(() => {
                       startTransition(() => {
                         setQuery("")
-                        router.push(`/watch/${item.id}/1`)
+                        router.push(
+                          `${extractId(item.mappings)}/${item.anilistId}/1`
+                        )
                       })
                     })
                   }

@@ -9,7 +9,8 @@ export default async function ContinueWatching() {
 
   return (
     <Section sectionName="recently-watch" className="relative">
-      <h3 className="w-full pt-2.5 text-left text-2xl font-semibold text-primary">
+      <h3 className="flex w-full pt-2.5 text-left text-2xl font-semibold">
+        <div className="mr-2 h-8 w-2 rounded-md bg-primary"></div>
         Recently Watched
       </h3>
       <span className="pb-6 text-xs text-muted-foreground/70">

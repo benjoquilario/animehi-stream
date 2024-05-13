@@ -32,7 +32,7 @@ const EpisodeList = ({
             className: cn(
               "rounded-xl border-l-2 border-primary",
               currentEpisode?.number === episode.number
-                ? "!bg-primary hover:!bg-primary/80"
+                ? "!bg-primary text-white hover:!bg-primary/80"
                 : "!bg-secondary hover:!bg-secondary/80"
             ),
           })}

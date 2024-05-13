@@ -13,7 +13,8 @@ const Column = ({ results, seasonalTitle }: ColumnProps) => {
   return (
     <div className="w-full">
       <div className="min-h-[300px] w-full">
-        <div className="relative mb-4 font-semibold text-primary xl:text-lg">
+        <div className="relative mb-4 flex font-semibold xl:text-lg">
+          <div className="mr-2 h-6 w-1 rounded-md bg-primary md:w-2"></div>
           {seasonalTitle}
         </div>
         <div className="bg-transparent">

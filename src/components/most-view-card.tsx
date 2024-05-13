@@ -36,17 +36,25 @@ export default function MostViewCard({
         </Link>
       </div>
       <div className="flex-1 px-3">
-        <h3 className="mb-1 line-clamp-2">{result.title}</h3>
+        <Link
+          href={`/watch/${result.animeId}/${result.anilistId}/${result.latestEpisodeNumber}`}
+        >
+          <h3 className="mb-1 line-clamp-2 text-sm font-medium !leading-5 hover:text-primary md:text-[15px]">
+            {result.title}
+          </h3>
+        </Link>
         <div className="overflow-hidden">
           <div className="flex flex-wrap items-center gap-1">
-            <div className="flex items-center gap-1 rounded-lg bg-primary px-2 py-1 text-xs">
+            <div className="flex items-center gap-1 rounded-lg bg-primary px-1 py-1 text-xs text-white md:px-2">
               <FaClosedCaptioning /> {result.latestEpisodeNumber ?? 1}
             </div>
-            <div className="flex items-center gap-1 rounded-lg bg-secondary px-2 py-1 text-xs">
+            <div className="flex items-center gap-1 rounded-lg bg-secondary px-1 py-1 text-xs md:px-2">
               {result.latestEpisodeNumber ?? 1}
             </div>
             <span className="mx-1 inline-block h-1 w-1 rounded-full bg-primary"></span>
-            <div className="text-sm text-muted-foreground/70">TV</div>
+            <div className="text-xs text-muted-foreground/70 md:text-sm">
+              TV
+            </div>
           </div>
         </div>
       </div>

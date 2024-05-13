@@ -26,8 +26,8 @@ export default function EpisodeCard({ animeResult }: EpisodeCardProps) {
         <div className="absolute left-0 top-0 rounded text-xs font-semibold">
           HD
         </div>
-        <div className="absolute bottom-2 left-2 z-[80] flex w-full justify-between shadow-lg">
-          <div className="flex items-center">
+        <div className="absolute bottom-0 left-2 z-[80] flex w-full justify-between py-2 shadow-lg">
+          <div className="flex items-center text-sm md:text-base">
             <BsPlayFill />
             <h2>Episode {episodeNumber}</h2>
           </div>
@@ -55,7 +55,7 @@ export default function EpisodeCard({ animeResult }: EpisodeCardProps) {
       <div>
         <h3
           title={animeResult.title.english ?? animeResult.title.romaji}
-          className="line-clamp-2 text-center text-xs font-semibold leading-5 md:text-sm"
+          className="line-clamp-2 text-center text-xs font-medium leading-5 md:text-sm"
         >
           {animeResult.title.english ?? animeResult.title.romaji}
         </h3>

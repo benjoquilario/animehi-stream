@@ -136,32 +136,6 @@ export default function OPlayer(props: WatchProps) {
 
     const { menu } = oplayer.context.ui
 
-    const menuBar: MenuBar = {
-      name: "Quality",
-      children: sources?.map((source) => ({
-        name: source.quality,
-        value: source.quality,
-        default: source.quality === "default",
-      })),
-      onChange: ({ value }) => {
-        if (!playerRef.current) return
-
-        playerRef.current
-          .changeSource(
-            getSelectedSrc(value).then((res) =>
-              res
-                ? {
-                    src: res.url,
-                    title: episodeId.split("-").join(" "),
-                    poster,
-                  }
-                : notFound()
-            )
-          )
-          .catch((err) => console.log(err))
-      },
-    }
-
     const forward = document.createElement("button")
 
     forward.className = "forward"
@@ -182,18 +156,13 @@ export default function OPlayer(props: WatchProps) {
       oplayer.seek(oplayer.currentTime - 10)
     }
 
-    menu.unregister("Source")
-    menu.register(menuBar)
-
     oplayer.$root.appendChild(forward)
     oplayer.$root.appendChild(backward)
 
     oplayer
       .changeSource(
         getSelectedSrc("default").then((res) =>
-          res
-            ? { src: res.url, title: episodeId.split("-").join(" "), poster }
-            : notFound()
+          res ? { src: res.url, poster } : notFound()
         )
       )
       .catch((err) => console.log(err))

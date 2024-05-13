@@ -55,7 +55,7 @@ const Details = ({ data }: DetailsProps) => {
           </span>
         ))}
       </div>
-      <div className="mt-4 bg-[#111827] p-4">
+      <div className="mt-4 rounded-md bg-secondary p-4">
         <p className="text-sm text-muted-foreground/90">{data.description}</p>
       </div>
     </div>

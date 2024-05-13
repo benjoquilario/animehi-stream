@@ -49,8 +49,8 @@ export default async function Server({
           </Suspense>
         </ButtonAction>
       </div>
-      <div className="flex flex-col items-center gap-4 bg-[#111827] md:flex-row">
-        <div className="w-full bg-secondary px-5 py-3 text-center text-sm md:w-80">
+      <div className="flex flex-col items-center gap-4 overflow-hidden rounded-md bg-secondary md:flex-row">
+        <div className="w-full bg-primary px-5 py-3 text-center text-sm text-white md:w-80">
           You are watching
           <div className="font-semibold">Episode {episodeNumber}</div>
           If current server doesnt work please try other servers beside

@@ -73,9 +73,7 @@ export const search = cache(async function search({
   query: string
   page?: number
 }) {
-  const response = await fetch(
-    `${animeApi}/anime/gogoanime/${query}?page=${page}`
-  )
+  const response = await fetch(`${animeApi}/anime/anify/${query}`)
 
   if (!response.ok) throw new Error("Failed to fetch search.")
 

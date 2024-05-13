@@ -15,6 +15,7 @@ import Link from "next/link"
 import NextImage from "./ui/image"
 import { extractId, stripHtml } from "@/lib/utils"
 import { Seasonal } from "types/types"
+import { IoAlertCircleOutline } from "react-icons/io5"
 
 type BannerProps = {
   trendings?: Seasonal[]
@@ -50,18 +51,29 @@ const Banner = ({ trendings }: BannerProps) => {
                     <h2 className="mx-0 mb-2 line-clamp-2 w-full max-w-lg text-lg font-bold sm:text-2xl md:text-5xl">
                       {trending.title.english || trending.title.romaji}
                     </h2>
-                    <p className="mx-0 my-3 line-clamp-2 w-full max-w-lg pr-6 text-left text-sm text-muted-foreground md:line-clamp-3">
+                    <p className="mx-0 my-3 line-clamp-2 w-full max-w-lg pr-6 text-left text-sm text-foreground/90 md:line-clamp-3">
                       {stripHtml(trending.description)}
                     </p>
-                    <Link
-                      href={`${extractId(trending.mappings)}/${trending.id}/${
-                        trending.currentEpisode ?? 1
-                      }`}
-                      className={buttonVariants()}
-                    >
-                      <BsFillPlayFill className="h-6 w-6" />
-                      Play Now
-                    </Link>
+                    <div className="flex gap-2">
+                      <Link
+                        href={`${extractId(trending.mappings)}/${trending.id}/${
+                          trending.currentEpisode ?? 1
+                        }`}
+                        className={buttonVariants()}
+                      >
+                        <BsFillPlayFill className="h-6 w-6" />
+                        Play Now
+                      </Link>
+                      <Link
+                        href={`${extractId(trending.mappings)}/${trending.id}/${
+                          trending.currentEpisode ?? 1
+                        }`}
+                        className={buttonVariants({ variant: "secondary" })}
+                      >
+                        <IoAlertCircleOutline className="h-6 w-6" />
+                        More Details
+                      </Link>
+                    </div>
                   </div>
                 </div>
               </div>

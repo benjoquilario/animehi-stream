@@ -4,6 +4,7 @@ import Combobox from "./combobox"
 import AuthForm from "./auth-form"
 import { getSession } from "@/lib/session"
 import { getCurrentUser } from "@/lib/current-user"
+import ThemeToggle from "./theme-toggle"
 
 export default async function SiteHeader() {
   const session = await getCurrentUser()
@@ -28,13 +29,21 @@ export default async function SiteHeader() {
         <nav className="hidden flex-1 md:block">
           <div>
             <ul className="flex gap-4 text-muted-foreground/90">
-              <Link href="/" className="text-sm">
-                Home
-              </Link>
+              <li>
+                <Link href="/" className="text-sm">
+                  Home
+                </Link>
+              </li>
+              <li>
+                <Link href="/" className="text-sm">
+                  Schedule
+                </Link>
+              </li>
             </ul>
           </div>
         </nav>
         <div className="flex items-center space-x-3">
+          <ThemeToggle />
           <Combobox />
           <AuthForm />
           {/* <Button onClick={() => signOut()}>Log out</Button> */}
