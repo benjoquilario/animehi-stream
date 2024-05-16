@@ -8,6 +8,10 @@ import { getSession } from "@/lib/session"
 import MostView from "@/components/most-view"
 import NewestComments from "@/components/comments/newest-comments"
 import Seasonal from "@/components/seasonal"
+import { Skeleton } from "@/components/ui/skeleton"
+import styles from "./loading.module.css"
+import { cn } from "@/lib/utils"
+import { SeasonalSkeleton } from "./loading"
 
 export default async function Home() {
   const [recentSettled, seasonSettled] = await Promise.allSettled([
@@ -34,9 +38,8 @@ export default async function Home() {
                 <div className="mt-10 flex scroll-m-20 items-center pb-2 text-base font-semibold tracking-tight transition-colors first:mt-0 md:text-3xl">
                   Welcome, <h2 className="ml-2"> {session.user.name}</h2>
                 </div>
-                <Suspense>
-                  <ContinueWatching />
-                </Suspense>
+
+                <ContinueWatching />
               </>
             ) : null}
 
@@ -47,7 +50,7 @@ export default async function Home() {
               <Sharethis />
             </div>
 
-            <Suspense>
+            <Suspense fallback={<div>Loading...</div>}>
               <NewestComments />
             </Suspense>
             <Seasonal seasonalResults={seasonalResponse} />

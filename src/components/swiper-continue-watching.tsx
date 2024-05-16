@@ -20,6 +20,11 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip"
 import { AiOutlineLeft, AiOutlineRight, AiOutlineClose } from "react-icons/ai"
+import { deleteWatchlist } from "@/app/actions"
+import { useMutation, useQueryClient } from "@tanstack/react-query"
+import { toast } from "sonner"
+import { publicUrl } from "@/lib/consumet"
+import axios from "axios"
 
 type SwiperContinueWatchingProps = {
   results: Watchlist[]
@@ -27,6 +32,17 @@ type SwiperContinueWatchingProps = {
 
 const SwiperContinueWatching = (props: SwiperContinueWatchingProps) => {
   const { results } = props
+  const queryClient = useQueryClient()
+
+  const mutate = useMutation({
+    mutationFn: (id: string) => axios.post(`/api/user/watching`, { id }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["watching"] })
+      toast.success(`Remove history`)
+
+      return toast.dismiss()
+    },
+  })
 
   return (
     <Swiper
@@ -66,7 +82,10 @@ const SwiperContinueWatching = (props: SwiperContinueWatchingProps) => {
                     <TooltipProvider>
                       <Tooltip>
                         <TooltipTrigger asChild>
-                          <button className="rounded-full bg-background p-1 text-foreground">
+                          <button
+                            onClick={() => mutate.mutate(result.id)}
+                            className="rounded-full bg-background p-1 text-foreground"
+                          >
                             <AiOutlineClose className="h-4 w-4" />
                           </button>
                         </TooltipTrigger>

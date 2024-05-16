@@ -171,6 +171,18 @@ export async function updateWatchlist({
   return
 }
 
+export async function deleteWatchlist(id: string) {
+  const deleteWatch = await db.watchlist.delete({
+    where: {
+      id,
+    },
+  })
+
+  revalidatePath("/")
+
+  return deleteWatch
+}
+
 export async function createBookmark({
   animeId,
   image,

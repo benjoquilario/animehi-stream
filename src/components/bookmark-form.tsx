@@ -67,7 +67,7 @@ const BookmarkForm = ({
     return (
       <Button
         onClick={handleOnBookmark}
-        className="flex h-3 items-center gap-1 bg-background px-2 text-sm hover:bg-background"
+        className="flex h-3 items-center gap-1 bg-background px-2 text-sm text-foreground hover:bg-background"
       >
         <BsFillBookmarkPlusFill className="h-5 w-5" /> Bookmark
       </Button>
@@ -79,7 +79,7 @@ const BookmarkForm = ({
       {!checkBookmarkExist && !isBookmark ? (
         <Button
           onClick={handleOnBookmark}
-          className="flex h-3 items-center gap-1 bg-background px-2 text-sm hover:bg-background"
+          className="flex h-3 items-center gap-1 bg-background px-2 text-sm text-foreground hover:bg-background"
         >
           {isLoading ? (
             <div className="flex h-3 items-center gap-1 bg-background px-2 text-sm hover:bg-background">

@@ -1,4 +1,4 @@
-import { animeInfo, popular, watch, publicUrl, anifyInfo } from "@/lib/consumet"
+import { animeInfo, popular, watch, publicUrl } from "@/lib/consumet"
 import Episodes from "@/components/episode/episodes"
 import Details from "@/components/details"
 import Sharethis from "@/components/sharethis"
@@ -75,9 +75,9 @@ export default async function Watch({ params: { params } }: Params) {
   const [animeId, anilistId, episodeNumber] = params as string[]
   const session = await getSession()
 
-  const animeResponse = await animeInfo(animeId)
+  const animeResponse = await animeInfo(`${animeId},${anilistId}`)
   // const popularResponse = await popular()
-  const anifyInfoResponse = await anifyInfo(anilistId)
+  // const anifyInfoResponse = await anifyInfo(anilistId, animeResponse.id)
 
   await createViewCounter({
     animeId,
@@ -94,7 +94,7 @@ export default async function Watch({ params: { params } }: Params) {
       return episodeNumber
 
     const nextEpisodeNumber = animeResponse.episodes.findIndex(
-      (episode) => episode.number === Number(episodeNumber)
+      (episode: any) => episode.number === Number(episodeNumber)
     )
 
     return String(nextEpisodeNumber + 2)
@@ -104,7 +104,7 @@ export default async function Watch({ params: { params } }: Params) {
     if (Number(episodeNumber) === 1) return episodeNumber
 
     const nextEpisodeNumber = animeResponse.episodes.findIndex(
-      (episode) => episode.number === Number(episodeNumber)
+      (episode: any) => episode.number === Number(episodeNumber)
     )
 
     return String(nextEpisodeNumber)
@@ -115,7 +115,7 @@ export default async function Watch({ params: { params } }: Params) {
       animeId,
       episodeNumber,
       title: animeResponse.title ?? animeResponse.otherName,
-      image: animeResponse.image,
+      image: animeResponse.bannerImage,
       nextEpisode: nextEpisode(),
       prevEpisode: prevEpisode(),
       anilistId,
@@ -145,7 +145,7 @@ export default async function Watch({ params: { params } }: Params) {
           sourcesPromise={sourcesPromise}
           episodeId={`${animeId}-episode-${episodeNumber}`}
           episodeNumber={episodeNumber}
-          poster={anifyInfoResponse.bannerImage}
+          poster={animeResponse.bannerImage}
         />
       </Suspense>
       {/* <VideoPlayer animeId={animeId} episodeNumber={episodeNumber} /> */}

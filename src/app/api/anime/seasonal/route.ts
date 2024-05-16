@@ -32,7 +32,7 @@ export async function GET(req: Request) {
   if (seasonal) {
     console.log("seasonal miss")
     const stringifyResult = JSON.stringify(seasonal)
-    await redis.setex("seasonal", 60 * 60 * 3, stringifyResult)
+    await redis.setex("seasonal", 60 * 60 * 5, stringifyResult)
   }
 
   return NextResponse.json(seasonal)

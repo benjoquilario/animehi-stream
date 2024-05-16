@@ -1,11 +1,15 @@
-import { continueWatching } from "@/lib/metrics"
+"use client"
+
 import SwiperContinueWatching from "./swiper-continue-watching"
 import Section from "./section"
+import { useQuery } from "@tanstack/react-query"
+import { publicUrl } from "@/lib/consumet"
 
-export default async function ContinueWatching() {
-  const results = await continueWatching()
-
-  if (results?.length === 0) return <></>
+export default function ContinueWatching() {
+  const { data, isLoading } = useQuery({
+    queryKey: ["watching"],
+    queryFn: () => fetch(`/api/user/watching`).then((res) => res.json()),
+  })
 
   return (
     <Section sectionName="recently-watch" className="relative">
@@ -16,7 +20,11 @@ export default async function ContinueWatching() {
       <span className="pb-6 text-xs text-muted-foreground/70">
         Swipe for more
       </span>
-      {results ? <SwiperContinueWatching results={results} /> : null}
+      {isLoading ? (
+        <div>Loading</div>
+      ) : (
+        <SwiperContinueWatching results={data} />
+      )}
     </Section>
   )
 }

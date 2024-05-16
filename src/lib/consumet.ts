@@ -37,19 +37,7 @@ export const popular = cache(async function popular() {
 })
 
 export const animeInfo = cache(async function animeInfo(animeId: string) {
-  const response = await fetch(`${publicUrl}/api/anime/info/${animeId}`, {
-    next: { revalidate: 5 * 60 },
-  })
-
-  if (!response.ok) throw new Error("Failed to fetch anime informations")
-
-  return (await response.json()) as AnimeInfoResponse
-})
-
-export const anifyInfo = cache(async function anifyInfo(id: string) {
-  const response = await fetch(
-    `https://api.anify.tv/info/${id}?fields=[id,coverImage,relations,bannerImage]`
-  )
+  const response = await fetch(`${publicUrl}/api/anime/info/${animeId}`)
 
   if (!response.ok) throw new Error("Failed to fetch anime informations")
 

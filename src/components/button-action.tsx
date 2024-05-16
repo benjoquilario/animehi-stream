@@ -68,7 +68,7 @@ const ButtonAction = ({
           onClick={handlePrevEpisode}
           disabled={isPrevEpisode}
           aria-label="previous episode"
-          className="flex h-3 items-center gap-1 bg-background px-2 text-sm hover:bg-background"
+          className="flex h-3 items-center gap-1 bg-background px-2 text-sm text-foreground hover:bg-background"
         >
           <AiFillBackward className="h-5 w-5" />
           <span className="hidden md:block">Prev episode</span>
@@ -77,7 +77,7 @@ const ButtonAction = ({
           onClick={handleNextEpisode}
           disabled={isNextEpisode}
           aria-label="next episode"
-          className="flex h-3 items-center gap-1 bg-background px-2 text-sm hover:bg-background"
+          className="flex h-3 items-center gap-1 bg-background px-2 text-sm text-foreground hover:bg-background"
         >
           <span className="hidden md:block">Next episode</span>
           <AiFillForward className="h-5 w-5" />

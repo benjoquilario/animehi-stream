@@ -23,6 +23,8 @@ export type SwiperNewestCommentsProps = {
 export default function SwiperNewestComments({
   newestComments,
 }: SwiperNewestCommentsProps) {
+  console.log(newestComments)
+
   return (
     <>
       <div className="relative hidden h-[280px] w-[280px] flex-shrink-0 md:block">
@@ -34,9 +36,12 @@ export default function SwiperNewestComments({
         />
       </div>
       <div className="flex w-[calc(100%-300px)] grow flex-col">
-        <ul className="flex flex-wrap">
+        <ul className="flex flex-wrap gap-2">
           <li className="flex items-center justify-center rounded-full border border-primary px-2 py-1 text-sm">
             Newest Comments
+          </li>
+          <li className="flex items-center justify-center rounded-full border border-primary px-2 py-1 text-sm opacity-50">
+            Popular Comments
           </li>
         </ul>
         <Swiper

@@ -4,7 +4,7 @@ import { cache } from "react"
 import { getSession } from "./session"
 import db from "./db"
 
-async function auth() {
+export async function auth() {
   const session = await getSession()
 
   if (!session) return

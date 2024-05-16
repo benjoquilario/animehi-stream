@@ -48,6 +48,7 @@
     "@vidstack/react": "^0.6.13",
     "artplayer": "^5.0.9",
     "artplayer-plugin-hls-quality": "^2.0.0",
+    "axios": "^1.6.8",
     "bcrypt": "^5.1.1",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.0.0",

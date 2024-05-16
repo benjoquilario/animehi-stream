@@ -40,7 +40,7 @@ const EpisodeList = ({
             router.push(`/watch/${animeId}/${anilistId}/${episode.number}`)
           }
         >
-          Ep. {episode.number}
+          {episode.number}
         </Button>
       ))}
     </div>
