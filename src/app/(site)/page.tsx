@@ -8,27 +8,19 @@ import { getSession } from "@/lib/session"
 import MostView from "@/components/most-view"
 import NewestComments from "@/components/comments/newest-comments"
 import Seasonal from "@/components/seasonal"
-import { Skeleton } from "@/components/ui/skeleton"
-import styles from "./loading.module.css"
-import { cn } from "@/lib/utils"
-import { SeasonalSkeleton } from "./loading"
 
 export default async function Home() {
-  const [recentSettled, seasonSettled] = await Promise.allSettled([
-    recent(),
-    seasonal(),
-  ])
-
-  const recentResponse =
-    recentSettled.status === "fulfilled" ? recentSettled.value : null
-  const seasonalResponse =
-    seasonSettled.status === "fulfilled" ? seasonSettled.value : null
+  const recentResponse = await recent()
+  const seasonalResponse = await seasonal()
 
   const session = await getSession()
+
   return (
     <>
       <section>
-        <Banner trendings={seasonalResponse?.trending} />
+        <Suspense fallback={<div>Loading...</div>}>
+          <Banner />
+        </Suspense>
       </section>
       <section className="w-full px-[2%]">
         <div className="flex flex-col md:space-x-4">

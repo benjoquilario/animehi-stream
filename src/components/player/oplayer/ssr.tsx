@@ -1,11 +1,11 @@
 import dynamic from "next/dynamic"
+import { watch } from "@/lib/consumet"
 
 const OPlayer = dynamic(() => import("./csr"), { ssr: false })
 import type { WatchProps } from "./csr"
 
 export default async function VideoPlayer(props: WatchProps) {
   const {
-    sourcesPromise,
     episodeId,
     nextEpisode,
     prevEpisode,
@@ -13,6 +13,8 @@ export default async function VideoPlayer(props: WatchProps) {
     episodeNumber,
     poster,
   } = props
+
+  const sourcesPromise = await watch(`${animeId}-episode-${episodeNumber}`)
 
   // const watchHistory = await animeWatchById(animeId)
 

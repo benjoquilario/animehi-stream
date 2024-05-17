@@ -49,7 +49,7 @@ const plugins = [
 ]
 
 export type WatchProps = {
-  sourcesPromise: Promise<SourcesResponse | undefined>
+  sourcesPromise?: SourcesResponse
   episodeId: string
   nextEpisode: string
   prevEpisode: string
@@ -88,7 +88,7 @@ export default function OPlayer(props: WatchProps) {
   useEffect(() => {
     if (!sourcesPromise) return
 
-    sourcesPromise.then((res) => (res ? setSources(res.sources) : notFound()))
+    setSources(sourcesPromise.sources)
 
     const updateWatchlistDb = async () => {
       await updateWatchlist({

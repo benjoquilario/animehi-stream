@@ -212,7 +212,7 @@ input[type="number"] {
   animation: bblFadInOut 1.8s infinite ease-in-out;
 }
 .loader {
-  color: #fff;
+  color: var(--background);
   font-size: 7px;
   position: relative;
   text-indent: -9999em;

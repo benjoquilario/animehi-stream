@@ -26,9 +26,9 @@ export async function generateMetadata({
     params: string[]
   }
 }): Promise<Metadata | undefined> {
-  const [animeId, episodeId] = params.params
+  const [animeId, anilistId, episodeNumber] = params.params
 
-  const response = await animeInfo(animeId)
+  const response = await animeInfo(`${animeId},${anilistId}`)
 
   if (!response) {
     return
@@ -45,7 +45,7 @@ export async function generateMetadata({
       title,
       description,
       type: "website",
-      url: `${publicUrl}/watch/${animeId}/${episodeId}`,
+      url: `${publicUrl}/watch/${animeId}/${anilistId}/${episodeNumber}`,
       images: [
         {
           url: `${imageUrl}`,
@@ -86,8 +86,6 @@ export default async function Watch({ params: { params } }: Params) {
     latestEpisodeNumber: animeResponse.episodes.length,
     anilistId,
   })
-
-  const sourcesPromise = watch(`${animeId}-episode-${episodeNumber}`)
 
   const nextEpisode = (): string => {
     if (Number(episodeNumber) === animeResponse.episodes?.length)
@@ -142,7 +140,6 @@ export default async function Watch({ params: { params } }: Params) {
           animeId={animeId}
           nextEpisode={nextEpisode()}
           prevEpisode={prevEpisode()}
-          sourcesPromise={sourcesPromise}
           episodeId={`${animeId}-episode-${episodeNumber}`}
           episodeNumber={episodeNumber}
           poster={animeResponse.bannerImage}
