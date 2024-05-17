@@ -10,8 +10,15 @@ import NewestComments from "@/components/comments/newest-comments"
 import Seasonal from "@/components/seasonal"
 
 export default async function Home() {
-  const recentResponse = await recent()
-  const seasonalResponse = await seasonal()
+  const [recentSettled, seasonSettled] = await Promise.allSettled([
+    recent(),
+    seasonal(),
+  ])
+
+  const recentResponse =
+    recentSettled.status === "fulfilled" ? recentSettled.value : null
+  const seasonalResponse =
+    seasonSettled.status === "fulfilled" ? seasonSettled.value : null
 
   const session = await getSession()
 

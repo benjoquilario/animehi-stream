@@ -3,14 +3,14 @@
 // credits : https://github.com/OatsProgramming/miruTV/blob/master/app/watch/components/OPlayer/OPlayer.tsx
 import Player from "@oplayer/core"
 import OUI from "@oplayer/ui"
-import hls from "@oplayer/hls"
+import OHls from "@oplayer/hls"
 import { skipOpEd } from "@/lib/plugins"
 import { useRef, useState, useEffect } from "react"
 import type {
   SourcesResponse,
-  Source,
   Episode,
   AnimeInfoResponse,
+  Source,
 } from "types/types"
 import { useRouter } from "next/navigation"
 import { notFound } from "next/navigation"
@@ -29,6 +29,28 @@ export type WatchProps = {
   episodeNumber: string
   poster: string
 }
+
+type Ctx = {
+  ui: ReturnType<typeof OUI>
+  hls: ReturnType<typeof OHls>
+}
+
+const plugins = [
+  skipOpEd(),
+  OUI({
+    subtitle: { background: true },
+    theme: {
+      primaryColor: "#6d28d9",
+      controller: {
+        slideToSeek: "long-touch",
+      },
+    },
+    screenshot: true,
+    forceLandscapeOnFullscreen: true,
+    autoFocus: true,
+  }),
+  OHls({ forceHLS: true, withBitrate: true }),
+]
 
 export default function OPlayer(props: WatchProps) {
   const {
@@ -76,22 +98,7 @@ export default function OPlayer(props: WatchProps) {
       autoplay: isAutoNext,
       playbackRate: 1,
     })
-      .use([
-        skipOpEd(),
-        OUI({
-          subtitle: { background: true },
-          theme: {
-            primaryColor: "#6d28d9",
-            controller: {
-              slideToSeek: "long-touch",
-            },
-          },
-          screenshot: true,
-          forceLandscapeOnFullscreen: true,
-          autoFocus: true,
-        }),
-        hls({ forceHLS: true, withBitrate: true }),
-      ])
+      .use(plugins)
       .on("ended", () => {
         updateWatchlistDb()
       })
@@ -109,7 +116,7 @@ export default function OPlayer(props: WatchProps) {
       .on("abort", () => {
         updateWatchlistDb()
       })
-      .create() as Player
+      .create() as Player<Ctx>
 
     return () => {
       playerRef.current?.destroy()
@@ -153,11 +160,12 @@ export default function OPlayer(props: WatchProps) {
         )
       )
       .catch((err) => console.log(err))
-  }, [sources, playerRef.current])
+  }, [sources, playerRef.current, episodeId])
 
   return (
     <AspectRatio ratio={16 / 9}>
       <div id="oplayer" />
+      {/* <ReactPlayer plugins={plugins} ref={playerRef} source={} /> */}
     </AspectRatio>
   )
 }

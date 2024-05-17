@@ -28,7 +28,7 @@ export async function generateMetadata({
 }): Promise<Metadata | undefined> {
   const [animeId, anilistId, episodeNumber] = params.params
 
-  const response = await animeInfo(`${animeId},${anilistId}`)
+  const response = await animeInfo(`${animeId}`)
 
   if (!response) {
     return
@@ -75,7 +75,7 @@ export default async function Watch({ params: { params } }: Params) {
   const [animeId, anilistId, episodeNumber] = params as string[]
   const session = await getSession()
 
-  const animeResponse = await animeInfo(`${animeId},${anilistId}`)
+  const animeResponse = await animeInfo(`${animeId}`)
   // const popularResponse = await popular()
   // const anifyInfoResponse = await anifyInfo(anilistId, animeResponse.id)
 
