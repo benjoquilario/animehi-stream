@@ -211,6 +211,7 @@ input[type="number"] {
   animation-fill-mode: both;
   animation: bblFadInOut 1.8s infinite ease-in-out;
 }
+
 .loader {
   color: var(--background);
   font-size: 7px;
@@ -219,12 +220,14 @@ input[type="number"] {
   transform: translateZ(0);
   animation-delay: -0.16s;
 }
+
 .loader:before,
 .loader:after {
   content: "";
   position: absolute;
   top: 0;
 }
+
 .loader:before {
   left: -3.5em;
   animation-delay: -0.32s;

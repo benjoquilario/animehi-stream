@@ -2,10 +2,9 @@
 
 // credits : https://github.com/OatsProgramming/miruTV/blob/master/app/watch/components/OPlayer/OPlayer.tsx
 import Player from "@oplayer/core"
-import ui from "@oplayer/ui"
+import OUI from "@oplayer/ui"
 import hls from "@oplayer/hls"
 import { skipOpEd } from "@/lib/plugins"
-import { AirPlay } from "@oplayer/plugins"
 import { useRef, useState, useEffect } from "react"
 import type {
   SourcesResponse,
@@ -79,7 +78,7 @@ export default function OPlayer(props: WatchProps) {
     })
       .use([
         skipOpEd(),
-        ui({
+        OUI({
           subtitle: { background: true },
           theme: {
             primaryColor: "#6d28d9",
@@ -92,7 +91,6 @@ export default function OPlayer(props: WatchProps) {
           autoFocus: true,
         }),
         hls({ forceHLS: true, withBitrate: true }),
-        new AirPlay(),
       ])
       .on("ended", () => {
         updateWatchlistDb()
