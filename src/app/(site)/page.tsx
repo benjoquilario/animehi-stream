@@ -25,9 +25,7 @@ export default async function Home() {
   return (
     <>
       <section>
-        <Suspense fallback={<div>Loading...</div>}>
-          <Banner />
-        </Suspense>
+        <Banner seasonalTrending={seasonalResponse?.trending} />
       </section>
       <section className="w-full px-[2%]">
         <div className="flex flex-col md:space-x-4">

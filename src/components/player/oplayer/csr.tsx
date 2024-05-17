@@ -21,7 +21,7 @@ import { useWatchStore } from "@/store"
 import { updateWatchlist } from "@/app/actions"
 
 export type WatchProps = {
-  sourcesPromise?: SourcesResponse
+  sourcesPromise: Promise<SourcesResponse>
   episodeId: string
   nextEpisode: string
   prevEpisode: string
@@ -61,7 +61,7 @@ export default function OPlayer(props: WatchProps) {
     poster,
   } = props
   const { data: session } = useSession()
-  const playerRef = useRef<Player>()
+  const playerRef = useRef<Player<Ctx>>()
   const lst = useRef()
   const router = useRouter()
   const [sources, setSources] = useState<Source[] | undefined>(undefined)
@@ -80,7 +80,7 @@ export default function OPlayer(props: WatchProps) {
   useEffect(() => {
     if (!sourcesPromise) return
 
-    setSources(sourcesPromise.sources)
+    sourcesPromise.then((res) => (res ? setSources(res.sources) : notFound()))
 
     const updateWatchlistDb = async () => {
       await updateWatchlist({

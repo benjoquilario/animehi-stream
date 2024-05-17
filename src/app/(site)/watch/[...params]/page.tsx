@@ -78,6 +78,7 @@ export default async function Watch({ params: { params } }: Params) {
   const animeResponse = await animeInfo(`${animeId}`)
   // const popularResponse = await popular()
   // const anifyInfoResponse = await anifyInfo(anilistId, animeResponse.id)
+  const sourcesPromise = watch(`${animeId}-episode-${episodeNumber}`)
 
   await createViewCounter({
     animeId,
@@ -137,6 +138,7 @@ export default async function Watch({ params: { params } }: Params) {
         }
       >
         <VideoPlayer
+          sourcesPromise={sourcesPromise}
           animeId={animeId}
           nextEpisode={nextEpisode()}
           prevEpisode={prevEpisode()}
