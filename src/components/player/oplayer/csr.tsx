@@ -41,13 +41,11 @@ const plugins = [
     subtitle: { background: true },
     theme: {
       primaryColor: "#6d28d9",
-      controller: {
-        slideToSeek: "long-touch",
-      },
     },
     screenshot: true,
     forceLandscapeOnFullscreen: true,
     autoFocus: true,
+    slideToSeek: "long-touch",
   }),
   OHls({ forceHLS: true, withBitrate: true }),
 ]
