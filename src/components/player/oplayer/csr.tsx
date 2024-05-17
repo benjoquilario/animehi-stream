@@ -2,9 +2,10 @@
 
 // credits : https://github.com/OatsProgramming/miruTV/blob/master/app/watch/components/OPlayer/OPlayer.tsx
 import Player from "@oplayer/core"
-import OUI, { type Highlight, type MenuBar } from "@oplayer/ui"
-import OHls from "@oplayer/hls"
+import ui from "@oplayer/ui"
+import hls from "@oplayer/hls"
 import { skipOpEd } from "@/lib/plugins"
+import { AirPlay } from "@oplayer/plugins"
 import { useRef, useState, useEffect } from "react"
 import type {
   SourcesResponse,
@@ -19,34 +20,6 @@ import { useSession } from "next-auth/react"
 import { publicUrl } from "@/lib/consumet"
 import { useWatchStore } from "@/store"
 import { updateWatchlist } from "@/app/actions"
-
-type Ctx = {
-  ui: ReturnType<typeof OUI>
-  hls: ReturnType<typeof OHls>
-}
-
-const plugins = [
-  skipOpEd(),
-  OUI({
-    autoFocus: true,
-    screenshot: true,
-    theme: {
-      primaryColor: "#6d28d9",
-    },
-    slideToSeek: "long-touch",
-    forceLandscapeOnFullscreen: true,
-    controlBar: { back: "always" },
-  }),
-  OHls({
-    forceHLS: true,
-    withBitrate: true,
-    active(instance, lib) {
-      instance.on(lib.Events.MANIFEST_PARSED, (...payload: any) => {
-        console.log(payload)
-      })
-    },
-  }),
-]
 
 export type WatchProps = {
   sourcesPromise?: SourcesResponse
@@ -69,7 +42,7 @@ export default function OPlayer(props: WatchProps) {
     poster,
   } = props
   const { data: session } = useSession()
-  const playerRef = useRef<Player<Ctx>>()
+  const playerRef = useRef<Player>()
   const lst = useRef()
   const router = useRouter()
   const [sources, setSources] = useState<Source[] | undefined>(undefined)
@@ -104,7 +77,23 @@ export default function OPlayer(props: WatchProps) {
       autoplay: isAutoNext,
       playbackRate: 1,
     })
-      .use(plugins)
+      .use([
+        skipOpEd(),
+        ui({
+          subtitle: { background: true },
+          theme: {
+            primaryColor: "#6d28d9",
+            controller: {
+              slideToSeek: "long-touch",
+            },
+          },
+          screenshot: true,
+          forceLandscapeOnFullscreen: true,
+          autoFocus: true,
+        }),
+        hls({ forceHLS: true, withBitrate: true }),
+        new AirPlay(),
+      ])
       .on("ended", () => {
         updateWatchlistDb()
       })
@@ -122,7 +111,7 @@ export default function OPlayer(props: WatchProps) {
       .on("abort", () => {
         updateWatchlistDb()
       })
-      .create() as Player<Ctx>
+      .create() as Player
 
     return () => {
       playerRef.current?.destroy()
