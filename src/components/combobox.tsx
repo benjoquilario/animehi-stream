@@ -15,7 +15,6 @@ import { cn, extractId } from "@/lib/utils"
 import { Search } from "types/types"
 import { useDebounce } from "@/hooks/useDebounce"
 import { useRouter } from "next/navigation"
-import { publicUrl } from "@/lib/consumet"
 import {
   AiOutlineArrowUp,
   AiOutlineArrowDown,
@@ -36,7 +35,7 @@ export default function Combobox() {
     if (debouncedQuery.length > 0) {
       startTransition(async () => {
         const res = await fetch(
-          `${publicUrl}/api/anime/search?q=${debouncedQuery}`
+          `${process.env.ANIME_API_URI}/anime/anify/${debouncedQuery}`
         )
         if (!res.ok) setSearch(null)
 

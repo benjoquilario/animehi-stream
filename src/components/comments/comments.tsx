@@ -34,7 +34,7 @@ export default function Comments({
     queryKey: [QUERY_KEYS.GET_INFINITE_COMMENTS],
     queryFn: ({ pageParam }) =>
       fetch(
-        `${publicUrl}/api/comments/${animeId}-episode-${episodeNumber}?limit=${5}&cursor=${pageParam}`
+        `${process.env.NEXT_PUBLIC_APP_URL}/api/comments/${animeId}-episode-${episodeNumber}?limit=${5}&cursor=${pageParam}`
       ).then((res) => res.json()),
     initialPageParam: 0,
     getNextPageParam: (lastPage) => lastPage.nextSkip,

@@ -1,6 +1,6 @@
 import type {
   AnifyRecentEpisode,
-  AnimeInfoResponse,
+  AnimeInfoResponse as TAnimeInfoResponse,
   ConsumetResponse,
   Popular,
   RecentEpisode,
@@ -9,23 +9,37 @@ import type {
   SourcesResponse,
 } from "types/types"
 import { cache } from "react"
-
-// import { ISearch,  } from "@consumet/extensions/dist/models/types"
-
-// export const url = "https://api.consumet.org/anime/gogoanime"
-// export const url2 = "https://consume-beige.vercel.app/anime/gogoanime"
+import { redis } from "./redis"
+import "server-only"
 
 export const publicUrl = process.env.NEXT_PUBLIC_APP_URL
 export const animeApi = process.env.ANIME_API_URI
+export const anifyUrl = "https://ahttps://api.anify.tv"
 
 export async function recent() {
-  const response = await fetch(`${publicUrl}/api/anime/recents`, {
-    cache: "no-cache",
-  })
+  const redisVal = "recents"
+  const url = `${animeApi}/meta/anilist/recent-episodes`
+  let cachedVal
 
-  if (!response.ok) throw new Error("Failed to fetch recent episodes.")
+  cachedVal = await redis.get(redisVal)
 
-  return (await response.json()) as ConsumetResponse<RecentEpisode>
+  if (cachedVal) {
+    return cachedVal
+  }
+
+  const response = await fetch(url, { cache: "no-cache" })
+
+  if (!response.ok) throw new Error("Fetch Failed")
+
+  const data = await response.json()
+
+  if (data) {
+    const stringifyResult = JSON.stringify(data)
+
+    await redis.setex(redisVal, 60 * 60 * 3, stringifyResult)
+  }
+
+  return data as ConsumetResponse<RecentEpisode>
 }
 
 export const popular = cache(async function popular() {
@@ -36,18 +50,32 @@ export const popular = cache(async function popular() {
   return (await response.json()) as ConsumetResponse<Popular>
 })
 
-export const animeInfo = cache(async function animeInfo(animeId: string) {
-  const response = await fetch(`${publicUrl}/api/anime/info/${animeId}`)
+export const animeInfo = async function (animeId: string) {
+  let cachedVal
 
-  if (!response.ok) throw new Error("Failed to fetch anime informations")
+  if (!animeId) throw new Error("Missing animeId for /anime/info")
 
-  return (await response.json()) as any
-})
+  cachedVal = await redis.get(`anime:${animeId}`)
+
+  if (cachedVal) {
+    console.log("anime info hits")
+    return cachedVal
+  }
+
+  const response = await fetch(`${animeApi}/anime/gogoanime/info/${animeId}`)
+
+  const consumetInfo = await response.json()
+
+  if (!response.ok) throw new Error("Failed to fetch anime information")
+
+  const stringifyResult = JSON.stringify(consumetInfo)
+  await redis.setex(`anime:${animeId}`, 60 * 60 * 3, stringifyResult)
+
+  return consumetInfo as TAnimeInfoResponse
+}
 
 export async function watch(episodeId: string) {
-  const response = await fetch(`${publicUrl}/api/watch/${episodeId}`, {
-    cache: "no-cache",
-  })
+  const response = await fetch(`${animeApi}/anime/gogoanime/watch/${episodeId}`)
 
   if (!response.ok) throw new Error("Failed to fetch anime informations")
 
@@ -69,11 +97,28 @@ export const search = cache(async function search({
 })
 
 export async function seasonal() {
-  const response = await fetch(`${publicUrl}/api/anime/seasonal`, {
-    cache: "no-cache",
-  })
+  const url = `https://api.anify.tv/seasonal/anime?fields=[id,%20mappings,%20title,%20coverImage,%20bannerImage,%20description,%20currentEpisode, %20totalEpisodes, %20format]`
+  const redisVal = "seasonal"
 
-  if (!response.ok) throw new Error("Failed to fetch seasonal.")
+  let cachedVal
 
-  return (await response.json()) as SeasonalResponse
+  cachedVal = await redis.get(redisVal)
+
+  if (cachedVal) {
+    return cachedVal
+  }
+
+  const response = await fetch(url, { cache: "no-cache" })
+
+  if (!response.ok) throw new Error("Fetch Failed")
+
+  const data = await response.json()
+
+  if (data) {
+    const stringifyResult = JSON.stringify(data)
+
+    await redis.setex(redisVal, 60 * 60 * 3, stringifyResult)
+  }
+
+  return data as SeasonalResponse
 }

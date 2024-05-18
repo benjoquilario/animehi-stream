@@ -12,6 +12,7 @@ import VideoPlayer from "@/components/player/oplayer/ssr"
 import Popular from "@/components/popular"
 import { AspectRatio } from "@/components/ui/aspect-ratio"
 import Comments from "@/components/comments/comments"
+import { AnimeInfoResponse } from "types/types"
 
 type Params = {
   params: {
@@ -28,7 +29,7 @@ export async function generateMetadata({
 }): Promise<Metadata | undefined> {
   const [animeId, anilistId, episodeNumber] = params.params
 
-  const response = await animeInfo(`${animeId}`)
+  const response = (await animeInfo(`${animeId}`)) as AnimeInfoResponse
 
   if (!response) {
     return
@@ -75,7 +76,7 @@ export default async function Watch({ params: { params } }: Params) {
   const [animeId, anilistId, episodeNumber] = params as string[]
   const session = await getSession()
 
-  const animeResponse = await animeInfo(`${animeId}`)
+  const animeResponse = (await animeInfo(`${animeId}`)) as AnimeInfoResponse
   // const popularResponse = await popular()
   // const anifyInfoResponse = await anifyInfo(anilistId, animeResponse.id)
   const sourcesPromise = watch(`${animeId}-episode-${episodeNumber}`)
@@ -114,7 +115,7 @@ export default async function Watch({ params: { params } }: Params) {
       animeId,
       episodeNumber,
       title: animeResponse.title ?? animeResponse.otherName,
-      image: animeResponse.bannerImage,
+      image: animeResponse.image,
       nextEpisode: nextEpisode(),
       prevEpisode: prevEpisode(),
       anilistId,
@@ -144,7 +145,7 @@ export default async function Watch({ params: { params } }: Params) {
           prevEpisode={prevEpisode()}
           episodeId={`${animeId}-episode-${episodeNumber}`}
           episodeNumber={episodeNumber}
-          poster={animeResponse.bannerImage}
+          poster={animeResponse.image}
         />
       </Suspense>
       {/* <VideoPlayer animeId={animeId} episodeNumber={episodeNumber} /> */}
