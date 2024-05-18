@@ -90,7 +90,7 @@ export const fetchSearch = cache(async function search(query: string) {
   return (await response.json()) as ConsumetResponse<Search>
 })
 
-export async function seasonal() {
+export const seasonal = cache(async function seasonal() {
   const url = `https://api.anify.tv/seasonal/anime?fields=[id,%20mappings,%20title,%20coverImage,%20bannerImage,%20description,%20currentEpisode, %20totalEpisodes, %20format]`
   const redisVal = "seasonal"
 
@@ -102,7 +102,7 @@ export async function seasonal() {
     return cachedVal
   }
 
-  const response = await fetch(url, { cache: "no-cache" })
+  const response = await fetch(url)
 
   if (!response.ok) throw new Error("Fetch Failed")
 
@@ -111,8 +111,8 @@ export async function seasonal() {
   if (data) {
     const stringifyResult = JSON.stringify(data)
 
-    await redis.setex(redisVal, 60 * 60 * 3, stringifyResult)
+    await redis.setex(redisVal, 60 * 60 * 6, stringifyResult)
   }
 
   return data as SeasonalResponse
-}
+})
