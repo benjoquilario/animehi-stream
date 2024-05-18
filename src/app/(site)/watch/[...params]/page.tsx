@@ -1,15 +1,13 @@
-import { animeInfo, popular, watch, publicUrl } from "@/lib/consumet"
+import { animeInfo, watch } from "@/lib/consumet"
 import Episodes from "@/components/episode/episodes"
 import Details from "@/components/details"
 import Sharethis from "@/components/sharethis"
 import type { Metadata } from "next"
-import { notFound } from "next/navigation"
 import { getSession } from "../../../../lib/session"
 import Server from "@/components/server"
 import { createViewCounter, createWatchlist, increment } from "@/app/actions"
 import { Suspense } from "react"
 import VideoPlayer from "@/components/player/oplayer/ssr"
-import Popular from "@/components/popular"
 import { AspectRatio } from "@/components/ui/aspect-ratio"
 import Comments from "@/components/comments/comments"
 import { AnimeInfoResponse } from "types/types"
@@ -46,7 +44,7 @@ export async function generateMetadata({
       title,
       description,
       type: "website",
-      url: `${publicUrl}/watch/${animeId}/${anilistId}/${episodeNumber}`,
+      url: `${process.env.NEXT_PUBLIC_APP_URL}/watch/${animeId}/${anilistId}/${episodeNumber}`,
       images: [
         {
           url: `${imageUrl}`,

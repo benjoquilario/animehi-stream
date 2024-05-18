@@ -15,11 +15,6 @@ import {
 } from "types/types"
 
 export default async function Home() {
-  const [recentSettled, seasonSettled] = await Promise.allSettled([
-    recent(),
-    seasonal(),
-  ])
-
   const recentResponse = (await recent()) as TConsumetResponse<TRecentEpisode>
   const seasonalResponse = (await seasonal()) as TSeasonalResponse
 

@@ -3,7 +3,6 @@ import { PrismaAdapter } from "@next-auth/prisma-adapter"
 import db from "./db"
 import bcrypt from "bcrypt"
 import type { NextAuthOptions } from "next-auth"
-import { publicUrl } from "./consumet"
 import CredentialsProvider from "next-auth/providers/credentials"
 import { credentialsValidator } from "@/lib/validations/credentials"
 
@@ -32,7 +31,7 @@ export const authOptions: NextAuthOptions = {
         },
       },
       token: "https://anilist.co/api/v2/oauth/token",
-      userinfo: `${publicUrl}/api/anilist/userinfo`,
+      userinfo: `${process.env.NEXT_PUBLIC_APP_}/api/anilist/userinfo`,
       clientId: process.env.CLIENT_ID,
       clientSecret: process.env.CLIENT_SECRET,
       profile(profile) {

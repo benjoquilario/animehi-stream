@@ -23,8 +23,6 @@ export type SwiperNewestCommentsProps = {
 export default function SwiperNewestComments({
   newestComments,
 }: SwiperNewestCommentsProps) {
-  console.log(newestComments)
-
   return (
     <>
       <div className="relative hidden h-[280px] w-[280px] flex-shrink-0 md:block">

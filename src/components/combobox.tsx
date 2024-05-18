@@ -12,7 +12,11 @@ import {
 } from "@/components/ui/command"
 import { AiOutlineSearch } from "react-icons/ai"
 import { cn, extractId } from "@/lib/utils"
-import { Search } from "types/types"
+import {
+  Search as TSearch,
+  ConsumetResponse as TConsumetResponse,
+} from "types/types"
+import { fetchSearch } from "@/lib/consumet"
 import { useDebounce } from "@/hooks/useDebounce"
 import { useRouter } from "next/navigation"
 import {
@@ -20,12 +24,13 @@ import {
   AiOutlineArrowDown,
   AiOutlineEnter,
 } from "react-icons/ai"
+import { animeApi } from "@/config/site"
 
 export default function Combobox() {
   const [isOpen, setIsOpen] = useState(false)
   const [query, setQuery] = useState("")
   const [isPending, startTransition] = useTransition()
-  const [search, setSearch] = useState<Search[] | null>(null)
+  const [search, setSearch] = useState<TSearch[] | null>(null)
   const debouncedQuery = useDebounce(query, 300)
   const router = useRouter()
 
@@ -34,15 +39,17 @@ export default function Combobox() {
 
     if (debouncedQuery.length > 0) {
       startTransition(async () => {
-        const res = await fetch(
-          `${process.env.ANIME_API_URI}/anime/anify/${debouncedQuery}`
+        const response = await fetch(
+          `https://consume-beige.vercel.app/anime/anify/${debouncedQuery}`
         )
-        if (!res.ok) setSearch(null)
 
-        const data = (await res.json()) as Search[]
-        setSearch(data)
+        if (!response.ok) setSearch(null)
 
-        console.log(data)
+        const data = (await response.json()) as TConsumetResponse<TSearch>
+
+        setSearch(data.results)
+
+        console.log(data.results)
       })
     }
   }, [debouncedQuery])

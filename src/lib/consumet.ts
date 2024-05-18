@@ -12,9 +12,9 @@ import { cache } from "react"
 import { redis } from "./redis"
 import "server-only"
 
-export const publicUrl = process.env.NEXT_PUBLIC_APP_URL
-export const animeApi = process.env.ANIME_API_URI
-export const anifyUrl = "https://ahttps://api.anify.tv"
+const publicUrl = process.env.NEXT_PUBLIC_APP_URL
+const animeApi = process.env.ANIME_API_URI
+const anifyUrl = "https://ahttps://api.anify.tv"
 
 export async function recent() {
   const redisVal = "recents"
@@ -82,13 +82,7 @@ export async function watch(episodeId: string) {
   return (await response.json()) as SourcesResponse
 }
 
-export const search = cache(async function search({
-  query,
-  page = 1,
-}: {
-  query: string
-  page?: number
-}) {
+export const fetchSearch = cache(async function search(query: string) {
   const response = await fetch(`${animeApi}/anime/anify/${query}`)
 
   if (!response.ok) throw new Error("Failed to fetch search.")

@@ -18,7 +18,7 @@ const ColumnCard = ({ result }: ColumnCardProps) => {
         <Link
           href={`${extractId(result.mappings)}/${
             result.id
-          }/${result.currentEpisode}`}
+          }/${result.currentEpisode ?? 1}`}
           aria-label={result.title.english ?? result.title.romaji}
         >
           <NextImage
