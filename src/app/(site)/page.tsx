@@ -8,6 +8,11 @@ import { getSession } from "@/lib/session"
 import MostView from "@/components/most-view"
 import NewestComments from "@/components/comments/newest-comments"
 import Seasonal from "@/components/seasonal"
+import {
+  ConsumetResponse as TConsumetResponse,
+  RecentEpisode as TRecentEpisode,
+  SeasonalResponse as TSeasonalResponse,
+} from "types/types"
 
 export default async function Home() {
   const [recentSettled, seasonSettled] = await Promise.allSettled([
@@ -15,10 +20,8 @@ export default async function Home() {
     seasonal(),
   ])
 
-  const recentResponse =
-    recentSettled.status === "fulfilled" ? recentSettled.value : null
-  const seasonalResponse =
-    seasonSettled.status === "fulfilled" ? seasonSettled.value : null
+  const recentResponse = (await recent()) as TConsumetResponse<TRecentEpisode>
+  const seasonalResponse = (await seasonal()) as TSeasonalResponse
 
   const session = await getSession()
 
