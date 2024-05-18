@@ -31,7 +31,7 @@ export const authOptions: NextAuthOptions = {
         },
       },
       token: "https://anilist.co/api/v2/oauth/token",
-      userinfo: `${process.env.NEXT_PUBLIC_APP_}/api/anilist/userinfo`,
+      userinfo: `${process.env.NEXT_PUBLIC_APP_URL}/api/anilist/userinfo`,
       clientId: process.env.CLIENT_ID,
       clientSecret: process.env.CLIENT_SECRET,
       profile(profile) {

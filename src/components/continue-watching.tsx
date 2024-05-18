@@ -3,7 +3,6 @@
 import SwiperContinueWatching from "./swiper-continue-watching"
 import Section from "./section"
 import { useQuery } from "@tanstack/react-query"
-import { publicUrl } from "@/lib/consumet"
 
 export default function ContinueWatching() {
   const { data, isLoading } = useQuery({

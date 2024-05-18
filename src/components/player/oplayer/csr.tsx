@@ -6,17 +6,11 @@ import OUI from "@oplayer/ui"
 import OHls from "@oplayer/hls"
 import { skipOpEd } from "@/lib/plugins"
 import { useRef, useState, useEffect } from "react"
-import type {
-  SourcesResponse,
-  Episode,
-  AnimeInfoResponse,
-  Source,
-} from "types/types"
+import type { SourcesResponse, Source } from "types/types"
 import { useRouter } from "next/navigation"
 import { notFound } from "next/navigation"
 import { AspectRatio } from "@/components/ui/aspect-ratio"
 import { useSession } from "next-auth/react"
-import { publicUrl } from "@/lib/consumet"
 import { useWatchStore } from "@/store"
 import { updateWatchlist } from "@/app/actions"
 

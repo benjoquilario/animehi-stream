@@ -19,11 +19,9 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip"
-import { AiOutlineLeft, AiOutlineRight, AiOutlineClose } from "react-icons/ai"
-import { deleteWatchlist } from "@/app/actions"
+import { AiOutlineClose } from "react-icons/ai"
 import { useMutation, useQueryClient } from "@tanstack/react-query"
 import { toast } from "sonner"
-import { publicUrl } from "@/lib/consumet"
 import axios from "axios"
 
 type SwiperContinueWatchingProps = {
