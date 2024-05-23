@@ -122,16 +122,14 @@ export default async function Watch({ params: { params } }: Params) {
         anilistId={anilistId}
       />
 
-      <Suspense>
-        <Server
-          episodeId={`${animeId}-episode-${episodeNumber}`}
-          animeResult={animeResponse}
-          animeId={animeId}
-          anilistId={anilistId}
-          episodeNumber={episodeNumber}
-          currentUser={currentUser}
-        />
-      </Suspense>
+      <Server
+        episodeId={`${animeId}-episode-${episodeNumber}`}
+        animeResult={animeResponse}
+        animeId={animeId}
+        anilistId={anilistId}
+        episodeNumber={episodeNumber}
+        currentUser={currentUser}
+      />
 
       {/* <VideoPlayer animeId={animeId} episodeNumber={episodeNumber} /> */}
       {/* <Suspense>
