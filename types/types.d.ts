@@ -203,17 +203,27 @@ interface IEpisode {
 
 interface Search {
   id: string
-  anilistId: string
-  title: string
-  image: string
-  cover: string
-  releaseDate: number
-  description: string
-  genres: string[]
-  rating: number
+  malId: string | null
+  title: {
+    romaji: string
+    english: string
+    native: string
+    userPreferred: string
+  }
   status: string
-  mappings: Mappings[]
+  image: string
+  imageHash: string
+  cover: string | null
+  coverHash: string
+  popularity: number
+  description: string
+  rating: number | null
+  genres: string[]
+  color: string | null
+  totalEpisodes: number
+  currentEpisodeCount: number
   type: string
+  releaseDate: number | null
 }
 
 interface SourcesResponse {

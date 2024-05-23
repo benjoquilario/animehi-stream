@@ -13,7 +13,7 @@ import {
   CommandList,
 } from "@/components/ui/command"
 import { AiOutlineSearch } from "react-icons/ai"
-import { cn, extractId } from "@/lib/utils"
+import { cn, extractId, transformedTitle } from "@/lib/utils"
 import {
   Search as TSearch,
   ConsumetResponse as TConsumetResponse,
@@ -42,7 +42,7 @@ export default function Combobox() {
     if (debouncedQuery.length > 0) {
       startTransition(async () => {
         const response = await fetch(
-          `https://consume-beige.vercel.app/anime/anify/${debouncedQuery}`
+          `https://consume-beige.vercel.app/meta/anilist/${debouncedQuery}`
         )
 
         if (!response.ok) setSearch(null)
@@ -112,13 +112,13 @@ export default function Combobox() {
               {search?.map((item) => (
                 <CommandItem
                   key={item.id}
-                  value={item.title}
+                  value={transformedTitle(item.title.romaji)}
                   onSelect={() =>
                     handleSelect(() => {
                       startTransition(() => {
                         setQuery("")
                         router.push(
-                          `${extractId(item.mappings)}/${item.anilistId}/1`
+                          `/anime/${transformedTitle(item.title.romaji)}/${item.id}`
                         )
                       })
                     })
@@ -126,12 +126,12 @@ export default function Combobox() {
                 >
                   <img
                     src={item.image}
-                    alt={item.title}
+                    alt={item.title.romaji ?? item.title.english ?? ""}
                     className="mr-4 h-14 w-10 rounded-sm"
                   />
                   <div className="flex flex-col justify-center">
                     <h3 className="text-sm font-medium leading-none">
-                      {item.title}
+                      {item.title.romaji ?? item.title.english}
                     </h3>
                     <p className="text-xs leading-none text-muted-foreground">
                       {item.releaseDate}
