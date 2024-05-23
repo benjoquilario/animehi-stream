@@ -75,7 +75,7 @@ export default async function Watch({ params: { params } }: Params) {
   const [animeId, anilistId, episodeNumber] = params as string[]
   const session = await getSession()
 
-  const url = `http://localhost:3000/api/anime/info/${anilistId}`
+  const url = `https://consume-beige.vercel.app/api/anime/info/${anilistId}`
   const response = await fetch(url)
 
   if (!response.ok) throw new Error("Error")
