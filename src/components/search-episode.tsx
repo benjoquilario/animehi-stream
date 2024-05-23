@@ -1,6 +1,6 @@
 "use client"
 
-import { memo } from "react"
+import React, { memo } from "react"
 import { Input } from "./ui/input"
 
 type SearchEpisodeProps = {

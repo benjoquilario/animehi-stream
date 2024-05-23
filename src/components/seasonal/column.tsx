@@ -2,10 +2,10 @@
 
 import React from "react"
 import ColumnCard from "./column-card"
-import { Seasonal } from "types/types"
+import { IAdvancedInfo, Seasonal } from "types/types"
 
 type ColumnProps = {
-  results?: Seasonal[]
+  results: IAdvancedInfo[]
   seasonalTitle: string
 }
 
@@ -19,7 +19,7 @@ const Column = ({ results, seasonalTitle }: ColumnProps) => {
         </div>
         <div className="bg-transparent">
           <ul>
-            {results?.slice(0, 5)?.map((result) => (
+            {results?.map((result) => (
               <li
                 key={result?.id}
                 className="relative flex items-center justify-between border-b py-4"

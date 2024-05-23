@@ -35,9 +35,169 @@ interface AnimeInfoResponse {
   episodes: Episode[]
 }
 
+interface IAdvancedInfo {
+  id: string
+  malId: number
+  title: {
+    romaji: string
+    english: string
+    native: string
+    userPreferred: string
+  }
+  status: string
+  image: string
+  imageHash: string
+  cover: string
+  coverHash: string
+  popularity: number
+  totalEpisodes: number
+  currentEpisode: number | null
+  countryOfOrigin: string
+  description: string
+  genres: string[]
+  rating: number
+  color: string
+  type: string
+  releaseDate: number
+}
+
+interface IAnilistInfo {
+  id: string
+  title: {
+    romaji: string
+    english: string
+    native: string
+  }
+  malId: number
+  trailer: {
+    id: string
+    site: string
+    thumbnail: string
+    thumbnailHash: string
+  }
+  synonyms: string[]
+  isLicensed: boolean
+  isAdult: boolean
+  countryOfOrigin: string
+  image: string
+  imageHash: string
+  cover: string
+  coverHash: string
+  description: string
+  status: string
+  releaseDate: number
+  nextAiringEpisode: {
+    airingTime: number
+    timeUntilAiring: number
+    episode: number
+  }
+  totalEpisodes: number
+  currentEpisode: number
+  rating: number
+  duration: number
+  genres: string[]
+  studios: string[]
+  season: string
+  popularity: number
+  type: string
+  startDate: {
+    year: number
+    month: number
+    day: number
+  }
+  endDate: {
+    year: number | null
+    month: number | null
+    day: number | null
+  }
+  color: string
+  recommendations: IRecommendationItem[]
+  characters: ICharacter[]
+  relations: IRelationItem[]
+}
+
+interface IRelationItem {
+  id: number
+  malId: number
+  relationType: string
+  title: {
+    romaji: string
+    english: string | null
+    native: string
+    userPreferred: string
+  }
+  status: string
+  episodes: null
+  image: string
+  imageHash: string
+  cover: string
+  coverHash: string
+  rating: number
+  type: string
+}
+
+interface ICharacter {
+  id: number
+  role: string
+  name: {
+    first: string
+    last: string
+    full: string
+    native: string
+    userPreferred: string
+  }
+  image: string
+  imageHash: string
+  voiceActors: IVoiceActor[]
+}
+
+interface IVoiceActor {
+  id: number
+  language: string
+  name: {
+    first: string
+    last: string
+    full: string
+    native: string
+    userPreferred: string
+  }
+  image: string
+  imageHash: string
+}
+
+interface IRecommendationItem {
+  id: number
+  malId: number
+  title: {
+    romaji: string
+    english: string
+    native: string
+    userPreferred: string
+  }
+  status: string
+  episodes: number
+  image: string
+  imageHash: string
+  cover: string
+  coverHash: string
+  rating: number
+  type: string
+}
+
 interface Episode {
   id: string
   number: number
+  url: string
+}
+
+interface IEpisode {
+  id: string
+  title: string
+  image: string
+  imageHash: string
+  number: number
+  createdAt: string
+  description: string | null
   url: string
 }
 

@@ -7,8 +7,8 @@ import ThemeToggle from "./theme-toggle"
 export default function SiteFooter() {
   return (
     <>
-      <footer className="mt-8 flex w-full flex-col px-[3%] pt-9">
-        <Separator className="my-4" />
+      <footer className="mt-20 flex w-full flex-col bg-secondary px-[3%] pt-9">
+        {/* <Separator className="my-4" /> */}
         <div className="flex flex-col">
           <div className="mb-5 flex flex-col items-start justify-between gap-5 xl:flex-row xl:items-center">
             <div>
@@ -26,23 +26,23 @@ export default function SiteFooter() {
                   </span>
                 </div>
               </Link>
-              <p className="mt-1 max-w-md text-xs italic text-muted-foreground/70">
+              <p className="mt-1 max-w-md text-xs italic text-muted-foreground">
                 This site does not store any files on our server, we only linked
                 to the media which is hosted on 3rd party services.
               </p>
             </div>
             <nav className="" aria-label="others links">
               <ul className="flex gap-3">
-                <li className="text-muted-foreground/80 hover:text-muted-foreground">
+                <li className="text-muted-foreground hover:text-muted-foreground">
                   <Link href="/popular">This Season</Link>
                 </li>
-                <li className="text-muted-foreground/80 hover:text-muted-foreground">
+                <li className="text-muted-foreground hover:text-muted-foreground">
                   <Link href="/popular">Popular Anime</Link>
                 </li>
-                <li className="text-muted-foreground/80 hover:text-muted-foreground">
+                <li className="text-muted-foreground hover:text-muted-foreground">
                   <Link href="/popular">Donate</Link>
                 </li>
-                <li className="text-muted-foreground/80 hover:text-muted-foreground">
+                <li className="text-muted-foreground hover:text-muted-foreground">
                   <Link href="/popular">DMCA</Link>
                 </li>
               </ul>

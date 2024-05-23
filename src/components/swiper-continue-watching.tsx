@@ -139,7 +139,7 @@ const SwiperContinueWatching = (props: SwiperContinueWatchingProps) => {
                   alt={result.title}
                   style={{ objectFit: "cover" }}
                 />
-                <div className="absolute bottom-3 left-0 z-30 mx-2 flex w-[80%] items-center gap-2">
+                <div className="absolute bottom-3 left-0 z-30 mx-2 flex w-4/5 items-center gap-2">
                   <BsPlayFill />
                   <h2>Watch Episode {result.episodeNumber}</h2>
                 </div>

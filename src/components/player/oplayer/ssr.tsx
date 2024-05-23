@@ -1,14 +1,21 @@
+"use client"
+
 import dynamic from "next/dynamic"
 const OPlayer = dynamic(() => import("./csr"), { ssr: false })
 import type { WatchProps } from "./csr"
+import { useWatchStore } from "@/store"
+import EmbedPlayer from "./embedded"
 
-export default async function VideoPlayer(props: WatchProps) {
+export default function VideoPlayer(props: WatchProps) {
+  const [sourceType, embeddedUrl] = useWatchStore((store) => [
+    store.sourceType,
+    store.embeddedUrl,
+  ])
   const {
     sourcesPromise,
     episodeId,
-    nextEpisode,
-    prevEpisode,
     animeId,
+    anilistId,
     episodeNumber,
     poster,
   } = props
@@ -19,11 +26,10 @@ export default async function VideoPlayer(props: WatchProps) {
     <OPlayer
       sourcesPromise={sourcesPromise}
       episodeId={episodeId}
-      nextEpisode={nextEpisode}
-      prevEpisode={prevEpisode}
       animeId={animeId}
       episodeNumber={episodeNumber}
       poster={poster}
+      anilistId={anilistId}
     />
   )
 }

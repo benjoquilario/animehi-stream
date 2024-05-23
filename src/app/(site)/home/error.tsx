@@ -20,7 +20,7 @@ export default function Error({
 
   return (
     <div className="relative flex h-[450px] w-full flex-col items-center justify-center bg-background px-[2%] md:h-[500px]">
-      <h2 className="text-center text-2xl text-destructive md:text-6xl">
+      <h2 className="text-center text-2xl md:text-6xl">
         Something went wrong!...maybe refresh?
       </h2>
       <div className="mt-4 flex flex-row gap-4">

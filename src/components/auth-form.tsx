@@ -125,7 +125,7 @@ const AuthForm = () => {
             </DialogHeader>
             {!authType ? <Login /> : <Register />}
             <div className="absolute bottom-4 left-6">
-              Don't have an account?
+              Don&apos;t have an account?
               <button
                 className="ml-2 text-primary"
                 onClick={() => setAuthType((authType) => !authType)}

@@ -3,6 +3,7 @@ import "server-only"
 import { cache } from "react"
 import { getSession } from "./session"
 import db from "./db"
+import { redis } from "./redis"
 
 export async function auth() {
   const session = await getSession()
@@ -93,3 +94,28 @@ export const getNewestComments = cache(async () => {
 
   return comments
 })
+
+const CACHE_MAX_AGE = 60 * 60 * 4
+export async function cacheRedis(cacheKey: string, url: string) {
+  try {
+    const cachedResponse = await redis.get(cacheKey)
+
+    if (cachedResponse) return cachedResponse
+
+    const response = await fetch(url)
+
+    if (!response.ok) throw new Error(`Server Error: ${response.statusText}`)
+
+    const data = await response.json()
+
+    if (data) {
+      const stringifyResult = JSON.stringify(data)
+
+      await redis.setex(cacheKey, CACHE_MAX_AGE, stringifyResult)
+    }
+
+    return data
+  } catch (error) {
+    throw error
+  }
+}

@@ -20,6 +20,12 @@ interface WatchInitialStore {
   enableAutoNext: () => void
   disabledAutoNext: () => void
   resetSources: () => void
+  download: string
+  setDownload: (download?: string) => void
+  sourceType: string
+  setSourceType: (sourceType: string) => void
+  embeddedUrl: string
+  setEmbeddedUrl: (embeddedUrl?: string) => void
 }
 
 export const useWatchStore = create<WatchInitialStore>((set) => ({
@@ -35,4 +41,10 @@ export const useWatchStore = create<WatchInitialStore>((set) => ({
   sources: undefined,
   resetSources: () => set({ sources: [] }),
   setSources: (arg: Source[] | undefined) => set({ sources: arg }),
+  download: "",
+  setDownload: (download?: string) => set({ download }),
+  sourceType: "default",
+  setSourceType: (sourceType: string) => set({ sourceType }),
+  embeddedUrl: "",
+  setEmbeddedUrl: (embeddedUrl?: string) => set({ embeddedUrl }),
 }))

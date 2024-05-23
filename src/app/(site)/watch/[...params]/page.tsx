@@ -1,16 +1,17 @@
 import { animeInfo, watch } from "@/lib/consumet"
 import Episodes from "@/components/episode/episodes"
-import Details from "@/components/details"
 import Sharethis from "@/components/sharethis"
 import type { Metadata } from "next"
 import { getSession } from "../../../../lib/session"
 import Server from "@/components/server"
 import { createViewCounter, createWatchlist, increment } from "@/app/actions"
 import { Suspense } from "react"
-import VideoPlayer from "@/components/player/oplayer/ssr"
-import { AspectRatio } from "@/components/ui/aspect-ratio"
+import OPlayer from "@/components/player/oplayer/csr"
 import Comments from "@/components/comments/comments"
-import { AnimeInfoResponse } from "types/types"
+import { AnimeInfoResponse, IAnilistInfo } from "types/types"
+import BreadcrumbWatch from "@/components/breadcrumb-watch"
+import { getCurrentUser } from "@/lib/current-user"
+import VideoPlayer from "@/components/player/oplayer/ssr"
 
 type Params = {
   params: {
@@ -74,104 +75,74 @@ export default async function Watch({ params: { params } }: Params) {
   const [animeId, anilistId, episodeNumber] = params as string[]
   const session = await getSession()
 
-  const animeResponse = (await animeInfo(`${animeId}`)) as AnimeInfoResponse
+  const url = `http://localhost:3000/api/anime/info/${anilistId}`
+  const response = await fetch(url)
+
+  if (!response.ok) throw new Error("Error")
+
+  const animeResponse = (await response.json()) as IAnilistInfo
+  // const animeResponse = (await fetchAnimeData(`${anilistId}`)) as IAnilistInfo
   // const popularResponse = await popular()
   // const anifyInfoResponse = await anifyInfo(anilistId, animeResponse.id)
   const sourcesPromise = watch(`${animeId}-episode-${episodeNumber}`)
 
   await createViewCounter({
     animeId,
-    title: animeResponse.title ?? animeResponse.otherName,
+    title: animeResponse.title.english ?? animeResponse.title.romaji,
     image: animeResponse.image,
-    latestEpisodeNumber: animeResponse.episodes.length,
+    latestEpisodeNumber: animeResponse.currentEpisode ?? 1,
     anilistId,
   })
-
-  const nextEpisode = (): string => {
-    if (Number(episodeNumber) === animeResponse.episodes?.length)
-      return episodeNumber
-
-    const nextEpisodeNumber = animeResponse.episodes.findIndex(
-      (episode: any) => episode.number === Number(episodeNumber)
-    )
-
-    return String(nextEpisodeNumber + 2)
-  }
-
-  const prevEpisode = (): string => {
-    if (Number(episodeNumber) === 1) return episodeNumber
-
-    const nextEpisodeNumber = animeResponse.episodes.findIndex(
-      (episode: any) => episode.number === Number(episodeNumber)
-    )
-
-    return String(nextEpisodeNumber)
-  }
 
   if (session) {
     await createWatchlist({
       animeId,
       episodeNumber,
-      title: animeResponse.title ?? animeResponse.otherName,
+      title: animeResponse.title.english ?? animeResponse.title.romaji,
       image: animeResponse.image,
-      nextEpisode: nextEpisode(),
-      prevEpisode: prevEpisode(),
+      nextEpisode: "1",
+      prevEpisode: "2",
       anilistId,
     })
   }
 
-  await increment(animeId, animeResponse.episodes.length)
+  await increment(animeId, animeResponse.currentEpisode)
+
+  const currentUser = await getCurrentUser()
 
   return (
-    <div className="mt-5 flex-1">
-      <Suspense
-        fallback={
-          <div className="mt-5 flex-1">
-            <AspectRatio
-              ratio={16 / 9}
-              className="flex items-center justify-center"
-            >
-              <div className="loader"></div>
-            </AspectRatio>
-          </div>
-        }
-      >
-        <VideoPlayer
-          sourcesPromise={sourcesPromise}
-          animeId={animeId}
-          nextEpisode={nextEpisode()}
-          prevEpisode={prevEpisode()}
-          episodeId={`${animeId}-episode-${episodeNumber}`}
-          episodeNumber={episodeNumber}
-          poster={animeResponse.image}
-        />
-      </Suspense>
-      {/* <VideoPlayer animeId={animeId} episodeNumber={episodeNumber} /> */}
+    <div className="mt-2 flex-1">
+      <BreadcrumbWatch animeId={anilistId} animeTitle={animeId} />
+      <VideoPlayer
+        sourcesPromise={sourcesPromise}
+        animeId={animeId}
+        episodeId={`${animeId}-episode-${episodeNumber}`}
+        episodeNumber={episodeNumber}
+        poster={animeResponse.cover}
+        anilistId={anilistId}
+      />
+
       <Suspense>
         <Server
           episodeId={`${animeId}-episode-${episodeNumber}`}
           animeResult={animeResponse}
-          episodes={animeResponse?.episodes}
           animeId={animeId}
           anilistId={anilistId}
           episodeNumber={episodeNumber}
+          currentUser={currentUser}
         />
       </Suspense>
-      {animeResponse ? (
-        <>
-          <Episodes
-            animeId={animeId}
-            fullEpisodes={animeResponse.episodes}
-            episodeId={`${animeId}-episode-${episodeNumber}`}
-            anilistId={anilistId}
-          />
-          <Details data={animeResponse} />
-        </>
-      ) : (
-        <div>Loading Episodes</div>
-      )}
-      <Sharethis />
 
+      {/* <VideoPlayer animeId={animeId} episodeNumber={episodeNumber} /> */}
+      {/* <Suspense>
+
+      </Suspense> */}
+
+      <Episodes
+        animeId={anilistId}
+        episodeId={`${animeId}-episode-${episodeNumber}`}
+      />
+      <Sharethis />
       <Comments
         animeId={animeId}
         episodeNumber={episodeNumber}

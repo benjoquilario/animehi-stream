@@ -27,7 +27,7 @@ export default function Bookmark({
         (bookmark) =>
           bookmark.animeId === animeResult?.id && bookmark.userId === userId
       ),
-    [bookmarks]
+    [bookmarks, userId, animeResult]
   )
 
   return (

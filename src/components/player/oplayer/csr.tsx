@@ -5,23 +5,24 @@ import Player from "@oplayer/core"
 import OUI from "@oplayer/ui"
 import OHls from "@oplayer/hls"
 import { skipOpEd } from "@/lib/plugins"
-import { useRef, useState, useEffect } from "react"
-import type { SourcesResponse, Source } from "types/types"
+import { type SourcesResponse, type Source, IEpisode } from "types/types"
 import { useRouter } from "next/navigation"
 import { notFound } from "next/navigation"
 import { AspectRatio } from "@/components/ui/aspect-ratio"
 import { useSession } from "next-auth/react"
 import { useWatchStore } from "@/store"
 import { updateWatchlist } from "@/app/actions"
+import useEpisodes from "@/hooks/useEpisodes"
+import { useRef, useState, useEffect, useMemo, useCallback } from "react"
+import useVideoSource from "@/hooks/useVideoSource"
 
 export type WatchProps = {
   sourcesPromise: Promise<SourcesResponse>
   episodeId: string
-  nextEpisode: string
-  prevEpisode: string
   animeId: string
   episodeNumber: string
   poster: string
+  anilistId: string
 }
 
 type Ctx = {
@@ -48,39 +49,63 @@ export default function OPlayer(props: WatchProps) {
   const {
     sourcesPromise,
     episodeId,
-    nextEpisode,
-    prevEpisode,
     animeId,
     episodeNumber,
     poster,
+    anilistId,
   } = props
   const { data: session } = useSession()
   const playerRef = useRef<Player<Ctx>>()
-  const lst = useRef()
-  const router = useRouter()
   const [sources, setSources] = useState<Source[] | undefined>(undefined)
   const isAutoNext = useWatchStore((store) => store.isAutoNext)
+  const setDownload = useWatchStore((store) => store.setDownload)
 
-  const getSelectedSrc = (selectedQuality: string): Promise<Source> => {
-    return new Promise((resolve, reject) => {
-      const selectedSrc = sources!.find(
-        (src) => src.quality === selectedQuality
-      ) as Source
-      if (!selectedSrc) reject("Selected quality source not found")
-      resolve(selectedSrc)
-    })
-  }
+  // const currentEpisode = useMemo(
+  //   () => episodes?.find((episode) => episode.id === episodeId),
+  //   [episodes, episodeId]
+  // )
+  // const nextEpisode = useMemo(() => {
+  //   if (episodes && !isLoading) {
+  //     if (Number(episodeNumber) === currentEpisode?.number) return episodeNumber
+
+  //     const nextEpisodeNumber = episodes?.findIndex(
+  //       (episode) => episode.number === Number(episodeNumber)
+  //     )
+
+  //     return String(nextEpisodeNumber + 2)
+  //   }
+  // }, [episodes, episodeNumber, isLoading])
+
+  console.log(sources)
+
+  const getSelectedSrc = useCallback(
+    (selectedQuality: string): Promise<Source> => {
+      return new Promise((resolve, reject) => {
+        const selectedSrc = sources!.find(
+          (src) => src.quality === selectedQuality
+        ) as Source
+        if (!selectedSrc) reject("Selected quality source not found")
+        resolve(selectedSrc)
+      })
+    },
+    [sources]
+  )
 
   useEffect(() => {
     if (!sourcesPromise) return
 
-    sourcesPromise.then((res) => (res ? setSources(res.sources) : notFound()))
+    sourcesPromise.then((res) => {
+      if (res) {
+        setSources(res.sources)
+        setDownload(res.download)
+      } else notFound
+    })
 
     const updateWatchlistDb = async () => {
       await updateWatchlist({
         episodeId,
-        nextEpisode,
-        prevEpisode,
+        nextEpisode: "1",
+        prevEpisode: "1",
         episodeNumber,
         animeId,
       })
@@ -113,6 +138,8 @@ export default function OPlayer(props: WatchProps) {
     return () => {
       playerRef.current?.destroy()
     }
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   useEffect(() => {
@@ -151,8 +178,13 @@ export default function OPlayer(props: WatchProps) {
           res ? { src: res.url, poster } : notFound()
         )
       )
+      .then(() => {
+        ;(async () => {
+          console.log("qqwqwq")
+        })()
+      })
       .catch((err) => console.log(err))
-  }, [sources, playerRef.current, episodeId])
+  }, [sources, episodeId, getSelectedSrc, poster])
 
   return (
     <AspectRatio ratio={16 / 9}>

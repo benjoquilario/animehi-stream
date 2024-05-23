@@ -4,11 +4,12 @@ import { Skeleton } from "@/components/ui/skeleton"
 
 interface WatchLayoutProps {
   children: React.ReactNode
+  params: string[]
 }
 
-const WatchLayout = ({ children }: WatchLayoutProps) => {
+const WatchLayout = ({ children, params }: WatchLayoutProps) => {
   return (
-    <div className="w-full px-[2%] pt-5">
+    <div className="w-full px-[2%] pt-3">
       <div className="relative flex w-full max-w-full flex-col">
         <div className="flex flex-col xl:flex-row xl:space-x-4">
           {children}

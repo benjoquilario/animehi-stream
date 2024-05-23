@@ -1,33 +1,95 @@
-import type { AnimeInfoResponse, Episode } from "types/types"
+"use client"
+
+import type { AnimeInfoResponse, Episode, IAnilistInfo } from "types/types"
 import { Button } from "./ui/button"
 import ButtonAction from "./button-action"
-import { getCurrentUser } from "@/lib/current-user"
 import BookmarkForm from "./bookmark-form"
-import { Suspense } from "react"
+import { FaClosedCaptioning } from "react-icons/fa6"
+import { FaMicrophone } from "react-icons/fa"
+import { FaDownload } from "react-icons/fa"
+import { useEffect, useMemo, useState } from "react"
+import Sub from "@/components/watch/subtitle"
+import { useWatchStore } from "@/store"
+import NextAiringEpisode from "./anime/next-airing"
 
 type ServerProps = {
-  episodes?: Episode[]
   episodeNumber: string
-  animeResult: AnimeInfoResponse | null
+  animeResult?: IAnilistInfo
   episodeId: string
   animeId: string
   anilistId: string
+  currentUser: any
 }
 
-export default async function Server({
-  episodes,
+export default function Server({
   animeResult,
   episodeId,
   animeId,
   episodeNumber,
   anilistId,
+  currentUser,
 }: ServerProps) {
-  const currentUser = await getCurrentUser()
-
-  const checkBookmarkExist = currentUser?.bookMarks.some(
-    (bookmark) =>
-      bookmark.animeId === animeResult?.id && bookmark.userId === currentUser.id
+  const checkBookmarkExist = useMemo(
+    () =>
+      currentUser?.bookMarks.some(
+        (bookmark: any) =>
+          bookmark.animeId === animeResult?.id &&
+          bookmark.userId === currentUser.id
+      ),
+    [currentUser, animeResult]
   )
+  const [download, sourceType] = useWatchStore((store) => [
+    store.download,
+    store.sourceType,
+  ])
+  // const setEmbeddedUrl = useWatchStore((store) => store.setEmbeddedUrl)
+  // const [isLoading, setIsLoading] = useState(true)
+
+  // console.log(sourceType)
+
+  // useEffect(() => {
+  //   let isMounted = false
+
+  //   async function fetchEmbeddedUrls() {
+  //     if (!episodeId) {
+  //       console.log("Error")
+  //       setIsLoading(false)
+  //       return
+  //     }
+  //     setIsLoading(true)
+  //     try {
+  //       const response = await fetch(
+  //         `${process.env.ANIME_API_URI}/meta/anilist/servers/${episodeId}?provider=gogoanime`
+  //       )
+
+  //       if (!response.ok) throw new Error("Failed to fetch servers")
+
+  //       const data = (await response.json()) as { name: string; url: string }[]
+
+  //       if (isMounted && data.length > 0) {
+  //         const vidstreamingUrl =
+  //           data.find((d) => d.name === "vidstreaming") || data[0]
+
+  //         const gogoServer = data.find((d) => d.name == "Gogo server")
+  //         if (sourceType === "vidstreaming") {
+  //           setEmbeddedUrl(vidstreamingUrl?.url)
+  //         } else if (sourceType === "gogo") {
+  //           setEmbeddedUrl(gogoServer?.url)
+  //         }
+  //       }
+  //     } catch (error) {
+  //       console.log("Error Again")
+  //     } finally {
+  //       if (isMounted) setIsLoading(false)
+  //     }
+  //   }
+
+  //   fetchEmbeddedUrls()
+
+  //   return () => {
+  //     isMounted = false
+  //   }
+  // }, [episodeId, setEmbeddedUrl, sourceType])
 
   return (
     <div className="mt-2 flex flex-col gap-2">
@@ -35,32 +97,43 @@ export default async function Server({
         <ButtonAction
           animeId={animeId}
           episodeId={episodeId}
-          episodes={episodes}
           anilistId={anilistId}
         >
-          <Suspense>
-            <BookmarkForm
-              userId={currentUser?.id}
-              bookmarks={currentUser?.bookMarks}
-              animeResult={animeResult}
-              checkBookmarkExist={checkBookmarkExist}
-              anilistId={anilistId}
-            />
-          </Suspense>
+          <BookmarkForm
+            animeId={animeId}
+            userId={currentUser?.id}
+            bookmarks={currentUser?.bookMarks}
+            animeResult={animeResult}
+            checkBookmarkExist={checkBookmarkExist}
+            anilistId={anilistId}
+          />
         </ButtonAction>
       </div>
-      <div className="flex flex-col items-center gap-4 overflow-hidden rounded-md bg-secondary md:flex-row">
-        <div className="w-full bg-primary px-5 py-3 text-center text-sm text-white md:w-80">
-          You are watching
-          <div className="font-semibold">Episode {episodeNumber}</div>
-          If current server doesnt work please try other servers beside
-        </div>
-        <div className="flex-1 pb-2 md:pb-0">
-          <div className="">
-            <Button size="sm" className="text-sm">
-              Default
-            </Button>
+      <div className="grid grid-cols-1 items-center gap-2 overflow-hidden rounded-md md:grid-cols-[1fr_400px] md:flex-row">
+        <div className="flex w-full flex-col gap-1 rounded-md bg-secondary px-5 py-3 text-left text-sm text-white">
+          <div className="flex items-center gap-2">
+            You are watching
+            <span className="font-semibold">Episode {episodeNumber}</span>
+            <a href={download} target="_blank" className="text-white">
+              <FaDownload />
+            </a>
           </div>
+          <span>If current server doesnt work please try other servers.</span>
+          <NextAiringEpisode animeInfo={animeResult} />
+        </div>
+        <div className="gap-2 flex h-full pl-4 flex-col p-3 items-start justify-center rounded-md bg-secondary">
+          <div className="flex items-center gap-2">
+            <span>
+              <FaClosedCaptioning />
+            </span>
+            <Sub />
+          </div>
+          {/* <div className="flex items-center gap-2">
+            <span>
+              <FaMicrophone />
+            </span>
+            <Sub />
+          </div> */}
         </div>
       </div>
       {/* <div className="mt-3 bg-[#111827] p-2 text-sm">

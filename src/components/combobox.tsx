@@ -1,3 +1,5 @@
+/* eslint-disable @next/next/no-img-element */
+/* eslint-disable react/jsx-no-comment-textnodes */
 "use client"
 
 import { useEffect, useState, useCallback, useTransition } from "react"
@@ -139,7 +141,7 @@ export default function Combobox() {
               ))}
             </CommandGroup>
           ) : null}
-          <div className="fixed bottom-[-2px] left-0 right-0 flex items-center gap-1 bg-background p-3 text-muted-foreground/80">
+          <div className="fixed inset-x-0 bottom-[-2px] flex items-center gap-1 bg-background p-3 text-muted-foreground/80">
             <div className="flex flex-col">
               <div className="flex w-4 flex-col items-center justify-center rounded-md border p-0.5">
                 <AiOutlineArrowUp className="h-2 w-2" />

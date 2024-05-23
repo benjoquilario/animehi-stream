@@ -1,13 +1,13 @@
 "use client"
 
-import { Episode } from "types/types"
+import { Episode, IEpisode } from "types/types"
 import { Button } from "./ui/button"
-import { useMemo } from "react"
+import { useCallback, useMemo } from "react"
 import { useRouter } from "next/navigation"
 import { AiFillForward, AiFillBackward } from "react-icons/ai"
+import useEpisodes from "@/hooks/useEpisodes"
 
 type ButtonActionProps = {
-  episodes?: Episode[]
   episodeId: string
   animeId: string
   children: React.ReactNode
@@ -15,33 +15,34 @@ type ButtonActionProps = {
 }
 
 const ButtonAction = ({
-  episodes,
   episodeId,
   animeId,
   children,
   anilistId,
 }: ButtonActionProps) => {
   const router = useRouter()
+  const { data: episodes, isLoading } = useEpisodes<IEpisode[]>(anilistId)
+
   const currentEpisode = useMemo(
     () => episodes?.find((episode) => episode.id === episodeId),
     [episodes, episodeId]
   )
 
-  const handleNextEpisode = () => {
+  const handleNextEpisode = useCallback(() => {
     if (currentEpisode?.number === episodes?.length) return
 
     router.push(
       `/watch/${animeId}/${anilistId}/${Number(currentEpisode?.number) + 1}`
     )
-  }
+  }, [episodes?.length, currentEpisode, router, animeId, anilistId])
 
-  const handlePrevEpisode = () => {
+  const handlePrevEpisode = useCallback(() => {
     if (currentEpisode?.number === 1) return
 
     router.push(
       `/watch/${animeId}/${anilistId}/${Number(currentEpisode?.number) - 1}`
     )
-  }
+  }, [currentEpisode, router, animeId, anilistId])
 
   const currentEpisodeIndex = useMemo(
     () => episodes?.findIndex((episode) => episode.id === episodeId),

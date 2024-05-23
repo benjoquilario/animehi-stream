@@ -5,24 +5,26 @@ import React, { useCallback, useState, useMemo } from "react"
 import { Button } from "./ui/button"
 import { BsFillBookmarkPlusFill, BsCheckCircleFill } from "react-icons/bs"
 import { toast } from "sonner"
-import type { AnimeInfoResponse } from "types/types"
+import type { AnimeInfoResponse, IAnilistInfo } from "types/types"
 import type { Bookmark as BookmarkT } from "@prisma/client"
 import { ImSpinner8 } from "react-icons/im"
 import { createBookmark } from "@/app/actions"
 import { useRouter } from "next/navigation"
 
 type BookmarkFormProps = {
-  animeResult: AnimeInfoResponse | null
+  animeResult?: IAnilistInfo
   bookmarks?: BookmarkT[]
   userId?: string
   checkBookmarkExist?: boolean
   anilistId: string
+  animeId: string
 }
 
 const BookmarkForm = ({
   animeResult,
   bookmarks,
   userId,
+  animeId,
   checkBookmarkExist,
   anilistId,
 }: BookmarkFormProps) => {
@@ -42,16 +44,16 @@ const BookmarkForm = ({
         if (!animeResult) return
 
         await createBookmark({
-          animeId: animeResult.id,
+          animeId,
           image: animeResult.image,
-          title: animeResult.title ?? animeResult.otherName,
+          title: animeResult.title.english ?? animeResult.title.romaji,
           anilistId,
         })
 
         setIsBookMark(true)
         setIsLoading(false)
         toast.success(
-          `${animeResult.title ?? animeResult.otherName} bookmarked`
+          `${animeResult.title.english ?? animeResult.title.romaji} bookmarked`
         )
       } catch (error) {
         setIsLoading(false)

@@ -1,0 +1,34 @@
+export const TYPE = {
+  ANIME: "ANIME",
+  MANGA: "MANGA",
+}
+
+export const FORMAT = {
+  TV: "TV",
+  TV_SHORT: "TV_SHORT",
+  OVA: "OVA",
+  ONA: "ONA",
+  MOVIE: "MOVIE",
+}
+
+export const STATUS = {
+  RELEASING: "RELEASING",
+  NOT_YET_RELEASED: "NOT_YET_RELEASED",
+  FINISHED: "FINISHED",
+  CANCELLED: "CANCELLED",
+  HIATUS: "HIATUS",
+}
+
+export const SORT = {
+  POPULARITY_DESC: ["POPULARITY_DESC", "SCORE_DESC"],
+  TRENDING_DESC: ["TRENDING_DESC", "SCORE_DESC"],
+  FAVORITES_SEASON: ["FAVOURITES_DESC", "SCORE_DESC"],
+}
+
+export const SEASON = {
+  WINTER: "WINTER",
+  SPRING: "SPRING",
+  SUMMER: "SUMMER",
+  FALL: "FALL",
+}
+export const CACHE_MAX_AGE = 60 * 60 * 4

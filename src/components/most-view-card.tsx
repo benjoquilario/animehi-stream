@@ -45,10 +45,10 @@ export default function MostViewCard({
         </Link>
         <div className="overflow-hidden">
           <div className="flex flex-wrap items-center gap-1">
-            <div className="flex items-center gap-1 rounded-lg bg-primary px-1 py-1 text-xs text-white md:px-2">
+            <div className="flex items-center gap-1 rounded-lg bg-primary p-1 text-xs text-white md:px-2">
               <FaClosedCaptioning /> {result.latestEpisodeNumber ?? 1}
             </div>
-            <div className="flex items-center gap-1 rounded-lg bg-secondary px-1 py-1 text-xs md:px-2">
+            <div className="flex items-center gap-1 rounded-lg bg-secondary p-1 text-xs md:px-2">
               {result.latestEpisodeNumber ?? 1}
             </div>
             <span className="mx-1 inline-block h-1 w-1 rounded-full bg-primary"></span>
