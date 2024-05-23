@@ -39,6 +39,7 @@ const NextImage: React.FC<ImageProps> = ({ onLoad, ...props }) => {
       animate={isLoaded ? "visible" : "hidden"}
       className={containerclassname}
     >
+      {/* eslint-disable-next-line jsx-a11y/alt-text */}
       <Image onLoad={handleLoadingComplete} unoptimized {...props} />
     </motion.div>
   )

@@ -25,7 +25,7 @@ export default function SwiperNewestComments({
 }: SwiperNewestCommentsProps) {
   return (
     <>
-      <div className="relative hidden h-[280px] w-[280px] flex-shrink-0 md:block">
+      <div className="relative hidden h-[280px] w-[280px] shrink-0 md:block">
         <NextImage
           fill
           src="/anime-34.png"
@@ -97,6 +97,7 @@ export default function SwiperNewestComments({
                   </div>
                   <div className="flex-1">
                     <p className="line-clamp-3 italic text-foreground/90">
+                      {/* eslint-disable-next-line react/no-unescaped-entities */}
                       "{newestComment.comment}"
                     </p>
                   </div>

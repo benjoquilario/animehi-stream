@@ -121,7 +121,7 @@ export default function Server({
           <span>If current server doesnt work please try other servers.</span>
           <NextAiringEpisode animeInfo={animeResult} />
         </div>
-        <div className="gap-2 flex h-full pl-4 flex-col p-3 items-start justify-center rounded-md bg-secondary">
+        <div className="flex h-full flex-col items-start justify-center gap-2 rounded-md bg-secondary p-3 pl-4">
           <div className="flex items-center gap-2">
             <span>
               <FaClosedCaptioning />
