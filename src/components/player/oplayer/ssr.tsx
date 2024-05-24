@@ -18,6 +18,7 @@ export default function VideoPlayer(props: WatchProps) {
     anilistId,
     episodeNumber,
     poster,
+    title,
   } = props
 
   // const watchHistory = await animeWatchById(animeId)
@@ -30,6 +31,7 @@ export default function VideoPlayer(props: WatchProps) {
       episodeNumber={episodeNumber}
       poster={poster}
       anilistId={anilistId}
+      title={title}
     />
   )
 }

@@ -28,10 +28,8 @@ const BookmarkForm = ({
   checkBookmarkExist,
   anilistId,
 }: BookmarkFormProps) => {
-  const router = useRouter()
   const [isLoading, setIsLoading] = useState(false)
   const { data: session } = useSession()
-  const [bookMarks] = useState(bookmarks)
   const [isBookmark, setIsBookMark] = useState(false)
 
   const handleOnBookmark = async () => {
@@ -59,6 +57,8 @@ const BookmarkForm = ({
         setIsLoading(false)
         setIsBookMark(false)
         toast.error("Something went wrong.")
+      } finally {
+        setIsLoading(false)
       }
     }
 

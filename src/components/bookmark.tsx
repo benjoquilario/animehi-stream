@@ -19,16 +19,16 @@ export default function Bookmark({
   userId,
   children,
 }: BookmarkProps) {
-  const [bookmarks] = useState(bookMarks)
-
   const isAnimeExist = useMemo(
     () =>
-      bookmarks?.some(
+      bookMarks?.some(
         (bookmark) =>
-          bookmark.animeId === animeResult?.id && bookmark.userId === userId
+          bookmark.anilistId === animeResult?.id && bookmark.userId === userId
       ),
-    [bookmarks, userId, animeResult]
+    [bookMarks, userId, animeResult]
   )
+
+  console.log(isAnimeExist)
 
   return (
     <>

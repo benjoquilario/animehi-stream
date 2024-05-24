@@ -89,8 +89,6 @@ export default function Episodes({ episodeId, animeId }: EpisodesProps) {
   //   [episodes]
   // )
 
-  console.log(currentEpisode)
-
   return (
     <div className="mt-4">
       {isLoading ? (

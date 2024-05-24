@@ -121,8 +121,6 @@ type RelationWithTypeProps = {
 function RelationWithType(props: RelationWithTypeProps) {
   const { relationType, relations } = props
 
-  console.log(relations)
-
   return relations.length !== 0 ? (
     <div className="mb-3 flex flex-col gap-3">
       <div className="mb-2">

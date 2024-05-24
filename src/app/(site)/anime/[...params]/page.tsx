@@ -338,7 +338,7 @@ function CharactersItem({ character }: CharactersItemProps) {
                     `${character.voiceActors?.[0].name.first} ${character.voiceActors?.[0].name.last}` ??
                     character.voiceActors?.[0].name.full ??
                     "No Name"
-                  : "No Name"
+                  : ""
               }
               fill
               style={{ objectFit: "cover" }}

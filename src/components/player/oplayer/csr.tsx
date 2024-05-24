@@ -23,6 +23,7 @@ export type WatchProps = {
   episodeNumber: string
   poster: string
   anilistId: string
+  title: string
 }
 
 type Ctx = {
@@ -53,6 +54,7 @@ export default function OPlayer(props: WatchProps) {
     episodeNumber,
     poster,
     anilistId,
+    title,
   } = props
   const { data: session } = useSession()
   const playerRef = useRef<Player<Ctx>>()
@@ -60,10 +62,13 @@ export default function OPlayer(props: WatchProps) {
   const isAutoNext = useWatchStore((store) => store.isAutoNext)
   const setDownload = useWatchStore((store) => store.setDownload)
 
-  // const currentEpisode = useMemo(
-  //   () => episodes?.find((episode) => episode.id === episodeId),
-  //   [episodes, episodeId]
-  // )
+  const { data: episodes, isLoading } = useEpisodes<IEpisode[]>(anilistId)
+
+  const currentEpisode = useMemo(
+    () => episodes?.find((episode) => episode.id === episodeId),
+    [episodes, episodeId]
+  )
+
   // const nextEpisode = useMemo(() => {
   //   if (episodes && !isLoading) {
   //     if (Number(episodeNumber) === currentEpisode?.number) return episodeNumber
@@ -175,7 +180,13 @@ export default function OPlayer(props: WatchProps) {
     oplayer
       .changeSource(
         getSelectedSrc("default").then((res) =>
-          res ? { src: res.url, poster } : notFound()
+          res
+            ? {
+                src: res.url,
+                poster: currentEpisode?.image ?? poster,
+                title: `${title} / Episode ${episodeNumber}`,
+              }
+            : notFound()
         )
       )
       .then(() => {
@@ -184,7 +195,15 @@ export default function OPlayer(props: WatchProps) {
         })()
       })
       .catch((err) => console.log(err))
-  }, [sources, episodeId, getSelectedSrc, poster])
+  }, [
+    sources,
+    episodeId,
+    getSelectedSrc,
+    poster,
+    title,
+    episodeNumber,
+    currentEpisode,
+  ])
 
   return (
     <AspectRatio ratio={16 / 9}>

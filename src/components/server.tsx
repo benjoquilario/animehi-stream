@@ -33,7 +33,7 @@ export default function Server({
     () =>
       currentUser?.bookMarks.some(
         (bookmark: any) =>
-          bookmark.animeId === animeResult?.id &&
+          bookmark.anilistId === animeResult?.id &&
           bookmark.userId === currentUser.id
       ),
     [currentUser, animeResult]
@@ -42,6 +42,8 @@ export default function Server({
     store.download,
     store.sourceType,
   ])
+
+  console.log(currentUser)
   // const setEmbeddedUrl = useWatchStore((store) => store.setEmbeddedUrl)
   // const [isLoading, setIsLoading] = useState(true)
 
@@ -109,12 +111,12 @@ export default function Server({
           />
         </ButtonAction>
       </div>
-      <div className="grid grid-cols-1 items-center gap-2 overflow-hidden rounded-md md:grid-cols-[1fr_400px] md:flex-row">
-        <div className="flex w-full flex-col gap-1 rounded-md bg-secondary px-5 py-3 text-left text-sm text-white">
+      <div className="grid grid-cols-1 items-center gap-2 overflow-hidden rounded-md md:grid-cols-[1fr_380px] md:flex-row">
+        <div className="flex w-full flex-col gap-1 rounded-md bg-secondary px-5 py-3 text-left text-sm">
           <div className="flex items-center gap-2">
             You are watching
             <span className="font-semibold">Episode {episodeNumber}</span>
-            <a href={download} target="_blank" className="text-white">
+            <a href={download} target="_blank">
               <FaDownload />
             </a>
           </div>
