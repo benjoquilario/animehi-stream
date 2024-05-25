@@ -121,6 +121,7 @@ export default async function Watch({ params: { params } }: Params) {
         poster={animeResponse.cover}
         anilistId={anilistId}
         title={`${animeResponse.title.english ?? animeResponse.title.romaji}`}
+        malId={animeResponse.malId}
       />
 
       <Server

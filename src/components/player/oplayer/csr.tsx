@@ -2,12 +2,16 @@
 
 // credits : https://github.com/OatsProgramming/miruTV/blob/master/app/watch/components/OPlayer/OPlayer.tsx
 import Player, { isIOS, isMobile } from "@oplayer/core"
-import OUI from "@oplayer/ui"
+import OUI, { type Highlight } from "@oplayer/ui"
 import OHls from "@oplayer/hls"
 import { skipOpEd } from "@/lib/plugins"
 import { Chromecast } from "@oplayer/plugins"
-import { type SourcesResponse, type Source, IEpisode } from "types/types"
-import { useParams, useRouter } from "next/navigation"
+import {
+  type SourcesResponse,
+  type Source,
+  IEpisode,
+  AniSkip,
+} from "types/types"
 import { notFound } from "next/navigation"
 import { AspectRatio } from "@/components/ui/aspect-ratio"
 import { useSession } from "next-auth/react"
@@ -15,7 +19,6 @@ import { useWatchStore } from "@/store"
 import { updateWatchlist } from "@/app/actions"
 import useEpisodes from "@/hooks/useEpisodes"
 import { useRef, useState, useEffect, useMemo, useCallback } from "react"
-import useVideoSource from "@/hooks/useVideoSource"
 import useLastPlayed from "@/hooks/useLastPlayed"
 import { throttle } from "@/lib/utils"
 
@@ -27,6 +30,7 @@ export type WatchProps = {
   poster: string
   anilistId: string
   title: string
+  malId: string
 }
 
 type Ctx = {
@@ -44,6 +48,7 @@ export default function OPlayer(props: WatchProps) {
     poster,
     anilistId,
     title,
+    malId,
   } = props
   const { data: session } = useSession()
   const playerRef = useRef<Player<Ctx>>()
@@ -59,10 +64,6 @@ export default function OPlayer(props: WatchProps) {
     () => episodes?.find((episode) => episode.id === episodeId),
     [episodes, episodeId]
   )
-
-  const [speed, setSpeed] = useState(() => localStorage.getItem("speed") || "1")
-
-  console.log(speed)
 
   const plugins = useMemo(
     () => [
@@ -107,12 +108,12 @@ export default function OPlayer(props: WatchProps) {
           {
             name: localStorage.getItem("speed")
               ? localStorage.getItem("speed")! + "x"
-              : "1.0",
+              : "1.0x",
             children: ["2.0", "1.5", "1.25", "1.0", "0.75", "0.5"].map(
               (speed) => ({
                 name: speed + "x",
                 value: speed,
-                default: (localStorage.getItem("speed") || "1.0") == speed,
+                default: (speed || "1.0") == speed,
               })
             ),
             onChange({ name, value }, elm, player) {
@@ -123,7 +124,7 @@ export default function OPlayer(props: WatchProps) {
           },
         ],
       }),
-      OHls({ forceHLS: true }),
+      OHls({ forceHLS: true, matcher: () => true }),
       new Chromecast(),
     ],
     []
@@ -140,8 +141,6 @@ export default function OPlayer(props: WatchProps) {
   //     return String(nextEpisodeNumber + 2)
   //   }
   // }, [episodes, episodeNumber, isLoading])
-
-  console.log(sources)
 
   const getSelectedSrc = useCallback(
     (selectedQuality: string): Promise<Source> => {
@@ -164,8 +163,6 @@ export default function OPlayer(props: WatchProps) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [lastEpisode]
   )
-
-  console.log(lastDuration)
 
   useEffect(() => {
     if (!sourcesPromise) return
@@ -218,7 +215,6 @@ export default function OPlayer(props: WatchProps) {
     return () => {
       playerRef.current?.destroy()
     }
-
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
@@ -265,20 +261,60 @@ export default function OPlayer(props: WatchProps) {
         )
       )
       .then(() => {
-        ;(async () => {
-          console.log("qqwqwq")
-        })()
+        async function skipTimes() {
+          console.log("Hello World!")
+
+          if (!malId) return
+          console.log(malId)
+          const response = await fetch(
+            `https://api.aniskip.com/v2/skip-times/${anilistId}/${episodeNumber}?types=op&types=recap&types=mixed-op&types=ed&types=mixed-ed&episodeLength`
+          )
+
+          if (!response.ok) return
+          const data = (await response.json()) as AniSkip
+
+          const highlights: Highlight[] = []
+
+          let opDuration = [],
+            edDuration = []
+
+          if (data.statusCode === 200) {
+            for (let result of data.results) {
+              if (result.skipType === "op" || result.skipType === "ed") {
+                const { startTime, endTime } = result.interval
+
+                if (startTime) {
+                  highlights.push({
+                    time: startTime,
+                    text: result.skipType === "op" ? "OP" : "ED",
+                  })
+                  if (result.skipType === "op") opDuration.push(startTime)
+                  else edDuration.push(startTime)
+                }
+
+                if (endTime) {
+                  highlights.push({
+                    time: endTime,
+                    text: result.skipType === "op" ? "OP" : "ED",
+                  })
+                  if (result.skipType === "op") opDuration.push(endTime)
+                  else edDuration.push(endTime)
+                }
+              }
+            }
+          }
+
+          playerRef.current?.emit("opedchange", [opDuration, edDuration])
+          // @ts-expect-error
+          playerRef.current?.plugins?.ui?.highlight(highlights)
+        }
+
+        skipTimes()
       })
       .catch((err) => console.log(err))
-  }, [
-    sources,
-    episodeId,
-    getSelectedSrc,
-    poster,
-    title,
-    episodeNumber,
-    currentEpisode,
-  ])
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [sources, episodeId, getSelectedSrc, currentEpisode])
 
   return (
     <AspectRatio ratio={16 / 9}>

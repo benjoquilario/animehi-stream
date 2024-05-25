@@ -338,7 +338,7 @@ export interface RecentEpisode {
 
 export interface AniSkip {
   statusCode: number
-  results?: AniSkipResult[]
+  results: AniSkipResult[]
 }
 
 export interface AniSkipResult {
@@ -346,7 +346,7 @@ export interface AniSkipResult {
     startTime: number
     endTime: number
   }
-  type: string
+  skipType: string
 }
 
 export interface SourceType {
