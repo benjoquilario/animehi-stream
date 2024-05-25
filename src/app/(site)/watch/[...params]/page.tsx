@@ -11,7 +11,7 @@ import Comments from "@/components/comments/comments"
 import { AnimeInfoResponse, IAnilistInfo } from "types/types"
 import BreadcrumbWatch from "@/components/breadcrumb-watch"
 import { getCurrentUser } from "@/lib/current-user"
-import VideoPlayer from "@/components/player/oplayer/ssr"
+import VideoPlayer from "@/components/player/oplayer/csr"
 
 type Params = {
   params: {
