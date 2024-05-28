@@ -16,7 +16,7 @@ type EpisodesProps = {
   episodeId?: string
   animeId: string
   isWatch: boolean
-  update: (id: string, i: number, d: number) => void
+  update?: (id: string, i: number, d: number) => void
 }
 
 export default function Episodes({
@@ -142,7 +142,7 @@ export default function Episodes({
                   displayedEpisodes?.map((episode, index) =>
                     isWatch ? (
                       <Button
-                        onClick={() => update(episode.id, episode.number, 0)}
+                        onClick={() => update?.(episode.id, episode.number, 0)}
                         key={episode.id}
                         className={cn(
                           "justify-start p-3 text-[14px] font-medium odd:bg-secondary/30 even:bg-background hover:bg-secondary",
