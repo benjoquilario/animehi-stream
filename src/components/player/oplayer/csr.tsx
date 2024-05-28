@@ -77,13 +77,13 @@ export default function OPlayer(props: WatchProps) {
     [videoSource]
   )
 
+  const download = useMemo(() => videoSource?.download, [videoSource])
+
   const { data: episodes, isLoading } = useEpisodes<IEpisode[]>(anilistId)
 
-  console.log(lastEpisode)
-
   const currentEpisode = useMemo(
-    () => episodes?.find((episode) => episode.id === episodeId),
-    [episodes, episodeId]
+    () => episodes?.find((episode) => episode.number === lastEpisode),
+    [episodes, lastEpisode]
   )
 
   const plugins = useMemo(
@@ -129,7 +129,7 @@ export default function OPlayer(props: WatchProps) {
           {
             name: localStorage.getItem("speed")
               ? localStorage.getItem("speed")! + "x"
-              : "1.0x",
+              : "1.0",
             children: ["2.0", "1.5", "1.25", "1.0", "0.75", "0.5"].map(
               (speed) => ({
                 name: speed + "x",
@@ -178,8 +178,8 @@ export default function OPlayer(props: WatchProps) {
   )
 
   useEffect(() => {
-    const updateWatchlistDb = async () => {
-      await updateWatchlist({
+    async function updateWatch() {
+      return await updateWatchlist({
         episodeId,
         nextEpisode: "1",
         prevEpisode: "1",
@@ -196,23 +196,29 @@ export default function OPlayer(props: WatchProps) {
     })
       .use(plugins)
       .on("ended", () => {
-        updateWatchlistDb()
+        updateWatch()
+
+        if (episodes?.length === lastEpisode) {
+          update(anilistId, 1, 0)
+        }
+
+        update(anilistId, lastEpisode + 1, 0)
       })
       .on("timeupdate", ({ payload }) => {
         console.log("Timeupdate")
         console.log(payload)
+
         // onTimeUpdate({ currentTime: payload.target.currentTime * 1000 })
       })
       .on("pause", () => {
         console.log("Playing Pause")
-
-        updateWatchlistDb()
+        updateWatch()
       })
       .on("destroy", () => {
-        updateWatchlistDb()
+        updateWatch()
       })
       .on("abort", () => {
-        updateWatchlistDb()
+        updateWatch()
       })
       .create() as Player<Ctx>
 
@@ -252,73 +258,75 @@ export default function OPlayer(props: WatchProps) {
     oplayer.$root.appendChild(forward)
     oplayer.$root.appendChild(backward)
 
-    oplayer
-      .changeSource(
-        getSelectedSrc("default").then((res) =>
-          res
-            ? {
-                src: res.url,
-                poster: currentEpisode?.image ?? poster,
-                title: `${title} / Episode ${lastEpisode}`,
-              }
-            : notFound()
-        )
-      )
-      .then(() => {
-        async function skipTimes() {
-          console.log("Hello World!")
-
-          if (!malId) return
-          console.log(malId)
-          const response = await fetch(
-            `https://api.aniskip.com/v2/skip-times/${anilistId}/${lastEpisode}?types=op&types=recap&types=mixed-op&types=ed&types=mixed-ed&episodeLength`
-          )
-
-          if (!response.ok) return
-          const data = (await response.json()) as AniSkip
-
-          const highlights: Highlight[] = []
-
-          let opDuration = [],
-            edDuration = []
-
-          if (data.statusCode === 200) {
-            for (let result of data.results) {
-              if (result.skipType === "op" || result.skipType === "ed") {
-                const { startTime, endTime } = result.interval
-
-                if (startTime) {
-                  highlights.push({
-                    time: startTime,
-                    text: result.skipType === "op" ? "OP" : "ED",
-                  })
-                  if (result.skipType === "op") opDuration.push(startTime)
-                  else edDuration.push(startTime)
+    if (currentEpisode) {
+      oplayer
+        .changeSource(
+          getSelectedSrc("default").then((res) =>
+            res
+              ? {
+                  src: res.url,
+                  poster: currentEpisode.image ?? poster,
+                  title: `${title} / Episode ${lastEpisode}`,
                 }
+              : notFound()
+          )
+        )
+        .then(() => {
+          async function skipTimes() {
+            console.log("Hello World!")
 
-                if (endTime) {
-                  highlights.push({
-                    time: endTime,
-                    text: result.skipType === "op" ? "OP" : "ED",
-                  })
-                  if (result.skipType === "op") opDuration.push(endTime)
-                  else edDuration.push(endTime)
+            if (!malId) return
+            console.log(malId)
+            const response = await fetch(
+              `https://api.aniskip.com/v2/skip-times/${anilistId}/${lastEpisode}?types=op&types=recap&types=mixed-op&types=ed&types=mixed-ed&episodeLength`
+            )
+
+            if (!response.ok) return
+            const data = (await response.json()) as AniSkip
+
+            const highlights: Highlight[] = []
+
+            let opDuration = [],
+              edDuration = []
+
+            if (data.statusCode === 200) {
+              for (let result of data.results) {
+                if (result.skipType === "op" || result.skipType === "ed") {
+                  const { startTime, endTime } = result.interval
+
+                  if (startTime) {
+                    highlights.push({
+                      time: startTime,
+                      text: result.skipType === "op" ? "OP" : "ED",
+                    })
+                    if (result.skipType === "op") opDuration.push(startTime)
+                    else edDuration.push(startTime)
+                  }
+
+                  if (endTime) {
+                    highlights.push({
+                      time: endTime,
+                      text: result.skipType === "op" ? "OP" : "ED",
+                    })
+                    if (result.skipType === "op") opDuration.push(endTime)
+                    else edDuration.push(endTime)
+                  }
                 }
               }
             }
+
+            playerRef.current?.emit("opedchange", [opDuration, edDuration])
+            // @ts-expect-error
+            playerRef.current?.plugins?.ui?.highlight(highlights)
           }
 
-          playerRef.current?.emit("opedchange", [opDuration, edDuration])
-          // @ts-expect-error
-          playerRef.current?.plugins?.ui?.highlight(highlights)
-        }
-
-        skipTimes()
-      })
-      .catch((err) => console.log(err))
+          skipTimes()
+        })
+        .catch((err) => console.log(err))
+    }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [lastEpisode, sources])
+  }, [lastEpisode, videoSource, currentEpisode])
 
   return (
     <>

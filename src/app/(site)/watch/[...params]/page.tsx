@@ -27,17 +27,22 @@ export async function generateMetadata({
     params: string[]
   }
 }): Promise<Metadata | undefined> {
-  const [animeId, anilistId, episodeNumber] = params.params
+  const [animeId, anilistId] = params.params
 
-  const response = (await animeInfo(`${animeId}`)) as AnimeInfoResponse
+  const url = `${process.env.NEXT_PUBLIC_APP_URL}/api/anime/info/${anilistId}`
+  const response = await fetch(url)
+
+  if (!response.ok) throw new Error("Error")
+
+  const data = (await response.json()) as IAnilistInfo
 
   if (!response) {
     return
   }
 
-  const title = response.title ?? response.otherName
-  const description = response.description
-  const imageUrl = response.image
+  const title = data.title.english ?? data.title.romaji
+  const description = data.description
+  const imageUrl = data.cover ?? data.image
 
   return {
     title,
@@ -46,7 +51,7 @@ export async function generateMetadata({
       title,
       description,
       type: "website",
-      url: `${process.env.NEXT_PUBLIC_APP_URL}/watch/${animeId}/${anilistId}/${episodeNumber}`,
+      url: `${process.env.NEXT_PUBLIC_APP_URL}/watch/${animeId}/${anilistId}?episode=`,
       images: [
         {
           url: `${imageUrl}`,

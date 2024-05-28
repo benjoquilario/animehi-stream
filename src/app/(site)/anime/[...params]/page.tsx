@@ -24,7 +24,11 @@ type AnimeProps = {
 
 export default function Anime({ params }: AnimeProps) {
   const [slug, animeId] = params.params as string[]
-  const { data: episodes, isLoading } = useEpisodes<IEpisode[]>(animeId)
+  const {
+    data: episodes,
+    isLoading,
+    isError,
+  } = useEpisodes<IEpisode[]>(animeId)
   const [animeInfo, setAnimeInfo] = useState<IAnilistInfo>()
   const [loading, setLoading] = useState(true)
 

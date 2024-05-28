@@ -26,7 +26,11 @@ export default function Episodes({
   isWatch,
 }: EpisodesProps) {
   const [query, setQuery] = useState("")
-  const { data: episodes, isLoading } = useEpisodes<IEpisode[]>(animeId)
+  const {
+    data: episodes,
+    isLoading,
+    isError,
+  } = useEpisodes<IEpisode[]>(animeId)
   const [interval, setInterval] = useState<[number, number]>([0, 99])
   const router = useRouter()
 
@@ -98,7 +102,9 @@ export default function Episodes({
 
   return (
     <div className="mt-4">
-      {isLoading ? (
+      {isError && !isLoading ? (
+        <div>Episode Not found</div>
+      ) : isLoading && !isError ? (
         <div className="mt-4 flex items-center gap-2">
           <FaSpinner className="animate-spin" />
           Loading...
@@ -186,6 +192,94 @@ export default function Episodes({
           </div>
         </div>
       )}
+      {/* {isLoading ? (
+        <div className="mt-4 flex items-center gap-2">
+          <FaSpinner className="animate-spin" />
+          Loading...
+        </div>
+      ) : (
+        <div className="mb-2 flex items-center justify-between">
+          <div className="w-full">
+            <div className="mb-4 flex h-full justify-between">
+              <select
+                onChange={handleIntervalChange}
+                value={`${interval[0]}-${interval[1]}`}
+                className="rounded-md border-none bg-secondary px-3"
+              >
+                {intervalOptions?.map((option, i) => (
+                  <option key={i} value={`${option.start}-${option.end}`}>
+                    Episode {option.start + 1} - {option.end + 1}
+                  </option>
+                ))}
+              </select>
+
+              <div className="relative">
+                <Input
+                  value={query}
+                  placeholder="No. Episode"
+                  onChange={(e) => setQuery(e.target.value)}
+                />
+                <Link href={`/watch/${animeId}/${query}`}>
+                  <button
+                    className="absolute right-[5px] top-[6px] text-muted-foreground/80"
+                    type="submit"
+                  >
+                    <AiOutlineSearch className="h-6 w-6" />
+                  </button>
+                </Link>
+              </div>
+            </div>
+
+            <div className="no-scrollbar max-h-96 w-full overflow-auto rounded-md">
+              <div className="flex flex-col odd:bg-secondary/30 even:bg-background">
+                {displayedEpisodes?.length !== 0 ? (
+                  displayedEpisodes?.map((episode, index) =>
+                    isWatch ? (
+                      <Button
+                        onClick={() => update?.(episode.id, episode.number, 0)}
+                        key={episode.id}
+                        className={cn(
+                          "justify-start p-3 text-[14px] font-medium odd:bg-secondary/30 even:bg-background hover:bg-secondary",
+                          currentEpisode?.number === episode.number
+                            ? "!bg-primary text-white hover:!bg-primary/80"
+                            : "!odd:bg-secondary/30 even:bg-background"
+                        )}
+                      >
+                        <div className="flex items-center gap-2">
+                          <span className="text-xs">{episode.number}</span>
+                          <div className="italic text-muted-foreground/80">
+                            {episode.title ?? `Episode ${episode.number}`}
+                          </div>
+                        </div>
+                      </Button>
+                    ) : (
+                      <Link
+                        href={`/watch/${animeTitle}/${animeId}?episode=${episode.number}`}
+                        key={episode.id}
+                        className={cn(
+                          "justify-start p-3 text-[14px] font-medium odd:bg-secondary/30 even:bg-background hover:bg-secondary",
+                          currentEpisode?.number === episode.number
+                            ? "!bg-primary text-white hover:!bg-primary/80"
+                            : "!odd:bg-secondary/30 even:bg-background"
+                        )}
+                      >
+                        <div className="flex items-center gap-2">
+                          <span className="text-xs">{episode.number}</span>
+                          <div className="italic text-muted-foreground/80">
+                            {episode.title ?? `Episode ${episode.number}`}
+                          </div>
+                        </div>
+                      </Link>
+                    )
+                  )
+                ) : (
+                  <div className="p-3">No Episode Found</div>
+                )}
+              </div>
+            </div>
+          </div>
+        </div>
+      )} */}
     </div>
   )
 }
