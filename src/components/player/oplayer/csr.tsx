@@ -258,7 +258,7 @@ export default function OPlayer(props: WatchProps) {
     oplayer.$root.appendChild(forward)
     oplayer.$root.appendChild(backward)
 
-    if (currentEpisode) {
+    if (currentEpisode && videoSource && !isLoading && !videoSourceLoading) {
       oplayer
         .changeSource(
           getSelectedSrc("default").then((res) =>
