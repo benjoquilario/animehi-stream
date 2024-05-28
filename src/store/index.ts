@@ -26,6 +26,8 @@ interface WatchInitialStore {
   setSourceType: (sourceType: string) => void
   embeddedUrl: string
   setEmbeddedUrl: (embeddedUrl?: string) => void
+  lastEpisode: number
+  setLastEpisode: (episode: number) => void
 }
 
 export const useWatchStore = create<WatchInitialStore>((set) => ({
@@ -46,5 +48,7 @@ export const useWatchStore = create<WatchInitialStore>((set) => ({
   sourceType: "default",
   setSourceType: (sourceType: string) => set({ sourceType }),
   embeddedUrl: "",
+  lastEpisode: 1,
+  setLastEpisode: (episode: number) => ({ episode }),
   setEmbeddedUrl: (embeddedUrl?: string) => set({ embeddedUrl }),
 }))

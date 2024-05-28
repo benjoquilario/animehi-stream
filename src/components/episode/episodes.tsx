@@ -15,9 +15,16 @@ import { FaSpinner } from "react-icons/fa"
 type EpisodesProps = {
   episodeId?: string
   animeId: string
+  isWatch: boolean
+  update: (id: string, i: number, d: number) => void
 }
 
-export default function Episodes({ episodeId, animeId }: EpisodesProps) {
+export default function Episodes({
+  episodeId,
+  animeId,
+  update,
+  isWatch,
+}: EpisodesProps) {
   const [query, setQuery] = useState("")
   const { data: episodes, isLoading } = useEpisodes<IEpisode[]>(animeId)
   const [interval, setInterval] = useState<[number, number]>([0, 99])
@@ -132,25 +139,45 @@ export default function Episodes({ episodeId, animeId }: EpisodesProps) {
             <div className="no-scrollbar max-h-96 w-full overflow-auto rounded-md">
               <div className="flex flex-col odd:bg-secondary/30 even:bg-background">
                 {displayedEpisodes?.length !== 0 ? (
-                  displayedEpisodes?.map((episode) => (
-                    <Link
-                      href={`/watch/${animeTitle}/${animeId}/${episode.number}`}
-                      key={episode.id}
-                      className={cn(
-                        "justify-start p-3 text-[14px] font-medium odd:bg-secondary/30 even:bg-background hover:bg-secondary",
-                        currentEpisode?.number === episode.number
-                          ? "!bg-primary text-white hover:!bg-primary/80"
-                          : "!odd:bg-secondary/30 even:bg-background"
-                      )}
-                    >
-                      <div className="flex items-center gap-2">
-                        <span className="text-xs">{episode.number}</span>
-                        <div className="italic text-muted-foreground/80">
-                          {episode.title ?? `Episode ${episode.number}`}
+                  displayedEpisodes?.map((episode, index) =>
+                    isWatch ? (
+                      <Button
+                        onClick={() => update(episode.id, episode.number, 0)}
+                        key={episode.id}
+                        className={cn(
+                          "justify-start p-3 text-[14px] font-medium odd:bg-secondary/30 even:bg-background hover:bg-secondary",
+                          currentEpisode?.number === episode.number
+                            ? "!bg-primary text-white hover:!bg-primary/80"
+                            : "!odd:bg-secondary/30 even:bg-background"
+                        )}
+                      >
+                        <div className="flex items-center gap-2">
+                          <span className="text-xs">{episode.number}</span>
+                          <div className="italic text-muted-foreground/80">
+                            {episode.title ?? `Episode ${episode.number}`}
+                          </div>
                         </div>
-                      </div>
-                    </Link>
-                  ))
+                      </Button>
+                    ) : (
+                      <Link
+                        href={`/watch/${animeTitle}/${animeId}?episode=${episode.number}`}
+                        key={episode.id}
+                        className={cn(
+                          "justify-start p-3 text-[14px] font-medium odd:bg-secondary/30 even:bg-background hover:bg-secondary",
+                          currentEpisode?.number === episode.number
+                            ? "!bg-primary text-white hover:!bg-primary/80"
+                            : "!odd:bg-secondary/30 even:bg-background"
+                        )}
+                      >
+                        <div className="flex items-center gap-2">
+                          <span className="text-xs">{episode.number}</span>
+                          <div className="italic text-muted-foreground/80">
+                            {episode.title ?? `Episode ${episode.number}`}
+                          </div>
+                        </div>
+                      </Link>
+                    )
+                  )
                 ) : (
                   <div className="p-3">No Episode Found</div>
                 )}

@@ -16,11 +16,18 @@ export default async function RecentEpisodes() {
         Recently Updated
       </h3>
       <ul className="relative grid grid-cols-3 gap-3 overflow-hidden md:grid-cols-4 lg:grid-cols-5">
-        {recentResponse.results.map((result) => (
-          <li key={result.id} className="col-span-1 overflow-hidden rounded-md">
-            <EpisodeCard animeResult={result} />
-          </li>
-        ))}
+        {recentResponse ? (
+          recentResponse.results.map((result) => (
+            <li
+              key={result.id}
+              className="col-span-1 overflow-hidden rounded-md"
+            >
+              <EpisodeCard animeResult={result} />
+            </li>
+          ))
+        ) : (
+          <div>Error</div>
+        )}
       </ul>
     </Section>
   )

@@ -1,4 +1,5 @@
-import { useParams } from "next/navigation"
+import { useWatchStore } from "@/store"
+import { useSearchParams } from "next/navigation"
 import { useCallback, useMemo, useState } from "react"
 
 const LOCAL_STORAGE_KEY_LAST_PLAYED_INFO = "@player/"
@@ -11,53 +12,45 @@ type LastPlayedInfo = {
 }
 
 export default function useLastPlayed(id: string) {
-  const params = useParams()
+  const episode = useSearchParams()
   const lastPlayedInfo = useMemo<LastPlayedInfo>(() => {
-    const episodeNumber = params.params[2]
+    // const episode = new URLSearchParams(window.location.search)
     const defaultLastPlayedInfo: LastPlayedInfo = {
       id,
       duration: 0,
-      episode: +episodeNumber,
+      episode: episode.has("episode") ? +episode.get("episode")! : 1,
       time: 0,
     }
 
-    return episodeNumber
+    return episode.has("episode")
       ? defaultLastPlayedInfo
       : JSON.parse(
           localStorage.getItem(LOCAL_STORAGE_KEY_LAST_PLAYED_INFO + id) ||
             "null"
         ) || defaultLastPlayedInfo
-  }, [id, params])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [episode])
 
   const [lastEpisode, setLastEpisode] = useState(lastPlayedInfo.episode)
-  const [lastDuration, setLastDuration] = useState(lastPlayedInfo.duration)
+  // const [lastDuration, setLastDuration] = useState(lastPlayedInfo.duration)
 
-  const set = useCallback(
-    (info: LastPlayedInfo) => {
-      localStorage.setItem(
-        LOCAL_STORAGE_KEY_LAST_PLAYED_INFO + id,
-        JSON.stringify(info)
-      )
+  const set = useCallback((info: LastPlayedInfo) => {
+    localStorage.setItem(
+      LOCAL_STORAGE_KEY_LAST_PLAYED_INFO + id,
+      JSON.stringify(info)
+    )
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+
+  const update = useCallback(
+    (id: any, episode: number, duration: number) => {
+      const same = episode == lastEpisode
+      set({ id, episode, duration, time: Date.now() })
+      if (!same) setLastEpisode(episode)
     },
-    [id]
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [lastEpisode]
   )
 
-  const _setLastEpisode = useCallback(
-    (episode: number) => {
-      if (episode == lastEpisode) return
-      setLastEpisode(episode)
-      setLastDuration(0)
-      set({ id, episode, duration: 0, time: Date.now() })
-    },
-    [lastEpisode, id, set]
-  )
-
-  const _setLastDuration = (duration: number) => {
-    set({ id, episode: lastEpisode, duration, time: Date.now() })
-  }
-
-  return [
-    { lastEpisode, setLastEpisode: _setLastEpisode },
-    { lastDuration: lastDuration, setLastDuration: _setLastDuration },
-  ] as const
+  return [lastEpisode, lastPlayedInfo.duration, update] as const
 }

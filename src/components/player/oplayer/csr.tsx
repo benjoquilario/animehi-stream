@@ -5,22 +5,24 @@ import Player, { isIOS, isMobile } from "@oplayer/core"
 import OUI, { type Highlight } from "@oplayer/ui"
 import OHls from "@oplayer/hls"
 import { skipOpEd } from "@/lib/plugins"
-import { Chromecast } from "@oplayer/plugins"
+import { Chromecast, Playlist } from "@oplayer/plugins"
 import {
   type SourcesResponse,
   type Source,
   IEpisode,
   AniSkip,
 } from "types/types"
-import { notFound } from "next/navigation"
+import { notFound, useRouter, useSearchParams } from "next/navigation"
 import { AspectRatio } from "@/components/ui/aspect-ratio"
 import { useSession } from "next-auth/react"
 import { useWatchStore } from "@/store"
 import { updateWatchlist } from "@/app/actions"
 import useEpisodes from "@/hooks/useEpisodes"
-import { useRef, useState, useEffect, useMemo, useCallback } from "react"
 import useLastPlayed from "@/hooks/useLastPlayed"
 import { throttle } from "@/lib/utils"
+import Episodes from "@/components/episode/episodes"
+import { useRef, useState, useEffect, useMemo, useCallback } from "react"
+import useVideoSource from "@/hooks/useVideoSource"
 
 export type WatchProps = {
   sourcesPromise: Promise<SourcesResponse>
@@ -31,6 +33,7 @@ export type WatchProps = {
   anilistId: string
   title: string
   malId: string
+  children: React.ReactNode
 }
 
 type Ctx = {
@@ -49,16 +52,34 @@ export default function OPlayer(props: WatchProps) {
     anilistId,
     title,
     malId,
+    children,
   } = props
   const { data: session } = useSession()
   const playerRef = useRef<Player<Ctx>>()
-  const [sources, setSources] = useState<Source[] | undefined>(undefined)
+  // const [sources, setSources] = useState<Source[] | undefined>(undefined)
   const isAutoNext = useWatchStore((store) => store.isAutoNext)
   const setDownload = useWatchStore((store) => store.setDownload)
-  const [{ lastEpisode, setLastEpisode }, { lastDuration, setLastDuration }] =
-    useLastPlayed(anilistId)
+  const [lastEpisode, lastDuration, update] = useLastPlayed(anilistId)
+  const router = useRouter()
+  const routerRef = useRef(router)
+
+  useEffect(() => {
+    routerRef.current.replace(
+      `/watch/${animeId}/${anilistId}?episode=${lastEpisode}`
+    )
+  }, [animeId, anilistId, lastEpisode])
+
+  const { data: videoSource, isLoading: videoSourceLoading } =
+    useVideoSource<SourcesResponse>(`${animeId}-episode-${lastEpisode}`)
+
+  const sources = useMemo(
+    () => (!videoSource?.sources.length ? null : videoSource?.sources),
+    [videoSource]
+  )
 
   const { data: episodes, isLoading } = useEpisodes<IEpisode[]>(anilistId)
+
+  console.log(lastEpisode)
 
   const currentEpisode = useMemo(
     () => episodes?.find((episode) => episode.id === episodeId),
@@ -126,6 +147,7 @@ export default function OPlayer(props: WatchProps) {
       }),
       OHls({ forceHLS: true, matcher: () => true }),
       new Chromecast(),
+      new Playlist(),
     ],
     []
   )
@@ -155,25 +177,7 @@ export default function OPlayer(props: WatchProps) {
     [sources]
   )
 
-  const onTimeUpdate = useMemo(
-    () =>
-      throttle(({ currentTime }) => {
-        setLastDuration(currentTime)
-      }, 1000),
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [lastEpisode]
-  )
-
   useEffect(() => {
-    if (!sourcesPromise) return
-
-    sourcesPromise.then((res) => {
-      if (res) {
-        setSources(res.sources)
-        setDownload(res.download)
-      } else notFound()
-    })
-
     const updateWatchlistDb = async () => {
       await updateWatchlist({
         episodeId,
@@ -185,7 +189,7 @@ export default function OPlayer(props: WatchProps) {
     }
 
     playerRef.current = Player.make("#oplayer", {
-      autoplay: isAutoNext,
+      autoplay: false,
       playbackRate: localStorage.getItem("speed")
         ? +localStorage.getItem("speed")!
         : 1,
@@ -197,7 +201,7 @@ export default function OPlayer(props: WatchProps) {
       .on("timeupdate", ({ payload }) => {
         console.log("Timeupdate")
         console.log(payload)
-        onTimeUpdate({ currentTime: payload.target.currentTime * 1000 })
+        // onTimeUpdate({ currentTime: payload.target.currentTime * 1000 })
       })
       .on("pause", () => {
         console.log("Playing Pause")
@@ -255,7 +259,7 @@ export default function OPlayer(props: WatchProps) {
             ? {
                 src: res.url,
                 poster: currentEpisode?.image ?? poster,
-                title: `${title} / Episode ${episodeNumber}`,
+                title: `${title} / Episode ${lastEpisode}`,
               }
             : notFound()
         )
@@ -267,7 +271,7 @@ export default function OPlayer(props: WatchProps) {
           if (!malId) return
           console.log(malId)
           const response = await fetch(
-            `https://api.aniskip.com/v2/skip-times/${anilistId}/${episodeNumber}?types=op&types=recap&types=mixed-op&types=ed&types=mixed-ed&episodeLength`
+            `https://api.aniskip.com/v2/skip-times/${anilistId}/${lastEpisode}?types=op&types=recap&types=mixed-op&types=ed&types=mixed-ed&episodeLength`
           )
 
           if (!response.ok) return
@@ -314,12 +318,21 @@ export default function OPlayer(props: WatchProps) {
       .catch((err) => console.log(err))
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [sources, episodeId, getSelectedSrc, currentEpisode])
+  }, [lastEpisode, sources])
 
   return (
-    <AspectRatio ratio={16 / 9}>
-      <div id="oplayer" />
-      {/* <ReactPlayer plugins={plugins} ref={playerRef} source={} /> */}
-    </AspectRatio>
+    <>
+      <AspectRatio ratio={16 / 9}>
+        <div id="oplayer" />
+        {/* <ReactPlayer plugins={plugins} ref={playerRef} source={} /> */}
+      </AspectRatio>
+      {children}
+      <Episodes
+        update={update}
+        animeId={anilistId}
+        episodeId={`${animeId}-episode-${episodeNumber}`}
+        isWatch={true}
+      />
+    </>
   )
 }

@@ -23,7 +23,7 @@ export default function MostViewCard({
     <>
       <div>
         <Link
-          href={`/watch/${result.animeId}/${result.anilistId}/${result.latestEpisodeNumber}`}
+          href={`/watch/${result.animeId}/${result.anilistId}?episode=${result.latestEpisodeNumber}`}
         >
           <NextImage
             containerclassname="relative w-[60px] h-[75px]"
@@ -37,7 +37,7 @@ export default function MostViewCard({
       </div>
       <div className="flex-1 px-3">
         <Link
-          href={`/watch/${result.animeId}/${result.anilistId}/${result.latestEpisodeNumber}`}
+          href={`/watch/${result.animeId}/${result.anilistId}?episode=${result.latestEpisodeNumber}`}
         >
           <h3 className="mb-1 line-clamp-2 text-sm font-medium !leading-5 hover:text-primary md:text-[15px]">
             {result.title}

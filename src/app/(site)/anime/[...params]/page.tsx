@@ -136,7 +136,7 @@ export default function Anime({ params }: AnimeProps) {
               disabled={isLoading}
               onClick={() =>
                 router.push(
-                  `/watch/${animeTitle}/${animeId}/${episodes?.[0].number}`
+                  `/watch/${animeTitle}/${animeId}?episode=${episodes?.[0].number}`
                 )
               }
             >
@@ -246,7 +246,7 @@ export default function Anime({ params }: AnimeProps) {
       <div className="px-[4%]">
         <div className="mt-14">
           <SectionTitle title="Episodes" />
-          <Episodes animeId={animeId} />
+          <Episodes animeId={animeId} isWatch={false} />
         </div>
       </div>
       <div className="px-[4%]">

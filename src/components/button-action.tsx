@@ -6,6 +6,7 @@ import { useCallback, useMemo } from "react"
 import { useRouter } from "next/navigation"
 import { AiFillForward, AiFillBackward } from "react-icons/ai"
 import useEpisodes from "@/hooks/useEpisodes"
+import useLastPlayed from "@/hooks/useLastPlayed"
 
 type ButtonActionProps = {
   episodeId: string
@@ -20,8 +21,8 @@ const ButtonAction = ({
   children,
   anilistId,
 }: ButtonActionProps) => {
-  const router = useRouter()
   const { data: episodes, isLoading } = useEpisodes<IEpisode[]>(anilistId)
+  const [lastEpisode, lastDuration, update] = useLastPlayed(anilistId)
 
   const currentEpisode = useMemo(
     () => episodes?.find((episode) => episode.id === episodeId),
@@ -31,18 +32,18 @@ const ButtonAction = ({
   const handleNextEpisode = useCallback(() => {
     if (currentEpisode?.number === episodes?.length) return
 
-    router.push(
-      `/watch/${animeId}/${anilistId}/${Number(currentEpisode?.number) + 1}`
-    )
-  }, [episodes?.length, currentEpisode, router, animeId, anilistId])
+    if (currentEpisode) {
+      update(animeId, lastEpisode + 1, 0)
+    }
+  }, [currentEpisode, episodes?.length, update, animeId, lastEpisode])
 
   const handlePrevEpisode = useCallback(() => {
     if (currentEpisode?.number === 1) return
 
-    router.push(
-      `/watch/${animeId}/${anilistId}/${Number(currentEpisode?.number) - 1}`
-    )
-  }, [currentEpisode, router, animeId, anilistId])
+    if (currentEpisode) {
+      update(animeId, lastEpisode - 1, 0)
+    }
+  }, [currentEpisode, animeId, update, lastEpisode])
 
   const currentEpisodeIndex = useMemo(
     () => episodes?.findIndex((episode) => episode.id === episodeId),
@@ -66,8 +67,8 @@ const ButtonAction = ({
       </div>
       <div className="flex items-center">
         <Button
-          onClick={handlePrevEpisode}
-          disabled={isPrevEpisode}
+          onClick={() => update(anilistId, lastEpisode - 1, 0)}
+          disabled={isPrevEpisode || isLoading}
           aria-label="previous episode"
           className="flex h-3 items-center gap-1 bg-background px-2 text-sm text-foreground hover:bg-background"
         >
@@ -75,8 +76,8 @@ const ButtonAction = ({
           <span className="hidden md:block">Prev episode</span>
         </Button>
         <Button
-          onClick={handleNextEpisode}
-          disabled={isNextEpisode}
+          onClick={() => update(anilistId, lastEpisode + 1, 0)}
+          disabled={isNextEpisode || isLoading}
           aria-label="next episode"
           className="flex h-3 items-center gap-1 bg-background px-2 text-sm text-foreground hover:bg-background"
         >

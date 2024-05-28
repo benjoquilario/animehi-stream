@@ -4,9 +4,6 @@ import Link from "next/link"
 import type { AnifyRecentEpisode, RecentEpisode } from "types/types"
 import { BsFillPlayFill, BsPlayFill } from "react-icons/bs"
 import NextImage from "./ui/image"
-import { increment } from "@/app/actions"
-import { useSession } from "next-auth/react"
-import { extractGogoId, extractId } from "@/lib/utils"
 
 type EpisodeCardProps = {
   animeResult: RecentEpisode
@@ -44,7 +41,7 @@ export default function EpisodeCard({ animeResult }: EpisodeCardProps) {
           />
         </div>
         <Link
-          href={`/watch${animeId}/${animeResult.id}/${episodeNumber}`}
+          href={`/watch${animeId}/${animeResult.id}?episode=${episodeNumber}`}
           aria-label={animeResult.id}
           className="absolute inset-0 z-50 flex items-center justify-center bg-background/70 text-primary opacity-0 transition-opacity hover:opacity-100"
         >

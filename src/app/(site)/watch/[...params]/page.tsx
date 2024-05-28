@@ -17,6 +17,7 @@ type Params = {
   params: {
     params: string[]
   }
+  searchParams: { [key: string]: string | string[] | undefined }
 }
 
 export async function generateMetadata({
@@ -71,8 +72,12 @@ export async function generateMetadata({
 
 export const dynamic = "force-dynamic"
 
-export default async function Watch({ params: { params } }: Params) {
-  const [animeId, anilistId, episodeNumber] = params as string[]
+export default async function Watch({
+  params: { params },
+  searchParams,
+}: Params) {
+  const episodeNumber = searchParams.episode as string
+  const [animeId, anilistId] = params as string[]
   const session = await getSession()
 
   const url = `${process.env.NEXT_PUBLIC_APP_URL}/api/anime/info/${anilistId}`
@@ -97,7 +102,7 @@ export default async function Watch({ params: { params } }: Params) {
   if (session) {
     await createWatchlist({
       animeId,
-      episodeNumber,
+      episodeNumber: episodeNumber,
       title: animeResponse.title.english ?? animeResponse.title.romaji,
       image: animeResponse.image,
       nextEpisode: "1",
@@ -109,6 +114,8 @@ export default async function Watch({ params: { params } }: Params) {
   await increment(animeId, animeResponse.currentEpisode)
 
   const currentUser = await getCurrentUser()
+
+  console.log(episodeNumber)
 
   return (
     <div className="mt-2 flex-1">
@@ -122,26 +129,22 @@ export default async function Watch({ params: { params } }: Params) {
         anilistId={anilistId}
         title={`${animeResponse.title.english ?? animeResponse.title.romaji}`}
         malId={`${animeResponse.malId}`}
-      />
-
-      <Server
-        episodeId={`${animeId}-episode-${episodeNumber}`}
-        animeResult={animeResponse}
-        animeId={animeId}
-        anilistId={anilistId}
-        episodeNumber={episodeNumber}
-        currentUser={currentUser}
-      />
+      >
+        <Server
+          episodeId={`${animeId}-episode-${episodeNumber}`}
+          animeResult={animeResponse}
+          animeId={animeId}
+          anilistId={anilistId}
+          episodeNumber={episodeNumber}
+          currentUser={currentUser}
+        />
+      </VideoPlayer>
 
       {/* <VideoPlayer animeId={animeId} episodeNumber={episodeNumber} /> */}
       {/* <Suspense>
 
       </Suspense> */}
 
-      <Episodes
-        animeId={anilistId}
-        episodeId={`${animeId}-episode-${episodeNumber}`}
-      />
       <Sharethis />
       <Comments
         animeId={animeId}
