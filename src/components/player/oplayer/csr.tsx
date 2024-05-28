@@ -80,6 +80,7 @@ export default function OPlayer(props: WatchProps) {
   const download = useMemo(() => videoSource?.download, [videoSource])
 
   const { data: episodes, isLoading } = useEpisodes<IEpisode[]>(anilistId)
+  const posterImage = episodes?.[lastEpisode + 1].image
 
   const currentEpisode = useMemo(
     () => episodes?.find((episode) => episode.number === lastEpisode),
@@ -264,7 +265,7 @@ export default function OPlayer(props: WatchProps) {
           res
             ? {
                 src: res.url,
-                poster: currentEpisode.image ?? poster,
+                poster: posterImage ?? poster,
                 title: `${title} / Episode ${lastEpisode}`,
               }
             : notFound()
