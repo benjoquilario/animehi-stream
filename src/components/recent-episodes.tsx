@@ -7,15 +7,12 @@ import {
   ConsumetResponse as TConsumetResponse,
   RecentEpisode as TRecentEpisode,
 } from "types/types"
-import { recent } from "@/lib/consumet"
 import { AiOutlineArrowLeft, AiOutlineArrowRight } from "react-icons/ai"
 import { Button } from "./ui/button"
 import { Skeleton } from "./ui/skeleton"
 import { useEffect, useState } from "react"
 
 export default function RecentEpisodes() {
-  const [recentResults, setRecentResults] =
-    useState<TConsumetResponse<TRecentEpisode>>()
   const [pageNumber, setPageNumber] = useState(1)
 
   const fetcher = (page: number) =>
@@ -33,11 +30,6 @@ export default function RecentEpisodes() {
     }
   )
 
-  useEffect(() => {
-    if (!data && !error) return
-    setRecentResults(data)
-  }, [pageNumber, error, data])
-
   if (error) {
     return (
       <Section sectionName="recent">
@@ -47,6 +39,7 @@ export default function RecentEpisodes() {
             Recently Updated
           </h3>
         </div>
+        <div>Failed to fetch Recently updated</div>
       </Section>
     )
   }

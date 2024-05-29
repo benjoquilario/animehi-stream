@@ -13,12 +13,11 @@ import {
   CommandList,
 } from "@/components/ui/command"
 import { AiOutlineSearch } from "react-icons/ai"
-import { cn, extractId, transformedTitle } from "@/lib/utils"
+import { cn, transformedTitle } from "@/lib/utils"
 import {
   Search as TSearch,
   ConsumetResponse as TConsumetResponse,
 } from "types/types"
-import { fetchSearch } from "@/lib/consumet"
 import { useDebounce } from "@/hooks/useDebounce"
 import { useRouter } from "next/navigation"
 import {
@@ -42,7 +41,7 @@ export default function Combobox() {
     if (debouncedQuery.length > 0) {
       startTransition(async () => {
         const response = await fetch(
-          `https://consume-beige.vercel.app/meta/anilist/${debouncedQuery}`
+          `https://consumet-api-production-2bba.up.railway.app/meta/anilist/${debouncedQuery}`
         )
 
         if (!response.ok) setSearch(null)

@@ -45,10 +45,11 @@ export default function Anime({ params }: AnimeProps) {
 
       setLoading(true)
       try {
-        const url = `${process.env.NEXT_PUBLIC_APP_URL}/api/anime/info/${animeId}`
-        const response = await fetch(url)
+        const response = await fetch(
+          `${process.env.NEXT_PUBLIC_APP_URL}/api/anime/info/${animeId}`
+        )
 
-        if (!response.ok) throw new Error("Error")
+        if (!response.ok) return
 
         const data = await response.json()
 
@@ -67,6 +68,7 @@ export default function Anime({ params }: AnimeProps) {
     return () => {
       isMounted = false
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [animeId])
 
   const animeTitle = useMemo(
