@@ -1,6 +1,4 @@
 import { NextResponse } from "next/server"
-import { animeApi } from "@/lib/consumet"
-import { cacheRedis } from "@/lib/metrics"
 import { redis } from "@/lib/redis"
 import { CACHE_MAX_AGE } from "@/lib/constant"
 
@@ -13,7 +11,7 @@ export async function GET(
   if (!animeId)
     return NextResponse.json("Missing animeId for /anime/info", { status: 422 })
 
-  const url = `${animeApi}/meta/anilist/data/${animeId}`
+  const url = `https://consumet-api-production-2bba.up.railway.app/meta/anilist/data/${animeId}`
 
   const cachedResponse = await redis.get(`anime:${animeId}`)
 

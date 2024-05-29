@@ -47,6 +47,8 @@ export default function Server({
     store.sourceType,
   ])
 
+  console.log(currentUser)
+
   // const setEmbeddedUrl = useWatchStore((store) => store.setEmbeddedUrl)
   // const [isLoading, setIsLoading] = useState(true)
 

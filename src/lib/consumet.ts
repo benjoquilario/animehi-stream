@@ -7,15 +7,15 @@ import type {
   Search,
   SeasonalResponse,
   SourcesResponse,
+  IAnilistInfo,
 } from "types/types"
 import { cache } from "react"
 import { redis } from "./redis"
 import "server-only"
 import { getSeason } from "./utils"
-import { SORT } from "./constant"
 
 const publicUrl = process.env.NEXT_PUBLIC_APP_URL
-export const animeApi = process.env.ANIME_API_URI
+const animeApi = process.env.ANIME_API_URI
 const anifyUrl = "https://ahttps://api.anify.tv"
 
 export async function popularThisSeason() {
@@ -102,29 +102,27 @@ export const popular = cache(async function popular() {
   return (await response.json()) as ConsumetResponse<Popular>
 })
 
-export const animeInfo = async function (animeId: string) {
-  let cachedVal
+export const animeInfo = cache(async function (animeId: string) {
+  let cachedResponse
 
-  if (!animeId) throw new Error("Missing animeId for /anime/info")
+  cachedResponse = await redis.get(`anime:${animeId}`)
 
-  cachedVal = await redis.get(`anime:${animeId}`)
-
-  if (cachedVal) {
+  if (cachedResponse) {
     console.log("anime info hits")
-    return cachedVal
+    return cachedResponse
   }
 
-  const response = await fetch(`${animeApi}/anime/gogoanime/info/${animeId}`)
+  const response = await fetch(`${animeApi}/meta/anilist/data/${animeId}`)
 
-  const consumetInfo = await response.json()
+  if (!response.ok) throw new Error("Error")
 
-  if (!response.ok) throw new Error("Failed to fetch anime information")
+  const animeResponse = (await response.json()) as IAnilistInfo
 
-  const stringifyResult = JSON.stringify(consumetInfo)
+  const stringifyResult = JSON.stringify(animeResponse)
   await redis.setex(`anime:${animeId}`, 60 * 60 * 3, stringifyResult)
 
-  return consumetInfo as TAnimeInfoResponse
-}
+  return animeResponse as IAnilistInfo
+})
 
 export async function watch(episodeId: string) {
   const response = await fetch(`${animeApi}/anime/gogoanime/watch/${episodeId}`)

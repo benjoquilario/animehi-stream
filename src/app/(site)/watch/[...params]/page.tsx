@@ -1,14 +1,10 @@
-import { animeInfo, watch } from "@/lib/consumet"
-import Episodes from "@/components/episode/episodes"
+import { animeInfo } from "@/lib/consumet"
 import Sharethis from "@/components/sharethis"
 import type { Metadata } from "next"
 import { getSession } from "../../../../lib/session"
-import Server from "@/components/server"
 import { createViewCounter, createWatchlist, increment } from "@/app/actions"
-import { Suspense } from "react"
-import OPlayer from "@/components/player/oplayer/csr"
 import Comments from "@/components/comments/comments"
-import { AnimeInfoResponse, IAnilistInfo } from "types/types"
+import type { IAnilistInfo } from "types/types"
 import BreadcrumbWatch from "@/components/breadcrumb-watch"
 import { getCurrentUser } from "@/lib/current-user"
 import VideoPlayer from "@/components/player/oplayer/csr"
@@ -29,20 +25,15 @@ export async function generateMetadata({
 }): Promise<Metadata | undefined> {
   const [animeId, anilistId] = params.params
 
-  const url = `${process.env.NEXT_PUBLIC_APP_URL}/api/anime/info/${anilistId}`
-  const response = await fetch(url)
+  const animeResponse = (await animeInfo(anilistId)) as IAnilistInfo
 
-  if (!response.ok) throw new Error("Error")
-
-  const data = (await response.json()) as IAnilistInfo
-
-  if (!response) {
+  if (!animeResponse) {
     return
   }
 
-  const title = data.title.english ?? data.title.romaji
-  const description = data.description
-  const imageUrl = data.cover ?? data.image
+  const title = animeResponse.title.english ?? animeResponse.title.romaji
+  const description = animeResponse.description
+  const imageUrl = animeResponse.cover ?? animeResponse.image
 
   return {
     title,
@@ -85,16 +76,7 @@ export default async function Watch({
   const [animeId, anilistId] = params as string[]
   const session = await getSession()
 
-  const url = `${process.env.NEXT_PUBLIC_APP_URL}/api/anime/info/${anilistId}`
-  const response = await fetch(url)
-
-  if (!response.ok) throw new Error("Error")
-
-  const animeResponse = (await response.json()) as IAnilistInfo
-  // const animeResponse = (await fetchAnimeData(`${anilistId}`)) as IAnilistInfo
-  // const popularResponse = await popular()
-  // const anifyInfoResponse = await anifyInfo(anilistId, animeResponse.id)
-  const sourcesPromise = watch(`${animeId}-episode-${episodeNumber}`)
+  const animeResponse = (await animeInfo(anilistId)) as IAnilistInfo
 
   await createViewCounter({
     animeId,
@@ -119,8 +101,6 @@ export default async function Watch({
   await increment(animeId, animeResponse.currentEpisode)
 
   const currentUser = await getCurrentUser()
-
-  console.log(episodeNumber)
 
   return (
     <div className="mt-2 flex-1">
