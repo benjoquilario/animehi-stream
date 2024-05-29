@@ -17,11 +17,11 @@ export const skipOpEd = () => ({
       z-index: 1;`)
 
     const area = $.css(`
-      color: #fff;
-      background: rgb(28 28 28 / 67%);
-      padding: 0.2em 1.5em;
+      color: hsl(224, 71.4%, 4.1%);
+      background: hsl(0, 0%, 100%);
+      padding: 0.2em 1.3em;
       border-radius: 4px;
-      font-size: 1.5em;
+      font-size: 1.3em;
       cursor: pointer;`)
 
     const $dom = $.create(`div.${pos}`, {}, `<div class=${area}>Skip</div>`)

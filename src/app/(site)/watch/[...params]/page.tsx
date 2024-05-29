@@ -126,24 +126,13 @@ export default async function Watch({
     <div className="mt-2 flex-1">
       <BreadcrumbWatch animeId={anilistId} animeTitle={animeId} />
       <VideoPlayer
-        sourcesPromise={sourcesPromise}
+        animeResponse={animeResponse}
         animeId={animeId}
         episodeId={`${animeId}-episode-${episodeNumber}`}
         episodeNumber={episodeNumber}
-        poster={animeResponse.cover}
         anilistId={anilistId}
-        title={`${animeResponse.title.english ?? animeResponse.title.romaji}`}
-        malId={`${animeResponse.malId}`}
-      >
-        <Server
-          episodeId={`${animeId}-episode-${episodeNumber}`}
-          animeResult={animeResponse}
-          animeId={animeId}
-          anilistId={anilistId}
-          episodeNumber={episodeNumber}
-          currentUser={currentUser}
-        />
-      </VideoPlayer>
+        currentUser={currentUser}
+      />
 
       {/* <VideoPlayer animeId={animeId} episodeNumber={episodeNumber} /> */}
       {/* <Suspense>

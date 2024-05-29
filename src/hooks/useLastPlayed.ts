@@ -1,6 +1,6 @@
 import { useWatchStore } from "@/store"
 import { useSearchParams } from "next/navigation"
-import { useCallback, useMemo, useState } from "react"
+import { useCallback, useEffect, useMemo, useState } from "react"
 
 const LOCAL_STORAGE_KEY_LAST_PLAYED_INFO = "@player/"
 

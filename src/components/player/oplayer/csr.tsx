@@ -11,6 +11,7 @@ import {
   type Source,
   IEpisode,
   AniSkip,
+  IAnilistInfo,
 } from "types/types"
 import { notFound, useRouter, useSearchParams } from "next/navigation"
 import { AspectRatio } from "@/components/ui/aspect-ratio"
@@ -23,17 +24,16 @@ import { throttle } from "@/lib/utils"
 import Episodes from "@/components/episode/episodes"
 import { useRef, useState, useEffect, useMemo, useCallback } from "react"
 import useVideoSource from "@/hooks/useVideoSource"
+import Server from "@/components/server"
+import ButtonAction from "@/components/button-action"
 
 export type WatchProps = {
-  sourcesPromise: Promise<SourcesResponse>
   episodeId: string
   animeId: string
   episodeNumber: string
-  poster: string
   anilistId: string
-  title: string
-  malId: string
-  children: React.ReactNode
+  currentUser: any
+  animeResponse: IAnilistInfo
 }
 
 type Ctx = {
@@ -44,15 +44,12 @@ type Ctx = {
 // const plugins =
 export default function OPlayer(props: WatchProps) {
   const {
-    sourcesPromise,
     episodeId,
     animeId,
     episodeNumber,
-    poster,
     anilistId,
-    title,
-    malId,
-    children,
+    animeResponse,
+    currentUser,
   } = props
   const { data: session } = useSession()
   const playerRef = useRef<Player<Ctx>>()
@@ -62,6 +59,8 @@ export default function OPlayer(props: WatchProps) {
   const [lastEpisode, lastDuration, update] = useLastPlayed(anilistId)
   const router = useRouter()
   const routerRef = useRef(router)
+
+  const title = `${animeResponse.title.english ?? animeResponse.title.romaji}`
 
   useEffect(() => {
     routerRef.current.replace(
@@ -77,10 +76,7 @@ export default function OPlayer(props: WatchProps) {
     [videoSource]
   )
 
-  const download = useMemo(() => videoSource?.download, [videoSource])
-
   const { data: episodes, isLoading } = useEpisodes<IEpisode[]>(anilistId)
-  const posterImage = episodes?.[lastEpisode + 1].image
 
   const currentEpisode = useMemo(
     () => episodes?.find((episode) => episode.number === lastEpisode),
@@ -126,25 +122,6 @@ export default function OPlayer(props: WatchProps) {
           //@ts-ignore
           chromecast: `<svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" viewBox="2 2 20 20"><path stroke="none" d="M0 0h24v24H0z"></path><path d="M3 19h.01M7 19a4 4 0 0 0-4-4m8 4a8 8 0 0 0-8-8"></path><path d="M15 19h3a3 3 0 0 0 3-3V8a3 3 0 0 0-3-3H6a3 3 0 0 0-2.8 2"></path></svg>`,
         },
-        menu: [
-          {
-            name: localStorage.getItem("speed")
-              ? localStorage.getItem("speed")! + "x"
-              : "1.0",
-            children: ["2.0", "1.5", "1.25", "1.0", "0.75", "0.5"].map(
-              (speed) => ({
-                name: speed + "x",
-                value: speed,
-                default: (speed || "1.0") == speed,
-              })
-            ),
-            onChange({ name, value }, elm, player) {
-              elm.innerText = name
-              player.setPlaybackRate(+value)
-              localStorage.setItem("speed", value)
-            },
-          },
-        ],
       }),
       OHls({ forceHLS: true, matcher: () => true }),
       new Chromecast(),
@@ -179,6 +156,7 @@ export default function OPlayer(props: WatchProps) {
   )
 
   useEffect(() => {
+    setDownload(videoSource?.download)
     async function updateWatch() {
       return await updateWatchlist({
         episodeId,
@@ -191,9 +169,6 @@ export default function OPlayer(props: WatchProps) {
 
     playerRef.current = Player.make("#oplayer", {
       autoplay: false,
-      playbackRate: localStorage.getItem("speed")
-        ? +localStorage.getItem("speed")!
-        : 1,
     })
       .use(plugins)
       .on("ended", () => {
@@ -265,7 +240,10 @@ export default function OPlayer(props: WatchProps) {
           res
             ? {
                 src: res.url,
-                poster: posterImage ?? poster,
+                poster:
+                  currentEpisode?.image ??
+                  animeResponse.cover ??
+                  animeResponse.image,
                 title: `${title} / Episode ${lastEpisode}`,
               }
             : notFound()
@@ -275,14 +253,16 @@ export default function OPlayer(props: WatchProps) {
         async function skipTimes() {
           console.log("Hello World!")
 
-          if (!malId) return
-          console.log(malId)
+          if (!animeResponse.malId) return
           const response = await fetch(
             `https://api.aniskip.com/v2/skip-times/${anilistId}/${lastEpisode}?types=op&types=recap&types=mixed-op&types=ed&types=mixed-ed&episodeLength`
           )
 
           if (!response.ok) return
+
           const data = (await response.json()) as AniSkip
+
+          if (data.statusCode === 404) return
 
           const highlights: Highlight[] = []
 
@@ -333,12 +313,29 @@ export default function OPlayer(props: WatchProps) {
         <div id="oplayer" />
         {/* <ReactPlayer plugins={plugins} ref={playerRef} source={} /> */}
       </AspectRatio>
-      {children}
+      <Server
+        episodeId={`${animeId}-episode-${lastEpisode}`}
+        animeResult={animeResponse}
+        animeId={animeId}
+        anilistId={anilistId}
+        episodeNumber={episodeNumber}
+        currentUser={currentUser}
+        lastEpisode={lastEpisode}
+      >
+        <ButtonAction
+          animeId={animeId}
+          episodeId={episodeId}
+          anilistId={anilistId}
+          update={update}
+          lastEpisode={lastEpisode}
+        />
+      </Server>
       <Episodes
         update={update}
         animeId={anilistId}
         episodeId={`${animeId}-episode-${episodeNumber}`}
         isWatch={true}
+        lastEpisode={lastEpisode}
       />
     </>
   )

@@ -73,20 +73,7 @@ export default async function Home() {
               <Seasonal />
             </Suspense>
             <div className="flex flex-col md:space-x-4 xl:flex-row">
-              <Suspense
-                fallback={
-                  <div className="relative grid grid-cols-3 gap-3 overflow-hidden md:grid-cols-4 lg:grid-cols-5">
-                    {Array.from(Array(10), (_, i) => (
-                      <div className="flex flex-col gap-2" key={i + 1}>
-                        <Skeleton className="h-[150px] w-[112px] md:h-[260px] md:w-[185px]" />
-                        <Skeleton className="md:w-[185px h-[40px] w-[112px]" />
-                      </div>
-                    ))}
-                  </div>
-                }
-              >
-                <RecentEpisodes />
-              </Suspense>
+              <RecentEpisodes />
               {/* <RecentEpisodes recentEpisodes={recentResponse?.results} /> */}
               <div className="flex flex-row sm:flex-col xl:flex-col">
                 <Suspense fallback={<SeasonalSkeleton />}>

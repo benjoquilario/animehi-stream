@@ -19,6 +19,8 @@ type ServerProps = {
   animeId: string
   anilistId: string
   currentUser: any
+  lastEpisode: number
+  children: React.ReactNode
 }
 
 export default function Server({
@@ -28,6 +30,8 @@ export default function Server({
   episodeNumber,
   anilistId,
   currentUser,
+  lastEpisode,
+  children,
 }: ServerProps) {
   const checkBookmarkExist = useMemo(
     () =>
@@ -95,11 +99,11 @@ export default function Server({
   return (
     <div className="mt-2 flex flex-col gap-2">
       <div className="flex items-center justify-between">
-        <ButtonAction
-          animeId={animeId}
-          episodeId={episodeId}
-          anilistId={anilistId}
-        >
+        <div className="text-sm">
+          Auto Next <button className="text-primary">Off</button>
+        </div>
+        <div className="flex items-center">
+          {children}
           <BookmarkForm
             animeId={animeId}
             userId={currentUser?.id}
@@ -108,13 +112,13 @@ export default function Server({
             checkBookmarkExist={checkBookmarkExist}
             anilistId={anilistId}
           />
-        </ButtonAction>
+        </div>
       </div>
       <div className="grid grid-cols-1 items-center gap-2 overflow-hidden rounded-md md:grid-cols-[1fr_380px] md:flex-row">
         <div className="flex w-full flex-col gap-1 rounded-md bg-secondary px-5 py-3 text-left text-sm">
           <div className="flex items-center gap-2">
             You are watching
-            <span className="font-semibold">Episode {episodeNumber}</span>
+            <span className="font-semibold">Episode {lastEpisode}</span>
             <a href={download} target="_blank">
               <FaDownload />
             </a>

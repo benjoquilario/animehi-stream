@@ -11,11 +11,13 @@ import { Button } from "../ui/button"
 import { useRouter } from "next/navigation"
 import { Skeleton } from "../ui/skeleton"
 import { FaSpinner } from "react-icons/fa"
+import { FaCirclePlay } from "react-icons/fa6"
 
 type EpisodesProps = {
   episodeId?: string
   animeId: string
   isWatch: boolean
+  lastEpisode?: number
   update?: (id: string, i: number, d: number) => void
 }
 
@@ -23,6 +25,7 @@ export default function Episodes({
   episodeId,
   animeId,
   update,
+  lastEpisode,
   isWatch,
 }: EpisodesProps) {
   const [query, setQuery] = useState("")
@@ -151,9 +154,9 @@ export default function Episodes({
                         onClick={() => update?.(episode.id, episode.number, 0)}
                         key={episode.id}
                         className={cn(
-                          "justify-start p-3 text-[14px] font-medium odd:bg-secondary/30 even:bg-background hover:bg-secondary",
-                          currentEpisode?.number === episode.number
-                            ? "!bg-primary text-white hover:!bg-primary/80"
+                          "justify-start p-3 text-[14px] font-medium transition-all odd:bg-secondary/30 even:bg-background hover:bg-secondary active:scale-[.98]",
+                          lastEpisode === index + 1
+                            ? "!bg-primary !text-white hover:!bg-primary/80"
                             : "!odd:bg-secondary/30 even:bg-background"
                         )}
                       >
@@ -162,6 +165,11 @@ export default function Episodes({
                           <div className="italic text-muted-foreground/80">
                             {episode.title ?? `Episode ${episode.number}`}
                           </div>
+                          {lastEpisode === index + 1 ? (
+                            <span>
+                              <FaCirclePlay />
+                            </span>
+                          ) : null}
                         </div>
                       </Button>
                     ) : (
