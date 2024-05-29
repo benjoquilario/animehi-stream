@@ -60,8 +60,6 @@ export default function OPlayer(props: WatchProps) {
   const router = useRouter()
   const routerRef = useRef(router)
 
-  const title = `${animeResponse.title.english ?? animeResponse.title.romaji}`
-
   useEffect(() => {
     routerRef.current.replace(
       `/watch/${animeId}/${anilistId}?episode=${lastEpisode}`
@@ -244,7 +242,7 @@ export default function OPlayer(props: WatchProps) {
                   currentEpisode?.image ??
                   animeResponse.cover ??
                   animeResponse.image,
-                title: `${title} / Episode ${lastEpisode}`,
+                title: `${animeResponse.title.english ?? animeResponse.title.romaji} / Episode ${lastEpisode}`,
               }
             : notFound()
         )
