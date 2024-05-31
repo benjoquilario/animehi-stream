@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server"
 import { redis } from "@/lib/redis"
 import { CACHE_MAX_AGE } from "@/lib/constant"
-import { animeApi } from "@/config/site"
+import { env } from "@/env.mjs"
 
 export async function GET(
   req: Request,
@@ -21,13 +21,17 @@ export async function GET(
   let results
 
   try {
-    const response = await fetch(`${animeApi}/meta/anilist/data/${animeId}`)
+    const response = await fetch(
+      `${env.ANIME_API_URI}/meta/anilist/data/${animeId}`
+    )
 
     if (!response.ok) throw new Error("Error")
 
     results = await response.json()
   } catch (error) {
-    const response = await fetch(`${animeApi}/meta/anilist/info/${animeId}`)
+    const response = await fetch(
+      `${env.ANIME_API_URI}/meta/anilist/info/${animeId}`
+    )
     if (!response.ok) throw new Error("Error")
 
     results = await response.json()
