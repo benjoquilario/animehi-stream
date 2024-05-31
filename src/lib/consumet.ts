@@ -3,9 +3,10 @@ import "server-only"
 import { cache } from "react"
 import { redis } from "./redis"
 import { getSeason } from "./utils"
+import { env } from "@/env.mjs"
 
-const animeApi = process.env.ANIME_API_URI
-const publicUrl = process.env.NEXT_PUBLIC_APP_URL
+const animeApi = env.ANIME_API_URI
+const publicUrl = env.NEXT_PUBLIC_APP_URL
 
 export async function popularThisSeason() {
   const currentSeason = getSeason()

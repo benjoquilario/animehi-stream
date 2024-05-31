@@ -1,23 +1,23 @@
 "use client"
 
 import { cn } from "@/lib/utils"
-import { useCallback, useEffect, useMemo, useState } from "react"
 import Link from "next/link"
 import { AiOutlineSearch } from "react-icons/ai"
-import useEpisodes from "@/hooks/useEpisodes"
 import { Input } from "../ui/input"
 import type { IEpisode } from "types/types"
 import { Button } from "../ui/button"
 import { useRouter } from "next/navigation"
-import { Skeleton } from "../ui/skeleton"
 import { FaSpinner } from "react-icons/fa"
 import { FaCirclePlay } from "react-icons/fa6"
+import { useCallback, useRef, useMemo, useState } from "react"
 
 type EpisodesProps = {
   episodeId?: string
   animeId: string
   isWatch: boolean
   lastEpisode?: number
+  episodes?: IEpisode[]
+  isLoading: boolean
   update?: (id: string, i: number, d: number) => void
 }
 
@@ -27,15 +27,13 @@ export default function Episodes({
   update,
   lastEpisode,
   isWatch,
+  episodes,
+  isLoading,
 }: EpisodesProps) {
   const [query, setQuery] = useState("")
-  const {
-    data: episodes,
-    isLoading,
-    isError,
-  } = useEpisodes<IEpisode[]>(animeId)
   const [interval, setInterval] = useState<[number, number]>([0, 99])
   const router = useRouter()
+  const routerRef = useRef(router)
 
   const animeTitle = useMemo(
     () => episodes?.[0].id.split("-episode-")[0],
@@ -103,11 +101,19 @@ export default function Episodes({
   //   [episodes]
   // )
 
+  const handleSelectedEpisode = useCallback(
+    (episode: IEpisode) => {
+      routerRef.current.replace(
+        `/watch/${animeTitle}/${animeId}?episode=${episode.number}`
+      )
+      update?.(episode.id, episode.number, 0)
+    },
+    [animeId, animeTitle, router, update]
+  )
+
   return (
     <div className="mt-4">
-      {isError && !isLoading ? (
-        <div>Episode Not found</div>
-      ) : isLoading && !isError ? (
+      {isLoading ? (
         <div className="mt-4 flex items-center gap-2">
           <FaSpinner className="animate-spin" />
           Loading...
@@ -147,11 +153,11 @@ export default function Episodes({
 
             <div className="no-scrollbar max-h-96 w-full overflow-auto rounded-md">
               <div className="flex flex-col odd:bg-secondary/30 even:bg-background">
-                {displayedEpisodes?.length !== 0 ? (
+                {episodes?.length !== 0 ? (
                   displayedEpisodes?.map((episode, index) =>
                     isWatch ? (
                       <Button
-                        onClick={() => update?.(episode.id, episode.number, 0)}
+                        onClick={() => handleSelectedEpisode(episode)}
                         key={episode.id}
                         className={cn(
                           "justify-start p-3 text-[14px] font-medium transition-all odd:bg-secondary/30 even:bg-background hover:bg-secondary active:scale-[.98]",

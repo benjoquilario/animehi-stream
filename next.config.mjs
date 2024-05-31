@@ -1,3 +1,10 @@
+import "./src/env.mjs"
+import nextPWA from "next-pwa"
+
+const withPWA = nextPWA({
+  dest: "public",
+})
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   async redirects() {
@@ -24,4 +31,4 @@ const nextConfig = {
   },
 }
 
-module.exports = nextConfig
+export default withPWA(nextConfig)

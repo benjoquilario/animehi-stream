@@ -18,12 +18,16 @@ type Params = {
 
 export async function generateMetadata({
   params,
+  searchParams,
 }: {
   params: {
     params: string[]
   }
+  searchParams: { [key: string]: string | string[] | undefined }
 }): Promise<Metadata | undefined> {
   const [animeId, anilistId] = params.params
+
+  const episode = searchParams.episode
 
   const animeResponse = (await animeInfo(anilistId)) as IAnilistInfo
 
@@ -42,7 +46,7 @@ export async function generateMetadata({
       title,
       description,
       type: "website",
-      url: `${process.env.NEXT_PUBLIC_APP_URL}/watch/${animeId}/${anilistId}?episode=`,
+      url: `${process.env.NEXT_PUBLIC_APP_URL}/watch/${animeId}/${anilistId}?episode=${episode}`,
       images: [
         {
           url: `${imageUrl}`,
@@ -65,8 +69,6 @@ export async function generateMetadata({
     },
   }
 }
-
-export const dynamic = "force-dynamic"
 
 export default async function Watch({
   params: { params },
@@ -92,13 +94,11 @@ export default async function Watch({
       episodeNumber: episodeNumber,
       title: animeResponse.title.english ?? animeResponse.title.romaji,
       image: animeResponse.image,
-      nextEpisode: "1",
-      prevEpisode: "2",
       anilistId,
     })
   }
 
-  await increment(animeId, animeResponse.currentEpisode)
+  await increment(animeId, animeResponse.currentEpisode ?? episodeNumber)
 
   const currentUser = await getCurrentUser()
 

@@ -10,7 +10,6 @@ import Link from "next/link"
 import type { Comment, User } from "@prisma/client"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { relativeDate } from "@/lib/utils"
-import { PiNotebook } from "react-icons/pi"
 
 export type SwiperNewestCommentsProps = {
   newestComments: Array<

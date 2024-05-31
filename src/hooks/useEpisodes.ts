@@ -1,10 +1,10 @@
-import { animeApi } from "@/config/site"
 import useSWR from "swr"
+import { env } from "@/env.mjs"
 
 const useEpisodes = <T>(animeId: string) => {
   const fetcher = async (episodeId: string) =>
     fetch(
-      `https://consumet-api-production-2bba.up.railway.app/meta/anilist/episodes/${episodeId}?provider=gogoanime&dub=false`
+      `${env.NEXT_PUBLIC_ANIME_API_URL}/meta/anilist/episodes/${episodeId}?provider=anify&dub=false`
     ).then((res) => res.json())
 
   const { data, error } = useSWR<T>([animeId], fetcher, {

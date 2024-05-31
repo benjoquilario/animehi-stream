@@ -25,7 +25,7 @@ import {
   AiOutlineArrowDown,
   AiOutlineEnter,
 } from "react-icons/ai"
-import { animeApi } from "@/config/site"
+import { env } from "@/env.mjs"
 
 export default function Combobox() {
   const [isOpen, setIsOpen] = useState(false)
@@ -41,7 +41,7 @@ export default function Combobox() {
     if (debouncedQuery.length > 0) {
       startTransition(async () => {
         const response = await fetch(
-          `https://consumet-api-production-2bba.up.railway.app/meta/anilist/${debouncedQuery}`
+          `${env.NEXT_PUBLIC_ANIME_API_URL}/meta/anilist/${debouncedQuery}`
         )
 
         if (!response.ok) setSearch(null)

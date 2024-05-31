@@ -65,8 +65,6 @@ model Watchlist {
   timeWatched   Int?      @default(0)
   duration      Int?       @default(0)
   episodeId     String?
-  nextEpisode   String?
-  prevEpisode   String?
   createdAt     DateTime   @default(now())
   updatedAt     DateTime   @updatedAt
   anilistId     String

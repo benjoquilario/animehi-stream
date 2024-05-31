@@ -1,9 +1,10 @@
 import useSWR from "swr"
+import { env } from "@/env.mjs"
 
 const useVideoSource = <T>(episodeId: string) => {
   const fetcher = async (episodeId: string) =>
     fetch(
-      `https://consumet-api-production-2bba.up.railway.app/anime/gogoanime/watch/${episodeId}`
+      `${env.NEXT_PUBLIC_ANIME_API_URL}/anime/gogoanime/watch/${episodeId}`
     ).then((res) => res.json())
 
   const { data, error } = useSWR<T>([episodeId], fetcher, {

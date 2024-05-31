@@ -20,6 +20,7 @@ type ServerProps = {
   anilistId: string
   currentUser: any
   lastEpisode: number
+  download: string
   children: React.ReactNode
 }
 
@@ -31,6 +32,7 @@ export default function Server({
   anilistId,
   currentUser,
   lastEpisode,
+  download,
   children,
 }: ServerProps) {
   const checkBookmarkExist = useMemo(
@@ -42,12 +44,6 @@ export default function Server({
       ),
     [currentUser, animeResult]
   )
-  const [download, sourceType] = useWatchStore((store) => [
-    store.download,
-    store.sourceType,
-  ])
-
-  console.log(currentUser)
 
   // const setEmbeddedUrl = useWatchStore((store) => store.setEmbeddedUrl)
   // const [isLoading, setIsLoading] = useState(true)

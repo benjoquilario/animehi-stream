@@ -58,13 +58,6 @@ export default function OPlayer(props: WatchProps) {
   const setDownload = useWatchStore((store) => store.setDownload)
   const [lastEpisode, lastDuration, update] = useLastPlayed(anilistId)
   const router = useRouter()
-  const routerRef = useRef(router)
-
-  useEffect(() => {
-    routerRef.current.replace(
-      `/watch/${animeId}/${anilistId}?episode=${lastEpisode}`
-    )
-  }, [animeId, anilistId, lastEpisode])
 
   const { data: videoSource, isLoading: videoSourceLoading } =
     useVideoSource<SourcesResponse>(`${animeId}-episode-${lastEpisode}`)
@@ -74,12 +67,33 @@ export default function OPlayer(props: WatchProps) {
     [videoSource]
   )
 
-  const { data: episodes, isLoading } = useEpisodes<IEpisode[]>(anilistId)
+  const {
+    data: episodes,
+    isLoading,
+    isError,
+  } = useEpisodes<IEpisode[]>(anilistId)
 
   const currentEpisode = useMemo(
     () => episodes?.find((episode) => episode.number === lastEpisode),
     [episodes, lastEpisode]
   )
+
+  const latestEpisodeNumber = useMemo(
+    () =>
+      episodes?.length !== 0
+        ? episodes?.length ??
+          animeResponse.currentEpisode ??
+          animeResponse.nextAiringEpisode.episode - 1
+        : 1,
+    [animeResponse, episodes]
+  )
+
+  const currentEpisodeIndex = useMemo(
+    () => episodes?.findIndex((episode) => episode.number === lastEpisode),
+    [episodes, lastEpisode]
+  )
+
+  const download = useMemo(() => videoSource?.download, [videoSource])
 
   const plugins = useMemo(
     () => [
@@ -140,6 +154,18 @@ export default function OPlayer(props: WatchProps) {
   //   }
   // }, [episodes, episodeNumber, isLoading])
 
+  const nextEpisode = useMemo(() => {
+    if (lastEpisode === latestEpisodeNumber) return lastEpisode
+
+    if (currentEpisodeIndex) return currentEpisodeIndex + 1
+  }, [currentEpisodeIndex, lastEpisode, latestEpisodeNumber])
+
+  const prevEpisode = useMemo(() => {
+    if (lastEpisode === 1) return 1
+
+    if (currentEpisodeIndex) return currentEpisodeIndex - 1
+  }, [currentEpisodeIndex, lastEpisode])
+
   const getSelectedSrc = useCallback(
     (selectedQuality: string): Promise<Source> => {
       return new Promise((resolve, reject) => {
@@ -158,8 +184,6 @@ export default function OPlayer(props: WatchProps) {
     async function updateWatch() {
       return await updateWatchlist({
         episodeId,
-        nextEpisode: "1",
-        prevEpisode: "1",
         episodeNumber,
         animeId,
       })
@@ -172,16 +196,13 @@ export default function OPlayer(props: WatchProps) {
       .on("ended", () => {
         updateWatch()
 
-        if (episodes?.length === lastEpisode) {
+        if (latestEpisodeNumber === lastEpisode) {
           update(anilistId, 1, 0)
         }
 
         update(anilistId, lastEpisode + 1, 0)
       })
       .on("timeupdate", ({ payload }) => {
-        console.log("Timeupdate")
-        console.log(payload)
-
         // onTimeUpdate({ currentTime: payload.target.currentTime * 1000 })
       })
       .on("pause", () => {
@@ -312,6 +333,7 @@ export default function OPlayer(props: WatchProps) {
         {/* <ReactPlayer plugins={plugins} ref={playerRef} source={} /> */}
       </AspectRatio>
       <Server
+        download={download ?? ""}
         episodeId={`${animeId}-episode-${lastEpisode}`}
         animeResult={animeResponse}
         animeId={animeId}
@@ -321,20 +343,29 @@ export default function OPlayer(props: WatchProps) {
         lastEpisode={lastEpisode}
       >
         <ButtonAction
-          animeId={animeId}
-          episodeId={episodeId}
+          isLoading={isLoading}
+          latestEpisodeNumber={latestEpisodeNumber}
           anilistId={anilistId}
           update={update}
           lastEpisode={lastEpisode}
         />
       </Server>
-      <Episodes
-        update={update}
-        animeId={anilistId}
-        episodeId={`${animeId}-episode-${episodeNumber}`}
-        isWatch={true}
-        lastEpisode={lastEpisode}
-      />
+
+      {isError || episodes?.length === 0 ? (
+        <div className="mt-4">
+          <div>No Episodes found</div>
+        </div>
+      ) : (
+        <Episodes
+          episodes={episodes}
+          isLoading={isLoading}
+          update={update}
+          animeId={anilistId}
+          episodeId={`${animeId}-episode-${episodeNumber}`}
+          isWatch={true}
+          lastEpisode={lastEpisode}
+        />
+      )}
     </>
   )
 }

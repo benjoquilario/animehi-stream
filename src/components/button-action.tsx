@@ -1,37 +1,22 @@
 "use client"
-
-import { Episode, IEpisode } from "types/types"
 import { Button } from "./ui/button"
-import { useCallback, useMemo } from "react"
-import { useRouter } from "next/navigation"
 import { AiFillForward, AiFillBackward } from "react-icons/ai"
-import useEpisodes from "@/hooks/useEpisodes"
-import useLastPlayed from "@/hooks/useLastPlayed"
 
 type ButtonActionProps = {
-  episodeId: string
-  animeId: string
   anilistId: string
   lastEpisode: number
+  latestEpisodeNumber: number
+  isLoading: boolean
   update: (id: string, i: number, d: number) => void
 }
 
 const ButtonAction = ({
-  episodeId,
-  animeId,
   anilistId,
+  latestEpisodeNumber,
+  isLoading,
   lastEpisode,
   update,
 }: ButtonActionProps) => {
-  const { data: episodes, isLoading } = useEpisodes<IEpisode[]>(anilistId)
-
-  const currentEpisode = useMemo(
-    () => episodes?.find((episode) => episode.id === episodeId),
-    [episodes, episodeId]
-  )
-
-  const latestEpisodeNumber = useMemo(() => episodes?.length, [episodes])
-
   return (
     <>
       <Button

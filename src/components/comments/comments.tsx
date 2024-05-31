@@ -42,16 +42,16 @@ export default function Comments({
 
   return (
     <div className="mt-4">
-      <h3 className="flex w-full items-center pt-2.5 text-left text-base font-semibold md:text-2xl">
+      <h3 className="flex w-full items-center pt-2.5 text-left text-sm font-semibold md:text-base">
         <div className="mr-2 h-6 w-2 rounded-md bg-primary md:h-8"></div>
         Comments
         <Badge className="ml-2">Beta</Badge>
       </h3>
-      <div className="mt-2 w-full rounded-sm bg-destructive px-2 py-5 text-center sm:text-sm">
+      <div className="mt-2 w-full rounded-sm bg-destructive px-2 py-5 text-center text-sm md:text-base">
         Respect others. Be nice. No spam. No hate speech.
       </div>
 
-      <div className="my-4 flex items-center gap-2">
+      <div className="my-4 flex items-center gap-2 text-xs md:text-sm">
         <LuMessageSquare />
 
         <span>Comments EP {episodeNumber}</span>

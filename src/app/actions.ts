@@ -49,8 +49,6 @@ export async function createWatchlist({
   image,
   title,
   episodeNumber,
-  nextEpisode,
-  prevEpisode,
   anilistId,
 }: CreateWatchList) {
   const session = await getSession()
@@ -65,7 +63,7 @@ export async function createWatchlist({
   })
 
   if (checkEpisode) {
-    return null
+    return
   } else
     await db.user.update({
       where: {
@@ -80,8 +78,6 @@ export async function createWatchlist({
               image,
               title,
               animeId,
-              nextEpisode,
-              prevEpisode,
               anilistId,
             },
           ],
@@ -138,8 +134,6 @@ type UpdateWatchlist = {
 export async function updateWatchlist({
   episodeId,
   episodeNumber,
-  nextEpisode,
-  prevEpisode,
   animeId,
 }: UpdateWatchlist) {
   const session = await getSession()
@@ -161,9 +155,7 @@ export async function updateWatchlist({
       },
       data: {
         episodeId,
-        nextEpisode,
-        prevEpisode,
-        episodeNumber: Number(episodeNumber),
+        episodeNumber: +episodeNumber,
         updatedAt: new Date(),
       },
     })
@@ -172,15 +164,49 @@ export async function updateWatchlist({
 }
 
 export async function deleteWatchlist(id: string) {
-  const deleteWatch = await db.watchlist.delete({
+  const session = await getSession()
+
+  if (!session) return
+
+  await db.watchlist.delete({
     where: {
       id,
     },
   })
 
-  revalidatePath("/")
+  return {
+    message: "Success",
+  }
+}
 
-  return deleteWatch
+export async function deleteBookmark({
+  animeId,
+  id,
+}: {
+  animeId: string
+  id: string
+}) {
+  const session = await getSession()
+
+  if (!session) return
+
+  const checkAnime = await db.bookmark.findFirst({
+    where: {
+      userId: session.user.id,
+      animeId,
+    },
+  })
+
+  if (checkAnime) {
+    await db.bookmark.delete({
+      where: {
+        id,
+        animeId,
+      },
+    })
+  }
+
+  return
 }
 
 export async function createBookmark({
@@ -233,6 +259,33 @@ export type AddComment = {
   animeId: string
   episodeNumber: string
   anilistId: string
+}
+
+export async function deleteComment(id: string) {
+  const session = await getSession()
+
+  if (!session) return
+
+  return await db.comment.delete({
+    where: {
+      id,
+    },
+  })
+}
+
+export async function editComment(id: string, updatedComment: string) {
+  const session = await getSession()
+
+  if (!session) return
+
+  return await db.comment.update({
+    where: {
+      id,
+    },
+    data: {
+      comment: updatedComment,
+    },
+  })
 }
 
 export async function addComment(comment: AddComment) {

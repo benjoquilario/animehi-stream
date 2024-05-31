@@ -5,6 +5,7 @@ import bcrypt from "bcrypt"
 import type { NextAuthOptions } from "next-auth"
 import CredentialsProvider from "next-auth/providers/credentials"
 import { credentialsValidator } from "@/lib/validations/credentials"
+import { env } from "@/env.mjs"
 
 export const providers = ["anilist"] as const
 
@@ -52,6 +53,7 @@ export const authOptions: NextAuthOptions = {
       },
       async authorize(credentials) {
         const cred = await credentialsValidator.parseAsync(credentials)
+
         if (!cred.email || !cred?.password) {
           throw new Error("Invalid Credentials")
         }
@@ -81,7 +83,7 @@ export const authOptions: NextAuthOptions = {
     }),
   ],
   debug: process.env.NODE_ENV !== "development",
-  secret: process.env.NEXTAUTH_SECRET,
+  secret: env.NEXTAUTH_SECRET,
   session: {
     //Sets the session to use JSON Web Token
     strategy: "jwt",
