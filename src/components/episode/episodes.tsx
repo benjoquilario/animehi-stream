@@ -108,7 +108,7 @@ export default function Episodes({
       )
       update?.(episode.id, episode.number, 0)
     },
-    [animeId, animeTitle, router, update]
+    [animeId, animeTitle, update]
   )
 
   return (

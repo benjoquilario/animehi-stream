@@ -1,6 +1,6 @@
 import "./src/env.mjs"
 import nextPWA from "next-pwa"
-
+// @ts-check
 const withPWA = nextPWA({
   dest: "public",
 })
