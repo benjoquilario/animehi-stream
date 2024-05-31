@@ -1,6 +1,7 @@
 import "./src/env.mjs"
+
 import nextPWA from "next-pwa"
-// @ts-check
+
 const withPWA = nextPWA({
   dest: "public",
 })
@@ -31,4 +32,6 @@ const nextConfig = {
   },
 }
 
-export default withPWA(nextConfig)
+export default process.env.NODE_ENV === "development"
+  ? nextConfig
+  : withPWA(nextConfig)

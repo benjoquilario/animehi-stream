@@ -39,8 +39,6 @@ type CreateWatchList = {
   image: string
   title: string
   episodeNumber: string
-  nextEpisode: string
-  prevEpisode: string
   anilistId: string
 }
 
@@ -126,8 +124,6 @@ export async function createViewCounter({
 type UpdateWatchlist = {
   episodeId: string
   episodeNumber: string
-  nextEpisode: string
-  prevEpisode: string
   animeId: string
 }
 
