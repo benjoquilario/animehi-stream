@@ -269,19 +269,27 @@ export async function deleteComment(id: string) {
   })
 }
 
-export async function editComment(id: string, updatedComment: string) {
+export async function editComment({
+  id,
+  commentText,
+}: {
+  id: string
+  commentText: string
+}) {
   const session = await getSession()
 
   if (!session) return
 
-  return await db.comment.update({
+  await db.comment.update({
     where: {
       id,
     },
     data: {
-      comment: updatedComment,
+      comment: commentText,
     },
   })
+
+  return
 }
 
 export async function addComment(comment: AddComment) {
@@ -309,7 +317,7 @@ export async function addComment(comment: AddComment) {
 
   if (!session) throw new Error("Not authenticated!")
 
-  await db.user.update({
+  const newComments = await db.user.update({
     where: {
       id: session.user.id,
     },
@@ -328,5 +336,9 @@ export async function addComment(comment: AddComment) {
     },
   })
 
-  return
+  return {
+    message: "Comment Created",
+    success: true,
+    data: newComments,
+  }
 }

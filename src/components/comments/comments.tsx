@@ -11,6 +11,8 @@ import { BsCaretDownFill } from "react-icons/bs"
 import { ImSpinner8 } from "react-icons/im"
 import { Badge } from "../ui/badge"
 import { LuMessageSquare } from "react-icons/lu"
+import { AnimatePresence, motion } from "framer-motion"
+import { Button } from "../ui/button"
 
 type CommentsProps = {
   animeId: string
@@ -30,7 +32,10 @@ export default function Comments({
     hasNextPage,
     isFetchingNextPage,
   } = useInfiniteQuery({
-    queryKey: [QUERY_KEYS.GET_INFINITE_COMMENTS],
+    queryKey: [
+      QUERY_KEYS.GET_INFINITE_COMMENTS,
+      `${animeId}-episode-${episodeNumber}`,
+    ],
     queryFn: ({ pageParam }) =>
       fetch(
         `${process.env.NEXT_PUBLIC_APP_URL}/api/comments/${animeId}-episode-${episodeNumber}?limit=${5}&cursor=${pageParam}`
@@ -69,14 +74,25 @@ export default function Comments({
               anilistId={anilistId}
             />
 
-            {comments?.pages.map((page) =>
-              page?.comments.map((comment: CommentsT<User>) => (
-                <CommentItem
-                  key={comment.id}
-                  comment={comment as CommentsT<User>}
-                />
-              ))
-            )}
+            <AnimatePresence>
+              {comments?.pages.map((page) =>
+                page?.comments.map((comment: CommentsT<User>) => (
+                  <motion.div
+                    key={comment.id}
+                    initial={{ y: 300, opacity: 0 }}
+                    animate={{ y: 0, opacity: 1 }}
+                    exit={{ x: -300, opacity: 0 }}
+                    className="mb-6 flex w-full gap-3 hover:bg-background/90"
+                  >
+                    <CommentItem
+                      comment={comment as CommentsT<User>}
+                      animeId={animeId}
+                      episodeNumber={episodeNumber}
+                    />
+                  </motion.div>
+                ))
+              )}
+            </AnimatePresence>
 
             {hasNextPage && (
               <div>
@@ -85,13 +101,15 @@ export default function Comments({
                     <ImSpinner8 className="h-4 w-4 animate-spin" />
                   </div>
                 ) : (
-                  <button
-                    className="flex items-center gap-1 text-[15px] leading-6 text-primary hover:text-primary/90"
+                  <Button
+                    className="flex items-center gap-1 text-[15px] leading-6 text-primary hover:text-primary/90 active:scale-105"
                     onClick={() => fetchNextPage()}
+                    size="sm"
+                    variant="ghost"
                   >
                     <BsCaretDownFill className="h-4 w-4" />
                     View More
-                  </button>
+                  </Button>
                 )}
               </div>
             )}

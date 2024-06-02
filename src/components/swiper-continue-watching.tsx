@@ -23,6 +23,8 @@ import { AiOutlineClose } from "react-icons/ai"
 import { useMutation, useQueryClient } from "@tanstack/react-query"
 import { toast } from "sonner"
 import axios from "axios"
+import { FaRegTrashCan } from "react-icons/fa6"
+import { Button } from "./ui/button"
 
 type SwiperContinueWatchingProps = {
   results: Watchlist[]
@@ -80,12 +82,12 @@ const SwiperContinueWatching = (props: SwiperContinueWatchingProps) => {
                     <TooltipProvider>
                       <Tooltip>
                         <TooltipTrigger asChild>
-                          <button
+                          <Button
                             onClick={() => mutate.mutate(result.id)}
-                            className="rounded-full bg-background p-1 text-foreground"
+                            className="rounded-md bg-foreground p-3 text-black hover:bg-destructive hover:text-white"
                           >
-                            <AiOutlineClose className="h-4 w-4" />
-                          </button>
+                            <FaRegTrashCan className="h-4 w-4" />
+                          </Button>
                         </TooltipTrigger>
                         <TooltipContent side="left">
                           <p>Remove History</p>
@@ -129,7 +131,7 @@ const SwiperContinueWatching = (props: SwiperContinueWatchingProps) => {
               </div>
               <Link
                 className="group relative aspect-video w-full overflow-hidden rounded-md md:w-[320px]"
-                href={`/watch/${result.animeId}/${result.anilistId}/${result.episodeNumber}`}
+                href={`/watch/${result.animeId}/${result.anilistId}?episode=${result.episodeNumber}`}
               >
                 <div className="absolute z-30 h-full w-full bg-gradient-to-t from-background/70 from-20% to-transparent transition-all duration-300 ease-out group-hover:to-background/40"></div>
                 {/* <span className="absolute bottom-0 left-0 z-30 h-[2px] bg-red-600"></span> */}
@@ -138,23 +140,20 @@ const SwiperContinueWatching = (props: SwiperContinueWatchingProps) => {
                   src={result.image}
                   alt={result.title}
                   style={{ objectFit: "cover" }}
+                  className="transition-all group-hover:scale-105"
                 />
-                <div className="absolute bottom-3 left-0 z-30 mx-2 flex w-4/5 items-center gap-2">
-                  <BsPlayFill />
-                  <h2>Watch Episode {result.episodeNumber}</h2>
+                <div className="absolute bottom-3 left-0 z-30 mx-2 flex w-full items-center justify-between gap-3">
+                  <div className="flex flex-col gap-0.5">
+                    <div className="text-sm text-muted-foreground">
+                      Watching Episode {result.episodeNumber}
+                    </div>
+                    <h3>{result.animeId.split("-").join(" ")}</h3>
+                  </div>
+                  <div className="mr-3 rounded-full p-2 text-white transition-all group-hover:bg-muted-foreground/90">
+                    <BsPlayFill className="h-6 w-6" />
+                  </div>
                 </div>
               </Link>
-
-              <p className="flex w-[320px] items-center gap-1 text-sm text-muted-foreground/80">
-                <span
-                  className="inline-block max-w-[220px] overflow-hidden text-ellipsis text-foreground"
-                  title={result.title}
-                  style={{ whiteSpace: "nowrap" }}
-                >
-                  {result.title}
-                </span>
-                | Episode {result.episodeNumber}
-              </p>
             </div>
           </SwiperSlide>
         ))

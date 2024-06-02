@@ -108,7 +108,7 @@ export default function Anime({ animeId }: { animeId: string }) {
         </div>
         <div className="z-10 flex w-full flex-col items-center gap-2 pt-4 md:items-start">
           {loading ? (
-            <div className="flex flex-col gap-2 pt-2">
+            <div className="flex flex-col items-center gap-2 pt-2 md:items-start">
               <Skeleton className="h-[22px] w-[70px]" />
               <Skeleton className="h-[36px] w-[200px]" />
               <Skeleton className="h-[24px] w-[154px]" />
@@ -324,7 +324,7 @@ function CharactersItem({ character }: CharactersItemProps) {
             style={{ objectFit: "cover" }}
           />
           <div className="flex flex-col gap-2">
-            <h4>
+            <h4 className="text-sm md:text-base">
               {character.name.userPreferred ??
                 `${character.name.first} ${character.name.last}` ??
                 character.name.full}
@@ -358,7 +358,7 @@ function CharactersItem({ character }: CharactersItemProps) {
               className="rounded-full"
             />
             <div className="flex flex-col items-end gap-2">
-              <h4>
+              <h4 className="text-sm md:text-base">
                 {character.voiceActors.length !== 0
                   ? character.voiceActors?.[0].name.userPreferred ??
                     `${character.voiceActors?.[0].name.first} ${character.voiceActors?.[0].name.last}` ??
@@ -366,7 +366,9 @@ function CharactersItem({ character }: CharactersItemProps) {
                     "No Name"
                   : "No Name"}
               </h4>
-              {/* <span className="text-sm text-muted-foreground/80">{}</span> */}
+              <span className="sr-only text-sm text-muted-foreground/80">
+                char
+              </span>
             </div>
           </div>
         </div>

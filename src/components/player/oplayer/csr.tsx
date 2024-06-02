@@ -26,6 +26,7 @@ import { useRef, useState, useEffect, useMemo, useCallback } from "react"
 import useVideoSource from "@/hooks/useVideoSource"
 import Server from "@/components/server"
 import ButtonAction from "@/components/button-action"
+import RelationWatch from "@/components/watch/relation"
 
 export type WatchProps = {
   episodeId: string
@@ -259,10 +260,7 @@ export default function OPlayer(props: WatchProps) {
           res
             ? {
                 src: res.url,
-                poster:
-                  currentEpisode?.image ??
-                  animeResponse.cover ??
-                  animeResponse.image,
+                poster: animeResponse.cover ?? animeResponse.image,
                 title: `${animeResponse.title.english ?? animeResponse.title.romaji} / Episode ${lastEpisode}`,
               }
             : notFound()
@@ -348,6 +346,7 @@ export default function OPlayer(props: WatchProps) {
           anilistId={anilistId}
           update={update}
           lastEpisode={lastEpisode}
+          animeTitle={animeId}
         />
       </Server>
 
@@ -366,6 +365,8 @@ export default function OPlayer(props: WatchProps) {
           lastEpisode={lastEpisode}
         />
       )}
+
+      <RelationWatch relations={animeResponse.relations} />
     </>
   )
 }

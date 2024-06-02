@@ -102,7 +102,7 @@ export default function SwiperNewestComments({
                   </div>
                   <div className="mt-3 block overflow-hidden text-ellipsis">
                     <Link
-                      href={`/watch/${newestComment.animeId}/${newestComment.anilistId}/${newestComment.episodeNumber}`}
+                      href={`/watch/${newestComment.animeId}/${newestComment.anilistId}?episode=${newestComment.episodeNumber}`}
                       className="line-clamp-1 text-primary hover:text-primary/90"
                     >
                       {newestComment.episodeId.split("-").join(" ")}

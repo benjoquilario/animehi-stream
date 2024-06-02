@@ -36,13 +36,16 @@ export default function MostViewCard({
         </Link>
       </div>
       <div className="flex-1 px-3">
-        <Link
-          href={`/watch/${result.animeId}/${result.anilistId}?episode=${result.latestEpisodeNumber}`}
-        >
-          <h3 className="mb-1 line-clamp-2 text-sm font-medium !leading-5 hover:text-primary md:text-[15px]">
-            {result.title}
-          </h3>
-        </Link>
+        <div className="inline-block">
+          <Link
+            href={`/watch/${result.animeId}/${result.anilistId}?episode=${result.latestEpisodeNumber}`}
+          >
+            <h3 className="mb-1 line-clamp-2 text-sm font-medium !leading-5 hover:text-primary md:text-[15px]">
+              {result.title}
+            </h3>
+          </Link>
+        </div>
+
         <div className="overflow-hidden">
           <div className="flex flex-wrap items-center gap-1">
             <div className="flex items-center gap-1 rounded-lg bg-primary p-1 text-xs text-white md:px-2">

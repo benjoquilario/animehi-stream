@@ -43,7 +43,7 @@ export async function generateMetadata({
     title,
     description,
     openGraph: {
-      title,
+      title: `Watch ${title} | AnimeHi`,
       description,
       type: "website",
       url: `${process.env.NEXT_PUBLIC_APP_URL}/watch/${animeId}/${anilistId}?episode=${episode}`,

@@ -1,6 +1,6 @@
 "use client"
 
-import React, { useRef, useState, useTransition } from "react"
+import React, { useRef, useState, useTransition, useMemo } from "react"
 import { usePathname } from "next/navigation"
 import { addComment, AddComment } from "@/app/actions"
 import * as z from "zod"
@@ -17,9 +17,15 @@ import {
 } from "@/components/ui/form"
 import { ImSpinner8 } from "react-icons/im"
 import { useSession } from "next-auth/react"
-import { useMutation, useQueryClient } from "@tanstack/react-query"
+import {
+  InfiniteData,
+  useMutation,
+  useQueryClient,
+} from "@tanstack/react-query"
 import { QUERY_KEYS } from "@/lib/queriesKeys"
 import { useAuthStore } from "@/store"
+import { Comment } from "@prisma/client"
+import chunk from "lodash.chunk"
 
 const commentSchema = z.object({
   comment: z
@@ -35,6 +41,12 @@ type CommentFormProps = {
   anilistId: string
 }
 
+export type TPage<TData> = {
+  comments: TData
+  hasNextPage: boolean
+  nextSkip: number
+}
+
 export default function CommentForm({
   animeId,
   episodeNumber,
@@ -45,6 +57,14 @@ export default function CommentForm({
   const buttonRef = useRef<HTMLButtonElement | null>(null)
   const queryClient = useQueryClient()
 
+  const queryKey = useMemo(
+    () => [
+      QUERY_KEYS.GET_INFINITE_COMMENTS,
+      `${animeId}-episode-${episodeNumber}`,
+    ],
+    [animeId, episodeNumber]
+  )
+
   const form = useForm<z.infer<typeof commentSchema>>({
     resolver: zodResolver(commentSchema),
     defaultValues: {
@@ -53,12 +73,8 @@ export default function CommentForm({
   })
 
   const { mutateAsync: createComment, isPending } = useMutation({
-    mutationFn: (comment: AddComment) => addComment(comment),
-    onSuccess: () => {
-      queryClient.invalidateQueries({
-        queryKey: [QUERY_KEYS.GET_INFINITE_COMMENTS],
-      })
-    },
+    mutationFn: async (comment: AddComment) => await addComment(comment),
+    onSettled: () => queryClient.invalidateQueries({ queryKey }),
   })
 
   async function handleOnSubmit(data: Inputs) {

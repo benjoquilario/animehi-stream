@@ -14,11 +14,23 @@ const Sub = () => {
     [setSourceType]
   )
 
+  const renderType = () => {
+    return ["default", "gogo", "vidstreaming"].map((type) => (
+      <Button
+        onClick={() => handleChangeType(type)}
+        size="sm"
+        className="text-sm"
+      >
+        {type}
+      </Button>
+    ))
+  }
+
   return (
     <div className="flex items-center gap-2">
       <div className="">
         <Button
-          onChange={() => handleChangeType("default")}
+          onClick={() => handleChangeType("default")}
           size="sm"
           className="text-sm"
         >
