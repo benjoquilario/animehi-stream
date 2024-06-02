@@ -16,6 +16,8 @@ import { Skeleton } from "@/components/ui/skeleton"
 import { FaSpinner } from "react-icons/fa"
 import Recommendations from "@/components/anime/recommendations"
 import { env } from "@/env.mjs"
+import type { IMetadata } from "types/types"
+import useMetadata from "@/hooks/useMetadata"
 
 export default function Anime({ animeId }: { animeId: string }) {
   const {
@@ -27,6 +29,13 @@ export default function Anime({ animeId }: { animeId: string }) {
   const [loading, setLoading] = useState(true)
 
   const router = useRouter()
+
+  const { data: metadata } = useMetadata<
+    {
+      providerId: string
+      data: IMetadata[]
+    }[]
+  >(animeId)
 
   useEffect(() => {
     let isMounted = true

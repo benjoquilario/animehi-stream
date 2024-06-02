@@ -9,7 +9,7 @@ import { Button } from "../ui/button"
 import { useRouter } from "next/navigation"
 import { FaSpinner } from "react-icons/fa"
 import { FaCirclePlay } from "react-icons/fa6"
-import { useCallback, useRef, useMemo, useState } from "react"
+import { useCallback, useRef, useMemo, useState, useEffect } from "react"
 
 type EpisodesProps = {
   episodeId?: string
@@ -18,7 +18,6 @@ type EpisodesProps = {
   lastEpisode?: number
   episodes?: IEpisode[]
   isLoading: boolean
-  currentMetadata?: IMetadata
   update?: (id: string, i: number, d: number) => void
 }
 
@@ -30,7 +29,6 @@ export default function Episodes({
   isWatch,
   episodes,
   isLoading,
-  currentMetadata,
 }: EpisodesProps) {
   const [query, setQuery] = useState("")
   const [interval, setInterval] = useState<[number, number]>([0, 99])
@@ -194,9 +192,7 @@ export default function Episodes({
                         <div className="flex items-center gap-2">
                           <span className="text-xs">{episode.number}</span>
                           <div className="italic text-muted-foreground/80">
-                            {currentMetadata?.title ??
-                              episode.title ??
-                              `Episode ${episode.number}`}
+                            {episode.title ?? `Episode ${episode.number}`}
                           </div>
                         </div>
                       </Link>
