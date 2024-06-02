@@ -12,6 +12,7 @@ import {
   IEpisode,
   AniSkip,
   IAnilistInfo,
+  IMetadata,
 } from "types/types"
 import { notFound, useRouter, useSearchParams } from "next/navigation"
 import { AspectRatio } from "@/components/ui/aspect-ratio"
@@ -27,6 +28,7 @@ import useVideoSource from "@/hooks/useVideoSource"
 import Server from "@/components/server"
 import ButtonAction from "@/components/button-action"
 import RelationWatch from "@/components/watch/relation"
+import useMetadata from "@/hooks/useMetadata"
 
 export type WatchProps = {
   episodeId: string
@@ -73,6 +75,13 @@ export default function OPlayer(props: WatchProps) {
     isLoading,
     isError,
   } = useEpisodes<IEpisode[]>(anilistId)
+
+  const { data: metadata } = useMetadata<
+    {
+      provider: string
+      data: IMetadata[]
+    }[]
+  >(anilistId)
 
   const currentEpisode = useMemo(
     () => episodes?.find((episode) => episode.number === lastEpisode),
@@ -154,6 +163,11 @@ export default function OPlayer(props: WatchProps) {
   //     return String(nextEpisodeNumber + 2)
   //   }
   // }, [episodes, episodeNumber, isLoading])
+
+  const currentMetadata = useMemo(
+    () => metadata?.[0].data.find((d) => d.number === lastEpisode),
+    [metadata, lastEpisode]
+  )
 
   const nextEpisode = useMemo(() => {
     if (lastEpisode === latestEpisodeNumber) return lastEpisode
@@ -260,7 +274,10 @@ export default function OPlayer(props: WatchProps) {
           res
             ? {
                 src: res.url,
-                poster: animeResponse.cover ?? animeResponse.image,
+                poster:
+                  currentMetadata?.img ??
+                  animeResponse.cover ??
+                  animeResponse.image,
                 title: `${animeResponse.title.english ?? animeResponse.title.romaji} / Episode ${lastEpisode}`,
               }
             : notFound()
@@ -363,6 +380,7 @@ export default function OPlayer(props: WatchProps) {
           episodeId={`${animeId}-episode-${episodeNumber}`}
           isWatch={true}
           lastEpisode={lastEpisode}
+          currentMetadata={currentMetadata}
         />
       )}
 

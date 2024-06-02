@@ -336,6 +336,18 @@ export interface RecentEpisode {
   type: string
 }
 
+export interface IMetadata {
+  id: string
+  description: string
+  hasDub: boolean
+  img: string
+  isFiller: boolean
+  number: number
+  title: string
+  updatedAt: number
+  rating: number
+}
+
 export interface AniSkip {
   statusCode: number
   results: AniSkipResult[]
