@@ -144,6 +144,7 @@ export default function Anime({ animeId }: { animeId: string }) {
           <div className="flex items-center gap-2">
             <Button
               disabled={isLoading}
+              variant="shine"
               onClick={() =>
                 router.push(
                   `/watch/${animeTitle}/${animeId}?episode=${episodes?.length !== 0 ? episodes?.[episodes.length - 1]?.number : 1}`

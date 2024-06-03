@@ -1,6 +1,13 @@
 "use client"
 
-import React, { useState, useRef, useMemo, useCallback, useEffect } from "react"
+import React, {
+  useState,
+  useRef,
+  useMemo,
+  useCallback,
+  useEffect,
+  useTransition,
+} from "react"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Button } from "../ui/button"
 import { BsReplyAllFill } from "react-icons/bs"
@@ -78,6 +85,8 @@ export default function CommentItem({
   const [isEditing, setIsEditing] = useState(false)
   const queryClient = useQueryClient()
   const buttonRef = useRef<HTMLButtonElement | null>(null)
+  const [isOpen, setIsOpen] = useState(false)
+  const [isPending, startTransition] = useTransition()
 
   const form = useForm<z.infer<typeof editSchema>>({
     resolver: zodResolver(editSchema),
@@ -85,6 +94,8 @@ export default function CommentItem({
       comment: comment.comment,
     },
   })
+
+  const [isAlertOpen, setIsAlertOpen] = useState(false)
 
   const queryKey = useMemo(
     () => [
@@ -94,11 +105,12 @@ export default function CommentItem({
     [animeId, episodeNumber]
   )
 
-  const { mutateAsync: mutateEditComment, isPending } = useMutation({
-    mutationFn: ({ id, commentText }: { id: string; commentText: string }) =>
-      editComment({ id, commentText }),
-    onSettled: () => queryClient.invalidateQueries({ queryKey }),
-  })
+  const { mutateAsync: mutateEditComment, isPending: isEditPending } =
+    useMutation({
+      mutationFn: ({ id, commentText }: { id: string; commentText: string }) =>
+        editComment({ id, commentText }),
+      onSettled: () => queryClient.invalidateQueries({ queryKey }),
+    })
 
   const { mutateAsync: mutateDeleteComment } = useMutation({
     mutationFn: async ({ id }: { id: string }) => await deleteComment(id),
@@ -178,7 +190,7 @@ export default function CommentItem({
                             placeholder="Leave a comment"
                             onKeyDown={handleKeyPress}
                             {...field}
-                            disabled={isPending}
+                            disabled={isEditPending}
                           />
                         </FormControl>
                         <FormMessage />
@@ -229,11 +241,12 @@ export default function CommentItem({
               <BiSolidDislike className="h-5 w-5 group-active:scale-110" />
             )}
           </button>
-          <DropdownMenu>
+          <DropdownMenu open={isOpen} onOpenChange={setIsOpen}>
             <DropdownMenuTrigger asChild>
               <Button
                 className="h-5 w-8 rounded p-1 ring-offset-1 hover:ring-1 hover:ring-foreground"
                 variant="ghost"
+                onClick={() => setIsOpen((isOpen) => !isOpen)}
               >
                 <BiDotsHorizontalRounded className="h-5 w-8" />
               </Button>
@@ -252,45 +265,20 @@ export default function CommentItem({
                       Edit
                     </Button>
                   </DropdownMenuItem>
+
                   <DropdownMenuItem asChild>
-                    <AlertDialog>
-                      <AlertDialogTrigger asChild>
-                        <Button
-                          className="flex w-full cursor-pointer gap-1 text-sm text-destructive hover:bg-destructive/60"
-                          variant="ghost"
-                          size="sm"
-                        >
-                          <MdOutlineDeleteOutline />
-                          Delete
-                        </Button>
-                      </AlertDialogTrigger>
-                      <AlertDialogContent>
-                        <AlertDialogHeader>
-                          <AlertDialogTitle>
-                            Are you absolutely sure?
-                          </AlertDialogTitle>
-                          <AlertDialogDescription>
-                            This action cannot be undone. This will permanently
-                            delete your comment and remove your data from our
-                            servers.
-                          </AlertDialogDescription>
-                        </AlertDialogHeader>
-                        <AlertDialogFooter>
-                          <AlertDialogCancel>Cancel</AlertDialogCancel>
-                          <AlertDialogAction asChild>
-                            <Button
-                              className="cursor-pointer"
-                              size="sm"
-                              onClick={() =>
-                                mutateDeleteComment({ id: comment.id })
-                              }
-                            >
-                              Delete
-                            </Button>
-                          </AlertDialogAction>
-                        </AlertDialogFooter>
-                      </AlertDialogContent>
-                    </AlertDialog>
+                    <Button
+                      className="flex w-full cursor-pointer gap-1 text-sm text-destructive hover:bg-destructive/60"
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => {
+                        setIsAlertOpen((isAlertOpen) => !isAlertOpen)
+                        setIsOpen(false)
+                      }}
+                    >
+                      <MdOutlineDeleteOutline />
+                      Delete
+                    </Button>
                   </DropdownMenuItem>
                 </>
               )}
@@ -306,8 +294,43 @@ export default function CommentItem({
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
+          <button
+            onClick={() => setIsEditing(false)}
+            className="text-xs text-primary"
+          >
+            cancel
+          </button>
         </div>
       </div>
+      <AlertDialog open={isAlertOpen} onOpenChange={setIsAlertOpen}>
+        <AlertDialogTrigger asChild></AlertDialogTrigger>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+            <AlertDialogDescription>
+              This action cannot be undone. This will permanently delete your
+              comment and remove your data from our servers.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction asChild>
+              <Button
+                className="cursor-pointer"
+                size="sm"
+                disabled={isPending}
+                onClick={() =>
+                  startTransition(() => {
+                    mutateDeleteComment({ id: comment.id })
+                  })
+                }
+              >
+                Delete
+              </Button>
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </>
   )
 }

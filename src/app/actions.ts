@@ -299,25 +299,24 @@ export async function addComment(comment: AddComment) {
 
   const ratelimit = new Ratelimit({
     redis: Redis.fromEnv(),
-    limiter: Ratelimit.fixedWindow(5, "60s"),
+    limiter: Ratelimit.slidingWindow(5, "60s"),
   })
 
-  const { success, reset } = await ratelimit.limit(
-    (ip ?? "anonymous") + "-addComment"
-  )
+  const { success, reset } = await ratelimit.limit(`${ip}`)
 
   if (!success) {
-    console.log(
-      `ratelimit hit for addComment , reset in ${new Date(reset).toUTCString()}`
-    )
-    return
+    console.log(`ratelimit hit for addComment , reset in `)
+    return {
+      success: false,
+      message: `You reached the limit, reset in ${new Date(reset).toUTCString()}`,
+    }
   }
 
   const session = await getSession()
 
   if (!session) throw new Error("Not authenticated!")
 
-  const newComments = await db.user.update({
+  await db.user.update({
     where: {
       id: session.user.id,
     },
@@ -339,6 +338,5 @@ export async function addComment(comment: AddComment) {
   return {
     message: "Comment Created",
     success: true,
-    data: newComments,
   }
 }

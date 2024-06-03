@@ -60,6 +60,7 @@
     "dayjs": "^1.11.10",
     "framer-motion": "^10.16.4",
     "hls.js": "^1.5.8",
+    "holy-loader": "^2.3.1",
     "ioredis": "^5.4.1",
     "next": "^14.2.3",
     "next-auth": "^4.24.4",

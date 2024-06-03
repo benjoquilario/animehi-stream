@@ -5,6 +5,7 @@ import { cn } from "@/lib/utils"
 import ThemeProvider from "@/components/theme-provider"
 import Script from "next/script"
 import NextTopLoader from "nextjs-toploader"
+import HolyLoader from "holy-loader"
 import { Toaster } from "@/components/ui/toaster"
 import AuthContext from "@/components/auth-context"
 import QueryProvider from "@/components/query-provider"
@@ -79,7 +80,14 @@ export default function RootLayout({
       >
         <AuthContext>
           <ThemeProvider attribute="class" defaultTheme="dark">
-            <NextTopLoader height={4} color="#6d28d9" />
+            {/* <NextTopLoader height={4} color="#6d28d9" /> */}
+            <HolyLoader
+              color="#6d28d9"
+              height="4px"
+              speed={250}
+              easing="linear"
+              showSpinner
+            />
             <QueryProvider>
               <div className="flex min-h-full flex-col">
                 <SiteHeader />

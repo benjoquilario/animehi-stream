@@ -8,6 +8,7 @@ import { Textarea } from "../ui/textarea"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
+import { toast } from "sonner"
 import {
   Form,
   FormControl,
@@ -78,12 +79,16 @@ export default function CommentForm({
   })
 
   async function handleOnSubmit(data: Inputs) {
-    await createComment({
+    const response = await createComment({
       commentText: data.comment,
       animeId,
       episodeNumber,
       anilistId,
     })
+
+    if (response.success === false) {
+      toast.error(`${response.message}`)
+    }
   }
 
   const handleKeyPress = (event: React.KeyboardEvent<HTMLTextAreaElement>) => {

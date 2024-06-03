@@ -8,13 +8,12 @@ import "swiper/css/pagination"
 import "swiper/css/navigation"
 import { Swiper, SwiperSlide } from "swiper/react"
 import { Autoplay } from "swiper/modules"
-import { spotlight } from "@/lib/spotlight"
 import { Button, buttonVariants } from "./ui/button"
 import { BsFillPlayFill } from "react-icons/bs"
 import Link from "next/link"
 import NextImage from "./ui/image"
-import { extractId, stripHtml } from "@/lib/utils"
-import { IAdvancedInfo, Seasonal } from "types/types"
+import { stripHtml, transformedTitle } from "@/lib/utils"
+import { IAdvancedInfo } from "types/types"
 import { IoAlertCircleOutline } from "react-icons/io5"
 import React from "react"
 
@@ -55,14 +54,14 @@ export default function BannerSwiper({ trendingAnime }: BannerSwiperProps) {
                 </p>
                 <div className="flex gap-2">
                   <Link
-                    href={`/anime/name/${trending.id}`}
-                    className={buttonVariants()}
+                    href={`/anime/${transformedTitle(trending.title.romaji)}/${trending.id}`}
+                    className={buttonVariants({ variant: "shine" })}
                   >
                     <BsFillPlayFill className="h-6 w-6" />
                     Play Now
                   </Link>
                   <Link
-                    href={`/anime/anime/${trending.id}`}
+                    href={`/anime/${transformedTitle(trending.title.romaji)}/${trending.id}`}
                     className={buttonVariants({ variant: "secondary" })}
                   >
                     <IoAlertCircleOutline className="h-6 w-6" />

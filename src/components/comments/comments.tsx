@@ -76,21 +76,27 @@ export default function Comments({
 
             <AnimatePresence>
               {comments?.pages.map((page) =>
-                page?.comments.map((comment: CommentsT<User>) => (
-                  <motion.div
-                    key={comment.id}
-                    initial={{ y: 300, opacity: 0 }}
-                    animate={{ y: 0, opacity: 1 }}
-                    exit={{ x: -300, opacity: 0 }}
-                    className="mb-6 flex w-full gap-3 hover:bg-background/90"
-                  >
-                    <CommentItem
-                      comment={comment as CommentsT<User>}
-                      animeId={animeId}
-                      episodeNumber={episodeNumber}
-                    />
-                  </motion.div>
-                ))
+                page?.comments.length !== 0 ? (
+                  page?.comments.map((comment: CommentsT<User>) => (
+                    <motion.div
+                      key={comment.id}
+                      initial={{ y: 300, opacity: 0 }}
+                      animate={{ y: 0, opacity: 1 }}
+                      exit={{ x: -300, opacity: 0 }}
+                      className="mb-6 flex w-full gap-3 hover:bg-background/90"
+                    >
+                      <CommentItem
+                        comment={comment as CommentsT<User>}
+                        animeId={animeId}
+                        episodeNumber={episodeNumber}
+                      />
+                    </motion.div>
+                  ))
+                ) : (
+                  <div className="text-center text-sm">
+                    No comments yet. Be the first to comment!
+                  </div>
+                )
               )}
             </AnimatePresence>
 

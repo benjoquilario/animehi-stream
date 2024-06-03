@@ -9,7 +9,14 @@ import { Button } from "../ui/button"
 import { useRouter } from "next/navigation"
 import { FaSpinner } from "react-icons/fa"
 import { FaCirclePlay } from "react-icons/fa6"
-import { useCallback, useRef, useMemo, useState, useEffect } from "react"
+import {
+  useCallback,
+  useRef,
+  useMemo,
+  useState,
+  useEffect,
+  useTransition,
+} from "react"
 
 type EpisodesProps = {
   episodeId?: string
@@ -30,6 +37,7 @@ export default function Episodes({
   episodes,
   isLoading,
 }: EpisodesProps) {
+  const [isPending, startTransition] = useTransition()
   const [query, setQuery] = useState("")
   const [interval, setInterval] = useState<[number, number]>([0, 99])
   const router = useRouter()
