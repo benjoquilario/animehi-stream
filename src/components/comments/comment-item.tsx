@@ -294,12 +294,14 @@ export default function CommentItem({
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
-          <button
-            onClick={() => setIsEditing(false)}
-            className="text-xs text-primary"
-          >
-            cancel
-          </button>
+          {isEditing ? (
+            <button
+              onClick={() => setIsEditing(false)}
+              className="text-xs text-primary"
+            >
+              cancel
+            </button>
+          ) : null}
         </div>
       </div>
       <AlertDialog open={isAlertOpen} onOpenChange={setIsAlertOpen}>
