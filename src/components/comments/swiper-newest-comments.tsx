@@ -1,7 +1,6 @@
 "use client"
 
 import React from "react"
-
 import NextImage from "@/components/ui/image"
 import { Swiper, SwiperSlide } from "swiper/react"
 // import required modules
