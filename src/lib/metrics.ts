@@ -25,6 +25,7 @@ export const continueWatching = cache(async () => {
     orderBy: {
       updatedAt: "asc",
     },
+    take: 10,
   })
 
   if (!data) return null

@@ -1,8 +1,6 @@
 import { animeInfo } from "@/lib/consumet"
 import Sharethis from "@/components/sharethis"
 import type { Metadata } from "next"
-import { getSession } from "../../../../lib/session"
-import { createViewCounter, createWatchlist, increment } from "@/app/actions"
 import Comments from "@/components/comments/comments"
 import type { IAnilistInfo } from "types/types"
 import BreadcrumbWatch from "@/components/breadcrumb-watch"
@@ -74,31 +72,8 @@ export default async function Watch({
   params: { params },
   searchParams,
 }: Params) {
-  const episodeNumber = searchParams.episode as string
   const [animeId, anilistId] = params as string[]
-  const session = await getSession()
-
   const animeResponse = (await animeInfo(anilistId)) as IAnilistInfo
-
-  await createViewCounter({
-    animeId,
-    title: animeResponse.title.english ?? animeResponse.title.romaji,
-    image: animeResponse.image,
-    latestEpisodeNumber: animeResponse.currentEpisode ?? 1,
-    anilistId,
-  })
-
-  if (session) {
-    await createWatchlist({
-      animeId,
-      episodeNumber: episodeNumber,
-      title: animeResponse.title.english ?? animeResponse.title.romaji,
-      image: animeResponse.image,
-      anilistId,
-    })
-  }
-
-  await increment(animeId, animeResponse.currentEpisode ?? episodeNumber)
 
   const currentUser = await getCurrentUser()
 
@@ -108,8 +83,6 @@ export default async function Watch({
       <VideoPlayer
         animeResponse={animeResponse}
         animeId={animeId}
-        episodeId={`${animeId}-episode-${episodeNumber}`}
-        episodeNumber={episodeNumber}
         anilistId={anilistId}
         currentUser={currentUser}
       />
@@ -118,13 +91,6 @@ export default async function Watch({
       {/* <Suspense>
 
       </Suspense> */}
-
-      <Sharethis />
-      <Comments
-        animeId={animeId}
-        episodeNumber={episodeNumber}
-        anilistId={anilistId}
-      />
     </div>
   )
 }

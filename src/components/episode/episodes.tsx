@@ -176,7 +176,7 @@ export default function Episodes({
                       >
                         <div className="flex items-center gap-2">
                           <span className="text-xs">{episode.number}</span>
-                          <div className="italic text-muted-foreground/80">
+                          <div className="line-clamp-1 italic text-muted-foreground/80 md:line-clamp-2">
                             {episode.title ?? `Episode ${episode.number}`}
                           </div>
                           {lastEpisode === index + 1 ? (
@@ -199,7 +199,7 @@ export default function Episodes({
                       >
                         <div className="flex items-center gap-2">
                           <span className="text-xs">{episode.number}</span>
-                          <div className="italic text-muted-foreground/80">
+                          <div className="line-clamp-1 italic text-muted-foreground/80 md:line-clamp-2">
                             {episode.title ?? `Episode ${episode.number}`}
                           </div>
                         </div>

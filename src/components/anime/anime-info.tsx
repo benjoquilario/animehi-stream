@@ -20,11 +20,7 @@ import type { IMetadata } from "types/types"
 import useMetadata from "@/hooks/useMetadata"
 
 export default function Anime({ animeId }: { animeId: string }) {
-  const {
-    data: episodes,
-    isLoading,
-    isError,
-  } = useEpisodes<IEpisode[]>(animeId)
+  const { data: episodes, isLoading, isError } = useEpisodes(animeId)
   const [animeInfo, setAnimeInfo] = useState<IAnilistInfo>()
   const [loading, setLoading] = useState(true)
 

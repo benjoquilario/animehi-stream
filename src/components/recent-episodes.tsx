@@ -1,6 +1,5 @@
 "use client"
 
-import useSWR from "swr"
 import EpisodeCard from "./episode-card"
 import Section from "./section"
 import {
@@ -10,25 +9,24 @@ import {
 import { AiOutlineArrowLeft, AiOutlineArrowRight } from "react-icons/ai"
 import { Button } from "./ui/button"
 import { Skeleton } from "./ui/skeleton"
-import { useEffect, useState } from "react"
+import { useState } from "react"
+import { useQuery } from "@tanstack/react-query"
+import { env } from "@/env.mjs"
 
 export default function RecentEpisodes() {
   const [pageNumber, setPageNumber] = useState(1)
 
   const fetcher = (page: number) =>
     fetch(
-      `https://consumet-api-production-2bba.up.railway.app/meta/anilist/recent-episodes?page=${page}&perPage=20`
+      `${env.NEXT_PUBLIC_ANIME_API_URL}/meta/anilist/recent-episodes?page=${page}&perPage=20`
     ).then((res) => res.json())
 
-  const { data, error, isLoading } = useSWR<TConsumetResponse<TRecentEpisode>>(
-    [pageNumber],
-    fetcher,
-    {
-      revalidateOnFocus: false,
-      revalidateIfStale: false,
-      revalidateOnReconnect: false,
-    }
-  )
+  const { data, error, isLoading } = useQuery<
+    TConsumetResponse<TRecentEpisode>
+  >({
+    queryKey: ["recents", pageNumber],
+    queryFn: () => fetcher(pageNumber),
+  })
 
   if (error) {
     return (

@@ -4,12 +4,13 @@ import Link from "next/link"
 import type { AnifyRecentEpisode, RecentEpisode } from "types/types"
 import { BsFillPlayFill, BsPlayFill } from "react-icons/bs"
 import NextImage from "./ui/image"
+import { memo } from "react"
 
 type EpisodeCardProps = {
   animeResult: RecentEpisode
 }
 
-export default function EpisodeCard({ animeResult }: EpisodeCardProps) {
+const EpisodeCard = ({ animeResult }: EpisodeCardProps) => {
   const episodeNumber = animeResult.episodeId.split("-").slice(-1).join()
   const animeId = animeResult.episodeId
     .split("-")
@@ -60,3 +61,5 @@ export default function EpisodeCard({ animeResult }: EpisodeCardProps) {
     </>
   )
 }
+
+export default memo(EpisodeCard)

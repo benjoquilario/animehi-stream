@@ -12,6 +12,8 @@ export async function GET(
   if (!animeId)
     return NextResponse.json("Missing animeId for /anime/info", { status: 422 })
 
+  // const cachedResponse = await get(redis, )
+
   const cachedResponse = await redis.get(`anime:${animeId}`)
 
   if (cachedResponse) {
@@ -38,7 +40,7 @@ export async function GET(
   }
 
   const stringifyResult = JSON.stringify(results)
-  await redis.setex(`anime:${animeId}`, CACHE_MAX_AGE, stringifyResult)
+  await redis.setex(`anime:${animeId}`, 60 * 60 * 84 + 84, stringifyResult)
 
   return NextResponse.json(results)
 }

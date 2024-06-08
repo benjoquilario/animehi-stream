@@ -1,10 +1,8 @@
 "use client"
 
-import React, { useEffect, useState } from "react"
+import React from "react"
 import CommentForm from "./comment-form"
 import CommentItem from "./comment-item"
-import { User } from "@prisma/client"
-import { CommentsT } from "types/types"
 import { QUERY_KEYS } from "@/lib/queriesKeys"
 import { useInfiniteQuery } from "@tanstack/react-query"
 import { BsCaretDownFill } from "react-icons/bs"
@@ -13,6 +11,7 @@ import { Badge } from "../ui/badge"
 import { LuMessageSquare } from "react-icons/lu"
 import { AnimatePresence, motion } from "framer-motion"
 import { Button } from "../ui/button"
+import type { IComment } from "@/hooks/useLikeUnlikeMutation"
 
 type CommentsProps = {
   animeId: string
@@ -27,7 +26,7 @@ export default function Comments({
 }: CommentsProps) {
   const {
     data: comments,
-    isLoading,
+    isPending,
     fetchNextPage,
     hasNextPage,
     isFetchingNextPage,
@@ -62,7 +61,7 @@ export default function Comments({
         <span>Comments EP {episodeNumber}</span>
       </div>
       <div className="mt-2 rounded-lg">
-        {isLoading ? (
+        {isPending ? (
           <div className="relative flex items-center justify-center">
             <div className="loader"></div>
           </div>
@@ -77,7 +76,7 @@ export default function Comments({
             <AnimatePresence>
               {comments?.pages.map((page) =>
                 page?.comments.length !== 0 ? (
-                  page?.comments.map((comment: CommentsT<User>) => (
+                  page?.comments.map((comment: IComment) => (
                     <motion.div
                       key={comment.id}
                       initial={{ y: 300, opacity: 0 }}
@@ -86,7 +85,7 @@ export default function Comments({
                       className="mb-6 flex w-full gap-3 hover:bg-background/90"
                     >
                       <CommentItem
-                        comment={comment as CommentsT<User>}
+                        comment={comment}
                         animeId={animeId}
                         episodeNumber={episodeNumber}
                       />

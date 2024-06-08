@@ -9,13 +9,10 @@ import { FaMicrophone } from "react-icons/fa"
 import { FaDownload } from "react-icons/fa"
 import { useEffect, useMemo, useState } from "react"
 import Sub from "@/components/watch/subtitle"
-import { useWatchStore } from "@/store"
 import NextAiringEpisode from "./anime/next-airing"
 
 type ServerProps = {
-  episodeNumber: string
   animeResult?: IAnilistInfo
-  episodeId: string
   animeId: string
   anilistId: string
   currentUser: any
@@ -26,9 +23,8 @@ type ServerProps = {
 
 export default function Server({
   animeResult,
-  episodeId,
+
   animeId,
-  episodeNumber,
   anilistId,
   currentUser,
   lastEpisode,

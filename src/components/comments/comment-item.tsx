@@ -7,6 +7,7 @@ import React, {
   useCallback,
   useEffect,
   useTransition,
+  memo,
 } from "react"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Button } from "../ui/button"
@@ -54,14 +55,20 @@ import {
   FormItem,
   FormMessage,
 } from "@/components/ui/form"
+import { FaSpinner } from "react-icons/fa"
 import { ImSpinner8 } from "react-icons/im"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { Textarea } from "../ui/textarea"
 import { AnimatePresence, motion } from "framer-motion"
+import type { TPage } from "./comment-form"
+import { useAuthStore } from "@/store"
+import { IComment, useCommentLikeMutation } from "@/hooks/useLikeUnlikeMutation"
+import { useCommentDislikeMutation } from "@/hooks/useDislikeMutation"
+import { useUpdateDeleteMutation } from "@/hooks/useUpdateDeleteMutation"
 
 export type CommentItemProps = {
-  comment: CommentsT<User>
+  comment: IComment
   animeId: string
   episodeNumber: string
 }
@@ -74,19 +81,31 @@ const editSchema = z.object({
 
 type Inputs = z.infer<typeof editSchema>
 
-export default function CommentItem({
+const CommentItem: React.FC<CommentItemProps> = ({
   comment,
   animeId,
   episodeNumber,
-}: CommentItemProps) {
+}) => {
   const { data: session } = useSession()
-  const [isLiked, setIsLiked] = useState(false)
   const [isDisLiked, setIsDisLiked] = useState(false)
   const [isEditing, setIsEditing] = useState(false)
   const queryClient = useQueryClient()
   const buttonRef = useRef<HTMLButtonElement | null>(null)
   const [isOpen, setIsOpen] = useState(false)
   const [isPending, startTransition] = useTransition()
+  const setIsAuthOpen = useAuthStore((store) => store.setIsAuthOpen)
+
+  const paramsLike = {
+    commentId: comment.id,
+    animeId: `${animeId}-episode-${episodeNumber}`,
+  }
+
+  const { likeMutation, unlikeMutation } = useCommentLikeMutation(paramsLike)
+
+  const { dislikeMutation, undislikeMutation } =
+    useCommentDislikeMutation(paramsLike)
+  const { updateCommentMutation, deleteCommentMutation } =
+    useUpdateDeleteMutation({ animeId: `${animeId}-episode-${episodeNumber}` })
 
   const form = useForm<z.infer<typeof editSchema>>({
     resolver: zodResolver(editSchema),
@@ -105,18 +124,6 @@ export default function CommentItem({
     [animeId, episodeNumber]
   )
 
-  const { mutateAsync: mutateEditComment, isPending: isEditPending } =
-    useMutation({
-      mutationFn: ({ id, commentText }: { id: string; commentText: string }) =>
-        editComment({ id, commentText }),
-      onSettled: () => queryClient.invalidateQueries({ queryKey }),
-    })
-
-  const { mutateAsync: mutateDeleteComment } = useMutation({
-    mutationFn: async ({ id }: { id: string }) => await deleteComment(id),
-    onSettled: () => queryClient.invalidateQueries({ queryKey }),
-  })
-
   const handleKeyPress = (event: React.KeyboardEvent<HTMLTextAreaElement>) => {
     if (event.key === "Enter" && event.shiftKey === false) {
       setIsEditing(false)
@@ -131,14 +138,26 @@ export default function CommentItem({
     form.setFocus("comment")
   }, [isEditing, form])
 
+  const handleLike = (isLiked: boolean) => {
+    if (!session) return setIsAuthOpen(true)
+
+    return !isLiked ? likeMutation.mutate() : unlikeMutation.mutate()
+  }
+
+  const handleDislike = (isDisliked: boolean) => {
+    if (!session) return setIsAuthOpen(true)
+
+    return !isDisliked ? dislikeMutation.mutate() : undislikeMutation.mutate()
+  }
+
   useEffect(() => {
     if (form.formState.isSubmitSuccessful) {
       form.reset()
     }
   }, [form])
 
-  async function handleOnSubmit(data: Inputs) {
-    await mutateEditComment({
+  const handleOnSubmit = async function (data: Inputs) {
+    return await updateCommentMutation.mutateAsync({
       id: comment.id,
       commentText: data.comment,
     })
@@ -159,11 +178,19 @@ export default function CommentItem({
       </div>
       <div className="flex w-full flex-col gap-1">
         <div className="flex items-center gap-3">
-          <Link href={`/profile/${comment.userId}`}>
-            <h4 className="text-[15px] leading-6">{comment.user.userName}</h4>
-          </Link>
+          <div className="flex items-center">
+            <Link href={`/profile/${comment.userId}`}>
+              <h4 className="text-[15px] leading-6">{comment.user.userName}</h4>
+            </Link>
+            {comment.isEdited && (
+              <span className="text-sm text-muted-foreground/60">(edited)</span>
+            )}
+          </div>
+
           <span className="text-xs text-muted-foreground/60">
-            {relativeDate(comment.createdAt)}
+            {comment.isEdited
+              ? relativeDate(comment.updatedAt)
+              : relativeDate(comment.createdAt)}
           </span>
         </div>
         {isEditing ? (
@@ -190,7 +217,7 @@ export default function CommentItem({
                             placeholder="Leave a comment"
                             onKeyDown={handleKeyPress}
                             {...field}
-                            disabled={isEditPending}
+                            disabled={updateCommentMutation.isPending}
                           />
                         </FormControl>
                         <FormMessage />
@@ -227,20 +254,39 @@ export default function CommentItem({
             <BsReplyAllFill className="h-5 w-5" />
             Reply
           </button>
-          <button onClick={() => setIsLiked(!isLiked)} className="group">
-            {isLiked ? (
-              <BiLike className="h-5 w-5 group-active:scale-110" />
-            ) : (
-              <BiSolidLike className="h-5 w-5 group-active:scale-110" />
-            )}
-          </button>
-          <button className="group">
-            {isDisLiked ? (
-              <BiDislike className="h-5 w-5 group-active:scale-110" />
-            ) : (
-              <BiSolidDislike className="h-5 w-5 group-active:scale-110" />
-            )}
-          </button>
+          <div className="inline-flex items-center">
+            <button
+              onClick={() => handleLike(comment.isLiked)}
+              className="group"
+            >
+              {comment.isLiked ? (
+                <BiSolidLike className="h-5 w-5 group-active:scale-110" />
+              ) : (
+                <BiLike className="h-5 w-5 group-active:scale-110" />
+              )}
+            </button>
+            <div className="ml-1 text-muted-foreground/70">
+              {/* {comment._count.commentLike} */}
+              {comment._count.commentLike}
+            </div>
+          </div>
+          <div className="inline-flex items-center">
+            <button
+              onClick={() => handleDislike(comment.isDisliked)}
+              className="group"
+            >
+              {comment.isDisliked ? (
+                <BiSolidDislike className="h-5 w-5 group-active:scale-110" />
+              ) : (
+                <BiDislike className="h-5 w-5 group-active:scale-110" />
+              )}
+            </button>
+            <div className="ml-1 text-muted-foreground/70">
+              {/* {comment._count.commentLike} */}
+              {comment._count.commentDislike}
+            </div>
+          </div>
+
           <DropdownMenu open={isOpen} onOpenChange={setIsOpen}>
             <DropdownMenuTrigger asChild>
               <Button
@@ -294,6 +340,11 @@ export default function CommentItem({
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
+          {updateCommentMutation.isPending && (
+            <div>
+              <FaSpinner aria-hidden className="animate-spin" />
+            </div>
+          )}
           {isEditing ? (
             <button
               onClick={() => setIsEditing(false)}
@@ -323,7 +374,7 @@ export default function CommentItem({
                 disabled={isPending}
                 onClick={() =>
                   startTransition(() => {
-                    mutateDeleteComment({ id: comment.id })
+                    deleteCommentMutation.mutateAsync({ id: comment.id })
                   })
                 }
               >
@@ -336,3 +387,5 @@ export default function CommentItem({
     </>
   )
 }
+
+export default memo(CommentItem)

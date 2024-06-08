@@ -48,12 +48,12 @@ export default async function Home() {
               </>
             ) : null}
 
-            <div className="mt-4 flex flex-col items-start rounded-md py-2">
+            {/* <div className="mt-4 flex flex-col items-start rounded-md py-2">
               <p className="mb-2 pl-3 text-xs text-muted-foreground/90">
                 Please help us by sharing the site to your friends
               </p>
               <Sharethis />
-            </div>
+            </div> */}
 
             <Suspense fallback={<div>Loading...</div>}>
               <NewestComments />

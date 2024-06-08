@@ -75,7 +75,35 @@ export default function CommentForm({
 
   const { mutateAsync: createComment, isPending } = useMutation({
     mutationFn: async (comment: AddComment) => await addComment(comment),
-    onSettled: () => queryClient.invalidateQueries({ queryKey }),
+    // mutationKey: ["createComment"],
+    onSuccess: (newComment) => {
+      queryClient.setQueryData<InfiniteData<TPage<Comment[]>>>(
+        queryKey,
+        (oldData) => {
+          if (!oldData) return
+
+          const newComments = {
+            ...oldData,
+            pages: oldData.pages.map((page, index) => {
+              if (index === 0) {
+                return {
+                  ...page,
+                  comments: [
+                    newComment.data,
+                    ...(page.comments ? page.comments : new Array()),
+                  ],
+                }
+              }
+
+              return page
+            }),
+          }
+
+          return newComments
+        }
+      )
+    },
+    // onSettled: () => queryClient.invalidateQueries({ queryKey }),
   })
 
   async function handleOnSubmit(data: Inputs) {
@@ -86,7 +114,7 @@ export default function CommentForm({
       anilistId,
     })
 
-    if (response.success === false) {
+    if (!response.ok) {
       toast.error(`${response.message}`)
     }
   }

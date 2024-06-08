@@ -1,5 +1,6 @@
 import db from "@/lib/db"
-import { type NextRequest } from "next/server"
+import { getSession } from "@/lib/session"
+import { type NextRequest, NextResponse } from "next/server"
 
 export async function GET(
   req: NextRequest,
@@ -9,6 +10,7 @@ export async function GET(
   const searchParams = req.nextUrl.searchParams
   const limit = searchParams.get("limit")
   const skip = searchParams.get("cursor")
+  const session = await getSession()
 
   const comments = await db.comment.findMany({
     where: {
@@ -23,6 +25,28 @@ export async function GET(
           email: true,
         },
       },
+      commentLike: {
+        select: {
+          id: true,
+        },
+        where: {
+          userId: session?.user.id,
+        },
+      },
+      commentDislike: {
+        select: {
+          id: true,
+        },
+        where: {
+          userId: session?.user.id,
+        },
+      },
+      _count: {
+        select: {
+          commentLike: true,
+          commentDislike: true,
+        },
+      },
     },
     orderBy: { createdAt: "desc" },
     take: Number(limit) || 5,
@@ -32,8 +56,26 @@ export async function GET(
   const nextId =
     comments.length < Number(limit) ? undefined : comments[Number(limit) - 1].id
 
-  return Response.json({
-    comments,
+  if (comments.length === 0) {
+    return NextResponse.json({
+      comments: [],
+      hasNextPage: false,
+      nextSkip: null,
+    })
+  }
+
+  const transformedComments = comments.map((comment) => {
+    const { _count, ...rest } = comment
+    return {
+      ...rest,
+      _count,
+      isLiked: session ? _count.commentLike > 0 : false,
+      isDisliked: session ? _count.commentDislike > 0 : false,
+    }
+  })
+
+  return NextResponse.json({
+    comments: transformedComments,
     hasNextPage: comments.length < (Number(limit) || 5) ? false : true,
     nextSkip:
       comments.length < (Number(limit) || 5)

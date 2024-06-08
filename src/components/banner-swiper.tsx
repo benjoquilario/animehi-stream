@@ -11,7 +11,7 @@ import { Autoplay } from "swiper/modules"
 import { Button, buttonVariants } from "./ui/button"
 import { BsFillPlayFill } from "react-icons/bs"
 import Link from "next/link"
-import NextImage from "./ui/image"
+import { cn } from "@/lib/utils"
 import { stripHtml, transformedTitle } from "@/lib/utils"
 import { IAdvancedInfo } from "types/types"
 import { IoAlertCircleOutline } from "react-icons/io5"
@@ -21,7 +21,7 @@ type BannerSwiperProps = {
   trendingAnime: IAdvancedInfo[]
 }
 
-export default function BannerSwiper({ trendingAnime }: BannerSwiperProps) {
+const BannerSwiper = ({ trendingAnime }: BannerSwiperProps) => {
   return (
     <Swiper
       spaceBetween={30}
@@ -37,14 +37,23 @@ export default function BannerSwiper({ trendingAnime }: BannerSwiperProps) {
         <SwiperSlide id="slider" key={trending.id}>
           <div className="absolute inset-0 h-full w-full ">
             <div className="absolute inset-0 overflow-hidden">
-              <NextImage
+              {/* <NextImage
                 containerclassname={`${styles.overlay} h-full w-full relative`}
                 src={trending.cover ?? trending.image}
                 className="absolute h-full w-full"
                 style={{ objectFit: "cover" }}
                 alt={trending.title.english || trending.title.romaji}
                 fill
-              />
+              /> */}
+              <div
+                className={cn(
+                  "h-full w-full bg-cover bg-center bg-no-repeat",
+                  styles.overlay
+                )}
+                style={{
+                  backgroundImage: `url("${trending.cover ?? trending.image}")`,
+                }}
+              ></div>
               <div className="absolute bottom-[50px] top-auto z-[100] w-full max-w-[800px] pl-[2%] md:bottom-[109px]">
                 <h2 className="mx-0 mb-2 line-clamp-2 w-full max-w-lg text-lg font-bold sm:text-2xl md:text-5xl">
                   {trending.title.english || trending.title.romaji}
@@ -76,3 +85,5 @@ export default function BannerSwiper({ trendingAnime }: BannerSwiperProps) {
     </Swiper>
   )
 }
+
+export default React.memo(BannerSwiper)

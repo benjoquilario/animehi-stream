@@ -254,9 +254,14 @@ interface CommentsT<T> {
   comment: string
   createdAt: Date
   episodeId: string
+  isEdited: boolean
+  isLiked: boolean
   id: string
   userId: string
   updatedAt: Date
+  _count: {
+    commentLike: number
+  }
   user: T
 }
 
@@ -302,6 +307,23 @@ export interface EpisodesType {
   image: string
   number: number
   title: string
+}
+
+export interface IAnifyEpisodeResponse {
+  providerId: string
+  episodes: IAnifyEpisodes[]
+}
+
+export interface IAnifyEpisodes {
+  id: string
+  isFiller: string
+  number: 1
+  title: "Full"
+  img: null
+  hasDub: false
+  description: null
+  rating: null
+  updatedAt: 0
 }
 
 export interface AnifyRecentEpisode {

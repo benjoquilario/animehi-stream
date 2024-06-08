@@ -19,9 +19,9 @@ export type SwiperNewestCommentsProps = {
   >
 }
 
-export default function SwiperNewestComments({
+const SwiperNewestComments = ({
   newestComments,
-}: SwiperNewestCommentsProps) {
+}: SwiperNewestCommentsProps) => {
   return (
     <>
       <div className="relative hidden h-[280px] w-[280px] shrink-0 md:block">
@@ -84,9 +84,9 @@ export default function SwiperNewestComments({
                       </Avatar>
                       <div className="flex flex-col gap-1">
                         <Link href={`/accounts/`}>
-                          <h4 className="text-[15px] leading-6 text-primary transition hover:underline">
+                          <div className="text-[15px] leading-6 text-primary transition hover:underline">
                             {newestComment.user.userName}
-                          </h4>
+                          </div>
                         </Link>
                         <span className="text-xs text-muted-foreground/60">
                           - {relativeDate(newestComment.createdAt)}
@@ -102,6 +102,7 @@ export default function SwiperNewestComments({
                   </div>
                   <div className="mt-3 block overflow-hidden text-ellipsis">
                     <Link
+                      title={newestComment.episodeId.split("-").join(" ")}
                       href={`/watch/${newestComment.animeId}/${newestComment.anilistId}?episode=${newestComment.episodeNumber}`}
                       className="line-clamp-1 text-primary hover:text-primary/90"
                     >
@@ -117,3 +118,5 @@ export default function SwiperNewestComments({
     </>
   )
 }
+
+export default React.memo(SwiperNewestComments)

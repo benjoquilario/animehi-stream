@@ -55,4 +55,4 @@ const ColumnCard = ({ result }: ColumnCardProps) => {
   )
 }
 
-export default ColumnCard
+export default React.memo(ColumnCard)

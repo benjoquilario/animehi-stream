@@ -1,5 +1,5 @@
-import useSWR from "swr"
 import { env } from "@/env.mjs"
+import { useQuery } from "@tanstack/react-query"
 
 const useVideoSource = <T>(episodeId: string) => {
   const fetcher = async (episodeId: string) =>
@@ -7,13 +7,14 @@ const useVideoSource = <T>(episodeId: string) => {
       `${env.NEXT_PUBLIC_ANIME_API_URL}/anime/gogoanime/watch/${episodeId}`
     ).then((res) => res.json())
 
-  const { data, error } = useSWR<T>([episodeId], fetcher, {
-    revalidateOnFocus: false,
+  const { data, error, isLoading } = useQuery<T>({
+    queryKey: [episodeId],
+    queryFn: () => fetcher(episodeId),
   })
 
   return {
     data,
-    isLoading: !error && !data,
+    isLoading,
     isError: error,
   }
 }

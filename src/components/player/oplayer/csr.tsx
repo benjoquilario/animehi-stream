@@ -13,25 +13,27 @@ import {
   AniSkip,
   IAnilistInfo,
   IMetadata,
+  IAnifyEpisodeResponse,
 } from "types/types"
-import { notFound, useRouter, useSearchParams } from "next/navigation"
 import { AspectRatio } from "@/components/ui/aspect-ratio"
 import { useSession } from "next-auth/react"
 import { useWatchStore } from "@/store"
-import { updateWatchlist } from "@/app/actions"
-import useEpisodes from "@/hooks/useEpisodes"
-import useLastPlayed from "@/hooks/useLastPlayed"
 import Episodes from "@/components/episode/episodes"
-import { useRef, useState, useEffect, useMemo, useCallback } from "react"
-import useVideoSource from "@/hooks/useVideoSource"
 import Server from "@/components/server"
 import ButtonAction from "@/components/button-action"
 import RelationWatch from "@/components/watch/relation"
+import Comments from "@/components/comments/comments"
+import Sharethis from "@/components/sharethis"
+import useVideoSource from "@/hooks/useVideoSource"
+import useEpisodes from "@/hooks/useEpisodes"
+import useLastPlayed from "@/hooks/useLastPlayed"
+import { increment, createViewCounter, createWatchlist } from "@/app/actions"
+import { updateWatchlist } from "@/app/actions"
+import { notFound, useRouter, useSearchParams } from "next/navigation"
+import { useRef, useState, useEffect, useMemo, useCallback } from "react"
 
 export type WatchProps = {
-  episodeId: string
   animeId: string
-  episodeNumber: string
   anilistId: string
   currentUser: any
   animeResponse: IAnilistInfo
@@ -44,14 +46,7 @@ type Ctx = {
 
 // const plugins =
 export default function OPlayer(props: WatchProps) {
-  const {
-    episodeId,
-    animeId,
-    episodeNumber,
-    anilistId,
-    animeResponse,
-    currentUser,
-  } = props
+  const { animeId, anilistId, animeResponse, currentUser } = props
   const { data: session } = useSession()
   const playerRef = useRef<Player<Ctx>>()
   // const [sources, setSources] = useState<Source[] | undefined>(undefined)
@@ -68,11 +63,7 @@ export default function OPlayer(props: WatchProps) {
     [videoSource]
   )
 
-  const {
-    data: episodes,
-    isLoading,
-    isError,
-  } = useEpisodes<IEpisode[]>(anilistId)
+  const { data: episodes, isLoading, isError } = useEpisodes(anilistId)
 
   const currentEpisode = useMemo(
     () => episodes?.find((episode) => episode.number === lastEpisode),
@@ -88,6 +79,46 @@ export default function OPlayer(props: WatchProps) {
         : 1,
     [animeResponse, episodes]
   )
+
+  useEffect(() => {
+    const updateViews = async () => {
+      return await increment(animeId, latestEpisodeNumber)
+    }
+
+    updateViews()
+  }, [animeId, latestEpisodeNumber])
+
+  useEffect(() => {
+    const createView = async () => {
+      return await createViewCounter({
+        animeId,
+        title: animeResponse.title.english ?? animeResponse.title.romaji,
+        image: animeResponse.image,
+        latestEpisodeNumber,
+        anilistId,
+      })
+    }
+
+    createView()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [anilistId, animeId])
+
+  useEffect(() => {
+    if (!session) return
+
+    const createWatch = async () => {
+      return await createWatchlist({
+        animeId,
+        episodeNumber: `${lastEpisode}`,
+        title: animeResponse.title.english ?? animeResponse.title.romaji,
+        image: animeResponse.image,
+        anilistId,
+      })
+    }
+
+    createWatch()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [session, anilistId, animeId])
 
   const currentEpisodeIndex = useMemo(
     () => episodes?.findIndex((episode) => episode.number === lastEpisode),
@@ -182,10 +213,11 @@ export default function OPlayer(props: WatchProps) {
 
   useEffect(() => {
     setDownload(videoSource?.download)
-    async function updateWatch() {
+
+    const updateWatch = async () => {
       return await updateWatchlist({
-        episodeId,
-        episodeNumber,
+        episodeId: `${animeId}-episode-${lastEpisode}`,
+        episodeNumber: `${lastEpisode}`,
         animeId,
       })
     }
@@ -260,8 +292,13 @@ export default function OPlayer(props: WatchProps) {
           res
             ? {
                 src: res.url,
-                poster: animeResponse.cover ?? animeResponse.image,
-                title: `${animeResponse.title.english ?? animeResponse.title.romaji} / Episode ${lastEpisode}`,
+                poster:
+                  currentEpisode?.image ??
+                  animeResponse.cover ??
+                  animeResponse.image,
+                title:
+                  currentEpisode?.title ??
+                  `${animeResponse.title.english ?? animeResponse.title.romaji} / Episode ${lastEpisode}`,
               }
             : notFound()
         )
@@ -332,11 +369,9 @@ export default function OPlayer(props: WatchProps) {
       </AspectRatio>
       <Server
         download={download ?? ""}
-        episodeId={`${animeId}-episode-${lastEpisode}`}
         animeResult={animeResponse}
         animeId={animeId}
         anilistId={anilistId}
-        episodeNumber={episodeNumber}
         currentUser={currentUser}
         lastEpisode={lastEpisode}
       >
@@ -360,13 +395,19 @@ export default function OPlayer(props: WatchProps) {
           isLoading={isLoading}
           update={update}
           animeId={anilistId}
-          episodeId={`${animeId}-episode-${episodeNumber}`}
+          episodeId={`${animeId}-episode-${lastEpisode}`}
           isWatch={true}
           lastEpisode={lastEpisode}
         />
       )}
 
       <RelationWatch relations={animeResponse.relations} />
+      {/* <Sharethis /> */}
+      <Comments
+        anilistId={anilistId}
+        animeId={animeId}
+        episodeNumber={`${lastEpisode}`}
+      />
     </>
   )
 }

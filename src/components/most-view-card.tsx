@@ -1,6 +1,6 @@
 "use client"
 
-import React from "react"
+import React, { memo } from "react"
 import type { ViewCounter } from "@prisma/client"
 import Link from "next/link"
 import { cn } from "@/lib/utils"
@@ -14,11 +14,7 @@ type MostViewCardProps = {
   rank: number
 }
 
-export default function MostViewCard({
-  result,
-  className,
-  rank,
-}: MostViewCardProps) {
+const MostViewCard = ({ result, className, rank }: MostViewCardProps) => {
   return (
     <>
       <div>
@@ -64,3 +60,5 @@ export default function MostViewCard({
     </>
   )
 }
+
+export default memo(MostViewCard)
