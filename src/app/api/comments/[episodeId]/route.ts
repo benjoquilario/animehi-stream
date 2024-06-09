@@ -1,5 +1,5 @@
 import db from "@/lib/db"
-import { getSession } from "@/lib/session"
+import { auth } from "@/auth"
 import { type NextRequest, NextResponse } from "next/server"
 
 export async function GET(
@@ -10,7 +10,7 @@ export async function GET(
   const searchParams = req.nextUrl.searchParams
   const limit = searchParams.get("limit")
   const skip = searchParams.get("cursor")
-  const session = await getSession()
+  const session = await auth()
 
   const comments = await db.comment.findMany({
     where: {

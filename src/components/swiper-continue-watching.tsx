@@ -84,7 +84,7 @@ const SwiperContinueWatching = (props: SwiperContinueWatchingProps) => {
                         <TooltipTrigger asChild>
                           <Button
                             onClick={() => mutate.mutate(result.id)}
-                            className="rounded-md bg-foreground p-3 text-black hover:bg-destructive hover:text-white"
+                            className="rounded-md bg-foreground p-3 text-muted-foreground hover:bg-destructive hover:text-white"
                           >
                             <FaRegTrashCan className="h-4 w-4" />
                           </Button>
@@ -149,7 +149,7 @@ const SwiperContinueWatching = (props: SwiperContinueWatchingProps) => {
                     </div>
                     <h3>{result.animeId.split("-").join(" ")}</h3>
                   </div>
-                  <div className="mr-3 rounded-full p-2 text-white transition-all group-hover:bg-muted-foreground/90">
+                  <div className="mr-3 rounded-full p-2 text-foreground transition-all group-hover:bg-muted-foreground/90">
                     <BsPlayFill className="h-6 w-6" />
                   </div>
                 </div>

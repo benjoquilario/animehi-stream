@@ -1,3 +1,5 @@
+"use client"
+
 import {
   Form,
   FormControl,
@@ -7,59 +9,45 @@ import {
   FormMessage,
 } from "@/components/ui/form"
 import { useRouter } from "next/navigation"
-import { Input } from "../ui/input"
+import { Input } from "@/components/ui/input"
 import {
   Register as RegisterT,
   registerValidator,
 } from "@/lib/validations/credentials"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { useEffect } from "react"
-import { Button } from "../ui/button"
-import { DialogFooter } from "../ui/dialog"
+import { useEffect, useTransition } from "react"
+import { Button } from "@/components/ui/button"
+import { DialogFooter } from "@/components/ui/dialog"
 import { useAuthStore } from "@/store"
+import { register } from "@/app/actions"
+import { useState } from "react"
 
 const Register = () => {
+  const [isPending, startTransition] = useTransition()
+  const [error, setError] = useState("")
   const router = useRouter()
   const form = useForm<RegisterT>({
     resolver: zodResolver(registerValidator),
   })
   const setIsAuthOpen = useAuthStore((store) => store.setIsAuthOpen)
 
-  const { isSubmitSuccessful, isSubmitting } = form.formState
+  function handleOnSubmit(values: RegisterT) {
+    setError("")
+    startTransition(() => {
+      register(values).then((data) => {
+        if (data.error) {
+          setError(data.error)
+        }
 
-  useEffect(() => {
-    if (isSubmitSuccessful) {
-      form.reset()
-    }
-  }, [isSubmitSuccessful, form])
+        if (data.ok) {
+          router.refresh()
+          setIsAuthOpen(false)
+        }
 
-  async function handleOnSubmit({
-    email,
-    password,
-    confirmPassword,
-    userName,
-  }: RegisterT) {
-    const res = await fetch("/api/register", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        userName,
-        email,
-        password,
-        confirmPassword,
-      }),
+        console.log("regiser")
+      })
     })
-
-    if (res.ok) {
-      console.log("Success")
-      router.refresh()
-      setIsAuthOpen(false)
-    }
-
-    if (!res.ok) return console.log("Something went wrong!")
   }
 
   return (
@@ -74,8 +62,9 @@ const Register = () => {
                 <FormLabel className="sr-only">Email</FormLabel>
                 <FormControl>
                   <Input
+                    type="email"
                     placeholder="Email"
-                    disabled={isSubmitting}
+                    disabled={isPending}
                     {...field}
                   />
                 </FormControl>
@@ -94,7 +83,7 @@ const Register = () => {
                 <FormControl>
                   <Input
                     placeholder="Username"
-                    disabled={isSubmitting}
+                    disabled={isPending}
                     {...field}
                   />
                 </FormControl>
@@ -114,7 +103,7 @@ const Register = () => {
                   <Input
                     placeholder="Password"
                     type="password"
-                    disabled={isSubmitting}
+                    disabled={isPending}
                     {...field}
                   />
                 </FormControl>
@@ -134,7 +123,7 @@ const Register = () => {
                   <Input
                     placeholder="Confirm Password"
                     type="password"
-                    disabled={isSubmitting}
+                    disabled={isPending}
                     {...field}
                   />
                 </FormControl>
@@ -143,8 +132,9 @@ const Register = () => {
             )}
           />
         </div>
+        <div className="mt-3 text-destructive">{error}</div>
         <DialogFooter className="mt-4">
-          <Button disabled={isSubmitting} type="submit">
+          <Button disabled={isPending} type="submit">
             Sign Up
           </Button>
         </DialogFooter>

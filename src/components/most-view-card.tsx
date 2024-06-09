@@ -18,28 +18,20 @@ const MostViewCard = ({ result, className, rank }: MostViewCardProps) => {
   return (
     <>
       <div>
-        <Link
-          href={`/watch/${result.animeId}/${result.anilistId}?episode=${result.latestEpisodeNumber}`}
-        >
-          <NextImage
-            containerclassname="relative w-[60px] h-[75px]"
-            fill
-            src={result.image}
-            alt={result.title}
-            className="rounded-lg"
-            style={{ objectFit: "cover" }}
-          />
-        </Link>
+        <NextImage
+          classnamecontainer="relative w-[60px] h-[75px]"
+          fill
+          src={result.image}
+          alt={result.title}
+          className="rounded-lg"
+          style={{ objectFit: "cover" }}
+        />
       </div>
       <div className="flex-1 px-3">
         <div className="inline-block">
-          <Link
-            href={`/watch/${result.animeId}/${result.anilistId}?episode=${result.latestEpisodeNumber}`}
-          >
-            <h3 className="mb-1 line-clamp-2 text-sm font-medium !leading-5 hover:text-primary md:text-[15px]">
-              {result.title}
-            </h3>
-          </Link>
+          <h3 className="mb-1 line-clamp-2 text-sm font-medium !leading-5 group-hover:text-primary md:text-[15px]">
+            {result.title}
+          </h3>
         </div>
 
         <div className="overflow-hidden">

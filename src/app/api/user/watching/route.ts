@@ -1,10 +1,9 @@
 import db from "@/lib/db"
-import { auth } from "@/lib/metrics"
-import { getSession } from "@/lib/session"
+import { auth } from "@/auth"
 import { NextResponse } from "next/server"
 
 export async function GET(request: Request) {
-  const session = await getSession()
+  const session = await auth()
 
   const watching = await db.watchlist.findMany({
     where: {

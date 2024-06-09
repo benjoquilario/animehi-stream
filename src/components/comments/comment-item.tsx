@@ -3,7 +3,6 @@
 import React, {
   useState,
   useRef,
-  useMemo,
   useCallback,
   useEffect,
   useTransition,
@@ -13,13 +12,10 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Button } from "../ui/button"
 import { BsReplyAllFill } from "react-icons/bs"
 import { BiLike, BiDislike, BiSolidLike, BiSolidDislike } from "react-icons/bi"
-import type { Comment, User } from "@prisma/client"
-import { CommentsT } from "types/types"
 import Link from "next/link"
 import { relativeDate } from "@/lib/utils"
 import { BiDotsHorizontalRounded } from "react-icons/bi"
 import { useSession } from "next-auth/react"
-
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -29,14 +25,7 @@ import {
 import { FiEdit } from "react-icons/fi"
 import { MdOutlineDeleteOutline } from "react-icons/md"
 import { IoWarningSharp } from "react-icons/io5"
-import { deleteComment, editComment } from "@/app/actions"
-import {
-  useMutation,
-  useQueryClient,
-  InfiniteData,
-} from "@tanstack/react-query"
 import * as z from "zod"
-import { QUERY_KEYS } from "@/lib/queriesKeys"
 import {
   AlertDialog,
   AlertDialogAction,
@@ -59,11 +48,13 @@ import { FaSpinner } from "react-icons/fa"
 import { ImSpinner8 } from "react-icons/im"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { Textarea } from "../ui/textarea"
+import { Textarea } from "@/components/ui/textarea"
 import { AnimatePresence, motion } from "framer-motion"
-import type { TPage } from "./comment-form"
 import { useAuthStore } from "@/store"
-import { IComment, useCommentLikeMutation } from "@/hooks/useLikeUnlikeMutation"
+import {
+  type IComment,
+  useCommentLikeMutation,
+} from "@/hooks/useLikeUnlikeMutation"
 import { useCommentDislikeMutation } from "@/hooks/useDislikeMutation"
 import { useUpdateDeleteMutation } from "@/hooks/useUpdateDeleteMutation"
 
@@ -87,23 +78,20 @@ const CommentItem: React.FC<CommentItemProps> = ({
   episodeNumber,
 }) => {
   const { data: session } = useSession()
-  const [isDisLiked, setIsDisLiked] = useState(false)
   const [isEditing, setIsEditing] = useState(false)
-  const queryClient = useQueryClient()
   const buttonRef = useRef<HTMLButtonElement | null>(null)
   const [isOpen, setIsOpen] = useState(false)
   const [isPending, startTransition] = useTransition()
   const setIsAuthOpen = useAuthStore((store) => store.setIsAuthOpen)
 
-  const paramsLike = {
+  const likeParams = {
     commentId: comment.id,
     animeId: `${animeId}-episode-${episodeNumber}`,
   }
 
-  const { likeMutation, unlikeMutation } = useCommentLikeMutation(paramsLike)
-
+  const { likeMutation, unlikeMutation } = useCommentLikeMutation(likeParams)
   const { dislikeMutation, undislikeMutation } =
-    useCommentDislikeMutation(paramsLike)
+    useCommentDislikeMutation(likeParams)
   const { updateCommentMutation, deleteCommentMutation } =
     useUpdateDeleteMutation({ animeId: `${animeId}-episode-${episodeNumber}` })
 
@@ -115,14 +103,6 @@ const CommentItem: React.FC<CommentItemProps> = ({
   })
 
   const [isAlertOpen, setIsAlertOpen] = useState(false)
-
-  const queryKey = useMemo(
-    () => [
-      QUERY_KEYS.GET_INFINITE_COMMENTS,
-      `${animeId}-episode-${episodeNumber}`,
-    ],
-    [animeId, episodeNumber]
-  )
 
   const handleKeyPress = (event: React.KeyboardEvent<HTMLTextAreaElement>) => {
     if (event.key === "Enter" && event.shiftKey === false) {
@@ -156,8 +136,8 @@ const CommentItem: React.FC<CommentItemProps> = ({
     }
   }, [form])
 
-  const handleOnSubmit = async function (data: Inputs) {
-    return await updateCommentMutation.mutateAsync({
+  const handleOnSubmit = function (data: Inputs) {
+    return updateCommentMutation.mutate({
       id: comment.id,
       commentText: data.comment,
     })

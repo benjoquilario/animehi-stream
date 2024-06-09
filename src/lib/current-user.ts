@@ -1,8 +1,8 @@
 import db from "./db"
-import { getSession } from "./session"
+import { auth } from "@/auth"
 
 export async function getCurrentUser() {
-  const session = await getSession()
+  const session = await auth()
 
   if (!session?.user.id) return null
 

@@ -1,17 +1,9 @@
 import "server-only"
 
 import { cache } from "react"
-import { getSession } from "./session"
+import { auth } from "@/auth"
 import db from "./db"
 import { redis } from "./redis"
-
-export async function auth() {
-  const session = await getSession()
-
-  if (!session) return
-
-  return session
-}
 
 export const continueWatching = cache(async () => {
   const session = await auth()
@@ -48,7 +40,7 @@ export const animeWatchById = cache(async (animeId: string) => {
   return watch
 })
 export const getCurrentUser = cache(async () => {
-  const session = await getSession()
+  const session = await auth()
 
   if (!session?.user.id) return null
 

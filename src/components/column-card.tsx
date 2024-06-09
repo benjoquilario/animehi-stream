@@ -20,7 +20,7 @@ export default function Column({ className, data, rank }: ColumnProps) {
       >
         <div className="w-[54px] shrink-0">
           <NextImage
-            containerclassname="relative h-[76px] w-[56px] rounded-sm"
+            classnamecontainer="relative h-[76px] w-[56px] rounded-sm"
             src={data.image}
             alt={data.title}
             fill

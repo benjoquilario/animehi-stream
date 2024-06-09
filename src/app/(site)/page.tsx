@@ -1,19 +1,16 @@
 import Banner from "@/components/banner"
 import RecentEpisodes from "@/components/recent-episodes"
 import { Suspense } from "react"
-import Sharethis from "@/components/sharethis"
 import ContinueWatching from "@/components/continue-watching"
 import MostView from "@/components/most-view"
 import NewestComments from "@/components/comments/newest-comments"
 import Seasonal from "@/components/seasonal"
 import { Skeleton } from "@/components/ui/skeleton"
-import { getSession } from "@/lib/session"
-import { getSeason } from "@/lib/utils"
-
+import { auth } from "@/auth"
 // export const revalidate = 60 * 60 * 3
 
 export default async function Home() {
-  const session = await getSession()
+  const session = await auth()
 
   return (
     <>

@@ -27,9 +27,7 @@ const ButtonAction = ({
       <Button
         onClick={() => {
           update(anilistId, lastEpisode - 1, 0)
-          router.replace(
-            `/watch/${animeTitle}/${anilistId}?episode=${lastEpisode - 1}`
-          )
+          router.replace(`?episode=${lastEpisode - 1}`)
         }}
         disabled={lastEpisode === 1 || isLoading}
         aria-label="previous episode"
@@ -41,9 +39,7 @@ const ButtonAction = ({
       <Button
         onClick={() => {
           update(anilistId, lastEpisode + 1, 0)
-          router.replace(
-            `/watch/${animeTitle}/${anilistId}?episode=${lastEpisode + 1}`
-          )
+          router.replace(`?episode=${lastEpisode + 1}`)
         }}
         disabled={lastEpisode === latestEpisodeNumber || isLoading}
         aria-label="next episode"

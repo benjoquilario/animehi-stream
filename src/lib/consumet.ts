@@ -13,29 +13,82 @@ export async function popularThisSeason() {
   const url = `${process.env.ANIME_API_URI}/meta/anilist/advanced-search?type=ANIME&page=1&perPage=5&season=${currentSeason.season}&format=TV&year=${currentSeason.year}&sort=["POPULARITY_DESC","SCORE_DESC"]`
 
   const response = await fetch(url)
-  const data = await response.json()
 
-  return data
+  if (!response.ok) {
+    return {
+      results: [],
+      ok: false,
+      message: "Trending Anime Not Found",
+    }
+  }
+
+  const data = await response.json()
+  return {
+    results: data.results,
+    ok: true,
+    message: "Success",
+  }
 }
 
 export async function popularAnime() {
   const url = `${animeApi}/meta/anilist/advanced-search?type=ANIME&page=1&perPage=5&format=TV&sort=["POPULARITY_DESC","SCORE_DESC"]`
 
+  const cachedResponse = await redis.get("popular")
+
+  if (cachedResponse) {
+    return {
+      results: cachedResponse,
+      ok: true,
+      message: "Success",
+    }
+  }
+
   const response = await fetch(url)
 
+  if (!response.ok) {
+    return {
+      results: [],
+      ok: false,
+      message: "Trending Anime Not Found",
+    }
+  }
+
   const data = await response.json()
-  return data
+  return {
+    results: data.results,
+    ok: true,
+    message: "Success",
+  }
 }
 
 export async function mostfavoriteAnime() {
-  const currentSeason = getSeason()
-  console.log(currentSeason.season)
-  const url = `${process.env.ANIME_API_URI}/meta/anilist/advanced-search?type=ANIME&page=1&perPage=5&season=${currentSeason.season}&format=TV&sort=["FAVOURITES_DESC", "SCORE_DESC"]`
+  const cachedResponse = await redis.get("favorite")
+
+  if (cachedResponse) {
+    return {
+      results: cachedResponse,
+      ok: true,
+      message: "Success",
+    }
+  }
+
+  const url = `${env.ANIME_API_URI}/meta/anilist/advanced-search?type=ANIME&page=1&perPage=5&format=TV&sort=["FAVOURITES_DESC", "SCORE_DESC"]`
 
   const response = await fetch(url)
+  if (!response.ok) {
+    return {
+      results: [],
+      ok: false,
+      message: "Trending Anime Not Found",
+    }
+  }
 
   const data = await response.json()
-  return data
+  return {
+    results: data.results,
+    ok: true,
+    message: "Success",
+  }
 }
 
 export async function topAiring() {
@@ -44,8 +97,31 @@ export async function topAiring() {
 
   const response = await fetch(url)
 
+  if (!response.ok) {
+    const cachedResponse = await redis.get("popular")
+
+    if (cachedResponse) {
+      return {
+        results: [],
+        ok: true,
+        message: "Success",
+      }
+    }
+
+    return {
+      results: [],
+      ok: false,
+      message: "Trending Anime Not Found",
+    }
+  }
+
   const data = await response.json()
-  return data
+
+  return {
+    results: data.results,
+    ok: true,
+    message: "Success",
+  }
 }
 
 export async function trendingAnime() {
@@ -54,8 +130,30 @@ export async function trendingAnime() {
 
   const response = await fetch(url)
 
+  if (!response.ok) {
+    const cachedResponse = await redis.get("trending")
+
+    if (cachedResponse) {
+      return {
+        results: cachedResponse,
+        ok: true,
+        message: "Success",
+      }
+    }
+
+    return {
+      results: [],
+      ok: false,
+      message: "Trending Anime Not Found",
+    }
+  }
+
   const data = await response.json()
-  return data
+  return {
+    results: data.results,
+    ok: true,
+    message: "Success",
+  }
 }
 
 export const animeInfo = cache(async function (animeId: string) {

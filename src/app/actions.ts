@@ -1,14 +1,102 @@
 "use server"
 import db from "@/lib/db"
-import { type Register } from "@/lib/validations/credentials"
+import {
+  Credentials,
+  credentialsValidator,
+  registerValidator,
+  type Register,
+} from "@/lib/validations/credentials"
 import bcrypt from "bcrypt"
-import { getCurrentUser } from "@/lib/current-user"
-import { getSession } from "@/lib/session"
+import { auth, signIn } from "@/auth"
 import { headers } from "next/headers"
 import { Ratelimit } from "@upstash/ratelimit"
-import { redis } from "@/lib/redis"
-import { revalidatePath } from "next/cache"
 import { Redis } from "@upstash/redis"
+import { AuthError } from "next-auth"
+
+export async function login(values: Credentials) {
+  const validatedFields = credentialsValidator.safeParse(values)
+
+  if (!validatedFields.success) {
+    return {
+      error: "Invalid Fields",
+    }
+  }
+
+  const { email, password } = validatedFields.data
+
+  try {
+    await signIn("credentials", {
+      email,
+      password,
+      redirect: false,
+    })
+
+    return {
+      ok: true,
+      message: "Signed in successfully",
+    }
+  } catch (error) {
+    if (error instanceof AuthError) {
+      switch (error.type) {
+        case "CredentialsSignin":
+          return {
+            error: "Invalid Credentials",
+          }
+        default:
+          return {
+            error: "Something went wrong",
+          }
+      }
+    }
+
+    throw error
+  }
+}
+
+export async function register(values: Register) {
+  const validatedFields = registerValidator.safeParse(values)
+
+  if (!validatedFields.success) {
+    return {
+      error: "Invalid Fields",
+    }
+  }
+
+  const { userName, email, password, confirmPassword } = validatedFields.data
+
+  const isEmailExist = await db.user.findFirst({
+    where: { email },
+  })
+
+  if (isEmailExist) {
+    return {
+      error: "User already exist",
+    }
+  }
+
+  const hashedPassword = await bcrypt.hash(password, 12)
+  const randomNumber = Math.floor(Math.random() * 6) + 1
+
+  if (password !== confirmPassword) {
+    return {
+      error: "The passwords did not match",
+    }
+  }
+
+  await db.user.create({
+    data: {
+      email,
+      password: hashedPassword,
+      userName,
+      image: `/avatar-${randomNumber}.png`,
+    },
+  })
+
+  return {
+    ok: true,
+    message: "Success",
+  }
+}
 
 export async function increment(animeId: string, latestEpisodeNumber: number) {
   const data = await db.viewCounter.findFirst({
@@ -49,7 +137,7 @@ export async function createWatchlist({
   episodeNumber,
   anilistId,
 }: CreateWatchList) {
-  const session = await getSession()
+  const session = await auth()
 
   if (!session) return
 
@@ -132,7 +220,7 @@ export async function updateWatchlist({
   episodeNumber,
   animeId,
 }: UpdateWatchlist) {
-  const session = await getSession()
+  const session = await auth()
 
   if (!session) return
 
@@ -160,7 +248,7 @@ export async function updateWatchlist({
 }
 
 export async function deleteWatchlist(id: string) {
-  const session = await getSession()
+  const session = await auth()
 
   if (!session) return
 
@@ -182,7 +270,7 @@ export async function deleteBookmark({
   animeId: string
   id: string
 }) {
-  const session = await getSession()
+  const session = await auth()
 
   if (!session) return
 
@@ -216,7 +304,7 @@ export async function createBookmark({
   title: string
   anilistId: string
 }) {
-  const session = await getSession()
+  const session = await auth()
 
   if (!session) return
 
@@ -258,7 +346,7 @@ export type AddComment = {
 }
 
 export async function deleteComment(id: string) {
-  const session = await getSession()
+  const session = await auth()
 
   if (!session) return
 
@@ -294,7 +382,7 @@ export async function editComment({
   id: string
   commentText: string
 }) {
-  const session = await getSession()
+  const session = await auth()
 
   if (!session) return
 
@@ -317,7 +405,7 @@ export async function editComment({
 }
 
 export async function likeComment({ commentId }: { commentId: string }) {
-  const session = await getSession()
+  const session = await auth()
   const userId = session?.user.id
 
   if (!session) return
@@ -349,7 +437,7 @@ export async function likeComment({ commentId }: { commentId: string }) {
 }
 
 export async function unlikeComment({ commentId }: { commentId: string }) {
-  const session = await getSession()
+  const session = await auth()
   const userId = session?.user.id
 
   if (!session) return
@@ -384,7 +472,7 @@ export async function unlikeComment({ commentId }: { commentId: string }) {
 }
 
 export async function dislikeComment({ commentId }: { commentId: string }) {
-  const session = await getSession()
+  const session = await auth()
   const userId = session?.user.id
 
   if (!session) return
@@ -416,7 +504,7 @@ export async function dislikeComment({ commentId }: { commentId: string }) {
 }
 
 export async function unDislikeComment({ commentId }: { commentId: string }) {
-  const session = await getSession()
+  const session = await auth()
   const userId = session?.user.id
 
   if (!session) return
@@ -471,7 +559,7 @@ export async function addComment(comment: AddComment) {
     }
   }
 
-  const session = await getSession()
+  const session = await auth()
 
   if (!session) throw new Error("Not authenticated!")
 

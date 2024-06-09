@@ -39,7 +39,7 @@ function RecommendationItem(props: RecommendationItemProps) {
       <div className="relative mb-2 w-full overflow-hidden rounded-md pb-[140%]">
         <div className="absolute h-full w-full">
           <NextImage
-            containerclassname="relative"
+            classnamecontainer="relative"
             style={{ objectFit: "cover" }}
             src={recommendation.image}
             alt={recommendation.title.english ?? recommendation.title.romaji}

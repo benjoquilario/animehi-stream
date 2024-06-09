@@ -40,6 +40,7 @@ const SwiperNewestComments = ({
             Popular Comments
           </li>
         </ul>
+
         <Swiper
           slidesPerView={4}
           spaceBetween={15}

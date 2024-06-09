@@ -146,7 +146,7 @@ function RelationWithType(props: RelationWithTypeProps) {
             fill
             className="rounded-md"
             style={{ objectFit: "cover" }}
-            containerclassname="relative h-20 w-16 md:h-24 md:w-20"
+            classnamecontainer="relative h-20 w-16 md:h-24 md:w-20"
           />
 
           <div className="mt-2 flex flex-col self-start">

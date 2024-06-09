@@ -1,7 +1,5 @@
 "use client"
 
-import { signIn } from "next-auth/react"
-
 import {
   Form,
   FormControl,
@@ -11,7 +9,7 @@ import {
   FormMessage,
 } from "@/components/ui/form"
 import { useRouter } from "next/navigation"
-import { Input } from "../ui/input"
+import { Input } from "@/components/ui/input"
 import { toast } from "sonner"
 import {
   Credentials,
@@ -19,13 +17,16 @@ import {
 } from "@/lib/validations/credentials"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { useEffect } from "react"
-import { Button } from "../ui/button"
-import { DialogFooter } from "../ui/dialog"
+import { useTransition, useEffect, useState } from "react"
+import { Button } from "@/components/ui/button"
+import { DialogFooter } from "@/components/ui/dialog"
 import { useAuthStore } from "@/store"
+import { login } from "@/app/actions"
 
 const Login = () => {
   const router = useRouter()
+  const [error, setError] = useState<string | undefined>(undefined)
+  const [isPending, startTransition] = useTransition()
   const form = useForm<Credentials>({
     resolver: zodResolver(credentialsValidator),
   })
@@ -33,23 +34,17 @@ const Login = () => {
 
   const { isSubmitSuccessful, isSubmitting } = form.formState
 
-  useEffect(() => {
-    if (isSubmitSuccessful) {
-      form.reset()
-    }
-  }, [isSubmitSuccessful, form])
+  function handleOnSubmit(values: Credentials) {
+    startTransition(() => {
+      login(values).then((data) => {
+        // if (data.ok) {
+        //   setIsAuthOpen(false)
+        //   toast.success("Signed in successfully")
+        // }
 
-  async function handleOnSubmit({ email, password }: Credentials) {
-    const response = await signIn("credentials", {
-      email,
-      password,
-      redirect: false,
+        setError(data.error)
+      })
     })
-
-    if (response?.ok) {
-      setIsAuthOpen(false)
-      toast.success("Signed in successfully")
-    }
 
     router.refresh()
     toast.dismiss()
@@ -66,11 +61,7 @@ const Login = () => {
               <FormItem>
                 <FormLabel className="sr-only">Email</FormLabel>
                 <FormControl>
-                  <Input
-                    disabled={isSubmitting}
-                    placeholder="Email"
-                    {...field}
-                  />
+                  <Input disabled={isPending} placeholder="Email" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -88,7 +79,7 @@ const Login = () => {
                   <Input
                     placeholder="Password"
                     type="password"
-                    disabled={isSubmitting}
+                    disabled={isPending}
                     {...field}
                   />
                 </FormControl>
@@ -97,8 +88,9 @@ const Login = () => {
             )}
           />
         </div>
+        <div className="mt-3 text-destructive">{error}</div>
         <DialogFooter className="mt-4">
-          <Button disabled={isSubmitting} type="submit">
+          <Button disabled={isPending} type="submit">
             Sign In
           </Button>
         </DialogFooter>

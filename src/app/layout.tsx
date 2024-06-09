@@ -1,16 +1,24 @@
 import "./globals.css"
-import type { Metadata } from "next"
+import type { Metadata, Viewport } from "next"
 import { Inter as FontSans, Outfit } from "next/font/google"
 import { cn } from "@/lib/utils"
 import ThemeProvider from "@/components/theme-provider"
 import Script from "next/script"
-import NextTopLoader from "nextjs-toploader"
 import HolyLoader from "holy-loader"
 import { Toaster } from "@/components/ui/toaster"
 import AuthContext from "@/components/auth-context"
 import QueryProvider from "@/components/query-provider"
 import SiteHeader from "@/components/site-header"
 import SiteFooter from "@/components/site-footer"
+
+export const viewport: Viewport = {
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: "white" },
+    { media: "(prefers-color-scheme: dark)", color: "black" },
+  ],
+
+  colorScheme: "dark light",
+}
 
 const fontSans = Outfit({
   subsets: ["latin"],
@@ -65,7 +73,7 @@ export const metadata: Metadata = {
   icons: {
     icon: "/favicon.png",
   },
-  manifest: "/manifest.json",
+  manifest: "/manifest.ts",
 }
 
 export default function RootLayout({

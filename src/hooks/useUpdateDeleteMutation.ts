@@ -22,7 +22,6 @@ export function useUpdateDeleteMutation({ animeId }: { animeId: string }) {
   const updateCommentMutation = useMutation({
     mutationFn: ({ id, commentText }: { id: string; commentText: string }) =>
       editComment({ id, commentText }),
-    // onSuccess: () => queryClient.invalidateQueries({ queryKey }),
     onMutate: async (updatedComment) => {
       queryClient.setQueryData<InfiniteData<TPage<IComment[]>>>(
         queryKey,
@@ -36,7 +35,9 @@ export function useUpdateDeleteMutation({ animeId }: { animeId: string }) {
                 (oldComment) => oldComment.id === updatedComment.id
               )
 
-              page.comments[index] = {
+              const newComments = [...page.comments]
+
+              newComments[index] = {
                 ...page.comments[index],
                 isEdited: true,
                 updatedAt: new Date(),
@@ -46,7 +47,7 @@ export function useUpdateDeleteMutation({ animeId }: { animeId: string }) {
 
               return {
                 ...page,
-                comments: page.comments,
+                comments: newComments,
               }
             }),
           }

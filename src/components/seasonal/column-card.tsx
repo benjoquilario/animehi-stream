@@ -5,38 +5,28 @@ import Link from "next/link"
 import NextImage from "@/components/ui/image"
 import { FaClosedCaptioning } from "react-icons/fa"
 import { IAdvancedInfo, Seasonal } from "types/types"
-import { transformedTitle } from "@/lib/utils"
 
 type ColumnCardProps = {
   result: IAdvancedInfo
 }
 
 const ColumnCard = ({ result }: ColumnCardProps) => {
-  const title = transformedTitle(result.title.romaji)
-
   return (
     <>
       <div>
-        <Link
-          href={`/anime/${title}/${result.id}`}
-          aria-label={result.title.english ?? result.title.romaji}
-        >
-          <NextImage
-            containerclassname="relative w-[60px] h-[75px]"
-            fill
-            src={result.image}
-            alt={result.title.english || result.title.romaji}
-            className="rounded-lg"
-            style={{ objectFit: "cover" }}
-          />
-        </Link>
+        <NextImage
+          classnamecontainer="relative w-[60px] h-[75px]"
+          fill
+          src={result.image}
+          alt={result.title.english || result.title.romaji}
+          className="rounded-lg"
+          style={{ objectFit: "cover" }}
+        />
       </div>
       <div className="flex-1 px-1 md:px-3">
-        <Link href={`/anime/${title}/${result.id}`}>
-          <h3 className="mb-1 line-clamp-2 text-sm font-medium !leading-5 hover:text-primary md:text-[15px]">
-            {result.title.english || result.title.romaji}
-          </h3>
-        </Link>
+        <h3 className="mb-1 line-clamp-2 text-sm font-medium !leading-5 hover:text-primary md:text-[15px]">
+          {result.title.english || result.title.romaji}
+        </h3>
 
         <div className="overflow-hidden">
           <div className="flex flex-wrap items-center gap-1">

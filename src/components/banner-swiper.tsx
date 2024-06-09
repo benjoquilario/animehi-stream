@@ -31,7 +31,7 @@ const BannerSwiper = ({ trendingAnime }: BannerSwiperProps) => {
         disableOnInteraction: false,
       }}
       modules={[Autoplay]}
-      className="mySwiper"
+      className="mySwiper relative"
     >
       {trendingAnime?.map((trending) => (
         <SwiperSlide id="slider" key={trending.id}>

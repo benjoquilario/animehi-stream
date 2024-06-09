@@ -1,17 +1,72 @@
+"use client"
+
 import Link from "next/link"
 import Image from "next/image"
 import Combobox from "./combobox"
 import AuthForm from "./auth-form"
 import { cn } from "@/lib/utils"
-import { getCurrentUser } from "@/lib/current-user"
 import ThemeToggle from "./theme-toggle"
 import { buttonVariants } from "./ui/button"
+import { useState, useEffect } from "react"
 
-export default async function SiteHeader() {
-  const session = await getCurrentUser()
+export default function SiteHeader() {
+  const [isFixed, setIsFixed] = useState(false)
+
+  useEffect(() => {
+    const doc = document.documentElement
+
+    let currScroll: number
+    let prevScroll = window.scrollY || doc.scrollTop
+    let currDirection = 0
+    let prevDirection = 0
+
+    let threshold = 200
+    let toggle: boolean
+
+    const toggleHeader = () => {
+      if (currDirection === 2 && currScroll > threshold) {
+        setIsFixed(true)
+      } else if (currDirection === 1) {
+        setIsFixed(false)
+      } else {
+        toggle = false
+      }
+
+      return toggle
+    }
+
+    const checkScroll = () => {
+      currScroll = window.scrollY || doc.scrollTop
+
+      if (currScroll > prevScroll) {
+        currDirection = 2
+      } else {
+        currDirection = 1
+      }
+
+      if (currDirection !== prevDirection) {
+        toggle = toggleHeader()
+      }
+
+      if (toggle) {
+        prevDirection = currDirection
+      }
+
+      prevScroll = currScroll
+    }
+
+    window.addEventListener("scroll", checkScroll)
+
+    return () => window.removeEventListener("scroll", checkScroll)
+  })
 
   return (
-    <header className="fixed left-0 top-0 z-[99999] h-[52px] w-full bg-background shadow-sm transition-all md:h-[64px] 2xl:h-[75px]">
+    <header
+      className={cn(
+        isFixed ? "top-[-56px]" : "top-0",
+        "fixed left-0 z-[99999] h-[52px] w-full bg-background shadow-sm transition-all md:h-[64px] 2xl:h-[75px]"
+      )}
+    >
       <div className="mx-auto flex h-[52px] w-full max-w-screen-2xl items-center justify-between gap-4 px-[2%] md:h-[64px] 2xl:h-[75px]">
         <Link href="/" className="p-1">
           <div className="flex">

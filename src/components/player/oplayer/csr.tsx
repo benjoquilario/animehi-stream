@@ -23,14 +23,13 @@ import Server from "@/components/server"
 import ButtonAction from "@/components/button-action"
 import RelationWatch from "@/components/watch/relation"
 import Comments from "@/components/comments/comments"
-import Sharethis from "@/components/sharethis"
 import useVideoSource from "@/hooks/useVideoSource"
 import useEpisodes from "@/hooks/useEpisodes"
 import useLastPlayed from "@/hooks/useLastPlayed"
 import { increment, createViewCounter, createWatchlist } from "@/app/actions"
 import { updateWatchlist } from "@/app/actions"
-import { notFound, useRouter, useSearchParams } from "next/navigation"
-import { useRef, useState, useEffect, useMemo, useCallback } from "react"
+import { notFound, useRouter } from "next/navigation"
+import { useRef, useEffect, useMemo, useCallback } from "react"
 
 export type WatchProps = {
   animeId: string
@@ -81,7 +80,7 @@ export default function OPlayer(props: WatchProps) {
   )
 
   useEffect(() => {
-    const updateViews = async () => {
+    const updateViews = async function () {
       return await increment(animeId, latestEpisodeNumber)
     }
 
@@ -89,7 +88,7 @@ export default function OPlayer(props: WatchProps) {
   }, [animeId, latestEpisodeNumber])
 
   useEffect(() => {
-    const createView = async () => {
+    const createView = async function () {
       return await createViewCounter({
         animeId,
         title: animeResponse.title.english ?? animeResponse.title.romaji,
@@ -106,7 +105,7 @@ export default function OPlayer(props: WatchProps) {
   useEffect(() => {
     if (!session) return
 
-    const createWatch = async () => {
+    const createWatch = async function () {
       return await createWatchlist({
         animeId,
         episodeNumber: `${lastEpisode}`,
@@ -286,80 +285,82 @@ export default function OPlayer(props: WatchProps) {
     oplayer.$root.appendChild(forward)
     oplayer.$root.appendChild(backward)
 
-    oplayer
-      .changeSource(
-        getSelectedSrc("default").then((res) =>
-          res
-            ? {
-                src: res.url,
-                poster:
-                  currentEpisode?.image ??
-                  animeResponse.cover ??
-                  animeResponse.image,
-                title:
-                  currentEpisode?.title ??
-                  `${animeResponse.title.english ?? animeResponse.title.romaji} / Episode ${lastEpisode}`,
-              }
-            : notFound()
-        )
-      )
-      .then(() => {
-        async function skipTimes() {
-          console.log("Hello World!")
-
-          if (!animeResponse.malId) return
-          const response = await fetch(
-            `https://api.aniskip.com/v2/skip-times/${anilistId}/${lastEpisode}?types=op&types=recap&types=mixed-op&types=ed&types=mixed-ed&episodeLength`
-          )
-
-          if (!response.ok) return
-
-          const data = (await response.json()) as AniSkip
-
-          if (data.statusCode === 404) return
-
-          const highlights: Highlight[] = []
-
-          let opDuration = [],
-            edDuration = []
-
-          if (data.statusCode === 200) {
-            for (let result of data.results) {
-              if (result.skipType === "op" || result.skipType === "ed") {
-                const { startTime, endTime } = result.interval
-
-                if (startTime) {
-                  highlights.push({
-                    time: startTime,
-                    text: result.skipType === "op" ? "OP" : "ED",
-                  })
-                  if (result.skipType === "op") opDuration.push(startTime)
-                  else edDuration.push(startTime)
+    if (currentEpisode) {
+      oplayer
+        .changeSource(
+          getSelectedSrc("default").then((res) =>
+            res
+              ? {
+                  src: res.url,
+                  poster:
+                    currentEpisode?.image ??
+                    animeResponse.cover ??
+                    animeResponse.image,
+                  title:
+                    currentEpisode?.title ??
+                    `${animeResponse.title.english ?? animeResponse.title.romaji} / Episode ${lastEpisode}`,
                 }
+              : notFound()
+          )
+        )
+        .then(() => {
+          async function skipTimes() {
+            console.log("Hello World!")
 
-                if (endTime) {
-                  highlights.push({
-                    time: endTime,
-                    text: result.skipType === "op" ? "OP" : "ED",
-                  })
-                  if (result.skipType === "op") opDuration.push(endTime)
-                  else edDuration.push(endTime)
+            if (!animeResponse.malId) return
+            const response = await fetch(
+              `https://api.aniskip.com/v2/skip-times/${anilistId}/${lastEpisode}?types=op&types=recap&types=mixed-op&types=ed&types=mixed-ed&episodeLength`
+            )
+
+            if (!response.ok) return
+
+            const data = (await response.json()) as AniSkip
+
+            if (data.statusCode === 404) return
+
+            const highlights: Highlight[] = []
+
+            let opDuration = [],
+              edDuration = []
+
+            if (data.statusCode === 200) {
+              for (let result of data.results) {
+                if (result.skipType === "op" || result.skipType === "ed") {
+                  const { startTime, endTime } = result.interval
+
+                  if (startTime) {
+                    highlights.push({
+                      time: startTime,
+                      text: result.skipType === "op" ? "OP" : "ED",
+                    })
+                    if (result.skipType === "op") opDuration.push(startTime)
+                    else edDuration.push(startTime)
+                  }
+
+                  if (endTime) {
+                    highlights.push({
+                      time: endTime,
+                      text: result.skipType === "op" ? "OP" : "ED",
+                    })
+                    if (result.skipType === "op") opDuration.push(endTime)
+                    else edDuration.push(endTime)
+                  }
                 }
               }
             }
+
+            playerRef.current?.emit("opedchange", [opDuration, edDuration])
+            // @ts-expect-error
+            playerRef.current?.plugins?.ui?.highlight(highlights)
           }
 
-          playerRef.current?.emit("opedchange", [opDuration, edDuration])
-          // @ts-expect-error
-          playerRef.current?.plugins?.ui?.highlight(highlights)
-        }
-
-        skipTimes()
-      })
-      .catch((err) => console.log(err))
+          skipTimes()
+        })
+        .catch((err) => console.log(err))
+    }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [lastEpisode, videoSource, animeId])
+  }, [lastEpisode, videoSource, animeId, currentEpisode])
 
   return (
     <>

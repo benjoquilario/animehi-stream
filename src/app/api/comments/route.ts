@@ -1,9 +1,9 @@
 import { headers } from "next/headers"
 import { Ratelimit } from "@upstash/ratelimit"
 import { Redis } from "@upstash/redis"
-import { getSession } from "@/lib/session"
 import db from "@/lib/db"
 import { NextResponse } from "next/server"
+import { auth } from "@/auth"
 
 export async function POST(req: Request) {
   const body = await req.json()
@@ -28,7 +28,7 @@ export async function POST(req: Request) {
     return
   }
 
-  const session = await getSession()
+  const session = await auth()
 
   if (!session) throw new Error("Not authenticated!")
 

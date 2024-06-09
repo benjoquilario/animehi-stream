@@ -84,7 +84,7 @@ export default function Anime({ animeId }: { animeId: string }) {
           alt={animeInfo?.title.english ?? animeInfo?.title.romaji ?? ""}
           fill
           style={{ objectFit: "cover" }}
-          containerclassname="relative w-full h-full"
+          classnamecontainer="relative w-full h-full"
           placeholder="blur"
           blurDataURL={`data:image/svg+xml;base64,$${base64SolidImage(animeInfo?.color ?? "")}`}
         />
@@ -99,7 +99,7 @@ export default function Anime({ animeId }: { animeId: string }) {
           ) : (
             <div className="mt-[-88px] block h-[196px] w-full min-w-full md:mt-[-69px] md:h-[300px]">
               <NextImage
-                containerclassname="relative w-full min-w-full h-full"
+                classnamecontainer="relative w-full min-w-full h-full"
                 className="rounded-lg"
                 style={{ objectFit: "cover" }}
                 fill
@@ -318,7 +318,7 @@ function CharactersItem({ character }: CharactersItemProps) {
       <div className="flex items-center justify-between">
         <div className="flex gap-2">
           <NextImage
-            containerclassname="w-12 h-12 relative rounded-full"
+            classnamecontainer="w-12 h-12 relative rounded-full"
             src={character.image ?? "/placeholder.png"}
             alt={
               character.name.userPreferred ??
@@ -343,7 +343,7 @@ function CharactersItem({ character }: CharactersItemProps) {
         <div>
           <div className="flex flex-row-reverse gap-2">
             <NextImage
-              containerclassname="w-12 h-12 relative rounded-full"
+              classnamecontainer="w-12 h-12 relative rounded-full"
               src={
                 character.voiceActors.length !== 0
                   ? character.voiceActors?.[0].image ??

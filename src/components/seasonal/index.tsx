@@ -1,11 +1,5 @@
 import React from "react"
 import Column from "./column"
-import {
-  IAdvancedInfo,
-  SeasonalResponse,
-  Seasonal as ISeasonal,
-  ConsumetResponse,
-} from "types/types"
 import Section from "../section"
 import {
   popularThisSeason,

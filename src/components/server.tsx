@@ -110,7 +110,7 @@ export default function Server({
       </div>
       <div className="grid grid-cols-1 items-center gap-2 overflow-hidden rounded-md md:grid-cols-[1fr_380px] md:flex-row">
         <div className="flex w-full flex-col gap-1 rounded-md bg-secondary px-5 py-3 text-left text-sm">
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-1">
             You are watching
             <span className="font-semibold">Episode {lastEpisode}</span>
             <a href={download} target="_blank">
