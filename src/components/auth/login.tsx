@@ -38,14 +38,13 @@ const Login = () => {
         if (data.ok) {
           setIsAuthOpen(false)
           toast.success("Signed in successfully")
+          router.refresh()
+          toast.dismiss()
         }
 
         if (data.error) {
           setError(data.error)
         }
-
-        router.refresh()
-        toast.dismiss()
       })
     })
   }
