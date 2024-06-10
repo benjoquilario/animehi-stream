@@ -111,12 +111,10 @@ export default function Episodes({
 
   const handleSelectedEpisode = useCallback(
     (episode: IEpisode) => {
-      routerRef.current.replace(
-        `/watch/${animeTitle}/${animeId}?episode=${episode.number}`
-      )
+      routerRef.current.replace(`?episode=${episode.number}`)
       update?.(episode.id, episode.number, 0)
     },
-    [animeId, animeTitle, update]
+    [update]
   )
 
   return (

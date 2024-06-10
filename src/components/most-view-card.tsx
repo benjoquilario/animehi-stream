@@ -2,10 +2,7 @@
 
 import React, { memo } from "react"
 import type { ViewCounter } from "@prisma/client"
-import Link from "next/link"
-import { cn } from "@/lib/utils"
 import NextImage from "./ui/image"
-import { AiFillEye } from "react-icons/ai"
 import { FaClosedCaptioning } from "react-icons/fa"
 
 type MostViewCardProps = {

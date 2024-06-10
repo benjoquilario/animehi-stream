@@ -2,7 +2,6 @@
 
 import React, { useRef, useState, useTransition, useMemo } from "react"
 import { usePathname } from "next/navigation"
-import { addComment, AddComment } from "@/app/actions"
 import * as z from "zod"
 import { Textarea } from "../ui/textarea"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
@@ -27,6 +26,8 @@ import { QUERY_KEYS } from "@/lib/queriesKeys"
 import { useAuthStore } from "@/store"
 import { Comment } from "@prisma/client"
 import chunk from "lodash.chunk"
+import type { AddComment } from "types/types"
+import { addComment } from "@/server/comment"
 
 const commentSchema = z.object({
   comment: z

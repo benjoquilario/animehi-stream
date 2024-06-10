@@ -1,7 +1,5 @@
 import { animeInfo } from "@/lib/consumet"
-import Sharethis from "@/components/sharethis"
 import type { Metadata } from "next"
-import Comments from "@/components/comments/comments"
 import type { IAnilistInfo } from "types/types"
 import BreadcrumbWatch from "@/components/breadcrumb-watch"
 import { getCurrentUser } from "@/lib/current-user"

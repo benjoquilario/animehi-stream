@@ -1,6 +1,5 @@
 "use client"
 
-// credits : https://github.com/OatsProgramming/miruTV/blob/master/app/watch/components/OPlayer/OPlayer.tsx
 import Player, { isIOS, isMobile } from "@oplayer/core"
 import OUI, { type Highlight } from "@oplayer/ui"
 import OHls from "@oplayer/hls"
@@ -26,8 +25,12 @@ import Comments from "@/components/comments/comments"
 import useVideoSource from "@/hooks/useVideoSource"
 import useEpisodes from "@/hooks/useEpisodes"
 import useLastPlayed from "@/hooks/useLastPlayed"
-import { increment, createViewCounter, createWatchlist } from "@/app/actions"
-import { updateWatchlist } from "@/app/actions"
+import {
+  increment,
+  createViewCounter,
+  createWatchlist,
+  updateWatchlist,
+} from "@/server/anime"
 import { notFound, useRouter } from "next/navigation"
 import { useRef, useEffect, useMemo, useCallback } from "react"
 
@@ -110,14 +113,14 @@ export default function OPlayer(props: WatchProps) {
         animeId,
         episodeNumber: `${lastEpisode}`,
         title: animeResponse.title.english ?? animeResponse.title.romaji,
-        image: animeResponse.image,
+        image: currentEpisode?.image ?? animeResponse.image,
         anilistId,
       })
     }
 
     createWatch()
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [session, anilistId, animeId])
+  }, [session, anilistId, animeId, currentEpisode])
 
   const currentEpisodeIndex = useMemo(
     () => episodes?.findIndex((episode) => episode.number === lastEpisode),
@@ -218,6 +221,7 @@ export default function OPlayer(props: WatchProps) {
         episodeId: `${animeId}-episode-${lastEpisode}`,
         episodeNumber: `${lastEpisode}`,
         animeId,
+        image: currentEpisode?.image ?? animeResponse.image,
       })
     }
 
@@ -236,6 +240,7 @@ export default function OPlayer(props: WatchProps) {
       })
       .on("timeupdate", ({ payload }) => {
         // onTimeUpdate({ currentTime: payload.target.currentTime * 1000 })
+        console.log(payload)
       })
       .on("pause", () => {
         console.log("Playing Pause")
@@ -308,6 +313,7 @@ export default function OPlayer(props: WatchProps) {
             console.log("Hello World!")
 
             if (!animeResponse.malId) return
+
             const response = await fetch(
               `https://api.aniskip.com/v2/skip-times/${anilistId}/${lastEpisode}?types=op&types=recap&types=mixed-op&types=ed&types=mixed-ed&episodeLength`
             )

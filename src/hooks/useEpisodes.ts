@@ -16,7 +16,9 @@ const useEpisodes = (animeId: string) => {
       if (data.length !== 0) {
         results = data
       } else {
-        const response = await fetch(`https://api.anify.tv/episodes/${animeId}`)
+        const response = await fetch(
+          `${env.NEXT_PUBLIC_ANIME_API_URL}/meta/anilist/episodes/${animeId}?provider=anify&dub=false`
+        )
 
         const data = (await response.json()) as IAnifyEpisodeResponse[]
 

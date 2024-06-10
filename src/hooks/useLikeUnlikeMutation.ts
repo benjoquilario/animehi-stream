@@ -7,7 +7,7 @@ import {
 } from "@tanstack/react-query"
 import { useSession } from "next-auth/react"
 import { QUERY_KEYS } from "@/lib/queriesKeys"
-import { likeComment, unlikeComment } from "@/app/actions"
+import { likeComment, unlikeComment } from "@/server/comment"
 import type { TPage } from "@/components/comments/comment-form"
 import type { Comment, User } from "@prisma/client"
 import { useMemo } from "react"

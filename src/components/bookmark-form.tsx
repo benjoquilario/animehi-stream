@@ -8,7 +8,7 @@ import { toast } from "sonner"
 import type { AnimeInfoResponse, IAnilistInfo } from "types/types"
 import type { Bookmark as BookmarkT } from "@prisma/client"
 import { ImSpinner8 } from "react-icons/im"
-import { createBookmark } from "@/app/actions"
+import { createBookmark } from "@/server/anime"
 import { useRouter } from "next/navigation"
 
 type BookmarkFormProps = {

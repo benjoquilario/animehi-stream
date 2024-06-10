@@ -16,11 +16,11 @@ import {
 } from "@/lib/validations/credentials"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { useEffect, useTransition } from "react"
+import { useTransition } from "react"
 import { Button } from "@/components/ui/button"
 import { DialogFooter } from "@/components/ui/dialog"
 import { useAuthStore } from "@/store"
-import { register } from "@/app/actions"
+import { register } from "@/server/auth"
 import { useState } from "react"
 
 const Register = () => {

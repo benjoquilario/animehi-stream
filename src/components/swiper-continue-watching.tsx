@@ -19,12 +19,11 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip"
-import { AiOutlineClose } from "react-icons/ai"
 import { useMutation, useQueryClient } from "@tanstack/react-query"
 import { toast } from "sonner"
-import axios from "axios"
 import { FaRegTrashCan } from "react-icons/fa6"
 import { Button } from "./ui/button"
+import { deleteWatchlist } from "@/server/anime"
 
 type SwiperContinueWatchingProps = {
   results: Watchlist[]
@@ -35,7 +34,7 @@ const SwiperContinueWatching = (props: SwiperContinueWatchingProps) => {
   const queryClient = useQueryClient()
 
   const mutate = useMutation({
-    mutationFn: (id: string) => axios.post(`/api/user/watching`, { id }),
+    mutationFn: ({ id }: { id: string }) => deleteWatchlist({ id }),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["watching"] })
       toast.success(`Remove history`)
@@ -83,7 +82,7 @@ const SwiperContinueWatching = (props: SwiperContinueWatchingProps) => {
                       <Tooltip>
                         <TooltipTrigger asChild>
                           <Button
-                            onClick={() => mutate.mutate(result.id)}
+                            onClick={() => mutate.mutate({ id: result.id })}
                             className="rounded-md bg-foreground p-3 text-muted-foreground hover:bg-destructive hover:text-white"
                           >
                             <FaRegTrashCan className="h-4 w-4" />

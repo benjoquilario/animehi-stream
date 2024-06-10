@@ -439,3 +439,10 @@ export interface EnimeType {
   updatedAt?: string
   year?: number
 }
+
+export type AddComment = {
+  commentText: string
+  animeId: string
+  episodeNumber: string
+  anilistId: string
+}

@@ -6,7 +6,7 @@ import {
   useQueryClient,
 } from "@tanstack/react-query"
 import { QUERY_KEYS } from "@/lib/queriesKeys"
-import { dislikeComment, unDislikeComment } from "@/app/actions"
+import { dislikeComment, unDislikeComment } from "@/server/comment"
 import type { TPage } from "@/components/comments/comment-form"
 import { useMemo } from "react"
 import type { IComment } from "./useLikeUnlikeMutation"

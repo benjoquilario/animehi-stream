@@ -21,7 +21,7 @@ import { useTransition, useEffect, useState } from "react"
 import { Button } from "@/components/ui/button"
 import { DialogFooter } from "@/components/ui/dialog"
 import { useAuthStore } from "@/store"
-import { login } from "@/app/actions"
+import { login } from "@/server/auth"
 
 const Login = () => {
   const router = useRouter()
@@ -32,22 +32,22 @@ const Login = () => {
   })
   const setIsAuthOpen = useAuthStore((store) => store.setIsAuthOpen)
 
-  const { isSubmitSuccessful, isSubmitting } = form.formState
-
   function handleOnSubmit(values: Credentials) {
     startTransition(() => {
       login(values).then((data) => {
-        // if (data.ok) {
-        //   setIsAuthOpen(false)
-        //   toast.success("Signed in successfully")
-        // }
+        if (data.ok) {
+          setIsAuthOpen(false)
+          toast.success("Signed in successfully")
+        }
 
-        setError(data.error)
+        if (data.error) {
+          setError(data.error)
+        }
+
+        router.refresh()
+        toast.dismiss()
       })
     })
-
-    router.refresh()
-    toast.dismiss()
   }
 
   return (

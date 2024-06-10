@@ -51,7 +51,7 @@ const EpisodeCard = ({ animeResult }: EpisodeCardProps) => {
         <div className="absolute bottom-0 z-30 h-1/4 w-full bg-gradient-to-t from-background/80 from-25% to-transparent transition-all duration-300 ease-out group-hover:to-background/40"></div>
       </div>
       <div className="grid grid-cols-[15px_1fr] items-start">
-        <div className="mr-2 h-3 w-3 rounded-full bg-green-500 mt-1"></div>
+        <div className="mr-2 mt-1 h-3 w-3 rounded-full bg-green-500"></div>
         <h3
           title={animeResult.title.english ?? animeResult.title.romaji}
           className="line-clamp-2  text-left text-xs font-medium leading-5 md:text-sm"
