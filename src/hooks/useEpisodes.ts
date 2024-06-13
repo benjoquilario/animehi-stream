@@ -20,23 +20,9 @@ const useEpisodes = (animeId: string) => {
           `${env.NEXT_PUBLIC_ANIME_API_URL}/meta/anilist/episodes/${animeId}?provider=anify&dub=false`
         )
 
-        const data = (await response.json()) as IAnifyEpisodeResponse[]
+        const data = (await response.json()) as IEpisode[]
 
-        const episodes = data.find((d) => d.providerId === "gogoanime")
-        const transformedEpisodes = episodes?.episodes.map((episode) => {
-          return {
-            id: episode.id,
-            title: episode.title,
-            image: episode.img ?? "",
-            imageHash: "hash",
-            number: episode.number,
-            createdAt: null ?? "",
-            description: null ?? "",
-            url: "",
-          }
-        })
-
-        results = transformedEpisodes as IEpisode[]
+        results = data
       }
 
       return results

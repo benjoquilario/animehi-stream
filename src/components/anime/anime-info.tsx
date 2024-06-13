@@ -16,59 +16,15 @@ import { Skeleton } from "@/components/ui/skeleton"
 import { FaSpinner } from "react-icons/fa"
 import Recommendations from "@/components/anime/recommendations"
 import { env } from "@/env.mjs"
-import type { IMetadata } from "types/types"
-import useMetadata from "@/hooks/useMetadata"
+import useAnimeInfo from "@/hooks/useAnimeInfo"
 
 export default function Anime({ animeId }: { animeId: string }) {
   const { data: episodes, isLoading, isError } = useEpisodes(animeId)
-  const [animeInfo, setAnimeInfo] = useState<IAnilistInfo>()
-  const [loading, setLoading] = useState(true)
+
+  const { data: animeInfo, isLoading: loading } =
+    useAnimeInfo<IAnilistInfo>(animeId)
 
   const router = useRouter()
-
-  const { data: metadata } = useMetadata<
-    {
-      providerId: string
-      data: IMetadata[]
-    }[]
-  >(animeId)
-
-  useEffect(() => {
-    let isMounted = true
-
-    const fetchInfo = async () => {
-      if (!animeId) {
-        setLoading(false)
-        return
-      }
-
-      setLoading(true)
-      try {
-        const response = await fetch(
-          `${env.NEXT_PUBLIC_APP_URL}/api/anime/info/${animeId}`
-        )
-
-        if (!response.ok) return
-
-        const data = await response.json()
-
-        if (isMounted) {
-          setAnimeInfo(data)
-        }
-      } catch (error) {
-        console.log(error)
-      } finally {
-        if (isMounted) setLoading(false)
-      }
-    }
-
-    fetchInfo()
-
-    return () => {
-      isMounted = false
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [animeId])
 
   const animeTitle = useMemo(
     () =>

@@ -91,6 +91,6 @@ export async function register(values: Register) {
 
   return {
     ok: true,
-    message: "Success",
+    message: "Account Created",
   }
 }

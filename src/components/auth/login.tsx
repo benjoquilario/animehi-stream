@@ -36,17 +36,18 @@ const Login = () => {
     startTransition(() => {
       login(values).then((data) => {
         if (data.ok) {
+          window.location.reload()
           setIsAuthOpen(false)
           toast.success("Signed in successfully")
-          router.refresh()
-          toast.dismiss()
         }
 
-        if (data.error) {
-          setError(data.error)
+        if (data?.error) {
+          setError(data?.error)
         }
       })
     })
+
+    toast.dismiss()
   }
 
   return (
@@ -60,7 +61,12 @@ const Login = () => {
               <FormItem>
                 <FormLabel className="sr-only">Email</FormLabel>
                 <FormControl>
-                  <Input disabled={isPending} placeholder="Email" {...field} />
+                  <Input
+                    type="email"
+                    disabled={isPending}
+                    placeholder="Email"
+                    {...field}
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>

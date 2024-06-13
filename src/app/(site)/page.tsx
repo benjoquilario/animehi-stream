@@ -38,7 +38,7 @@ export default async function Home() {
             {session ? (
               <>
                 <div className="mt-10 flex scroll-m-20 items-center pb-2 text-base font-semibold tracking-tight transition-colors first:mt-0 md:text-3xl">
-                  {/* Welcome, <h2 className="ml-2"> {session.user.name}</h2> */}
+                  Welcome, <h2 className="ml-2"> {session.user.name}</h2>
                 </div>
 
                 <ContinueWatching />

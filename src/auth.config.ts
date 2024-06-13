@@ -10,17 +10,16 @@ export const authConfig = {
     signOut: "/",
   },
   callbacks: {
-    authorized({ auth }) {
-      const isAuthenticated = !!auth?.user
-
-      return isAuthenticated
-    },
     jwt({ token, user }) {
-      return { ...token, ...user }
+      if (user) {
+        // User is available during sign-in
+        token.id = user.id
+      }
+      return token
     },
-    session({ session, token, user }) {
-      //@ts-ignore
-      session.user.id = token.sub
+    session({ session, token }) {
+      // @ts-expect-error
+      session.user.id = token.id
       return session
     },
   },

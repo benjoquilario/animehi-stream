@@ -26,26 +26,22 @@ import { useState } from "react"
 const Register = () => {
   const [isPending, startTransition] = useTransition()
   const [error, setError] = useState("")
-  const router = useRouter()
   const form = useForm<RegisterT>({
     resolver: zodResolver(registerValidator),
   })
-  const setIsAuthOpen = useAuthStore((store) => store.setIsAuthOpen)
+  const setIsLogin = useAuthStore((store) => store.setIsLogin)
 
   function handleOnSubmit(values: RegisterT) {
     setError("")
     startTransition(() => {
       register(values).then((data) => {
-        if (data.error) {
+        if (data?.error) {
           setError(data.error)
         }
 
-        if (data.ok) {
-          router.refresh()
-          setIsAuthOpen(false)
+        if (data?.ok) {
+          setIsLogin(true)
         }
-
-        console.log("regiser")
       })
     })
   }

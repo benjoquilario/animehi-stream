@@ -3,12 +3,16 @@ import { create } from "zustand"
 
 interface AuthInitialState {
   isAuthOpen: boolean
-  setIsAuthOpen: (arg: boolean) => void
+  setIsAuthOpen: (isAuthOpen: boolean) => void
+  isLogin: boolean
+  setIsLogin: (isLogin: boolean) => void
 }
 
 export const useAuthStore = create<AuthInitialState>((set) => ({
   isAuthOpen: false,
-  setIsAuthOpen: (arg: boolean) => set({ isAuthOpen: arg }),
+  setIsAuthOpen: (isAuthOpen: boolean) => set({ isAuthOpen }),
+  isLogin: false,
+  setIsLogin: (isLogin: boolean) => set({ isLogin }),
 }))
 
 interface WatchInitialStore {

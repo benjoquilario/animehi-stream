@@ -6,12 +6,12 @@ generator client {
 }
 
 datasource db {
-  provider = "mongodb"
+  provider = "postgresql"
   url      = env("DATABASE_URL")
 }
 
 model User {
-  id              String @id @default(auto()) @map("_id") @db.ObjectId
+    id            String          @id @default(cuid())
   name            String?
   email           String? @unique
   emailVerified   DateTime?
@@ -32,34 +32,37 @@ model User {
 }
 
 model Account {
-  id              String @id @default(auto()) @map("_id") @db.ObjectId
-  userId          String @db.ObjectId
+  id              String          @id @default(cuid())
+  userId          String
   type            String
   provider        String
   providerAccountId String
-  refresh_token   String? @db.String
-  access_token    String? @db.String
+  refresh_token   String?
+  access_token    String?
   expires_at      Int?
   token_type      String?
   scope           String?
-  id_token        String? @db.String
+  id_token        String?
   session_state   String?
 
   user            User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([provider, providerAccountId])
+  @@map("accounts")
 }
 
 model Session {
-  id           String     @id @default(auto()) @map("_id") @db.ObjectId
-  sessionToken String     @unique
-  userId       String     @db.ObjectId
+    id            String          @id @default(cuid())
+
+  sessionToken String   @unique @map("session_token")
+  userId       String
   expires      DateTime
   user         User       @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model Watchlist {
-  id            String     @id @default(auto()) @map("_id") @db.ObjectId
+    id            String          @id @default(cuid())
+
   animeId       String
   image         String
   title         String
@@ -70,34 +73,37 @@ model Watchlist {
   createdAt     DateTime   @default(now())
   updatedAt     DateTime   @updatedAt
   anilistId     String
-  userId       String     @db.ObjectId
+  userId       String
   user         User       @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model Bookmark {
-  id           String     @id @default(auto()) @map("_id") @db.ObjectId
+    id            String          @id @default(cuid())
+
   animeId      String
   image        String
   title        String
   anilistId    String
   createdAt    DateTime   @default(now())
-  userId       String     @db.ObjectId
+  userId       String
   user         User       @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model ContinueWatching {
-  id           String     @id @default(auto()) @map("_id") @db.ObjectId
+   id            String          @id @default(cuid())
+
   animeId      String
   image        String
   title        String
   createdAt    DateTime    @default(now())
   anilistId    String
-  userId       String     @db.ObjectId
+  userId       String
   user         User       @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model ViewCounter {
-  id           String   @id @default(auto()) @map("_id") @db.ObjectId
+   id            String          @id @default(cuid())
+
   view         Int      @default(0)
   createdAt    DateTime @default(now())
   animeId      String
@@ -109,7 +115,8 @@ model ViewCounter {
 
 
 model Comment {
-  id           String   @id @default(auto()) @map("_id") @db.ObjectId
+    id            String          @id @default(cuid())
+
   comment      String
   createdAt    DateTime @default(now())
   animeId      String
@@ -121,29 +128,31 @@ model Comment {
   commentLike  CommentLike[]
   commentDislike  CommentDislike[]
 
-  userId       String     @db.ObjectId
+  userId       String
   user         User       @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model CommentLike {
-  id           String     @id @default(auto()) @map("_id") @db.ObjectId
+    id            String          @id @default(cuid())
+
   createdAt    DateTime   @default(now())
-  commentId    String     @db.ObjectId
+  commentId    String
   comment      Comment    @relation(fields: [commentId], references: [id], onDelete: Cascade)
 
-  userId       String     @db.ObjectId
+  userId       String
   user         User       @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([userId, commentId])
 }
 
 model CommentDislike {
-  id           String     @id @default(auto()) @map("_id") @db.ObjectId
+    id            String          @id @default(cuid())
+
   createdAt    DateTime   @default(now())
-  commentId    String     @db.ObjectId
+  commentId    String
   comment      Comment    @relation(fields: [commentId], references: [id], onDelete: Cascade)
 
-  userId       String     @db.ObjectId
+  userId       String
   user         User       @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([userId, commentId])

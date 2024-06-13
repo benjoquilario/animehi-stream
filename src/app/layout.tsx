@@ -106,11 +106,6 @@ export default function RootLayout({
           </ThemeProvider>
         </AuthContext>
         <Toaster />
-        <Script
-          type="text/javascript"
-          src="https://platform-api.sharethis.com/js/sharethis.js#property=651ea0ee6ee9de001217ae58&product=inline-share-buttons"
-          async
-        ></Script>
       </body>
     </html>
   )
