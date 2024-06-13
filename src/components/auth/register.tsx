@@ -40,7 +40,7 @@ const Register = () => {
         }
 
         if (data?.ok) {
-          setIsLogin(true)
+          setIsLogin(false)
         }
       })
     })

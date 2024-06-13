@@ -102,7 +102,7 @@ export async function topAiring() {
 
     if (cachedResponse) {
       return {
-        results: [],
+        results: cachedResponse,
         ok: true,
         message: "Success",
       }

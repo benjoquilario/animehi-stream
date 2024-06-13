@@ -133,12 +133,12 @@ const AuthForm = () => {
           </DialogHeader>
           {!isLogin ? <Login /> : <Register />}
           <div className="absolute bottom-4 left-6">
-            {isLogin ? (
+            {!isLogin ? (
               <>
                 Don&apos;t have an account
                 <button
                   className="ml-2 text-primary"
-                  onClick={() => setIsLogin(false)}
+                  onClick={() => setIsLogin(true)}
                 >
                   Sign Up
                 </button>
@@ -148,7 +148,7 @@ const AuthForm = () => {
                 Already have an account?
                 <button
                   className="ml-2 text-primary"
-                  onClick={() => setIsLogin(true)}
+                  onClick={() => setIsLogin(false)}
                 >
                   Sign In
                 </button>
