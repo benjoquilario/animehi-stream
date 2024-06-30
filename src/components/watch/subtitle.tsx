@@ -3,39 +3,32 @@
 import { useWatchStore } from "@/store"
 import { Button } from "../ui/button"
 import React, { useCallback } from "react"
+import { useRouter, useSearchParams } from "next/navigation"
+import { cn } from "@/lib/utils"
 
-const Sub = () => {
-  const setSourceType = useWatchStore((store) => store.setSourceType)
+type SubProps = {
+  episodeNumber: number
+}
 
-  const handleChangeType = useCallback(
-    (type: string) => {
-      setSourceType(type)
-    },
-    [setSourceType]
-  )
+const Sub = (props: SubProps) => {
+  const { episodeNumber } = props
+  const router = useRouter()
+  const searchParams = useSearchParams()
 
-  const renderType = () => {
-    return ["default", "gogo", "vidstreaming"].map((type) => (
-      <Button
-        onClick={() => handleChangeType(type)}
-        size="sm"
-        className="text-sm"
-      >
-        {type}
-      </Button>
-    ))
-  }
+  const isDub = searchParams.get("dub")
 
   return (
     <div className="flex items-center gap-2">
       <div className="">
-        <Button
-          onClick={() => handleChangeType("default")}
-          size="sm"
-          className="text-sm"
+        <button
+          onClick={() => router.replace(`?episode=${episodeNumber}`)}
+          className={cn(
+            "text-xs inline-flex items-center justify-center font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 h-9 rounded-md px-3",
+            isDub ? "bg-background/20" : "bg-primary"
+          )}
         >
-          default
-        </Button>
+          Sub
+        </button>
       </div>
       {/* <div className="">
         <Button

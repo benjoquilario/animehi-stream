@@ -9,6 +9,7 @@ import { FaMicrophone } from "react-icons/fa"
 import { FaDownload } from "react-icons/fa"
 import { useEffect, useMemo, useState } from "react"
 import Sub from "@/components/watch/subtitle"
+import Dub from "./watch/dub"
 import NextAiringEpisode from "./anime/next-airing"
 
 type ServerProps = {
@@ -23,7 +24,6 @@ type ServerProps = {
 
 export default function Server({
   animeResult,
-
   animeId,
   anilistId,
   currentUser,
@@ -125,14 +125,14 @@ export default function Server({
             <span>
               <FaClosedCaptioning />
             </span>
-            <Sub />
+            <Sub episodeNumber={lastEpisode} />
           </div>
-          {/* <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2">
             <span>
               <FaMicrophone />
             </span>
-            <Sub />
-          </div> */}
+            <Dub episodeNumber={lastEpisode} />
+          </div>
         </div>
       </div>
       {/* <div className="mt-3 bg-[#111827] p-2 text-sm">

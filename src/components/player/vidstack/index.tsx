@@ -26,18 +26,26 @@ const VideoPlayer = (props: VideoPlayerProps) => {
 
   const searchParams = useSearchParams()
   const epNumber = searchParams.get("episode")
+  const isDub = searchParams.get("dub")
   const episodeNumber = Number(epNumber)
   const {
     data: episodes,
     isLoading: isPending,
     isError,
   } = useEpisodes(anilistId)
-  const episodeId = `${animeId}-episode-${episodeNumber}`
+  const episodeId = useMemo(
+    () => `${animeId}-${isDub ? "dub-" : ""}episode-${episodeNumber}`,
+    [animeId, episodeNumber, isDub]
+  )
   const [isLoading, setIsLoading] = useState(false)
   const download = useWatchStore((store) => store.download)
   const [src, setSrc] = useState<string>("")
   const setDownload = useWatchStore((store) => store.setDownload)
   const [vttGenerated, setVttGenerated] = useState<boolean>(false)
+
+  console.log(episodeId)
+
+  console.log(isDub)
 
   const [vttUrl, setVttUrl] = useState<string>("")
   const [error, setError] = useState(false)
@@ -79,9 +87,11 @@ const VideoPlayer = (props: VideoPlayerProps) => {
         setDownload(data.download)
       } else {
         console.error("Backup source not found")
+        setError(true)
       }
     } catch (error) {
       console.error("Failed to fetch anime streaming links", error)
+      setError(true)
     }
   }
 
@@ -94,7 +104,7 @@ const VideoPlayer = (props: VideoPlayerProps) => {
       if (vttUrl) URL.revokeObjectURL(vttUrl)
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [episodeId, episodeNumber, animeResponse])
+  }, [episodeId, episodeNumber, animeResponse, isDub])
 
   function generateWebVTTFromSkipTimes(
     skipTimes: AniSkip,
@@ -177,7 +187,7 @@ const VideoPlayer = (props: VideoPlayerProps) => {
         <div className="flex animate-pulse">
           <div className="relative h-0 w-full rounded-md bg-primary/10 pt-[56%]"></div>
         </div>
-      ) : (
+      ) : !error ? (
         <VidstackPlayer
           episodeId={episodeId}
           animeId={animeId}
@@ -192,6 +202,8 @@ const VideoPlayer = (props: VideoPlayerProps) => {
           skipTimes={skipTimes}
           currentTime={currentTime}
         />
+      ) : (
+        <div>Please try again</div>
       )}
 
       <Server
