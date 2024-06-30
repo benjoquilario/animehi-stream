@@ -22,7 +22,7 @@ type EpisodesProps = {
   episodeId?: string
   animeId: string
   isWatch: boolean
-  episodeNumber: number
+  episodeNumber?: number
   episodes?: IEpisode[]
   isLoading: boolean
 }
