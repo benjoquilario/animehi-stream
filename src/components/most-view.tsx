@@ -7,6 +7,8 @@ import { transformedTitle } from "@/lib/utils"
 export default async function MostView() {
   const mostViewAnime = await mostView()
 
+  console.log(mostViewAnime)
+
   return (
     <div className="w-full pt-5 xl:w-80 xl:pt-0">
       <div className="block w-full">

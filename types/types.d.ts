@@ -371,7 +371,6 @@ export interface IMetadata {
 }
 
 export interface AniSkip {
-  statusCode: number
   results: AniSkipResult[]
 }
 

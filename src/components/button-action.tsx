@@ -9,7 +9,6 @@ type ButtonActionProps = {
   latestEpisodeNumber: number
   isLoading: boolean
   animeTitle: string
-  update: (id: string, i: number, d: number) => void
 }
 
 const ButtonAction = ({
@@ -18,7 +17,6 @@ const ButtonAction = ({
   isLoading,
   lastEpisode,
   animeTitle,
-  update,
 }: ButtonActionProps) => {
   const router = useRouter()
 
@@ -26,7 +24,6 @@ const ButtonAction = ({
     <>
       <Button
         onClick={() => {
-          update(anilistId, lastEpisode - 1, 0)
           router.replace(`?episode=${lastEpisode - 1}`)
         }}
         disabled={lastEpisode === 1 || isLoading}
@@ -38,7 +35,6 @@ const ButtonAction = ({
       </Button>
       <Button
         onClick={() => {
-          update(anilistId, lastEpisode + 1, 0)
           router.replace(`?episode=${lastEpisode + 1}`)
         }}
         disabled={lastEpisode === latestEpisodeNumber || isLoading}

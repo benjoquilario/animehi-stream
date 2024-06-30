@@ -156,6 +156,18 @@ export async function trendingAnime() {
   }
 }
 
+export async function watch(episodeId: string) {
+  const response = await fetch(
+    `${env.NEXT_PUBLIC_ANIME_API_URL}/meta/anilist/watch/${episodeId}`
+  )
+
+  if (!response.ok) throw new Error("Failed to fetch watch.")
+
+  const data = await response.json()
+
+  return data
+}
+
 export const animeInfo = cache(async function (animeId: string) {
   if (!animeId) throw new Error("Please provide a anime Id")
 

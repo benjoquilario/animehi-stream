@@ -3,7 +3,9 @@ import type { Metadata } from "next"
 import type { IAnilistInfo } from "types/types"
 import BreadcrumbWatch from "@/components/breadcrumb-watch"
 import { getCurrentUser } from "@/lib/current-user"
-import VideoPlayer from "@/components/player/oplayer/csr"
+import OPlayer from "@/components/player/oplayer"
+import VidstackPlayer from "@/components/player/vidstack/player"
+import VideoPlayer from "@/components/player/vidstack"
 
 type Params = {
   params: {
@@ -77,11 +79,18 @@ export default async function Watch({
 
   return (
     <div className="mt-2 flex-1">
-      <BreadcrumbWatch animeId={anilistId} animeTitle={animeId} />
-      <VideoPlayer
+      {/* <BreadcrumbWatch animeId={anilistId} animeTitle={animeId} /> */}
+      {/* <OPlayer
         animeResponse={animeResponse}
         animeId={animeId}
         anilistId={anilistId}
+        currentUser={currentUser}
+      /> */}
+
+      <VideoPlayer
+        anilistId={anilistId}
+        animeId={animeId}
+        animeResponse={animeResponse}
         currentUser={currentUser}
       />
 

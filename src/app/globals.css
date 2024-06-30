@@ -263,3 +263,26 @@ input[type="number"] {
     box-shadow: 0 2.5em 0 0;
   }
 }
+
+.player[data-view-type='audio'] .vds-poster {
+  display: none;
+  border-radius: 5rem;
+}
+
+.player[data-view-type='video'] {
+  aspect-ratio: 16 /9;
+}
+
+.src-buttons {
+  display: flex;
+  align-items: center;
+  justify-content: space-evenly;
+  margin-top: 40px;
+  margin-inline: auto;
+  max-width: 300px;
+}
+
+.vds-poster {
+  object-fit: cover;
+}
+

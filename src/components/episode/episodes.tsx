@@ -22,22 +22,19 @@ type EpisodesProps = {
   episodeId?: string
   animeId: string
   isWatch: boolean
-  lastEpisode?: number
+  episodeNumber: number
   episodes?: IEpisode[]
   isLoading: boolean
-  update?: (id: string, i: number, d: number) => void
 }
 
 export default function Episodes({
   episodeId,
   animeId,
-  update,
-  lastEpisode,
   isWatch,
   episodes,
   isLoading,
+  episodeNumber,
 }: EpisodesProps) {
-  const [isPending, startTransition] = useTransition()
   const [query, setQuery] = useState("")
   const [interval, setInterval] = useState<[number, number]>([0, 99])
   const router = useRouter()
@@ -109,13 +106,9 @@ export default function Episodes({
   //   [episodes]
   // )
 
-  const handleSelectedEpisode = useCallback(
-    (episode: IEpisode) => {
-      routerRef.current.replace(`?episode=${episode.number}`)
-      update?.(episode.id, episode.number, 0)
-    },
-    [update]
-  )
+  const handleSelectedEpisode = useCallback((episode: IEpisode) => {
+    routerRef.current.replace(`?episode=${episode.number}`)
+  }, [])
 
   return (
     <div className="mt-4">
@@ -167,7 +160,7 @@ export default function Episodes({
                         key={episode.id}
                         className={cn(
                           "justify-start p-3 text-[14px] font-medium transition-all odd:bg-secondary/30 even:bg-background hover:bg-secondary active:scale-[.98]",
-                          lastEpisode === index + 1
+                          episodeNumber === index + 1
                             ? "!bg-primary !text-white hover:!bg-primary/80"
                             : "!odd:bg-secondary/30 even:bg-background"
                         )}
@@ -177,7 +170,7 @@ export default function Episodes({
                           <div className="line-clamp-1 italic text-muted-foreground/80 md:line-clamp-2">
                             {episode.title ?? `Episode ${episode.number}`}
                           </div>
-                          {lastEpisode === index + 1 ? (
+                          {episodeNumber === index + 1 ? (
                             <span>
                               <FaCirclePlay />
                             </span>
