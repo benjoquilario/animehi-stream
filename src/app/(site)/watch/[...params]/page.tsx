@@ -1,10 +1,7 @@
 import { animeInfo } from "@/lib/consumet"
 import type { Metadata } from "next"
 import type { IAnilistInfo } from "types/types"
-import BreadcrumbWatch from "@/components/breadcrumb-watch"
 import { getCurrentUser } from "@/lib/current-user"
-import OPlayer from "@/components/player/oplayer"
-import VidstackPlayer from "@/components/player/vidstack/player"
 import VideoPlayer from "@/components/player/vidstack"
 
 type Params = {
