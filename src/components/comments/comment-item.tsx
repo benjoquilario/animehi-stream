@@ -146,10 +146,11 @@ const CommentItem: React.FC<CommentItemProps> = ({
   return (
     <>
       <div>
-        <Avatar>
+        <Avatar className="h-8 w-8 md:h-10 md:w-10">
           <AvatarImage
             src={comment.user.image ?? ""}
             alt={comment.user.userName ?? ""}
+            className="h-8 w-8 md:h-10 md:w-10"
           />
           <AvatarFallback>
             <div className="h-full w-full animate-pulse bg-secondary"></div>
@@ -230,8 +231,8 @@ const CommentItem: React.FC<CommentItemProps> = ({
         )}
 
         <div className="flex items-center gap-4">
-          <button className="flex items-center gap-1 text-base">
-            <BsReplyAllFill className="h-5 w-5" />
+          <button className="flex items-center gap-1 text-xs md:text-base">
+            <BsReplyAllFill className="h-4 w-4 md:h-5 md:w-5" />
             Reply
           </button>
           <div className="inline-flex items-center">
@@ -245,7 +246,7 @@ const CommentItem: React.FC<CommentItemProps> = ({
                 <BiLike className="h-5 w-5 group-active:scale-110" />
               )}
             </button>
-            <div className="ml-1 text-muted-foreground/70">
+            <div className="ml-1 text-foreground">
               {/* {comment._count.commentLike} */}
               {comment._count.commentLike}
             </div>
@@ -261,7 +262,7 @@ const CommentItem: React.FC<CommentItemProps> = ({
                 <BiDislike className="h-5 w-5 group-active:scale-110" />
               )}
             </button>
-            <div className="ml-1 text-muted-foreground/70">
+            <div className="ml-1 text-foreground">
               {/* {comment._count.commentLike} */}
               {comment._count.commentDislike}
             </div>

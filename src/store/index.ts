@@ -1,5 +1,6 @@
 import { Source, SourcesResponse } from "types/types"
 import { create } from "zustand"
+import { persist } from "zustand/middleware"
 
 interface AuthInitialState {
   isAuthOpen: boolean
@@ -56,3 +57,44 @@ export const useWatchStore = create<WatchInitialStore>((set) => ({
   setLastEpisode: (episode: number) => ({ episode }),
   setEmbeddedUrl: (embeddedUrl?: string) => set({ embeddedUrl }),
 }))
+
+interface IAutoNext {
+  autoNext: boolean
+  setAutoNext: (autoNext: boolean) => void
+}
+
+export const useAutoNext = create(
+  persist(
+    (set, get) => ({
+      autoNext: false,
+      setAutoNext: (autoNext: boolean) => set({ autoNext }),
+    }),
+    {
+      name: "autoNext",
+    }
+  )
+)
+
+export const useAutoPlay = create(
+  persist(
+    (set, get) => ({
+      autoPlay: false,
+      setAutoPlay: (autoPlay: boolean) => set({ autoPlay }),
+    }),
+    {
+      name: "autoPlay",
+    }
+  )
+)
+
+export const useAutoSkip = create(
+  persist(
+    (set, get) => ({
+      autoSkip: false,
+      setAutoSkip: (autoSkip: boolean) => set({ autoSkip }),
+    }),
+    {
+      name: "autoSkip",
+    }
+  )
+)

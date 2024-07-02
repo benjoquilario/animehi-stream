@@ -23,7 +23,7 @@ const Sub = (props: SubProps) => {
         <button
           onClick={() => router.replace(`?episode=${episodeNumber}`)}
           className={cn(
-            "text-xs inline-flex items-center justify-center font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 h-9 rounded-md px-3",
+            "inline-flex h-9 items-center justify-center rounded-md px-3 text-xs font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50",
             isDub ? "bg-background/20" : "bg-primary"
           )}
         >

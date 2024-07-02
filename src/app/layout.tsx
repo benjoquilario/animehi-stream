@@ -10,6 +10,7 @@ import AuthContext from "@/components/auth-context"
 import QueryProvider from "@/components/query-provider"
 import SiteHeader from "@/components/site-header"
 import SiteFooter from "@/components/site-footer"
+import { GeistSans } from "geist/font/sans"
 
 export const viewport: Viewport = {
   themeColor: [
@@ -20,11 +21,7 @@ export const viewport: Viewport = {
   colorScheme: "dark light",
 }
 
-const fontSans = Outfit({
-  subsets: ["latin"],
-  variable: "--font-sans",
-  display: "swap",
-})
+const fontSans = GeistSans
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://animehi-stream.vercel.app"),
@@ -82,9 +79,12 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html lang="en" suppressHydrationWarning className={fontSans.variable}>
       <body
-        className={cn("min-h-screen font-sans antialiased", fontSans.variable)}
+        className={cn(
+          "font-geist-sans min-h-screen antialiased",
+          fontSans.variable
+        )}
       >
         <AuthContext>
           <ThemeProvider attribute="class" defaultTheme="dark">

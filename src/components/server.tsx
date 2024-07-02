@@ -11,6 +11,9 @@ import { useEffect, useMemo, useState } from "react"
 import Sub from "@/components/watch/subtitle"
 import Dub from "./watch/dub"
 import NextAiringEpisode from "./anime/next-airing"
+import { useAutoSkip, useAutoPlay, useAutoNext } from "@/store"
+import { useStore } from "zustand"
+import ClientOnly from "./ui/client-only"
 
 type ServerProps = {
   animeResult?: IAnilistInfo
@@ -40,6 +43,23 @@ export default function Server({
       ),
     [currentUser, animeResult]
   )
+
+  const isAutoSkip = useStore(useAutoSkip, (store: any) => store.autoSkip)
+  const isAutoPlay = useStore(useAutoPlay, (store: any) => store.autoPlay)
+  const isAutoNext = useStore(useAutoNext, (store: any) => store.autoNext)
+
+  const changeAutoSkip = function () {
+    useAutoSkip.setState({ autoSkip: true })
+  }
+
+  const changeAutoPlay = function () {
+    useAutoPlay.setState({ autoPlay: isAutoPlay ? false : true })
+  }
+  const changeAutoNext = function () {
+    useAutoNext.setState({ autoNext: isAutoNext ? false : true })
+  }
+
+  console.log(isAutoSkip)
 
   // const setEmbeddedUrl = useWatchStore((store) => store.setEmbeddedUrl)
   // const [isLoading, setIsLoading] = useState(true)
@@ -93,8 +113,25 @@ export default function Server({
   return (
     <div className="mt-2 flex flex-col gap-2">
       <div className="flex items-center justify-between">
-        <div className="text-sm">
-          Auto Next <button className="text-primary">Off</button>
+        <div className="flex items-center gap-2 text-xs">
+          <div className="">
+            Auto Skip{" "}
+            <button className="text-primary" onClick={changeAutoSkip}>
+              <ClientOnly>{isAutoSkip ? "On" : "Off"}</ClientOnly>
+            </button>
+          </div>
+          <div className="">
+            Auto Next{" "}
+            <button className="text-primary" onClick={changeAutoNext}>
+              <ClientOnly>{isAutoNext ? "On" : "Off"}</ClientOnly>
+            </button>
+          </div>
+          <div className="">
+            Auto Play{" "}
+            <button className="text-primary" onClick={changeAutoPlay}>
+              <ClientOnly>{isAutoPlay ? "On" : "Off"}</ClientOnly>
+            </button>
+          </div>
         </div>
         <div className="flex items-center">
           {children}

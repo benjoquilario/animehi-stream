@@ -131,10 +131,11 @@ export default function CommentForm({
   return (
     <div className="mb-6 flex w-full gap-2">
       <div>
-        <Avatar>
+        <Avatar className="h-8 w-8 md:h-10 md:w-10">
           <AvatarImage
             src={session?.user.image ?? "/placeholder.png"}
             alt={session?.user.name ?? ""}
+            className="h-8 w-8 md:h-10 md:w-10"
           />
           <AvatarFallback>
             <div className="h-full w-full animate-pulse bg-secondary"></div>

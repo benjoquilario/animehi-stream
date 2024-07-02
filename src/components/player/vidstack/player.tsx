@@ -29,6 +29,8 @@ import {
 } from "@/server/anime"
 import { useSession } from "next-auth/react"
 import { useRouter } from "next/navigation"
+import { useStore } from "zustand"
+import { useAutoSkip, useAutoNext, useAutoPlay } from "@/store"
 
 type VidstackPlayerProps = {
   animeId: string
@@ -63,6 +65,18 @@ const VidstackPlayer = (props: VidstackPlayerProps) => {
   const { data: session } = useSession()
   const router = useRouter()
   const player = useRef<MediaPlayerInstance>(null)
+  const autoSkip = useStore(
+    useAutoSkip,
+    (store: any) => store.autoSkip as boolean
+  )
+  const autoPlay = useStore(
+    useAutoPlay,
+    (store: any) => store.autoPlay as boolean
+  )
+  const autoNext = useStore(
+    useAutoNext,
+    (store: any) => store.autoNext as boolean
+  )
 
   useEffect(() => {
     if (player.current && currentTime) {
@@ -120,12 +134,12 @@ const VidstackPlayer = (props: VidstackPlayerProps) => {
   }, [session, anilistId, animeId, currentEpisode])
 
   useEffect(() => {
-    if (player.current) {
+    if (autoPlay && player.current) {
       player.current
         .play()
         .catch((e) => console.log("Playback failed to start automatically:", e))
     }
-  }, [src])
+  }, [autoPlay, src])
 
   function onProviderChange(
     provider: MediaProviderAdapter | null,
@@ -152,7 +166,7 @@ const VidstackPlayer = (props: VidstackPlayerProps) => {
         playbackPercentage,
       }
 
-      if (skipTimes.length) {
+      if (autoSkip && skipTimes.length) {
         const skipInterval = skipTimes.find(
           ({ interval }) =>
             currentTime >= interval.startTime && currentTime < interval.endTime
@@ -177,7 +191,7 @@ const VidstackPlayer = (props: VidstackPlayerProps) => {
       className="player"
       title={`${animeResponse.title.english ?? animeResponse.title.romaji} / Episode ${episodeNumber}`}
       src={src}
-      // autoplay={autoPlay}
+      autoplay={autoPlay}
       crossorigin
       playsinline
       onLoadedMetadata={onLoadedMetadata}
