@@ -25,10 +25,7 @@ const fontSans = GeistSans
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://animehi-stream.vercel.app"),
-  title: {
-    default: "AnimeHi - Watch animes without ads",
-    template: `%s - AnimeHi`,
-  },
+  title: "AnimeHi - Watch anime online with SUB and DUB without ads",
   description:
     "Watch anime shows, tv, movies for free without ads in your mobile, tablet or pc",
   keywords: [
@@ -39,9 +36,9 @@ export const metadata: Metadata = {
     "Tailwind CSS",
     "Gogoanime",
     "Anilist",
-    "Anime Hi",
+    "Anime - Hi",
     "Anime",
-    "Watch Anime",
+    "Watch AnimeHi",
     "Anime Streaming Site",
   ],
   authors: [

@@ -71,7 +71,8 @@ const BookmarkForm = ({
         onClick={handleOnBookmark}
         className="flex h-3 items-center gap-1 bg-background px-2 text-sm text-foreground hover:bg-background"
       >
-        <BsFillBookmarkPlusFill className="h-5 w-5" /> Bookmark
+        <BsFillBookmarkPlusFill className="h-5 w-5" />{" "}
+        <span className="hidden md:block">Bookmark</span>
       </Button>
     )
   }
@@ -90,7 +91,8 @@ const BookmarkForm = ({
             </div>
           ) : (
             <>
-              <BsFillBookmarkPlusFill className="h-5 w-5" /> Bookmark
+              <BsFillBookmarkPlusFill className="h-5 w-5" />{" "}
+              <span className="hidden md:block">Bookmark</span>
             </>
           )}
         </Button>
@@ -99,7 +101,8 @@ const BookmarkForm = ({
           onClick={handleOnBookmark}
           className="flex h-3 items-center gap-1 bg-background px-2 text-sm text-primary hover:bg-background"
         >
-          <BsCheckCircleFill className="h-5 w-5" /> Bookmarked
+          <BsCheckCircleFill className="h-5 w-5" />{" "}
+          <span className="hidden md:block">Bookmarked</span>
         </Button>
       )}
     </>

@@ -113,7 +113,7 @@ export default function Server({
   return (
     <div className="mt-2 flex flex-col gap-2">
       <div className="flex items-center justify-between">
-        <div className="flex items-center gap-2 text-xs">
+        <div className="flex items-center gap-2 text-[10px] md:text-xs">
           <div className="">
             Auto Skip{" "}
             <button className="text-primary" onClick={changeAutoSkip}>

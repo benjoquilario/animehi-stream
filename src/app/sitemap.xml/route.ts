@@ -4,6 +4,7 @@ import {
   ConsumetResponse as TConsumetResponse,
   RecentEpisode as TRecentEpisode,
 } from "types/types"
+import { transformedTitle } from "@/lib/utils"
 
 const url = `https://animehi-stream.vercel.app`
 
@@ -31,19 +32,19 @@ async function generateSiteMap() {
 
   const animeMap = [
     ...recent.results.map((anime) => ({
-      url: `${url}/anime/${anime.id}`,
+      url: `${url}/anime/${transformedTitle(anime.title.english ?? anime.title.romaji)}/${anime.id}`,
       lastModified: new Date().toISOString(),
       changeFreq: "weekly",
       priority: 0.9,
     })),
     ...popular.results.map((anime: any) => ({
-      url: `${url}/anime/${anime.id}`,
+      url: `${url}/anime/${transformedTitle(anime.title.english ?? anime.title.romaji)}/${anime.id}`,
       lastModified: new Date().toISOString(),
       changeFreq: "weekly",
       priority: 0.9,
     })),
     ...top.results.map((anime: any) => ({
-      url: `${url}/anime/${anime.id}`,
+      url: `${url}/anime/${transformedTitle(anime.title.english ?? anime.title.romaji)}/${anime.id}`,
       lastModified: new Date().toISOString(),
       changeFreq: "weekly",
       priority: 0.9,
