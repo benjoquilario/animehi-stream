@@ -27,6 +27,8 @@ model User {
   comments        Comment[]
   commentLike     CommentLike[]
   commentDislike  CommentDislike[]
+  replies         ReplyComment[]
+  replyLike       LikeReplyComment[]
 
   accounts        Account[]
 }
@@ -127,6 +129,7 @@ model Comment {
   isEdited     Boolean?
   commentLike  CommentLike[]
   commentDislike  CommentDislike[]
+  replyComment  ReplyComment[]
 
   userId       String
   user         User       @relation(fields: [userId], references: [id], onDelete: Cascade)
@@ -157,3 +160,32 @@ model CommentDislike {
 
   @@unique([userId, commentId])
 }
+
+model ReplyComment {
+    id            String          @id @default(cuid())
+
+  content      String
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime   @updatedAt
+  isEdited     Boolean?
+  commentId       String
+  comment         Comment    @relation(fields: [commentId], references: [id], onDelete: Cascade)
+  replyLike   LikeReplyComment[]
+
+  userId       String
+  user         User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model LikeReplyComment {
+  id            String          @id @default(cuid())
+  createdAt     DateTime        @default(now())
+  replyId       String
+  reply         ReplyComment    @relation(fields: [replyId], references: [id], onDelete: Cascade)
+
+  userId        String
+  user          User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, replyId])
+}
+
+

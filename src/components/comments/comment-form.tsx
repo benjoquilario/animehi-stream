@@ -104,7 +104,7 @@ export default function CommentForm({
         }
       )
     },
-    // onSettled: () => queryClient.invalidateQueries({ queryKey }),
+    onSettled: () => queryClient.invalidateQueries({ queryKey }),
   })
 
   async function handleOnSubmit(data: Inputs) {

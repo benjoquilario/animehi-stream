@@ -57,6 +57,8 @@ import {
 } from "@/hooks/useLikeUnlikeMutation"
 import { useCommentDislikeMutation } from "@/hooks/useDislikeMutation"
 import { useUpdateDeleteMutation } from "@/hooks/useUpdateDeleteMutation"
+import Replies from "@/components/replies"
+import { BsArrow90DegDown } from "react-icons/bs"
 
 export type CommentItemProps = {
   comment: IComment
@@ -83,6 +85,7 @@ const CommentItem: React.FC<CommentItemProps> = ({
   const [isOpen, setIsOpen] = useState(false)
   const [isPending, startTransition] = useTransition()
   const setIsAuthOpen = useAuthStore((store) => store.setIsAuthOpen)
+  const [isRepliesOpen, setIsRepliesOpen] = useState(false)
 
   const likeParams = {
     commentId: comment.id,
@@ -144,7 +147,10 @@ const CommentItem: React.FC<CommentItemProps> = ({
   }
 
   return (
-    <>
+    <div className="relative flex w-full gap-2">
+      {isRepliesOpen || comment._count.replyComment > 0 ? (
+        <div className="absolute left-[18px] top-[30px] h-[calc(100%_-_80px)] w-[2px] bg-input"></div>
+      ) : null}
       <div>
         <Avatar className="h-8 w-8 md:h-10 md:w-10">
           <AvatarImage
@@ -160,8 +166,15 @@ const CommentItem: React.FC<CommentItemProps> = ({
       <div className="flex w-full flex-col gap-1">
         <div className="flex items-center gap-3">
           <div className="flex items-center">
-            <Link href={`/profile/${comment.userId}`}>
-              <h4 className="text-[15px] leading-6">{comment.user.userName}</h4>
+            <Link className="inline" href={`/profile/${comment.userId}`}>
+              <h4 className="inline-flex">
+                <span
+                  className="max-w-full text-sm font-medium text-foreground underline-offset-1 hover:underline"
+                  style={{ wordBreak: "break-word" }}
+                >
+                  {comment.user.userName}
+                </span>
+              </h4>
             </Link>
             {comment.isEdited && (
               <span className="text-sm text-muted-foreground/60">(edited)</span>
@@ -231,7 +244,10 @@ const CommentItem: React.FC<CommentItemProps> = ({
         )}
 
         <div className="flex items-center gap-4">
-          <button className="flex items-center gap-1 text-xs md:text-base">
+          <button
+            onClick={() => setIsRepliesOpen(true)}
+            className="flex items-center gap-1 text-xs md:text-sm"
+          >
             <BsReplyAllFill className="h-4 w-4 md:h-5 md:w-5" />
             Reply
           </button>
@@ -335,6 +351,27 @@ const CommentItem: React.FC<CommentItemProps> = ({
             </button>
           ) : null}
         </div>
+
+        {comment._count.replyComment !== 0 &&
+          (!isRepliesOpen ? (
+            <div className="ml-2 mt-1">
+              <div className="absolute bottom-[12px] left-[18px] h-[42px] w-[38px] rounded-l border-b-2 border-l-2 border-l-input border-t-input md:w-[27px]"></div>
+              <Button
+                variant="ghost"
+                onClick={() => setIsRepliesOpen(true)}
+                aria-label="show replies"
+                size="sm"
+                className="flex items-center gap-1 text-xs font-semibold underline-offset-1 hover:underline"
+              >
+                <span>
+                  <BsArrow90DegDown className="-rotate-90" />
+                </span>
+                <span>{comment._count.replyComment} replies</span>
+              </Button>
+            </div>
+          ) : null)}
+
+        {isRepliesOpen && <Replies commentId={comment.id} />}
       </div>
       <AlertDialog open={isAlertOpen} onOpenChange={setIsAlertOpen}>
         <AlertDialogTrigger asChild></AlertDialogTrigger>
@@ -365,7 +402,7 @@ const CommentItem: React.FC<CommentItemProps> = ({
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
-    </>
+    </div>
   )
 }
 

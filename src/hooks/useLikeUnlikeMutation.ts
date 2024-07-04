@@ -16,6 +16,7 @@ export interface IComment extends Comment {
   _count: {
     commentLike: number
     commentDislike: number
+    replyComment: number
   }
   isLiked: boolean
   isDisliked: boolean

@@ -23,26 +23,24 @@ const ButtonAction = ({
   return (
     <>
       <Button
-        onClick={() => {
-          router.replace(`?episode=${lastEpisode - 1}`)
-        }}
+        onClick={() => router.push(`?episode=${lastEpisode - 1}`)}
         disabled={lastEpisode === 1 || isLoading}
         aria-label="previous episode"
         className="flex items-center gap-1 bg-background p-2 text-sm text-foreground transition-all hover:bg-background active:scale-[.98]"
       >
-        <AiFillBackward className="h-5 w-5" />
+        <AiFillBackward className="h-5 w-5" aria-hidden />
         <span className="hidden md:block">Prev episode</span>
       </Button>
       <Button
         onClick={() => {
-          router.replace(`?episode=${lastEpisode + 1}`)
+          router.push(`?episode=${lastEpisode + 1}`)
         }}
         disabled={lastEpisode === latestEpisodeNumber || isLoading}
         aria-label="next episode"
         className="flex items-center gap-1 bg-background p-2 text-sm text-foreground transition-all hover:bg-background active:scale-[.98]"
       >
         <span className="hidden md:block">Next episode</span>
-        <AiFillForward className="h-5 w-5" />
+        <AiFillForward className="h-5 w-5" aria-hidden />
       </Button>
     </>
   )

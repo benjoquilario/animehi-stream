@@ -4,17 +4,18 @@ import { type NextRequest, NextResponse } from "next/server"
 
 export async function GET(
   req: NextRequest,
-  { params }: { params: { episodeId: string } }
+  { params }: { params: { commentId: string } }
 ) {
-  const episodeId = params.episodeId
+  const commentId = params.commentId
+
   const searchParams = req.nextUrl.searchParams
   const limit = searchParams.get("limit")
   const skip = searchParams.get("cursor")
   const session = await auth()
 
-  const comments = await db.comment.findMany({
+  const comments = await db.replyComment.findMany({
     where: {
-      episodeId,
+      commentId,
     },
     include: {
       user: {
@@ -25,15 +26,7 @@ export async function GET(
           email: true,
         },
       },
-      commentLike: {
-        select: {
-          id: true,
-        },
-        where: {
-          userId: session?.user.id,
-        },
-      },
-      commentDislike: {
+      replyLike: {
         select: {
           id: true,
         },
@@ -43,9 +36,7 @@ export async function GET(
       },
       _count: {
         select: {
-          commentLike: true,
-          commentDislike: true,
-          replyComment: true,
+          replyLike: true,
         },
       },
     },
@@ -59,24 +50,24 @@ export async function GET(
 
   if (comments.length === 0) {
     return NextResponse.json({
-      comments: [],
+      replies: [],
       hasNextPage: false,
       nextSkip: null,
     })
   }
 
-  const transformedComments = comments.map((comment) => {
-    const { _count, ...rest } = comment
+  const transformedReplies = comments.map((post) => {
+    const { _count, replyLike, ...rest } = post
     return {
       ...rest,
       _count,
-      isLiked: session ? _count.commentLike > 0 : false,
-      isDisliked: session ? _count.commentDislike > 0 : false,
+      replyLike,
+      isLiked: session ? replyLike.length > 0 : false,
     }
   })
 
   return NextResponse.json({
-    comments: transformedComments,
+    replies: transformedReplies,
     hasNextPage: comments.length < (Number(limit) || 5) ? false : true,
     nextSkip:
       comments.length < (Number(limit) || 5)

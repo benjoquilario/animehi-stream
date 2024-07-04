@@ -155,13 +155,13 @@ export default function Episodes({
                 {episodes?.length !== 0 ? (
                   displayedEpisodes?.map((episode, index) =>
                     isWatch ? (
-                      <Button
-                        onClick={() => handleSelectedEpisode(episode)}
+                      <Link
+                        href={`?episode=${episode.number}`}
                         key={episode.id}
                         className={cn(
                           "justify-start p-3 text-[14px] font-medium transition-all odd:bg-secondary/30 even:bg-background hover:bg-secondary active:scale-[.98]",
                           episodeNumber === index + 1
-                            ? "!bg-primary !text-white hover:!bg-primary/80"
+                            ? "!bg-primary !text-foreground hover:!bg-primary/80"
                             : "!odd:bg-secondary/30 even:bg-background"
                         )}
                       >
@@ -176,7 +176,7 @@ export default function Episodes({
                             </span>
                           ) : null}
                         </div>
-                      </Button>
+                      </Link>
                     ) : (
                       <Link
                         href={`/watch/${animeTitle}/${animeId}?episode=${episode.number}`}
@@ -184,7 +184,7 @@ export default function Episodes({
                         className={cn(
                           "justify-start p-3 text-[14px] font-medium odd:bg-secondary/30 even:bg-background hover:bg-secondary",
                           currentEpisode?.number === episode.number
-                            ? "!bg-primary text-white hover:!bg-primary/80"
+                            ? "!bg-primary text-foreground hover:!bg-primary/80"
                             : "!odd:bg-secondary/30 even:bg-background"
                         )}
                       >

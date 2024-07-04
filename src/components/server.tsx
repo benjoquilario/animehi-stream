@@ -49,7 +49,7 @@ export default function Server({
   const isAutoNext = useStore(useAutoNext, (store: any) => store.autoNext)
 
   const changeAutoSkip = function () {
-    useAutoSkip.setState({ autoSkip: true })
+    useAutoSkip.setState({ autoSkip: isAutoSkip ? false : true })
   }
 
   const changeAutoPlay = function () {
