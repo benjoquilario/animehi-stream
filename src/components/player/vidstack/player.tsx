@@ -14,6 +14,7 @@ import {
   type MediaProviderChangeEvent,
   type MediaPlayerInstance,
   updateSliderPreviewPlacement,
+  SeekButton,
 } from "@vidstack/react"
 import {
   DefaultAudioLayout,
@@ -31,6 +32,7 @@ import { useSession } from "next-auth/react"
 import { useRouter } from "next/navigation"
 import { useStore } from "zustand"
 import { useAutoSkip, useAutoNext, useAutoPlay } from "@/store"
+import { SeekForward10Icon, SeekBackward10Icon } from "@vidstack/react/icons"
 
 type VidstackPlayerProps = {
   animeId: string
@@ -214,6 +216,7 @@ const VidstackPlayer = (props: VidstackPlayerProps) => {
           <Track kind="chapters" src={vttUrl} default label="Skip Times" />
         )}
       </MediaProvider>
+
       <DefaultAudioLayout icons={defaultLayoutIcons} />
       <DefaultVideoLayout icons={defaultLayoutIcons} />
     </MediaPlayer>

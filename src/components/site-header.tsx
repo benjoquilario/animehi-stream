@@ -105,6 +105,16 @@ export default function SiteHeader() {
                   Schedule
                 </Link>
               </li>
+              <li>
+                <Link
+                  href="/browse?query=&sort=POPULARITY_DESC"
+                  className={cn(
+                    buttonVariants({ variant: "linkHover", size: "sm" })
+                  )}
+                >
+                  Browse
+                </Link>
+              </li>
             </ul>
           </div>
         </nav>

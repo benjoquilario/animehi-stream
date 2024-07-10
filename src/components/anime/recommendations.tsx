@@ -1,7 +1,7 @@
 "use client"
 
 import { IRecommendationItem } from "types/types"
-import NextImage from "../ui/image"
+import NextImage from "@/components/ui/image"
 import Link from "next/link"
 import { transformedTitle } from "@/lib/utils"
 
@@ -55,14 +55,6 @@ function RecommendationItem(props: RecommendationItemProps) {
         >
           <div className="absolute bottom-0 z-30 h-1/4 w-full bg-gradient-to-t from-background/80 from-25% to-transparent transition-all duration-300 ease-out group-hover:to-background/40"></div>
         </Link>
-        {/* <Link
-          href={`/anime/${title}/${recommendation.id}`}
-          aria-label={`${recommendation.id}`}
-          className="absolute inset-0 z-50 flex items-center justify-center bg-background/70 text-primary opacity-0 transition-opacity hover:opacity-100"
-        >
-
-        </Link>
-        <div className="absolute bottom-0 z-30 h-1/4 w-full bg-gradient-to-t from-background/80 from-25% to-transparent transition-all duration-300 ease-out group-hover:to-background/40"></div> */}
       </div>
       <div>
         <h3

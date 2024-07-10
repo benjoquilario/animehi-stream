@@ -181,3 +181,5 @@ export const animeInfo = cache(async function (animeId: string) {
 
   return data
 })
+
+const LIMIT = 20
