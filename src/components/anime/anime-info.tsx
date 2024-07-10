@@ -219,7 +219,6 @@ export default function Anime({ animeId }: { animeId: string }) {
               episodes={episodes}
               isLoading={isLoading}
               animeId={animeId}
-              isWatch={false}
             />
           )}
         </div>

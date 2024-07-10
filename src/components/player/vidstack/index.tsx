@@ -228,7 +228,6 @@ const VideoPlayer = (props: VideoPlayerProps) => {
         isLoading={isPending}
         animeId={anilistId}
         episodeId={episodeId}
-        isWatch={true}
         episodeNumber={Number(episodeNumber)}
       />
 

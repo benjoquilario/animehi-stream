@@ -21,7 +21,6 @@ import {
 type EpisodesProps = {
   episodeId?: string
   animeId: string
-  isWatch: boolean
   episodeNumber?: number
   episodes?: IEpisode[]
   isLoading: boolean
@@ -30,7 +29,6 @@ type EpisodesProps = {
 export default function Episodes({
   episodeId,
   animeId,
-  isWatch,
   episodes,
   isLoading,
   episodeNumber,
@@ -38,7 +36,6 @@ export default function Episodes({
   const [query, setQuery] = useState("")
   const [interval, setInterval] = useState<[number, number]>([0, 99])
   const router = useRouter()
-  const routerRef = useRef(router)
 
   const animeTitle = useMemo(
     () => episodes?.[0].id.split("-episode-")[0],
@@ -90,26 +87,6 @@ export default function Episodes({
     }
   }, [episodes, interval, isLoading, query, filteredEpisode])
 
-  // const handleSearchEpisode = useCallback(
-  //   (episodeNumber: string) => {
-  //     if (episodeNumber) {
-  //       const filterEpisode = fullEpisodes?.filter(
-  //         (episode) => episode.number === Number(episodeNumber)
-  //       )
-  //       setEpisodes(filterEpisode)
-  //     } else {
-  //       setEpisodes(fullEpisodes)
-  //     }
-
-  //     setQuery(episodeNumber)
-  //   },
-  //   [episodes]
-  // )
-
-  const handleSelectedEpisode = useCallback((episode: IEpisode) => {
-    routerRef.current.replace(`?episode=${episode.number}`)
-  }, [])
-
   return (
     <div className="mt-4">
       {isLoading ? (
@@ -153,50 +130,30 @@ export default function Episodes({
             <div className="no-scrollbar max-h-96 w-full overflow-auto rounded-md">
               <div className="flex flex-col odd:bg-secondary/30 even:bg-background">
                 {episodes?.length !== 0 ? (
-                  displayedEpisodes?.map((episode, index) =>
-                    isWatch ? (
-                      <Link
-                        href={`/watch/${animeTitle}/${animeId}?episode=${episode.number}`}
-                        key={episode.id}
-                        className={cn(
-                          "justify-start p-3 text-[14px] font-medium transition-all odd:bg-secondary/30 even:bg-background hover:bg-secondary active:scale-[.98]",
-                          episodeNumber === index + 1
-                            ? "!bg-primary !text-foreground hover:!bg-primary/80"
-                            : "!odd:bg-secondary/30 even:bg-background"
-                        )}
-                      >
-                        <div className="flex items-center gap-2">
-                          <span className="text-xs">{episode.number}</span>
-                          <div className="line-clamp-1 italic text-muted-foreground/80 md:line-clamp-2">
-                            {episode.title ?? `Episode ${episode.number}`}
-                          </div>
-                          {episodeNumber === index + 1 ? (
-                            <span>
-                              <FaCirclePlay />
-                            </span>
-                          ) : null}
+                  displayedEpisodes?.map((episode, index) => (
+                    <Link
+                      href={`/watch/${animeTitle}/${animeId}?episode=${episode.number}`}
+                      key={episode.id}
+                      className={cn(
+                        "justify-start p-3 text-[14px] font-medium transition-all odd:bg-secondary/30 even:bg-background hover:bg-secondary active:scale-[.98]",
+                        episodeNumber === index + 1
+                          ? "!bg-primary !text-foreground hover:!bg-primary/80"
+                          : "!odd:bg-secondary/30 even:bg-background"
+                      )}
+                    >
+                      <div className="flex items-center gap-2">
+                        <span className="text-xs">{episode.number}</span>
+                        <div className="line-clamp-1 italic text-muted-foreground/80 md:line-clamp-2">
+                          {episode.title ?? `Episode ${episode.number}`}
                         </div>
-                      </Link>
-                    ) : (
-                      <Link
-                        href={`/watch/${animeTitle}/${animeId}?episode=${episode.number}`}
-                        key={episode.id}
-                        className={cn(
-                          "justify-start p-3 text-[14px] font-medium odd:bg-secondary/30 even:bg-background hover:bg-secondary",
-                          currentEpisode?.number === episode.number
-                            ? "!bg-primary text-foreground hover:!bg-primary/80"
-                            : "!odd:bg-secondary/30 even:bg-background"
-                        )}
-                      >
-                        <div className="flex items-center gap-2">
-                          <span className="text-xs">{episode.number}</span>
-                          <div className="line-clamp-1 italic text-muted-foreground/80 md:line-clamp-2">
-                            {episode.title ?? `Episode ${episode.number}`}
-                          </div>
-                        </div>
-                      </Link>
-                    )
-                  )
+                        {episodeNumber === index + 1 ? (
+                          <span>
+                            <FaCirclePlay />
+                          </span>
+                        ) : null}
+                      </div>
+                    </Link>
+                  ))
                 ) : (
                   <div className="p-3">No Episode Found</div>
                 )}
