@@ -156,7 +156,7 @@ export default function Episodes({
                   displayedEpisodes?.map((episode, index) =>
                     isWatch ? (
                       <Link
-                        href={`?episode=${episode.number}`}
+                        href={`/watch/${animeTitle}/${animeId}?episode=${episode.number}`}
                         key={episode.id}
                         className={cn(
                           "justify-start p-3 text-[14px] font-medium transition-all odd:bg-secondary/30 even:bg-background hover:bg-secondary active:scale-[.98]",
