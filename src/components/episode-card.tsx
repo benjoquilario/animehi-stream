@@ -42,7 +42,7 @@ const EpisodeCard = ({ animeResult }: EpisodeCardProps) => {
           />
         </div>
         <Link
-          href={`/watch${animeId}/${animeResult.id}?episode=${episodeNumber}`}
+          href={`/watch?id=${animeResult.id}&slug=${animeId.replace("/", "")}&ep=${episodeNumber}`}
           aria-label={animeResult.id}
           className="absolute inset-0 z-50 flex items-center justify-center bg-background/70 text-primary opacity-0 transition-opacity hover:opacity-100 group-hover/item:scale-105"
         >
