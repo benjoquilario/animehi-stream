@@ -10,9 +10,10 @@ import { transformedTitle } from "@/lib/utils"
 type ColumnProps = {
   results: IAdvancedInfo[]
   seasonalTitle: string
+  browse: string
 }
 
-const Column = ({ results, seasonalTitle }: ColumnProps) => {
+const Column = ({ results, seasonalTitle, browse }: ColumnProps) => {
   if (results.length === 0) {
     return <div>{seasonalTitle} not found</div>
   }
@@ -21,7 +22,7 @@ const Column = ({ results, seasonalTitle }: ColumnProps) => {
     <div className="w-full">
       <div className="min-h-[300px] w-full">
         <Link
-          href="/browse"
+          href={browse}
           className="group relative mb-4 flex items-center text-[12px] font-medium uppercase transition-all xl:text-lg"
         >
           <div className="mr-2 h-6 w-1 rounded-md bg-primary md:w-2"></div>
@@ -35,7 +36,7 @@ const Column = ({ results, seasonalTitle }: ColumnProps) => {
                 <Link
                   href={`/anime/${transformedTitle(result?.title?.english ?? result?.title?.romaji)}/${result?.id}`}
                   aria-label={result?.title?.english ?? result?.title?.romaji}
-                  className="relation flex h-full w-full items-center justify-between rounded-md border-b bg-card/80 py-3 transition-all hover:scale-105"
+                  className="relation flex h-full w-full items-center justify-between rounded-md border-b bg-card/80 py-3 transition-all hover:scale-[1.02]"
                 >
                   <ColumnCard result={result} />
                 </Link>

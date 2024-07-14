@@ -13,14 +13,8 @@ import {
   type MediaProviderAdapter,
   type MediaProviderChangeEvent,
   type MediaPlayerInstance,
-  updateSliderPreviewPlacement,
-  SeekButton,
 } from "@vidstack/react"
-import {
-  DefaultAudioLayout,
-  defaultLayoutIcons,
-  DefaultVideoLayout,
-} from "@vidstack/react/player/layouts/default"
+
 import type { IAnilistInfo, IEpisode, AniSkipResult } from "types/types"
 import {
   increment,
@@ -32,7 +26,14 @@ import { useSession } from "next-auth/react"
 import { useRouter } from "next/navigation"
 import { useStore } from "zustand"
 import { useAutoSkip, useAutoNext, useAutoPlay } from "@/store"
-import { SeekForward10Icon, SeekBackward10Icon } from "@vidstack/react/icons"
+import { VideoLayout } from "./layout/video-layout"
+import styles from "./player.module.css"
+import { cn } from "@/lib/utils"
+import {
+  DefaultAudioLayout,
+  defaultLayoutIcons,
+  DefaultVideoLayout,
+} from "@vidstack/react/player/layouts/default"
 
 type VidstackPlayerProps = {
   animeId: string
@@ -79,6 +80,53 @@ const VidstackPlayer = (props: VidstackPlayerProps) => {
     useAutoNext,
     (store: any) => store.autoNext as boolean
   )
+  const [opButton, setOpButton] = useState(false)
+  const [otButton, setEdButton] = useState(false)
+
+  useEffect(() => {
+    player.current?.subscribe(({ currentTime, duration, poster }) => {
+      if (skipTimes && skipTimes.length > 0) {
+        const opStart = skipTimes[0]?.interval.startTime ?? 0
+        const opEnd = skipTimes[0]?.interval.endTime ?? 0
+
+        const epStart = skipTimes[1]?.interval.startTime ?? 0
+        const epEnd = skipTimes[1]?.interval.endTime ?? 0
+
+        const opButtonText = "Opening"
+        const edButtonText = "Outro"
+
+        setOpButton(
+          opButtonText === "Opening" &&
+            currentTime > opStart &&
+            currentTime < opEnd
+        )
+        setEdButton(
+          edButtonText === "Outro" &&
+            currentTime > epStart &&
+            currentTime < epEnd
+        )
+
+        if (autoSkip) {
+          if (
+            opButtonText === "Opening" &&
+            currentTime > opStart &&
+            currentTime < opEnd
+          ) {
+            Object.assign(player.current ?? {}, { currentTime: opEnd })
+            return null
+          }
+          if (
+            edButtonText === "Outro" &&
+            currentTime > epStart &&
+            currentTime < epEnd
+          ) {
+            Object.assign(player.current ?? {}, { currentTime: epEnd })
+            return null
+          }
+        }
+      }
+    })
+  }, [autoSkip, skipTimes])
 
   useEffect(() => {
     if (player.current && currentTime) {
@@ -190,11 +238,15 @@ const VidstackPlayer = (props: VidstackPlayerProps) => {
 
   return (
     <MediaPlayer
+      key={src}
       className="player"
       title={`${animeResponse.title.english ?? animeResponse.title.romaji} / Episode ${episodeNumber}`}
-      src={src}
+      src={{
+        src: src,
+        type: "application/x-mpegurl",
+      }}
       autoplay={autoPlay}
-      crossorigin
+      crossorigin="anonymous"
       playsinline
       onLoadedMetadata={onLoadedMetadata}
       onProviderChange={onProviderChange}
@@ -203,8 +255,8 @@ const VidstackPlayer = (props: VidstackPlayerProps) => {
       onTimeUpdate={onTimeUpdate}
       ref={player}
       aspectRatio="16/9"
-      load="eager"
-      posterLoad="eager"
+      load="idle"
+      posterLoad="idle"
       streamType="on-demand"
       storage="storage-key"
       keyTarget="player"
@@ -216,11 +268,33 @@ const VidstackPlayer = (props: VidstackPlayerProps) => {
           <Track kind="chapters" src={vttUrl} default label="Skip Times" />
         )}
       </MediaProvider>
-
+      {opButton && (
+        <button
+          onClick={() =>
+            Object.assign(player.current ?? {}, {
+              currentTime: skipTimes[0]?.interval.endTime ?? 0,
+            })
+          }
+          className="absolute bottom-[70px] right-4 z-40 rounded-md bg-white px-3 py-2 text-sm  text-black sm:bottom-[83px]"
+        >
+          Skip Opening
+        </button>
+      )}
+      {otButton && (
+        <button
+          onClick={() =>
+            Object.assign(player.current ?? {}, {
+              currentTime: skipTimes[1]?.interval.endTime ?? 0,
+            })
+          }
+          className="absolute bottom-[70px] right-4 z-40 rounded-[6px] bg-white px-3 py-2 text-sm font-medium text-black sm:bottom-[83px]"
+        >
+          Skip Ending
+        </button>
+      )}
       <DefaultAudioLayout icons={defaultLayoutIcons} />
       <DefaultVideoLayout icons={defaultLayoutIcons} />
     </MediaPlayer>
   )
 }
-
 export default VidstackPlayer

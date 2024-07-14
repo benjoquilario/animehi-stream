@@ -75,5 +75,21 @@ module.exports = {
       },
     },
   },
-  plugins: [require("tailwindcss-animate")],
+  plugins: [
+    require("tailwindcss-animate"),
+    require("@vidstack/react/tailwind.cjs")({
+      prefix: "media",
+    }),
+    customVariants,
+  ],
+}
+
+// @ts-expect-error
+function customVariants({ addVariant, matchVariant }) {
+  // Strict version of `.group` to help with nesting.
+  // @ts-expect-error
+  matchVariant("parent-data", (value) => `.parent[data-${value}] > &`)
+
+  addVariant("hocus", ["&:hover", "&:focus-visible"])
+  addVariant("group-hocus", [".group:hover &", ".group:focus-visible &"])
 }

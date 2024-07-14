@@ -3,6 +3,7 @@ import type { Metadata } from "next"
 import type { IAnilistInfo } from "types/types"
 import { getCurrentUser } from "@/lib/current-user"
 import VideoPlayer from "@/components/player/vidstack"
+import { Suspense } from "react"
 
 type Params = {
   params: {
@@ -20,11 +21,11 @@ export async function generateMetadata({
   }
   searchParams: { [key: string]: string | string[] | undefined }
 }): Promise<Metadata | undefined> {
-  const [animeId, anilistId] = params.params
+  const id = searchParams.id as string
+  const slug = searchParams.slug as string
+  const ep = searchParams.ep as string
 
-  const episode = searchParams.episode
-
-  const animeResponse = (await animeInfo(anilistId)) as IAnilistInfo
+  const animeResponse = (await animeInfo(id)) as IAnilistInfo
 
   if (!animeResponse) {
     return
@@ -35,13 +36,13 @@ export async function generateMetadata({
   const imageUrl = animeResponse.cover ?? animeResponse.image
 
   return {
-    title,
+    title: `Watch ${title} Episode ${ep} - AnimeHi`,
     description,
     openGraph: {
-      title: `Watch ${title} Episode ${episode} - AnimeHi`,
+      title: `Watch ${title} Episode ${ep} - AnimeHi`,
       description,
       type: "website",
-      url: `${process.env.NEXT_PUBLIC_APP_URL}/watch/${animeId}/${anilistId}?episode=${episode}`,
+      url: `${process.env.NEXT_PUBLIC_APP_URL}/watch?id=${id}&slug=${slug}?ep=${ep}`,
       images: [
         {
           url: `${imageUrl}`,
@@ -69,32 +70,20 @@ export default async function Watch({
   params: { params },
   searchParams,
 }: Params) {
-  const [animeId, anilistId] = params as string[]
-  const animeResponse = (await animeInfo(anilistId)) as IAnilistInfo
+  const id = searchParams.id as string
+  const slug = searchParams.slug as string
+  const animeResponse = (await animeInfo(id)) as IAnilistInfo
 
   const currentUser = await getCurrentUser()
 
   return (
     <div className="mt-2 flex-1">
-      {/* <BreadcrumbWatch animeId={anilistId} animeTitle={animeId} /> */}
-      {/* <OPlayer
-        animeResponse={animeResponse}
-        animeId={animeId}
-        anilistId={anilistId}
-        currentUser={currentUser}
-      /> */}
-
       <VideoPlayer
-        anilistId={anilistId}
-        animeId={animeId}
+        anilistId={id}
+        animeId={slug}
         animeResponse={animeResponse}
         currentUser={currentUser}
       />
-
-      {/* <VideoPlayer animeId={animeId} episodeNumber={episodeNumber} /> */}
-      {/* <Suspense>
-
-      </Suspense> */}
     </div>
   )
 }

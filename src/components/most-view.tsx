@@ -26,7 +26,7 @@ export default async function MostView() {
                 <Link
                   href={`/anime/${transformedTitle(mostView.title)}/${mostView.anilistId}`}
                   aria-label={mostView.title}
-                  className="relation group flex h-full w-full items-center justify-between rounded-md bg-card/80 transition-all hover:scale-105"
+                  className="relation group flex h-full w-full items-center justify-between rounded-md bg-card/80 transition-all hover:scale-[1.03]"
                 >
                   <MostViewCard result={mostView} rank={index + 1} />
                 </Link>

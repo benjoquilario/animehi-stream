@@ -15,6 +15,7 @@ export const env = createEnv({
   client: {
     NEXT_PUBLIC_ANIME_API_URL: z.string().url(),
     NEXT_PUBLIC_APP_URL: z.string().url(),
+    NEXT_PUBLIC_PROXY_URI: z.string().url(),
   },
   runtimeEnv: {
     UPSTASH_REDIS_REST_URL: process.env.UPSTASH_REDIS_REST_URL,
@@ -27,5 +28,6 @@ export const env = createEnv({
     ANIME_API_URI: process.env.ANIME_API_URI,
     NEXT_PUBLIC_ANIME_API_URL: process.env.NEXT_PUBLIC_ANIME_API_URL,
     NEXT_PUBLIC_APP_URL: process.env.NEXT_PUBLIC_APP_URL,
+    NEXT_PUBLIC_PROXY_URI: process.env.NEXT_PUBLIC_PROXY_URI,
   },
 })

@@ -25,9 +25,9 @@ const VideoPlayer = (props: VideoPlayerProps) => {
   const { animeId, animeResponse, anilistId, currentUser } = props
 
   const searchParams = useSearchParams()
-  const epNumber = searchParams.get("episode")
   const isDub = searchParams.get("dub")
-  const episodeNumber = Number(epNumber)
+  const ep = searchParams.get("ep")
+  const episodeNumber = Number(ep)
   const {
     data: episodes,
     isLoading: isPending,
@@ -71,10 +71,10 @@ const VideoPlayer = (props: VideoPlayerProps) => {
   async function fetchAndSetAnimeSource() {
     try {
       const response = await fetch(
-        `${env.NEXT_PUBLIC_ANIME_API_URL}/meta/anilist/watch/${episodeId}`
+        `${env.NEXT_PUBLIC_ANIME_API_URL}/anime/gogoanime/watch/${episodeId}`
       )
 
-      if (!response.ok) return
+      if (!response.ok) throw Error
 
       const data = (await response.json()) as SourcesResponse
 
@@ -83,15 +83,30 @@ const VideoPlayer = (props: VideoPlayerProps) => {
       )
 
       if (backupSource) {
-        setSrc(backupSource.url)
+        setSrc(`${env.NEXT_PUBLIC_PROXY_URI}=${backupSource.url}`)
         setDownload(data.download)
       } else {
         console.error("Backup source not found")
-        setError(true)
       }
     } catch (error) {
       console.error("Failed to fetch anime streaming links", error)
-      setError(true)
+      const response = await fetch(
+        `${env.NEXT_PUBLIC_PROXY_URI}=https://aniwatch-4cxa.vercel.app/anime/info/${anilistId}`
+      )
+
+      const data = await response.json()
+
+      const { episodesList } = data
+
+      const sources = episodesList[episodeNumber + 1]
+      const fetchDataSources = await fetch(
+        `${env.NEXT_PUBLIC_PROXY_URI}=https://aniwatch-one.vercel.app/anime/episode-srcs?id=${sources.id}`
+      )
+
+      const videoSource = await fetchDataSources.json()
+
+      setSrc(`${env.NEXT_PUBLIC_PROXY_URI}=${videoSource.sources[0].url}`)
+      setDownload("")
     }
   }
 
@@ -122,18 +137,15 @@ const VideoPlayer = (props: VideoPlayerProps) => {
       const skipType =
         skipTime.skipType.toUpperCase() === "OP" ? "Opening" : "Outro"
 
-      // Insert default title chapter before this skip time if there's a gap
       if (previousEndTime < startTime) {
         vttString += `${formatTime(previousEndTime)} --> ${formatTime(startTime)}\n`
         vttString += `${animeResponse.title.english ?? animeResponse.title.romaji} / Episode ${episodeNumber}\n\n`
       }
 
-      // Insert this skip time
       vttString += `${formatTime(startTime)} --> ${formatTime(endTime)}\n`
       vttString += `${skipType}\n\n`
       previousEndTime = endTime
 
-      // Insert default title chapter after the last skip time
       if (index === sortedSkipTimes.length - 1 && endTime < totalDuration) {
         vttString += `${formatTime(endTime)} --> ${formatTime(totalDuration)}\n`
         vttString += `${animeResponse.title.english ?? animeResponse.title.romaji} / Episode ${episodeNumber}\n\n`

@@ -23,7 +23,11 @@ const ButtonAction = ({
   return (
     <>
       <Button
-        onClick={() => router.push(`?episode=${lastEpisode - 1}`)}
+        onClick={() =>
+          router.push(
+            `id=${anilistId}&slug=${animeTitle}&ep=${lastEpisode - 1}`
+          )
+        }
         disabled={lastEpisode === 1 || isLoading}
         aria-label="previous episode"
         className="flex items-center gap-1 bg-background p-2 text-sm text-foreground transition-all hover:bg-background active:scale-[.98]"
@@ -33,7 +37,9 @@ const ButtonAction = ({
       </Button>
       <Button
         onClick={() => {
-          router.push(`?episode=${lastEpisode + 1}`)
+          router.push(
+            `id=${anilistId}&slug=${animeTitle}&ep=${lastEpisode + 1}`
+          )
         }}
         disabled={lastEpisode === latestEpisodeNumber || isLoading}
         aria-label="next episode"
