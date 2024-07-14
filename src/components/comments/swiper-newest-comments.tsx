@@ -103,7 +103,7 @@ const SwiperNewestComments = ({
                   <div className="mt-3 block overflow-hidden text-ellipsis">
                     <Link
                       title={newestComment.episodeId.split("-").join(" ")}
-                      href={`/watch/${newestComment.animeId}/${newestComment.anilistId}?episode=${newestComment.episodeNumber}`}
+                      href={`/watch?id=${newestComment.anilistId}&slug=${newestComment.animeId}&ep=${newestComment.episodeNumber}`}
                       className="line-clamp-1 text-primary hover:text-primary/90"
                     >
                       {newestComment.episodeId.split("-").join(" ")}
