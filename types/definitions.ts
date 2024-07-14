@@ -41,3 +41,10 @@ interface DiscoverFilters {
     | "TITLE_ENGLISH_DESC"
     | "TITLE_NATIVE_DESC"
 }
+
+interface ITracks {
+  default: boolean
+  file: string
+  kind: string
+  label: string
+}

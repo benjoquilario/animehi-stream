@@ -28,7 +28,11 @@ const SelectFilter = (props: SelectFilterProps) => {
       <SelectTrigger className={cn("w-full", className)}>
         <SelectValue placeholder={label} />
       </SelectTrigger>
-      <SelectContent>
+      <SelectContent
+        ref={(ref) =>
+          ref?.addEventListener("touchend", (e) => e.preventDefault())
+        }
+      >
         {options?.map((option) => (
           <SelectItem key={option.value} value={option.value}>
             {option.value}

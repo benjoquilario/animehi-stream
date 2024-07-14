@@ -14,7 +14,6 @@ import {
   type MediaProviderChangeEvent,
   type MediaPlayerInstance,
 } from "@vidstack/react"
-
 import type { IAnilistInfo, IEpisode, AniSkipResult } from "types/types"
 import {
   increment,
@@ -26,11 +25,8 @@ import { useSession } from "next-auth/react"
 import { useRouter } from "next/navigation"
 import { useStore } from "zustand"
 import { useAutoSkip, useAutoNext, useAutoPlay } from "@/store"
-import { VideoLayout } from "./layout/video-layout"
-import styles from "./player.module.css"
-import { cn } from "@/lib/utils"
+import { env } from "@/env.mjs"
 import {
-  DefaultAudioLayout,
   defaultLayoutIcons,
   DefaultVideoLayout,
 } from "@vidstack/react/player/layouts/default"
@@ -48,6 +44,7 @@ type VidstackPlayerProps = {
   skipTimes: AniSkipResult[]
   currentTime: number
   setTotalDuration: (duration: number) => void
+  textTracks: ITracks[]
 }
 
 const VidstackPlayer = (props: VidstackPlayerProps) => {
@@ -64,6 +61,7 @@ const VidstackPlayer = (props: VidstackPlayerProps) => {
     skipTimes,
     setTotalDuration,
     currentTime,
+    textTracks,
   } = props
   const { data: session } = useSession()
   const router = useRouter()
@@ -233,7 +231,7 @@ const VidstackPlayer = (props: VidstackPlayerProps) => {
 
     if (latestEpisodeNumber === episodeNumber) return
 
-    router.replace(`?episode=${episodeNumber + 1}`)
+    router.replace(`?id=${anilistId}&slug=${animeId}&ep=${episodeNumber + 1}`)
   }
 
   return (
@@ -255,18 +253,29 @@ const VidstackPlayer = (props: VidstackPlayerProps) => {
       onTimeUpdate={onTimeUpdate}
       ref={player}
       aspectRatio="16/9"
-      load="idle"
-      posterLoad="idle"
+      load="eager"
+      posterLoad="eager"
       streamType="on-demand"
       storage="storage-key"
       keyTarget="player"
       onEnded={handlePlaybackEnded}
     >
       <MediaProvider>
-        <Poster className="vds-poster" src={currentEpisode?.image} alt="" />
-        {vttUrl && (
-          <Track kind="chapters" src={vttUrl} default label="Skip Times" />
-        )}
+        <Poster
+          className="vds-poster"
+          src={`${env.NEXT_PUBLIC_PROXY_URI}=${currentEpisode?.image}`}
+          alt=""
+        />
+        {textTracks &&
+          textTracks.map((track) => (
+            <Track
+              label={track.label}
+              kind={track.kind === "thumbnails" ? "chapters" : "captions"}
+              src={track.file}
+              default={track.default}
+              key={track.file}
+            />
+          ))}
       </MediaProvider>
       {opButton && (
         <button
@@ -292,7 +301,6 @@ const VidstackPlayer = (props: VidstackPlayerProps) => {
           Skip Ending
         </button>
       )}
-      <DefaultAudioLayout icons={defaultLayoutIcons} />
       <DefaultVideoLayout icons={defaultLayoutIcons} />
     </MediaPlayer>
   )

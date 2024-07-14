@@ -42,6 +42,7 @@ const VideoPlayer = (props: VideoPlayerProps) => {
   const [src, setSrc] = useState<string>("")
   const setDownload = useWatchStore((store) => store.setDownload)
   const [vttGenerated, setVttGenerated] = useState<boolean>(false)
+  const [textTracks, setTextTracks] = useState<ITracks[]>([])
 
   console.log(episodeId)
 
@@ -95,17 +96,27 @@ const VideoPlayer = (props: VideoPlayerProps) => {
       )
 
       const data = await response.json()
+      console.log(data)
 
-      const { episodesList } = data
+      const { episodesList } = data.data
 
-      const sources = episodesList[episodeNumber + 1]
+      const source = episodesList.find(
+        (episode: {
+          episodeId: number
+          id: string
+          number: number
+          title: string
+        }) => episode.number === episodeNumber
+      )
+
       const fetchDataSources = await fetch(
-        `${env.NEXT_PUBLIC_PROXY_URI}=https://aniwatch-one.vercel.app/anime/episode-srcs?id=${sources.id}`
+        `${env.NEXT_PUBLIC_PROXY_URI}=https://aniwatch-one.vercel.app/anime/episode-srcs?id=${source.id}`
       )
 
       const videoSource = await fetchDataSources.json()
 
-      setSrc(`${env.NEXT_PUBLIC_PROXY_URI}=${videoSource.sources[0].url}`)
+      setSrc(`${videoSource.sources[0].url}`)
+      setTextTracks(videoSource.tracks)
       setDownload("")
     }
   }
@@ -213,6 +224,7 @@ const VideoPlayer = (props: VideoPlayerProps) => {
           setTotalDuration={setTotalDuration}
           skipTimes={skipTimes}
           currentTime={currentTime}
+          textTracks={textTracks}
         />
       ) : (
         <div>Please try again</div>

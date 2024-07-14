@@ -14,6 +14,8 @@ import NextAiringEpisode from "./anime/next-airing"
 import { useAutoSkip, useAutoPlay, useAutoNext } from "@/store"
 import { useStore } from "zustand"
 import ClientOnly from "./ui/client-only"
+import { MdCheckBoxOutlineBlank, MdOutlineCheckBox } from "react-icons/md"
+import { FaCheck } from "react-icons/fa6"
 
 type ServerProps = {
   animeResult?: IAnilistInfo
@@ -111,25 +113,64 @@ export default function Server({
   // }, [episodeId, setEmbeddedUrl, sourceType])
 
   return (
-    <div className="mt-2 flex flex-col gap-2">
+    <div className="flex flex-col gap-2">
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2 text-[10px] md:text-xs">
           <div className="">
-            Auto Skip{" "}
-            <button className="text-primary" onClick={changeAutoSkip}>
-              <ClientOnly>{isAutoSkip ? "On" : "Off"}</ClientOnly>
+            <button
+              className="flex items-center gap-1 text-foreground/80 hover:scale-95 hover:text-foreground  active:scale-105"
+              onClick={changeAutoSkip}
+            >
+              <ClientOnly>
+                {isAutoSkip ? (
+                  <FaCheck aria-hidden className="text-primary" size={15} />
+                ) : (
+                  <MdCheckBoxOutlineBlank
+                    aria-hidden
+                    className="text-primary"
+                    size={15}
+                  />
+                )}
+              </ClientOnly>
+              <span className="text-foreground"> Auto Skip</span>
             </button>
           </div>
           <div className="">
-            Auto Next{" "}
-            <button className="text-primary" onClick={changeAutoNext}>
-              <ClientOnly>{isAutoNext ? "On" : "Off"}</ClientOnly>
+            <button
+              className="flex items-center gap-1 text-foreground/80 hover:scale-95 hover:text-foreground  active:scale-105"
+              onClick={changeAutoNext}
+            >
+              <ClientOnly>
+                {isAutoNext ? (
+                  <FaCheck aria-hidden className="text-primary" size={15} />
+                ) : (
+                  <MdCheckBoxOutlineBlank
+                    aria-hidden
+                    className="text-primary"
+                    size={15}
+                  />
+                )}
+              </ClientOnly>
+              <span className="text-foreground"> Auto Next</span>
             </button>
           </div>
           <div className="">
-            Auto Play{" "}
-            <button className="text-primary" onClick={changeAutoPlay}>
-              <ClientOnly>{isAutoPlay ? "On" : "Off"}</ClientOnly>
+            <button
+              className="flex items-center gap-1 text-foreground/80 hover:scale-95 hover:text-foreground  active:scale-105"
+              onClick={changeAutoPlay}
+            >
+              <ClientOnly>
+                {isAutoPlay ? (
+                  <FaCheck aria-hidden className="text-primary" size={15} />
+                ) : (
+                  <MdCheckBoxOutlineBlank
+                    aria-hidden
+                    className="text-primary"
+                    size={15}
+                  />
+                )}
+              </ClientOnly>
+              <span className="text-foreground"> Auto Play</span>
             </button>
           </div>
         </div>
@@ -146,7 +187,7 @@ export default function Server({
         </div>
       </div>
       <div className="grid grid-cols-1 items-center gap-2 overflow-hidden rounded-md md:grid-cols-[1fr_380px] md:flex-row">
-        <div className="flex w-full flex-col gap-1 rounded-md bg-secondary px-5 py-3 text-left text-sm">
+        <div className="flex h-full w-full flex-col justify-center gap-3 rounded-md bg-secondary px-5 py-3 text-left text-sm">
           <div className="flex items-center gap-1">
             You are watching
             <span className="font-semibold">Episode {lastEpisode}</span>
@@ -163,12 +204,24 @@ export default function Server({
               <FaClosedCaptioning />
             </span>
             <Sub episodeNumber={lastEpisode} />
+            <Button
+              variant="ghost"
+              className="bg-background/60 hover:bg-background/80"
+            >
+              Vidstreaming
+            </Button>
           </div>
           <div className="flex items-center gap-2">
             <span>
               <FaMicrophone />
             </span>
             <Dub episodeNumber={lastEpisode} />
+            <Button
+              variant="ghost"
+              className="bg-background/60 hover:bg-background/80"
+            >
+              Vidstreaming
+            </Button>
           </div>
         </div>
       </div>

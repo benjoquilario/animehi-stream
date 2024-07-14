@@ -25,6 +25,7 @@ import {
 import { QUERY_KEYS } from "@/lib/queriesKeys"
 import { createReplyComment } from "@/server/reply"
 import type { User } from "@prisma/client"
+import { useAuthStore } from "@/store"
 
 const repliesSchema = z.object({
   content: z
@@ -43,6 +44,7 @@ export default function RepliesForm({ commentId, replyId }: RepliesFormProps) {
   const buttonRef = useRef<HTMLButtonElement | null>(null)
   const queryClient = useQueryClient()
   const { data: session } = useSession()
+  const setIsAuthOpen = useAuthStore((store) => store.setIsAuthOpen)
 
   const queryKey = useMemo(
     () => [QUERY_KEYS.GET_INFINITE_REPLIES, commentId],
@@ -121,43 +123,56 @@ export default function RepliesForm({ commentId, replyId }: RepliesFormProps) {
           </AvatarFallback>
         </Avatar>
       </div>
-      <div className="flex flex-1 flex-col gap-3">
-        <Form {...form}>
-          <form
-            onSubmit={form.handleSubmit(handleOnSubmit)}
-            className="relative h-full space-y-1"
-          >
-            <FormField
-              control={form.control}
-              name="content"
-              render={({ field }) => (
-                <FormItem>
-                  <FormControl>
-                    <Textarea
-                      className="rounded-xl bg-accent"
-                      placeholder="Leave a comment"
-                      onKeyDown={handleKeyPress}
-                      {...field}
-                      disabled={isPending}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+      <div className="mt-1 flex flex-1 flex-col gap-3">
+        {session?.user ? (
+          <Form {...form}>
+            <form
+              onSubmit={form.handleSubmit(handleOnSubmit)}
+              className="relative h-full space-y-1"
+            >
+              <FormField
+                control={form.control}
+                name="content"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormControl>
+                      <Textarea
+                        className="rounded-xl bg-accent"
+                        placeholder="Leave a comment"
+                        onKeyDown={handleKeyPress}
+                        {...field}
+                        disabled={isPending}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
 
+              <button
+                aria-disabled={isPending}
+                disabled={isPending}
+                ref={buttonRef}
+                type="submit"
+                className="sr-only"
+              />
+              {isPending ? (
+                <ImSpinner8 className="absolute bottom-3 right-2 h-4 w-4 animate-spin" />
+              ) : null}
+            </form>
+          </Form>
+        ) : (
+          <p>
+            You must be{" "}
             <button
-              aria-disabled={isPending}
-              disabled={isPending}
-              ref={buttonRef}
-              type="submit"
-              className="sr-only"
-            />
-            {isPending ? (
-              <ImSpinner8 className="absolute bottom-3 right-2 h-4 w-4 animate-spin" />
-            ) : null}
-          </form>
-        </Form>
+              className="text-primary"
+              onClick={() => setIsAuthOpen(true)}
+            >
+              login
+            </button>{" "}
+            to post a comment
+          </p>
+        )}
       </div>
     </div>
   )
