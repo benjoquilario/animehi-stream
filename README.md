@@ -68,11 +68,6 @@ Share your thought in episode
 
   </details>
 </div>
-
-## Comments
-
-Share your thoughts in episode
-
 Try the App: [AnimeHI](https://animehi-stream.vercel.app/)
 
 ### Acknowledgements
@@ -114,13 +109,66 @@ This app would not have been possible without the kind and rapid support of the 
 - <s>Watch list</s> ✅
 - <s>Recently Watching</s> ✅
 - <s>PWA</s>✅
-- Advance Search and filter genres
+- <s>Advance Search and filter genres</s>✅
 - <s>Dark more</s>✅
 - <s>Comments</s>✅
 - <s>Reply Comment</s>✅
 - <s>Like/Dislike Comment/Replies</s>✅
 - Own domain name
 - … and many more
+
+## Installation and Local Development
+
+### 1. Clone this repository using
+
+```bash
+git clone https://github.com/benjoquilario/animehi-stream.git
+```
+
+```bash
+cd Miruro
+```
+
+### 2. Install Dependencies
+
+- You can use Bun to install dependencies quickly. If you prefer, `npm` / `yarn` or `pnpm` can also be used with equivalent commands.
+
+```bash
+bun install
+```
+
+### Copy `.env.example` into `.env` in the root folder
+
+- `.env.local` & `.env` are both viable options, you can also set
+  `.env.test.local`,
+  `.env.development.local` or
+  `.env.production.local`
+
+```bash
+cp .env.example .env.local
+```
+
+### 3. Sync your database
+
+- Create a database instance in neon.tech
+
+```bash
+npx prisma migrate dev
+```
+
+### 4. Run on development &/or production
+
+- Run on development mode
+
+```bash
+bun run dev
+```
+
+- Run on production mode
+
+```bash
+bun run preview
+```
 
 ## Contribution
 
@@ -134,7 +182,7 @@ Your ideas, translations, design changes, code cleaning, real heavy code changes
 
 - Twitter: [@iambenjo](https://twitter.com/iam_benjo)
 - Github: [@benjoquilario](https://github.com/benjoquilario)
-- Portfolio: [@benjoquilario](https://benjoquilario.me)
+- Portfolio: [@benjoquilario](https://benjoquilario.site)
 
 Please give this repository a ⭐️ if you liked this app. It seems like a little thing, but it helps a lot with the motivation.
 
