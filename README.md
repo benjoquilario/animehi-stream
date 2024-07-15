@@ -126,7 +126,7 @@ git clone https://github.com/benjoquilario/animehi-stream.git
 ```
 
 ```bash
-cd Miruro
+cd animehi-stream
 ```
 
 ### 2. Install Dependencies
