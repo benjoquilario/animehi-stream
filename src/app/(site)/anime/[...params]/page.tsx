@@ -62,5 +62,5 @@ export async function generateMetadata({
 export default function AnimePage({ params }: AnimeProps) {
   const [slug, animeId] = params.params as string[]
 
-  return <Anime animeId={animeId} />
+  return <Anime animeId={animeId} slug={slug} />
 }

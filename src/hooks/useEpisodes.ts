@@ -17,12 +17,35 @@ const useEpisodes = (animeId: string) => {
         results = data
       } else {
         const response = await fetch(
-          `${env.NEXT_PUBLIC_ANIME_API_URL}/meta/anilist/episodes/${animeId}?provider=anify&dub=false`
+          `${env.NEXT_PUBLIC_PROXY_URI}=https://aniwatch-4cxa.vercel.app/anime/info/${animeId}`
         )
 
-        const data = (await response.json()) as IEpisode[]
+        const data = await response.json()
 
-        results = data
+        const { episodesList } = data.data
+
+        const transformEpisode: IEpisode[] = episodesList.map(
+          (episode: {
+            episodeId: number
+            id: string
+            number: number
+            title: string
+          }) => {
+            return {
+              id: episode.episodeId,
+              title: `Episode ${episode.number}`,
+              image: null,
+              imageHash: "hash",
+              number: episode.number,
+              createdAt: null,
+              description: null,
+              url: "",
+            }
+          }
+        )
+
+        console.log(transformEpisode)
+        results = transformEpisode
       }
 
       return results

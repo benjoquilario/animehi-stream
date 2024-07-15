@@ -10,6 +10,7 @@ import {
   MediaProvider,
   Poster,
   Track,
+  Captions,
   type MediaProviderAdapter,
   type MediaProviderChangeEvent,
   type MediaPlayerInstance,
@@ -237,7 +238,7 @@ const VidstackPlayer = (props: VidstackPlayerProps) => {
   return (
     <MediaPlayer
       key={src}
-      className="player"
+      className="media-player relative"
       title={`${animeResponse.title.english ?? animeResponse.title.romaji} / Episode ${episodeNumber}`}
       src={{
         src: src,
@@ -277,6 +278,7 @@ const VidstackPlayer = (props: VidstackPlayerProps) => {
             />
           ))}
       </MediaProvider>
+      <Captions className="vds-captions bg-transparent" />
       {opButton && (
         <button
           onClick={() =>

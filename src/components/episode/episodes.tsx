@@ -24,6 +24,7 @@ type EpisodesProps = {
   episodeNumber?: number
   episodes?: IEpisode[]
   isLoading: boolean
+  slug: string
 }
 
 export default function Episodes({
@@ -32,15 +33,18 @@ export default function Episodes({
   episodes,
   isLoading,
   episodeNumber,
+  slug,
 }: EpisodesProps) {
   const [query, setQuery] = useState("")
   const [interval, setInterval] = useState<[number, number]>([0, 99])
   const router = useRouter()
 
   const animeTitle = useMemo(
-    () => episodes?.[0].id.split("-episode-")[0],
-    [episodes]
+    () => episodes?.[0]?.id?.split?.("-episode-")[0] ?? slug,
+    [episodes, slug]
   )
+
+  console.log(episodes)
 
   const intervalOptions = useMemo(() => {
     if (!isLoading) {

@@ -18,7 +18,13 @@ import Recommendations from "@/components/anime/recommendations"
 import { env } from "@/env.mjs"
 import useAnimeInfo from "@/hooks/useAnimeInfo"
 
-export default function Anime({ animeId }: { animeId: string }) {
+export default function Anime({
+  animeId,
+  slug,
+}: {
+  animeId: string
+  slug: string
+}) {
   const { data: episodes, isLoading, isError } = useEpisodes(animeId)
 
   const { data: animeInfo, isLoading: loading } =
@@ -27,9 +33,8 @@ export default function Anime({ animeId }: { animeId: string }) {
   const router = useRouter()
 
   const animeTitle = useMemo(
-    () =>
-      episodes?.length !== 0 ? episodes?.[0]?.id.split("-episode-")[0] : null,
-    [episodes]
+    () => episodes?.[0]?.id.split?.("-episode-")[0] ?? slug,
+    [episodes, slug]
   )
 
   return (
@@ -219,6 +224,7 @@ export default function Anime({ animeId }: { animeId: string }) {
               episodes={episodes}
               isLoading={isLoading}
               animeId={animeId}
+              slug={slug}
             />
           )}
         </div>

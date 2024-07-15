@@ -123,8 +123,6 @@ const VideoPlayer = (props: VideoPlayerProps) => {
 
   useEffect(() => {
     fetchAndSetAnimeSource()
-
-    fetchAndSetAnimeSource()
     fetchAndProcessSkipTimes()
     return () => {
       if (vttUrl) URL.revokeObjectURL(vttUrl)
@@ -248,6 +246,7 @@ const VideoPlayer = (props: VideoPlayerProps) => {
       </Server>
 
       <Episodes
+        slug={animeId}
         episodes={episodes}
         isLoading={isPending}
         animeId={anilistId}

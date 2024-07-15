@@ -48,3 +48,19 @@ interface ITracks {
   kind: string
   label: string
 }
+
+interface IRecents {
+  bannerImage: string
+  coverImage: string
+  currentEpisode: number
+  genres: string[]
+  id: string
+  status: string
+  title: {
+    native: string
+    romaji: string
+    english: string
+  }
+  totalEpisodes: number
+  year: number
+}

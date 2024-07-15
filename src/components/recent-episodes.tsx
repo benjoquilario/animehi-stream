@@ -17,13 +17,11 @@ export default function RecentEpisodes() {
   const [pageNumber, setPageNumber] = useState(1)
 
   const fetcher = (page: number) =>
-    fetch(
-      `${env.NEXT_PUBLIC_ANIME_API_URL}/meta/anilist/recent-episodes?page=${page}&perPage=20`
-    ).then((res) => res.json())
+    fetch(`${env.NEXT_PUBLIC_APP_URL}/api/anime/recents?page=${page}`).then(
+      (res) => res.json()
+    )
 
-  const { data, error, isLoading } = useQuery<
-    TConsumetResponse<TRecentEpisode>
-  >({
+  const { data, error, isLoading } = useQuery<IRecents[]>({
     queryKey: ["recents", pageNumber],
     queryFn: () => fetcher(pageNumber),
   })
@@ -80,7 +78,7 @@ export default function RecentEpisodes() {
                 <Skeleton className="h-[30px] w-[112px] md:w-[185px]" />
               </div>
             ))
-          : data?.results.map((result) => (
+          : data?.map((result) => (
               <li
                 key={result.id}
                 className="col-span-1 overflow-hidden rounded-md"

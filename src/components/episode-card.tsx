@@ -1,23 +1,16 @@
 "use client"
 
 import Link from "next/link"
-import type { AnifyRecentEpisode, RecentEpisode } from "types/types"
 import { BsFillPlayFill, BsPlayFill } from "react-icons/bs"
 import NextImage from "./ui/image"
 import { memo } from "react"
+import { transformedTitle } from "@/lib/utils"
 
 type EpisodeCardProps = {
-  animeResult: RecentEpisode
+  animeResult: IRecents
 }
 
 const EpisodeCard = ({ animeResult }: EpisodeCardProps) => {
-  const episodeNumber = animeResult.episodeId.split("-").slice(-1).join()
-  const animeId = animeResult.episodeId
-    .split("-")
-    .slice(0, -1)
-    .join("-")
-    .replace("-episode", "")
-
   return (
     <>
       <div className="relative mb-2 w-full overflow-hidden rounded-md pb-[140%]">
@@ -27,14 +20,14 @@ const EpisodeCard = ({ animeResult }: EpisodeCardProps) => {
         <div className="absolute bottom-0 left-2 z-[80] flex w-full justify-between py-2 shadow-lg">
           <div className="flex items-center text-sm md:text-base">
             <BsPlayFill />
-            <h2>Episode {episodeNumber}</h2>
+            <h2>Episode {animeResult.currentEpisode}</h2>
           </div>
         </div>
         <div className="absolute h-full w-full">
           <NextImage
             classnamecontainer="relative"
             style={{ objectFit: "cover" }}
-            src={animeResult.image}
+            src={animeResult.coverImage}
             alt={animeResult.title.english ?? animeResult.title.romaji}
             width={180}
             height={200}
@@ -42,7 +35,7 @@ const EpisodeCard = ({ animeResult }: EpisodeCardProps) => {
           />
         </div>
         <Link
-          href={`/watch?id=${animeResult.id}&slug=${animeId.replace("/", "")}&ep=${episodeNumber}`}
+          href={`/anime/${transformedTitle(animeResult.title.romaji ?? animeResult.title.english)}/${animeResult.id}`}
           aria-label={animeResult.id}
           className="absolute inset-0 z-50 flex items-center justify-center bg-background/70 text-primary opacity-0 transition-opacity hover:opacity-100 group-hover/item:scale-105"
         >
