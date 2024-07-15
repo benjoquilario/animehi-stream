@@ -50,23 +50,36 @@
 
 ## Screenshots
 
-<a href="https://animehi-stream.vercel.app/" target="blank">
-  <img src="public/watch.jpg" />
-</a>
-<a href="https://animehi-stream.vercel.app/" target="blank">
-  <img src="public/page.png" />
-</a>
-<a href="https://animehi-stream.vercel.app/" target="blank">
-  <img src="public/mobile.png" />
-</a>
+<div style="text-align: left;">
+  <img src="public/screenshot.png" alt="Home Page" />
+  <details>
+  <summary>Screenshots [View More]</summary>
+  <br>
+
+### Watch Page
+
+Watch your favorite anime for free
+<img src="public/watch-page.jpeg" alt="Watch Page" style="max-width: 70%;">
+
+### Comments
+
+Share your thought in episode
+<img src="public/comments.jpeg" alt="Watch Page" style="max-width: 70%;">
+
+  </details>
+</div>
+
+## Comments
+
+Share your thoughts in episode
 
 Try the App: [AnimeHI](https://animehi-stream.vercel.app/)
 
 ### Acknowledgements
 
 <p align="center">
-<a href="https://github.com/shiyiya/oplayer">
-    <img src="https://img.shields.io/badge/shiyiya/oplayer-333.svg?style=flat-square">
+<a href="https://github.com/vidstack">
+    <img src="https://img.shields.io/badge/vidstack.io/vidstack-333.svg?style=flat-square">
   </a>
   <a href="https://github.com/consumet/">
     <img src="https://img.shields.io/badge/consumet/consumet.ts-333.svg?style=flat-square">
@@ -74,17 +87,9 @@ Try the App: [AnimeHI](https://animehi-stream.vercel.app/)
   <a href="https://anilist.co">
     <img src="https://img.shields.io/badge/AniList-1e2432.svg?logo=anilist&style=flat-square">
   </a>
-  <a href="https://gogoanime.bid">
-    <img src="https://img.shields.io/badge/GogoAnime-00a651.svg?style=flat-square">
-  </a>
-  <a href="https://github.com/Enime-Project/api.enime.moe">
-    <img src="https://img.shields.io/badge/Enime-Projects/api.enime.moe-333.svg?style=flat-square">
-  </a>
 </p>
 
-This app would not have been possible without the kind and rapid support of the experts over at [Consumet](https://github.com/consumet/) and [Enime](https://github.com/Enime-Project/api.enime.moe). AnimeHI was built using the Consumet API and Enime API to supply 99% of the data.
-
-Credits to the person who made the logo [Vergel](https://github.com/vergelmacayan).
+This app would not have been possible without the kind and rapid support of the experts over at [Consumet](https://github.com/consumet/). AnimeHI was built using the Consumet API to supply 99% of the data.
 
 ### Features
 
@@ -94,9 +99,13 @@ Credits to the person who made the logo [Vergel](https://github.com/vergelmacaya
 - Recently release Anime
 - All time popular Anime list
 - All time favorite Anime list
-- Favorite this seasonm
+- Favorite this season
 - Airing Scheduled
+- Bookmark Anime
+- Continue Watching
+- AutoNext/AutoPlay/AutoSkip features
 - Fully Responsive
+- Login/Register Account
 - ...enough talk [see it yourself](https://animehi-stream.vercel.app/)
 
 ### Coming Features
@@ -104,10 +113,12 @@ Credits to the person who made the logo [Vergel](https://github.com/vergelmacaya
 - Authorization system with anilist
 - <s>Watch list</s> ✅
 - <s>Recently Watching</s> ✅
-- PWA
+- <s>PWA</s>✅
 - Advance Search and filter genres
-- Dark more
-- Comments
+- <s>Dark more</s>✅
+- <s>Comments</s>✅
+- <s>Reply Comment</s>✅
+- <s>Like/Dislike Comment/Replies</s>✅
 - Own domain name
 - … and many more
 

@@ -82,7 +82,7 @@ export default function Comments({
                       initial={{ y: 300, opacity: 0 }}
                       animate={{ y: 0, opacity: 1 }}
                       exit={{ x: -300, opacity: 0 }}
-                      className="mb-6 flex w-full gap-3 hover:bg-background/90"
+                      className="mb-2 flex w-full gap-3 hover:bg-background/90"
                     >
                       <CommentItem
                         comment={comment}

@@ -1,16 +1,14 @@
 import "./globals.css"
 import type { Metadata, Viewport } from "next"
-import { Inter as FontSans, Outfit } from "next/font/google"
 import { cn } from "@/lib/utils"
 import ThemeProvider from "@/components/theme-provider"
-import Script from "next/script"
 import HolyLoader from "holy-loader"
 import { Toaster } from "@/components/ui/toaster"
 import AuthContext from "@/components/auth-context"
 import QueryProvider from "@/components/query-provider"
 import SiteHeader from "@/components/site-header"
 import SiteFooter from "@/components/site-footer"
-import { GeistSans } from "geist/font/sans"
+import { fontSans } from "@/lib/fonts"
 
 export const viewport: Viewport = {
   themeColor: [
@@ -20,8 +18,6 @@ export const viewport: Viewport = {
 
   colorScheme: "dark light",
 }
-
-const fontSans = GeistSans
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://animehi-stream.vercel.app"),
@@ -83,6 +79,14 @@ export default function RootLayout({
           fontSans.variable
         )}
       >
+        <h1 className="sr-only">
+          AnimeHi - Watch anime online with SUB and DUB without ads
+        </h1>
+        <p className="sr-only">
+          AnimeHi is a Free anime streaming website which you can watch English
+          Subbed and Dubbed Anime online for free without ads in your mobile,
+          tablet or pc.
+        </p>
         <AuthContext>
           <ThemeProvider attribute="class" defaultTheme="dark">
             {/* <NextTopLoader height={4} color="#6d28d9" /> */}

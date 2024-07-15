@@ -1,13 +1,13 @@
 "use client"
 
 import Link from "next/link"
-import Image from "next/image"
 import Combobox from "./combobox"
 import AuthForm from "./auth-form"
 import { cn } from "@/lib/utils"
 import ThemeToggle from "./theme-toggle"
 import { buttonVariants } from "./ui/button"
 import { useState, useEffect } from "react"
+import { permanentMarker } from "@/lib/fonts"
 
 export default function SiteHeader() {
   const [isFixed, setIsFixed] = useState(false)
@@ -70,16 +70,21 @@ export default function SiteHeader() {
       <div className="mx-auto flex h-[52px] w-full max-w-screen-2xl items-center justify-between gap-4 px-[2%] md:h-[64px] 2xl:h-[75px]">
         <Link href="/" className="p-1">
           <div className="flex">
-            <div className="relative h-[24px] w-[24px] p-2 md:h-[28px] md:w-[28px]">
-              <Image fill src="/animehi.svg" alt="animehi" priority />
-            </div>
-            <span className="text-base font-semibold uppercase md:text-[28px] 2xl:text-[32px]">
+            <div
+              className={cn(
+                permanentMarker.className,
+                "text-base font-bold uppercase md:text-3xl"
+              )}
+            >
+              <span className="text-base font-extrabold text-primary md:text-4xl">
+                A
+              </span>
               nime
-              <span className="text-[28px] font-extrabold md:text-[35px]">
+              <span className="text-base font-extrabold text-primary md:text-4xl">
                 H
               </span>
-              i
-            </span>
+              I
+            </div>
           </div>
         </Link>
         <nav className="hidden flex-1 md:block">

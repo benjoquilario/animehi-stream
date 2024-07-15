@@ -6,7 +6,7 @@ export async function GET(req: NextRequest) {
   const searchParams = req.nextUrl.searchParams
   const page = searchParams.get("page")
 
-  const url = `${env.ANIME_API_URI_V2}/recent-eps?type=anime&page=${page}&perPage=12`
+  const url = `${env.ANIME_API_URI_V2}/recent-eps?type=anime&page=${page}&perPage=20`
   const response = await fetch(url)
 
   if (!response.ok) throw new Error("Failed to fetch")
