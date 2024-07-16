@@ -68,6 +68,7 @@ Share your thought in episode
 
   </details>
 </div>
+
 Try the App: [AnimeHI](https://animehi-stream.vercel.app/)
 
 ### Acknowledgements
@@ -148,7 +149,7 @@ bun install
 cp .env.example .env.local
 ```
 
-### 3. Sync your database
+### 4. Sync your database
 
 - Create a database instance in neon.tech
 

@@ -7,7 +7,7 @@ export async function GET(req: NextRequest) {
   const page = searchParams.get("page")
 
   const url = `${env.ANIME_API_URI_V2}/recent-eps?type=anime&page=${page}&perPage=20`
-  const response = await fetch(url)
+  const response = await fetch(url, { cache: "no-cache" })
 
   if (!response.ok) throw new Error("Failed to fetch")
 

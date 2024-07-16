@@ -84,7 +84,9 @@ const VideoPlayer = (props: VideoPlayerProps) => {
       )
 
       if (backupSource) {
-        setSrc(`${env.NEXT_PUBLIC_PROXY_URI}=${backupSource.url}`)
+        setSrc(
+          `${env.NEXT_PUBLIC_PROXY_URI}=${encodeURIComponent(backupSource.url)}`
+        )
         setDownload(data.download)
       } else {
         console.error("Backup source not found")
@@ -92,7 +94,7 @@ const VideoPlayer = (props: VideoPlayerProps) => {
     } catch (error) {
       console.error("Failed to fetch anime streaming links", error)
       const response = await fetch(
-        `${env.NEXT_PUBLIC_PROXY_URI}=https://aniwatch-4cxa.vercel.app/anime/info/${anilistId}`
+        `${env.NEXT_PUBLIC_PROXY_URI}=${env.NEXT_PUBLIC_ANIME_API_URL_V3}/anime/info/${anilistId}`
       )
 
       const data = await response.json()
@@ -110,12 +112,12 @@ const VideoPlayer = (props: VideoPlayerProps) => {
       )
 
       const fetchDataSources = await fetch(
-        `${env.NEXT_PUBLIC_PROXY_URI}=https://aniwatch-one.vercel.app/anime/episode-srcs?id=${source.id}`
+        `${env.NEXT_PUBLIC_PROXY_URI}=${env.NEXT_PUBLIC_ANIME_API_URL_V2}/anime/episode-srcs?id=${source.id}`
       )
 
       const videoSource = await fetchDataSources.json()
 
-      setSrc(`${videoSource.sources[0].url}`)
+      setSrc(videoSource.sources[0].url)
       setTextTracks(videoSource.tracks)
       setDownload("")
     }
