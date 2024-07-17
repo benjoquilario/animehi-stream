@@ -149,7 +149,7 @@ bun install
 cp .env.example .env.local
 ```
 
-### 4. Sync your database
+### 3. Sync your database
 
 - Create a database instance in neon.tech
 
@@ -170,6 +170,11 @@ bun run dev
 ```bash
 bun run preview
 ```
+
+You are all set! Open [localhost:3000](http://localhost:3000/) to see the app.
+
+> [!NOTE]
+> This project is a work in progress, it still contains bugs and will constantly be updated to stay up-to-date with the latest framework changes.
 
 ## Contribution
 

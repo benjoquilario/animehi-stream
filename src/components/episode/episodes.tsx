@@ -25,6 +25,7 @@ type EpisodesProps = {
   episodes?: IEpisode[]
   isLoading: boolean
   slug: string
+  onEpisodeSelect: (id: string) => void
 }
 
 export default function Episodes({
@@ -34,14 +35,16 @@ export default function Episodes({
   isLoading,
   episodeNumber,
   slug,
+  onEpisodeSelect,
 }: EpisodesProps) {
   const [query, setQuery] = useState("")
   const [interval, setInterval] = useState<[number, number]>([0, 99])
-  const router = useRouter()
 
-  const animeTitle = useMemo(
-    () => episodes?.[0]?.id?.split?.("-episode-")[0] ?? slug,
-    [episodes, slug]
+  const handleEpisodeSelect = useCallback(
+    (id: string) => {
+      onEpisodeSelect(id)
+    },
+    [onEpisodeSelect]
   )
 
   const intervalOptions = useMemo(() => {
@@ -66,11 +69,6 @@ export default function Episodes({
       setInterval([start, end])
     },
     []
-  )
-
-  const currentEpisode = useMemo(
-    () => episodes?.find((episode: IEpisode) => episode?.id === episodeId),
-    [episodes, episodeId]
   )
 
   const filteredEpisode = useMemo(() => {
@@ -133,8 +131,8 @@ export default function Episodes({
               <div className="flex flex-col odd:bg-secondary/30 even:bg-background">
                 {episodes?.length !== 0 ? (
                   displayedEpisodes?.map((episode, index) => (
-                    <Link
-                      href={`/watch?id=${animeId}&slug=${animeTitle}&ep=${episode.number}`}
+                    <Button
+                      onClick={() => handleEpisodeSelect(episode.id)}
                       key={episode.id}
                       className={cn(
                         "justify-start p-3 text-[14px] font-medium transition-all odd:bg-secondary/30 even:bg-background hover:bg-secondary active:scale-[.98]",
@@ -154,7 +152,7 @@ export default function Episodes({
                           </span>
                         ) : null}
                       </div>
-                    </Link>
+                    </Button>
                   ))
                 ) : (
                   <div className="p-3">No Episode Found</div>

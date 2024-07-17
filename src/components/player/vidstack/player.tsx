@@ -49,6 +49,7 @@ type VidstackPlayerProps = {
   setTotalDuration: (duration: number) => void
   textTracks: ITracks[]
   banner: string
+  title: string
 }
 
 const VidstackPlayer = (props: VidstackPlayerProps) => {
@@ -67,16 +68,11 @@ const VidstackPlayer = (props: VidstackPlayerProps) => {
     currentTime,
     textTracks,
     banner,
+    title,
   } = props
   const { data: session } = useSession()
   const router = useRouter()
   const player = useRef<MediaPlayerInstance>(null)
-
-  const animeVideoTitle = useMemo(
-    () =>
-      `${currentEpisode?.title ?? `${animeResponse.title.english ?? animeResponse.title.romaji} / Episode ${episodeNumber}`}`,
-    [animeResponse, episodeNumber, currentEpisode]
-  )
 
   const autoSkip = useStore(
     useAutoSkip,
@@ -148,13 +144,13 @@ const VidstackPlayer = (props: VidstackPlayerProps) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [session, anilistId, animeId, currentEpisode])
 
-  // useEffect(() => {
-  //   if (autoPlay && player.current) {
-  //     player.current
-  //       .play()
-  //       .catch((e) => console.log("Playback failed to start automatically:", e))
-  //   }
-  // }, [autoPlay, src])
+  useEffect(() => {
+    if (autoPlay && player.current) {
+      player.current
+        .play()
+        .catch((e) => console.log("Playback failed to start automatically:", e))
+    }
+  }, [autoPlay, src])
 
   function onProviderChange(
     provider: MediaProviderAdapter | null,
@@ -225,7 +221,7 @@ const VidstackPlayer = (props: VidstackPlayerProps) => {
     <MediaPlayer
       key={src}
       className="font-geist-sans player relative"
-      title={animeVideoTitle}
+      title={title}
       src={{
         src: src,
         type: "application/x-mpegurl",
