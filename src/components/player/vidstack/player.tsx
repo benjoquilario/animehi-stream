@@ -11,6 +11,7 @@ import {
   Poster,
   Track,
   Captions,
+  TextTrack,
   type MediaProviderAdapter,
   type MediaProviderChangeEvent,
   type MediaPlayerInstance,
@@ -31,6 +32,7 @@ import {
   defaultLayoutIcons,
   DefaultVideoLayout,
 } from "@vidstack/react/player/layouts/default"
+import { Button } from "@/components/ui/button"
 
 type VidstackPlayerProps = {
   animeId: string
@@ -46,6 +48,7 @@ type VidstackPlayerProps = {
   currentTime: number
   setTotalDuration: (duration: number) => void
   textTracks: ITracks[]
+  banner: string
 }
 
 const VidstackPlayer = (props: VidstackPlayerProps) => {
@@ -63,10 +66,18 @@ const VidstackPlayer = (props: VidstackPlayerProps) => {
     setTotalDuration,
     currentTime,
     textTracks,
+    banner,
   } = props
   const { data: session } = useSession()
   const router = useRouter()
   const player = useRef<MediaPlayerInstance>(null)
+
+  const animeVideoTitle = useMemo(
+    () =>
+      `${currentEpisode?.title ?? `${animeResponse.title.english ?? animeResponse.title.romaji} / Episode ${episodeNumber}`}`,
+    [animeResponse, episodeNumber, currentEpisode]
+  )
+
   const autoSkip = useStore(
     useAutoSkip,
     (store: any) => store.autoSkip as boolean
@@ -81,51 +92,6 @@ const VidstackPlayer = (props: VidstackPlayerProps) => {
   )
   const [opButton, setOpButton] = useState(false)
   const [otButton, setEdButton] = useState(false)
-
-  useEffect(() => {
-    player.current?.subscribe(({ currentTime, duration, poster }) => {
-      if (skipTimes && skipTimes.length > 0) {
-        const opStart = skipTimes[0]?.interval.startTime ?? 0
-        const opEnd = skipTimes[0]?.interval.endTime ?? 0
-
-        const epStart = skipTimes[1]?.interval.startTime ?? 0
-        const epEnd = skipTimes[1]?.interval.endTime ?? 0
-
-        const opButtonText = "Opening"
-        const edButtonText = "Outro"
-
-        setOpButton(
-          opButtonText === "Opening" &&
-            currentTime > opStart &&
-            currentTime < opEnd
-        )
-        setEdButton(
-          edButtonText === "Outro" &&
-            currentTime > epStart &&
-            currentTime < epEnd
-        )
-
-        if (autoSkip) {
-          if (
-            opButtonText === "Opening" &&
-            currentTime > opStart &&
-            currentTime < opEnd
-          ) {
-            Object.assign(player.current ?? {}, { currentTime: opEnd })
-            return null
-          }
-          if (
-            edButtonText === "Outro" &&
-            currentTime > epStart &&
-            currentTime < epEnd
-          ) {
-            Object.assign(player.current ?? {}, { currentTime: epEnd })
-            return null
-          }
-        }
-      }
-    })
-  }, [autoSkip, skipTimes])
 
   useEffect(() => {
     if (player.current && currentTime) {
@@ -182,13 +148,13 @@ const VidstackPlayer = (props: VidstackPlayerProps) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [session, anilistId, animeId, currentEpisode])
 
-  useEffect(() => {
-    if (autoPlay && player.current) {
-      player.current
-        .play()
-        .catch((e) => console.log("Playback failed to start automatically:", e))
-    }
-  }, [autoPlay, src])
+  // useEffect(() => {
+  //   if (autoPlay && player.current) {
+  //     player.current
+  //       .play()
+  //       .catch((e) => console.log("Playback failed to start automatically:", e))
+  //   }
+  // }, [autoPlay, src])
 
   function onProviderChange(
     provider: MediaProviderAdapter | null,
@@ -215,6 +181,22 @@ const VidstackPlayer = (props: VidstackPlayerProps) => {
         playbackPercentage,
       }
 
+      const opStart = skipTimes[0]?.interval.startTime ?? 0
+      const opEnd = skipTimes[0]?.interval.endTime ?? 0
+
+      const epStart = skipTimes[1]?.interval.startTime ?? 0
+      const epEnd = skipTimes[1]?.interval.endTime ?? 0
+
+      const opButtonText = skipTimes[0]?.skipType
+      const edButtonText = skipTimes[1]?.skipType
+
+      setOpButton(
+        opButtonText === "op" && currentTime > opStart && currentTime < opEnd
+      )
+      setEdButton(
+        edButtonText === "ed" && currentTime > epStart && currentTime < epEnd
+      )
+
       if (autoSkip && skipTimes.length) {
         const skipInterval = skipTimes.find(
           ({ interval }) =>
@@ -227,19 +209,23 @@ const VidstackPlayer = (props: VidstackPlayerProps) => {
     }
   }
 
-  function handlePlaybackEnded() {
+  const handlePlaybackEnded = function () {
     player.current?.pause()
 
     if (latestEpisodeNumber === episodeNumber) return
 
-    router.replace(`?id=${anilistId}&slug=${animeId}&ep=${episodeNumber + 1}`)
+    if (autoNext) {
+      router.replace(`?id=${anilistId}&slug=${animeId}&ep=${episodeNumber + 1}`)
+    }
   }
+
+  //console.log(opButton)
 
   return (
     <MediaPlayer
       key={src}
-      className="media-player relative"
-      title={`${animeResponse.title.english ?? animeResponse.title.romaji} / Episode ${episodeNumber}`}
+      className="font-geist-sans player relative"
+      title={animeVideoTitle}
       src={{
         src: src,
         type: "application/x-mpegurl",
@@ -264,8 +250,9 @@ const VidstackPlayer = (props: VidstackPlayerProps) => {
       <MediaProvider>
         <Poster
           className="vds-poster"
-          src={`${env.NEXT_PUBLIC_PROXY_URI}=${currentEpisode?.image}`}
+          src={`${env.NEXT_PUBLIC_PROXY_URI}=${banner}`}
           alt=""
+          style={{ objectFit: "cover" }}
         />
         {textTracks &&
           textTracks.map((track) => (
@@ -277,33 +264,37 @@ const VidstackPlayer = (props: VidstackPlayerProps) => {
               key={track.file}
             />
           ))}
+        {vttUrl && (
+          <Track kind="chapters" src={vttUrl} default label="Skip Times" />
+        )}
       </MediaProvider>
-      <Captions className="vds-captions bg-transparent" />
       {opButton && (
-        <button
+        <Button
           onClick={() =>
             Object.assign(player.current ?? {}, {
               currentTime: skipTimes[0]?.interval.endTime ?? 0,
             })
           }
-          className="absolute bottom-[70px] right-4 z-40 rounded-md bg-white px-3 py-2 text-sm  text-black sm:bottom-[83px]"
+          variant="secondary"
+          className="absolute bottom-[70px] right-4 z-40 rounded-md px-3 py-2 text-sm sm:bottom-[83px]"
         >
           Skip Opening
-        </button>
+        </Button>
       )}
       {otButton && (
-        <button
+        <Button
+          variant="secondary"
           onClick={() =>
             Object.assign(player.current ?? {}, {
               currentTime: skipTimes[1]?.interval.endTime ?? 0,
             })
           }
-          className="absolute bottom-[70px] right-4 z-40 rounded-[6px] bg-white px-3 py-2 text-sm font-medium text-black sm:bottom-[83px]"
+          className="absolute bottom-[70px] right-4 z-40 rounded-[6px] px-3 py-2 text-sm sm:bottom-[83px]"
         >
           Skip Ending
-        </button>
+        </Button>
       )}
-      <DefaultVideoLayout icons={defaultLayoutIcons} />
+      <DefaultVideoLayout thumbnails={vttUrl} icons={defaultLayoutIcons} />
     </MediaPlayer>
   )
 }

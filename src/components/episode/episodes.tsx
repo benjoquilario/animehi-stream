@@ -44,8 +44,6 @@ export default function Episodes({
     [episodes, slug]
   )
 
-  console.log(episodes)
-
   const intervalOptions = useMemo(() => {
     if (!isLoading) {
       return episodes?.reduce<{ start: number; end: number }[]>(

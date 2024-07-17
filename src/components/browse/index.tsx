@@ -1,6 +1,6 @@
 "use client"
 
-import React, { useCallback, useEffect, useState, useRef } from "react"
+import React, { useCallback, useEffect, useState, useRef, useMemo } from "react"
 import { usePathname, useRouter, useSearchParams } from "next/navigation"
 import SelectFilter from "@/components/browse/select"
 import {
@@ -9,6 +9,7 @@ import {
   sortOptions,
   statusOptions,
   yearOptions,
+  genreOptions,
 } from "@/config/site"
 import { getSeason, transformedTitle } from "@/lib/utils"
 import { Input } from "@/components/ui/input"
@@ -19,6 +20,15 @@ import NextImage from "@/components/ui/image"
 import Link from "next/link"
 import { Skeleton } from "@/components/ui/skeleton"
 import { fetchAdvanceSearch } from "@/lib/client"
+import {
+  MultiSelector,
+  MultiSelectorContent,
+  MultiSelectorInput,
+  MultiSelectorItem,
+  MultiSelectorList,
+  MultiSelectorTrigger,
+} from "@/components/ui/multi-select"
+import { useDebounce } from "@/hooks/useDebounce"
 
 const Browse = () => {
   const searchParams = useSearchParams()
@@ -28,7 +38,13 @@ const Browse = () => {
   const [page, setPage] = useState(1)
   const [isLoading, setIsLoading] = useState(false)
 
+  const genresParam = searchParams.get("genres")
+  const initialGenres = genresParam
+    ? genresParam.split(",").map((value) => ({ value, label: value }))
+    : []
+
   const filters = {
+    query: searchParams.get("query") || "",
     seasons: searchParams.get("season") || "",
     format: searchParams.get("format") || "",
     status: searchParams.get("status") || "",
@@ -58,11 +74,12 @@ const Browse = () => {
   const [animeData, setAnimeData] = useState<IAdvancedInfo[]>([])
   const [hasNextPage, setHasNextPage] = useState(false)
   const delayTimeout = useRef<number | null>(null)
+  const debouncedQuery = useDebounce(filters.query, 300)
 
   const fetchInitialAdvanceSearch = useCallback(async () => {
     setIsLoading(true)
     try {
-      const data = await fetchAdvanceSearch("", page, 20, {
+      const data = await fetchAdvanceSearch(debouncedQuery, page, 20, {
         status: filters.status,
         year: filters.year,
         format: filters.format,
@@ -84,6 +101,7 @@ const Browse = () => {
     filters.status,
     filters.year,
     page,
+    debouncedQuery,
   ])
 
   console.log(page)
@@ -93,7 +111,7 @@ const Browse = () => {
 
     delayTimeout.current = window.setTimeout(() => {
       fetchInitialAdvanceSearch()
-    }, 0)
+    }, 100)
 
     return () => {
       if (delayTimeout.current !== null) clearTimeout(delayTimeout.current)
@@ -159,6 +177,30 @@ const Browse = () => {
           label="Sort"
           options={sortOptions}
         />
+        {/* <MultiSelector
+          values={filters.genres.map((g) => g)}
+          onValuesChange={(event) =>
+            updateSearchParams({
+              title: "genres",
+              value: event.map((g) => g).join(","),
+            })
+          }
+          loop={false}
+          className="w-full"
+        >
+          <MultiSelectorTrigger>
+            <MultiSelectorInput placeholder="Genres" />
+          </MultiSelectorTrigger>
+          <MultiSelectorContent>
+            <MultiSelectorList>
+              {genreOptions.map((genre) => (
+                <MultiSelectorItem key={genre.value} value={genre.value}>
+                  {genre.value}
+                </MultiSelectorItem>
+              ))}
+            </MultiSelectorList>
+          </MultiSelectorContent>
+        </MultiSelector> */}
       </div>
       <ul className="relative mt-4 grid grid-cols-3 gap-3 overflow-hidden md:grid-cols-5 lg:grid-cols-7">
         {(isLoading && page === 1) ||

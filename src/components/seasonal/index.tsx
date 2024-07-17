@@ -40,7 +40,7 @@ export default async function Seasonal() {
         <Column
           seasonalTitle="Most Favorite Anime"
           results={mostFavorite.results}
-          browse="/browse?query=&sort=FAVORITE_DESC&format=TV"
+          browse="/browse?query=&sort=FAVOURITES_DESC&format=TV"
         />
       </div>
     </Section>

@@ -1,6 +1,6 @@
 "use client"
 
-import React, { useMemo, useEffect, useState } from "react"
+import React, { useMemo, useEffect, useState, useCallback } from "react"
 import { IAnilistInfo } from "types/types"
 import VidstackPlayer from "./player"
 import Episodes from "@/components/episode/episodes"
@@ -43,10 +43,8 @@ const VideoPlayer = (props: VideoPlayerProps) => {
   const setDownload = useWatchStore((store) => store.setDownload)
   const [vttGenerated, setVttGenerated] = useState<boolean>(false)
   const [textTracks, setTextTracks] = useState<ITracks[]>([])
-
-  console.log(episodeId)
-
-  console.log(isDub)
+  const [selectedBackgroundImage, setSelectedBackgroundImage] =
+    useState<string>("")
 
   const [vttUrl, setVttUrl] = useState<string>("")
   const [error, setError] = useState(false)
@@ -68,6 +66,32 @@ const VideoPlayer = (props: VideoPlayerProps) => {
         : 1,
     [animeResponse, episodes]
   )
+
+  useEffect(() => {
+    const updateBackgroundImage = () => {
+      const episodeImage = currentEpisode?.image
+      const bannerImage = animeResponse?.cover || animeResponse?.image
+      if (episodeImage && episodeImage !== animeResponse.image) {
+        const img = new Image()
+        img.onload = () => {
+          if (img.width > 500) {
+            setSelectedBackgroundImage(episodeImage)
+          } else {
+            setSelectedBackgroundImage(bannerImage)
+          }
+        }
+        img.onerror = () => {
+          setSelectedBackgroundImage(bannerImage)
+        }
+        img.src = episodeImage
+      } else {
+        setSelectedBackgroundImage(bannerImage)
+      }
+    }
+    if (animeResponse && currentEpisode?.id !== "0") {
+      updateBackgroundImage()
+    }
+  }, [animeResponse, currentEpisode])
 
   async function fetchAndSetAnimeSource() {
     try {
@@ -220,6 +244,7 @@ const VideoPlayer = (props: VideoPlayerProps) => {
           latestEpisodeNumber={latestEpisodeNumber}
           anilistId={anilistId}
           src={src}
+          banner={selectedBackgroundImage}
           vttUrl={vttUrl}
           setTotalDuration={setTotalDuration}
           skipTimes={skipTimes}

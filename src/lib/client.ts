@@ -5,6 +5,7 @@ interface FetchOptions {
   season?: string
   format?: string
   sort?: string[]
+  genres?: string[]
   id?: string
   year?: string
   status?: string
@@ -28,6 +29,11 @@ export async function fetchAdvanceSearch(
     ...(options.status && { status: options.status }),
     ...(options.sort && { sort: JSON.stringify(options.sort) }),
   })
+
+  if (options.genres && options.genres.length > 0) {
+    // Correctly encode genres as a JSON array
+    queryParams.set("genres", JSON.stringify(options.genres.map((g) => g)))
+  }
 
   const url = `${env.NEXT_PUBLIC_ANIME_API_URL}/meta/anilist/advanced-search?${queryParams.toString()}`
   const response = await fetch(url)
