@@ -16,6 +16,7 @@ import { stripHtml, transformedTitle } from "@/lib/utils"
 import { IAdvancedInfo } from "types/types"
 import { IoAlertCircleOutline } from "react-icons/io5"
 import React from "react"
+import { FaFire, FaCalendar } from "react-icons/fa"
 
 type BannerSwiperProps = {
   trendingAnime: IAdvancedInfo[]
@@ -33,7 +34,7 @@ const BannerSwiper = ({ trendingAnime }: BannerSwiperProps) => {
       modules={[Autoplay]}
       className="mySwiper relative"
     >
-      {trendingAnime?.map((trending) => (
+      {trendingAnime?.map((trending, index) => (
         <SwiperSlide id="slider" key={trending.id}>
           <div className="absolute inset-0 h-full w-full ">
             <div className="absolute inset-0 overflow-hidden">
@@ -54,11 +55,35 @@ const BannerSwiper = ({ trendingAnime }: BannerSwiperProps) => {
                   backgroundImage: `url("${trending.cover ?? trending.image}")`,
                 }}
               ></div>
+
               <div className="absolute bottom-[50px] top-auto z-[100] w-full max-w-[800px] pl-[2%] md:bottom-[109px]">
-                <h2 className="mx-0 mb-2 line-clamp-2 w-full max-w-lg text-lg font-bold sm:text-2xl md:text-5xl">
+                <div className="mb-3 text-base font-bold text-primary md:text-2xl">
+                  #{index + 1} on Trend
+                </div>
+                <h2
+                  title={trending.title.english || trending.title.romaji}
+                  className="mx-0 mb-2 line-clamp-2 w-full max-w-xl text-lg font-bold sm:text-2xl md:text-5xl"
+                >
                   {trending.title.english || trending.title.romaji}
                 </h2>
-                <p className="mx-0 my-3 line-clamp-2 w-full max-w-lg pr-6 text-left text-sm text-foreground/90 md:line-clamp-3">
+                <div className="flex items-center gap-3 text-xs md:text-base">
+                  <div className="flex items-center gap-1">
+                    <BsFillPlayFill />
+                    {trending.type}
+                  </div>
+                  <div className="flex items-center gap-1">
+                    <FaFire />
+                    {trending.rating}%
+                  </div>
+                  <div className="uppercase text-primary">
+                    {trending.status}
+                  </div>
+                  <div className="flex items-center gap-1">
+                    <FaCalendar />
+                    {trending.releaseDate}
+                  </div>
+                </div>
+                <p className="mx-0 my-3 line-clamp-3 w-full max-w-lg pr-6 text-left text-sm text-foreground/90 md:line-clamp-3">
                   {stripHtml(trending.description)}
                 </p>
                 <div className="flex gap-2">
