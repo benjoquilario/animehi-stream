@@ -39,6 +39,7 @@ const VideoPlayer = (props: VideoPlayerProps) => {
   )
   const download = useWatchStore((store) => store.download)
   const [src, setSrc] = useState<string>("")
+  const [isLoading, setIsLoading] = useState(false)
   const setDownload = useWatchStore((store) => store.setDownload)
   const [vttGenerated, setVttGenerated] = useState<boolean>(false)
   const [textTracks, setTextTracks] = useState<ITracks[]>([])
@@ -125,6 +126,7 @@ const VideoPlayer = (props: VideoPlayerProps) => {
   }, [episodes, episodeId, router, anilistId, animeId])
 
   async function fetchAndSetAnimeSource() {
+    setIsLoading(true)
     try {
       const response = await fetch(
         `${env.NEXT_PUBLIC_ANIME_API_URL}/anime/gogoanime/watch/${currentEpisode.id}`
@@ -143,6 +145,7 @@ const VideoPlayer = (props: VideoPlayerProps) => {
           `${env.NEXT_PUBLIC_PROXY_URI}=${encodeURIComponent(backupSource.url)}`
         )
         setDownload(data.download)
+        setIsLoading(false)
       } else {
         console.error("Backup source not found")
       }
@@ -175,8 +178,16 @@ const VideoPlayer = (props: VideoPlayerProps) => {
       setSrc(videoSource.sources[0].url)
       setTextTracks(videoSource.tracks)
       setDownload("")
+    } finally {
+      setIsLoading(false)
     }
   }
+
+  useEffect(() => {
+    if (isLoading) {
+      setSrc("")
+    }
+  }, [isLoading])
 
   useEffect(() => {
     fetchAndSetAnimeSource()
