@@ -72,6 +72,8 @@ export default async function Watch({
 }: Params) {
   const id = searchParams.id as string
   const slug = searchParams.slug as string
+  const ep = searchParams.ep as string
+
   const animeResponse = (await animeInfo(id)) as IAnilistInfo
 
   const currentUser = await getCurrentUser()
@@ -83,6 +85,7 @@ export default async function Watch({
         animeId={slug}
         animeResponse={animeResponse}
         currentUser={currentUser}
+        ep={ep}
       />
     </div>
   )

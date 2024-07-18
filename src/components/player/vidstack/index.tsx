@@ -24,14 +24,14 @@ type VideoPlayerProps = {
   animeResponse: IAnilistInfo
   anilistId: string
   currentUser: any
+  ep: string
 }
 
 const VideoPlayer = (props: VideoPlayerProps) => {
-  const { animeId, animeResponse, anilistId, currentUser } = props
+  const { animeId, animeResponse, anilistId, currentUser, ep } = props
 
   const searchParams = useSearchParams()
   const isDub = searchParams.get("dub")
-  const ep = searchParams.get("ep")
   const episodeNumber = Number(ep)
   const episodeId = useMemo(
     () => `${animeId}-${isDub ? "dub-" : ""}episode-${episodeNumber}`,
@@ -198,7 +198,7 @@ const VideoPlayer = (props: VideoPlayerProps) => {
       if (vttUrl) URL.revokeObjectURL(vttUrl)
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [currentEpisode.id, animeResponse, isDub, currentEpisode.number])
+  }, [animeId, animeResponse, isDub, episodeNumber])
 
   const handleEpisodeSelect = useCallback(
     async (selectedEpisode: IEpisode) => {
