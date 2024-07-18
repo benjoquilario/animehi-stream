@@ -16,6 +16,7 @@ import { useStore } from "zustand"
 import ClientOnly from "./ui/client-only"
 import { MdCheckBoxOutlineBlank, MdOutlineCheckBox } from "react-icons/md"
 import { FaCheck } from "react-icons/fa6"
+import { IoCloseSharp, IoAlertCircleOutline } from "react-icons/io5"
 
 type ServerProps = {
   animeResult?: IAnilistInfo
@@ -36,6 +37,7 @@ export default function Server({
   download,
   children,
 }: ServerProps) {
+  const [isRemove, setIsRemove] = useState(false)
   const checkBookmarkExist = useMemo(
     () =>
       currentUser?.bookMarks.some(
@@ -186,6 +188,21 @@ export default function Server({
           />
         </div>
       </div>
+      {isRemove ? null : (
+        <div className="flex items-center justify-between rounded-md bg-destructive p-2 text-xs md:text-sm">
+          <div className="flex items-center gap-1">
+            <IoAlertCircleOutline />{" "}
+            <span>
+              If the player isn&apos;t working, refresh the page. If the problem
+              persists, please report it.
+            </span>
+          </div>
+          <button onClick={() => setIsRemove(true)}>
+            <IoCloseSharp />
+          </button>
+        </div>
+      )}
+
       <div className="grid grid-cols-1 items-center gap-2 overflow-hidden rounded-md md:grid-cols-[1fr_380px] md:flex-row">
         <div className="flex h-full w-full flex-col justify-center gap-3 rounded-md bg-secondary px-5 py-3 text-left text-sm">
           <div className="flex items-center gap-1">
@@ -225,10 +242,6 @@ export default function Server({
           </div>
         </div>
       </div>
-      {/* <div className="mt-3 bg-[#111827] p-2 text-sm">
-        The next episode is predicted to arrive on 2023/10/17 15:50GMT (6 days,
-        10 hours, 7 minutes, 11 seconds)
-      </div> */}
     </div>
   )
 }

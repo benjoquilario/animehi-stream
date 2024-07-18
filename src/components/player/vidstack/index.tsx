@@ -105,7 +105,9 @@ const VideoPlayer = (props: VideoPlayerProps) => {
   }, [animeResponse, currentEpisode])
 
   useEffect(() => {
-    const navigateToEpisode = episodes?.find((ep) => ep.id === episodeId)
+    const navigateToEpisode = episodes?.find(
+      (ep) => ep.number === episodeNumber
+    )
 
     if (navigateToEpisode) {
       setCurrentEpisode({
@@ -123,7 +125,7 @@ const VideoPlayer = (props: VideoPlayerProps) => {
         `/watch?id=${anilistId}&slug=${animeId}&ep=${navigateToEpisode.number}`
       )
     }
-  }, [episodes, episodeId, router, anilistId, animeId])
+  }, [episodes, episodeNumber, router, anilistId, animeId])
 
   async function fetchAndSetAnimeSource() {
     setIsLoading(true)
