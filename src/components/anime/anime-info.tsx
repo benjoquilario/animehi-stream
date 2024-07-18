@@ -133,7 +133,7 @@ export default function Anime({
                 <div className="mt-4">
                   <div>
                     <SectionTitle title="Overview" />
-                    <p className="italic text-muted-foreground/90">
+                    <p className="text-xs italic text-muted-foreground/80 md:text-sm">
                       {stripHtml(animeInfo?.description)}
                     </p>
                     <div className="mt-4 flex flex-wrap items-center gap-3">
@@ -225,6 +225,7 @@ export default function Anime({
               isLoading={isLoading}
               animeId={animeId}
               slug={slug}
+              isWatching={false}
             />
           )}
         </div>
@@ -262,7 +263,7 @@ function SectionTitle({ title }: { title: string }) {
 
 function InfoItem({ title, value }: { title?: string; value?: string }) {
   return (
-    <div className="flex justify-between">
+    <div className="flex justify-between text-xs md:text-sm">
       <span className="font-medium capitalize">{title}</span>
       <span>{value}</span>
     </div>

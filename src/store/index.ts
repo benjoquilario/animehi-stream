@@ -47,7 +47,7 @@ export const useWatchStore = create<WatchInitialStore>((set) => ({
   },
   sources: undefined,
   resetSources: () => set({ sources: [] }),
-  setSources: (arg: Source[] | undefined) => set({ sources: arg }),
+  setSources: (sources: Source[] | undefined) => set({ sources }),
   download: "",
   setDownload: (download?: string) => set({ download }),
   sourceType: "default",

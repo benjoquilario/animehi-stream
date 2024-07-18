@@ -127,6 +127,7 @@ const VideoPlayer = (props: VideoPlayerProps) => {
 
   async function fetchAndSetAnimeSource() {
     setIsLoading(true)
+
     try {
       const response = await fetch(
         `${env.NEXT_PUBLIC_ANIME_API_URL}/anime/gogoanime/watch/${currentEpisode.id}`
@@ -184,21 +185,13 @@ const VideoPlayer = (props: VideoPlayerProps) => {
   }
 
   useEffect(() => {
-    if (isLoading) {
-      setSrc("")
-      setTextTracks([])
-      setVttUrl("")
-    }
-  }, [isLoading])
-
-  useEffect(() => {
     fetchAndSetAnimeSource()
     fetchAndProcessSkipTimes()
     return () => {
       if (vttUrl) URL.revokeObjectURL(vttUrl)
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [animeId, animeResponse, isDub, episodeNumber])
+  }, [currentEpisode.id, animeResponse, isDub, currentEpisode.number])
 
   const handleEpisodeSelect = useCallback(
     async (selectedEpisode: IEpisode) => {
@@ -292,6 +285,14 @@ const VideoPlayer = (props: VideoPlayerProps) => {
       }
     }
   }
+
+  useEffect(() => {
+    if (isLoading) {
+      setSrc("")
+      setTextTracks([])
+      setVttUrl("")
+    }
+  }, [isLoading])
 
   return (
     <>

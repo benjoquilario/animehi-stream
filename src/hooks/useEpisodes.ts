@@ -17,7 +17,7 @@ const useEpisodes = (animeId: string) => {
         results = data
       } else {
         const response = await fetch(
-          `${env.NEXT_PUBLIC_PROXY_URI}=https://aniwatch-4cxa.vercel.app/anime/info/${animeId}`
+          `${env.NEXT_PUBLIC_PROXY_URI}=${env.NEXT_PUBLIC_ANIME_API_URL_V3}/anime/info/${animeId}`
         )
 
         const data = await response.json()

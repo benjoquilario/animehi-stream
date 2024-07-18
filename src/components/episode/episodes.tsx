@@ -6,17 +6,9 @@ import { AiOutlineSearch } from "react-icons/ai"
 import { Input } from "../ui/input"
 import type { IEpisode, IMetadata } from "types/types"
 import { Button } from "../ui/button"
-import { useRouter } from "next/navigation"
 import { FaSpinner } from "react-icons/fa"
 import { FaCirclePlay } from "react-icons/fa6"
-import {
-  useCallback,
-  useRef,
-  useMemo,
-  useState,
-  useEffect,
-  useTransition,
-} from "react"
+import { useCallback, useMemo, useState } from "react"
 
 type EpisodesProps = {
   episodeId?: string
@@ -26,6 +18,7 @@ type EpisodesProps = {
   isLoading: boolean
   slug: string
   onEpisodeSelect?: (id: string) => void
+  isWatching?: boolean
 }
 
 export default function Episodes({
@@ -35,6 +28,7 @@ export default function Episodes({
   isLoading,
   episodeNumber,
   slug,
+  isWatching = true,
   onEpisodeSelect,
 }: EpisodesProps) {
   const [query, setQuery] = useState("")
@@ -131,7 +125,7 @@ export default function Episodes({
               <div className="flex flex-col odd:bg-secondary/30 even:bg-background">
                 {episodes?.length !== 0 ? (
                   displayedEpisodes?.map((episode, index) =>
-                    onEpisodeSelect ? (
+                    isWatching ? (
                       <Button
                         onClick={() => handleEpisodeSelect(episode.id)}
                         key={episode.id}
@@ -156,7 +150,7 @@ export default function Episodes({
                       </Button>
                     ) : (
                       <Link
-                        href={`/watch?id=${animeId}&slug=${episode.id.split("-episode-")[0]}&ep=${episode.number}`}
+                        href={`/watch?id=${animeId}&slug=${slug}&ep=${episode.number}`}
                         key={episode.id}
                         className={cn(
                           "!odd:bg-secondary/30 justify-start p-3 text-[14px] font-medium transition-all odd:bg-secondary/30 even:bg-background hover:bg-secondary active:scale-[.98]"
