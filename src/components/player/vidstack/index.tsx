@@ -186,6 +186,8 @@ const VideoPlayer = (props: VideoPlayerProps) => {
   useEffect(() => {
     if (isLoading) {
       setSrc("")
+      setTextTracks([])
+      setVttUrl("")
     }
   }, [isLoading])
 
