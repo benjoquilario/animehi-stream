@@ -38,7 +38,6 @@ type VidstackPlayerProps = {
   animeId: string
   episodeNumber: number
   animeResponse: IAnilistInfo
-  episodeId: string
   currentEpisode?: IEpisode
   anilistId: string
   latestEpisodeNumber: number
@@ -57,7 +56,6 @@ const VidstackPlayer = (props: VidstackPlayerProps) => {
     animeId,
     episodeNumber,
     animeResponse,
-    episodeId,
     currentEpisode,
     anilistId,
     latestEpisodeNumber,

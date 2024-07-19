@@ -17,8 +17,6 @@ type EpisodesProps = {
   episodes?: IEpisode[]
   isLoading: boolean
   slug: string
-  onEpisodeSelect?: (id: string) => void
-  isWatching?: boolean
 }
 
 export default function Episodes({
@@ -28,18 +26,9 @@ export default function Episodes({
   isLoading,
   episodeNumber,
   slug,
-  isWatching = true,
-  onEpisodeSelect,
 }: EpisodesProps) {
   const [query, setQuery] = useState("")
   const [interval, setInterval] = useState<[number, number]>([0, 99])
-
-  const handleEpisodeSelect = useCallback(
-    (id: string) => {
-      onEpisodeSelect?.(id)
-    },
-    [onEpisodeSelect]
-  )
 
   const intervalOptions = useMemo(() => {
     if (!isLoading) {
@@ -124,47 +113,30 @@ export default function Episodes({
             <div className="no-scrollbar max-h-96 w-full overflow-auto rounded-md">
               <div className="flex flex-col odd:bg-secondary/30 even:bg-background">
                 {episodes?.length !== 0 ? (
-                  displayedEpisodes?.map((episode, index) =>
-                    isWatching ? (
-                      <Button
-                        onClick={() => handleEpisodeSelect(episode.id)}
-                        key={episode.id}
-                        className={cn(
-                          "justify-start p-3 text-[14px] font-medium transition-all odd:bg-secondary/30 even:bg-background hover:bg-secondary active:scale-[.98]",
-                          episodeNumber === index + 1
-                            ? "!bg-primary !text-foreground hover:!bg-primary/80"
-                            : "!odd:bg-secondary/30 even:bg-background"
-                        )}
-                      >
-                        <div className="flex items-center gap-2">
-                          <span className="text-xs">{episode.number}</span>
-                          <div className="line-clamp-1 italic text-muted-foreground/80 md:line-clamp-2">
-                            {episode.title ?? `Episode ${episode.number}`}
-                          </div>
-                          {episodeNumber === index + 1 ? (
-                            <span>
-                              <FaCirclePlay />
-                            </span>
-                          ) : null}
+                  displayedEpisodes?.map((episode, index) => (
+                    <Link
+                      href={`/watch?id=${animeId}&slug=${animeId}&ep=${episode.number}`}
+                      key={episode.id}
+                      className={cn(
+                        "justify-start p-3 text-[14px] font-medium transition-all odd:bg-secondary/30 even:bg-background hover:bg-secondary active:scale-[.98]",
+                        episodeNumber === index + 1
+                          ? "!bg-primary !text-foreground hover:!bg-primary/80"
+                          : "!odd:bg-secondary/30 even:bg-background"
+                      )}
+                    >
+                      <div className="flex items-center gap-2">
+                        <span className="text-xs">{episode.number}</span>
+                        <div className="line-clamp-1 italic text-muted-foreground/80 md:line-clamp-2">
+                          {episode.title ?? `Episode ${episode.number}`}
                         </div>
-                      </Button>
-                    ) : (
-                      <Link
-                        href={`/watch?id=${animeId}&slug=${slug}&ep=${episode.number}`}
-                        key={episode.id}
-                        className={cn(
-                          "!odd:bg-secondary/30 justify-start p-3 text-[14px] font-medium transition-all odd:bg-secondary/30 even:bg-background hover:bg-secondary active:scale-[.98]"
-                        )}
-                      >
-                        <div className="flex items-center gap-2">
-                          <span className="text-xs">{episode.number}</span>
-                          <div className="line-clamp-1 italic text-muted-foreground/80 md:line-clamp-2">
-                            {episode.title ?? `Episode ${episode.number}`}
-                          </div>
-                        </div>
-                      </Link>
-                    )
-                  )
+                        {episodeNumber === index + 1 ? (
+                          <span>
+                            <FaCirclePlay />
+                          </span>
+                        ) : null}
+                      </div>
+                    </Link>
+                  ))
                 ) : (
                   <div className="p-3">No Episode Found</div>
                 )}

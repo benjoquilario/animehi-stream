@@ -51,22 +51,17 @@ const VideoPlayer = (props: VideoPlayerProps) => {
   const [currentTime, setCurrentTime] = useState<number>(0)
   const [skipTimes, setSkipTimes] = useState<AniSkipResult[]>([])
   const [totalDuration, setTotalDuration] = useState<number>(0)
-  const [currentEpisode, setCurrentEpisode] = useState<IEpisode>({
-    id: "0",
-    title: "",
-    image: "",
-    imageHash: "hash",
-    number: 0,
-    createdAt: "",
-    description: "",
-    url: "",
-  })
-  const router = useRouter()
+
   const {
     data: episodes,
     isLoading: isPending,
     isError,
   } = useEpisodes(anilistId)
+
+  const currentEpisode = useMemo(
+    () => episodes?.find((episode) => episode.number === episodeNumber),
+    [episodes, episodeNumber]
+  )
 
   const latestEpisodeNumber = useMemo(
     () =>
@@ -104,53 +99,33 @@ const VideoPlayer = (props: VideoPlayerProps) => {
     }
   }, [animeResponse, currentEpisode])
 
-  useEffect(() => {
-    const navigateToEpisode = episodes?.find(
-      (ep) => ep.number === episodeNumber
-    )
-
-    if (navigateToEpisode) {
-      setCurrentEpisode({
-        id: navigateToEpisode.id,
-        number: navigateToEpisode.number,
-        image: navigateToEpisode.image,
-        title: navigateToEpisode.title,
-        description: navigateToEpisode.description,
-        imageHash: navigateToEpisode.imageHash,
-        createdAt: navigateToEpisode.createdAt,
-        url: navigateToEpisode.url,
-      })
-
-      router.push(
-        `/watch?id=${anilistId}&slug=${animeId}&ep=${navigateToEpisode.number}`
-      )
-    }
-  }, [episodes, episodeNumber, router, anilistId, animeId])
-
   async function fetchAndSetAnimeSource() {
     setIsLoading(true)
-
+    setSrc("")
+    setTextTracks([])
     try {
-      const response = await fetch(
-        `${env.NEXT_PUBLIC_ANIME_API_URL}/anime/gogoanime/watch/${currentEpisode.id}`
-      )
-
-      if (!response.ok) throw Error
-
-      const data = (await response.json()) as SourcesResponse
-
-      const backupSource = data.sources.find(
-        (source) => source.quality === "default"
-      )
-
-      if (backupSource) {
-        setSrc(
-          `${env.NEXT_PUBLIC_PROXY_URI}=${encodeURIComponent(backupSource.url)}`
+      if (currentEpisode) {
+        const response = await fetch(
+          `${env.NEXT_PUBLIC_ANIME_API_URL}/anime/gogoanime/watch/${currentEpisode.id}`
         )
-        setDownload(data.download)
-        setIsLoading(false)
-      } else {
-        console.error("Backup source not found")
+
+        if (!response.ok) throw Error
+
+        const data = (await response.json()) as SourcesResponse
+
+        const backupSource = data.sources.find(
+          (source) => source.quality === "default"
+        )
+
+        if (backupSource) {
+          setSrc(
+            `${env.NEXT_PUBLIC_PROXY_URI}=${encodeURIComponent(backupSource.url)}`
+          )
+          setDownload(data.download)
+          setIsLoading(false)
+        } else {
+          console.error("Backup source not found")
+        }
       }
     } catch (error) {
       console.error("Failed to fetch anime streaming links", error)
@@ -193,28 +168,7 @@ const VideoPlayer = (props: VideoPlayerProps) => {
       if (vttUrl) URL.revokeObjectURL(vttUrl)
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [currentEpisode.id, animeResponse, isDub, currentEpisode.number])
-
-  const handleEpisodeSelect = useCallback(
-    async (selectedEpisode: IEpisode) => {
-      setCurrentEpisode({
-        id: selectedEpisode.id,
-        number: selectedEpisode.number,
-        image: selectedEpisode.image,
-        title: selectedEpisode.title,
-        description: selectedEpisode.description,
-        imageHash: selectedEpisode.imageHash,
-        createdAt: selectedEpisode.createdAt,
-        url: selectedEpisode.url,
-      })
-
-      router.push(
-        `/watch?id=${anilistId}&slug=${animeId}&ep=${selectedEpisode.number}`
-      )
-      await new Promise((resolve) => setTimeout(resolve, 100))
-    },
-    [animeId, router, anilistId]
-  )
+  }, [animeId, animeResponse, isDub, episodeNumber, currentEpisode])
 
   function generateWebVTTFromSkipTimes(
     skipTimes: AniSkip,
@@ -261,40 +215,34 @@ const VideoPlayer = (props: VideoPlayerProps) => {
       try {
         if (!animeResponse.malId) return
 
-        const response = await fetch(
-          `https://api.aniskip.com/v2/skip-times/${animeResponse.malId}/${currentEpisode.number}?types=op&types=recap&types=mixed-op&types=ed&types=mixed-ed&episodeLength`
-        )
-
-        if (!response.ok) return
-
-        const data = (await response.json()) as AniSkip
-        const filteredSkipTimes = data.results.filter(
-          ({ skipType }) => skipType === "op" || skipType === "ed"
-        )
-        if (!vttGenerated) {
-          const vttContent = generateWebVTTFromSkipTimes(
-            { results: filteredSkipTimes },
-            totalDuration
+        if (currentEpisode) {
+          const response = await fetch(
+            `https://api.aniskip.com/v2/skip-times/${animeResponse.malId}/${currentEpisode.number}?types=op&types=recap&types=mixed-op&types=ed&types=mixed-ed&episodeLength`
           )
-          const blob = new Blob([vttContent], { type: "text/vtt" })
-          const vttBlobUrl = URL.createObjectURL(blob)
-          setVttUrl(vttBlobUrl)
-          setSkipTimes(filteredSkipTimes)
-          setVttGenerated(true)
+
+          if (!response.ok) return
+
+          const data = (await response.json()) as AniSkip
+          const filteredSkipTimes = data.results.filter(
+            ({ skipType }) => skipType === "op" || skipType === "ed"
+          )
+          if (!vttGenerated) {
+            const vttContent = generateWebVTTFromSkipTimes(
+              { results: filteredSkipTimes },
+              totalDuration
+            )
+            const blob = new Blob([vttContent], { type: "text/vtt" })
+            const vttBlobUrl = URL.createObjectURL(blob)
+            setVttUrl(vttBlobUrl)
+            setSkipTimes(filteredSkipTimes)
+            setVttGenerated(true)
+          }
         }
       } catch (error) {
         console.error("Failed to fetch skip times", error)
       }
     }
   }
-
-  useEffect(() => {
-    if (isLoading) {
-      setSrc("")
-      setTextTracks([])
-      setVttUrl("")
-    }
-  }, [isLoading])
 
   return (
     <>
@@ -304,10 +252,9 @@ const VideoPlayer = (props: VideoPlayerProps) => {
         </div>
       ) : !error ? (
         <VidstackPlayer
-          episodeId={currentEpisode.id}
           animeId={animeId}
           animeResponse={animeResponse}
-          episodeNumber={currentEpisode.number}
+          episodeNumber={currentEpisode?.number!}
           currentEpisode={currentEpisode}
           latestEpisodeNumber={latestEpisodeNumber}
           anilistId={anilistId}
@@ -319,7 +266,7 @@ const VideoPlayer = (props: VideoPlayerProps) => {
           currentTime={currentTime}
           textTracks={textTracks}
           title={
-            currentEpisode.title ??
+            currentEpisode?.title ??
             animeResponse.title.english ??
             animeResponse.title.romaji
           }
@@ -334,13 +281,13 @@ const VideoPlayer = (props: VideoPlayerProps) => {
         animeId={animeId}
         anilistId={anilistId}
         currentUser={currentUser}
-        lastEpisode={currentEpisode.number}
+        lastEpisode={currentEpisode?.number!}
       >
         <ButtonAction
           isLoading={isPending}
           latestEpisodeNumber={latestEpisodeNumber}
           anilistId={anilistId}
-          lastEpisode={currentEpisode.number}
+          lastEpisode={currentEpisode?.number!}
           animeTitle={animeId}
         />
       </Server>
@@ -351,14 +298,7 @@ const VideoPlayer = (props: VideoPlayerProps) => {
         isLoading={isPending}
         animeId={anilistId}
         episodeId={episodeId}
-        episodeNumber={currentEpisode.number}
-        onEpisodeSelect={(id: string) => {
-          const episode = episodes?.find((ep) => ep.id === id)
-
-          if (episode) {
-            handleEpisodeSelect(episode)
-          }
-        }}
+        episodeNumber={currentEpisode?.number}
       />
 
       <RelationWatch relations={animeResponse.relations} />
@@ -366,7 +306,7 @@ const VideoPlayer = (props: VideoPlayerProps) => {
       <Comments
         anilistId={anilistId}
         animeId={animeId}
-        episodeNumber={`${currentEpisode.number}`}
+        episodeNumber={`${currentEpisode?.number}`}
       />
     </>
   )
