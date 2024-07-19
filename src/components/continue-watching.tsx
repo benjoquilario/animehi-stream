@@ -3,6 +3,7 @@
 import SwiperContinueWatching from "./swiper-continue-watching"
 import Section from "./section"
 import { useQuery } from "@tanstack/react-query"
+import { Skeleton } from "./ui/skeleton"
 
 export default function ContinueWatching() {
   const { data, isLoading } = useQuery({
@@ -20,7 +21,12 @@ export default function ContinueWatching() {
         Swipe for more
       </span>
       {isLoading ? (
-        <div>Loading</div>
+        <div className="flex items-center gap-2">
+          <Skeleton className="h-44 w-full md:w-80"></Skeleton>
+          <Skeleton className="hidden h-44 w-80 md:block"></Skeleton>
+          <Skeleton className="hidden h-44 w-80 md:block"></Skeleton>
+          <Skeleton className="hidden h-44 w-80 md:block"></Skeleton>
+        </div>
       ) : (
         <SwiperContinueWatching results={data} />
       )}

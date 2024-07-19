@@ -15,15 +15,8 @@ export default function Section({
   sectionName,
 }: SectionProps) {
   return (
-    <motion.div
-      key={sectionName}
-      initial={{ y: 20, opacity: 0 }}
-      whileInView={{ y: 0, opacity: 1 }}
-      transition={{ duration: 0.5 }}
-      viewport={{ once: true }}
-      className={className}
-    >
+    <div key={sectionName} className={className}>
       {children}
-    </motion.div>
+    </div>
   )
 }

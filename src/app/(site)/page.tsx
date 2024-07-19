@@ -7,7 +7,9 @@ import NewestComments from "@/components/comments/newest-comments"
 import Seasonal from "@/components/seasonal"
 import { Skeleton } from "@/components/ui/skeleton"
 import { auth } from "@/auth"
+import Section from "@/components/section"
 // export const revalidate = 60 * 60 * 3
+import NextImage from "@/components/ui/image"
 
 export default async function Home() {
   const session = await auth()
@@ -51,10 +53,37 @@ export default async function Home() {
               </p>
               <Sharethis />
             </div> */}
+            <Section sectionName="newest-comments" className="relative">
+              <div className="flex pt-4">
+                <div className="relative hidden h-[280px] w-[280px] shrink-0 md:block">
+                  <NextImage
+                    fill
+                    src="/anime-34.png"
+                    alt="anime"
+                    style={{ objectFit: "cover" }}
+                  />
+                </div>
+                <Suspense
+                  fallback={
+                    <div>
+                      <div className="flex items-center gap-2">
+                        <Skeleton className="h-8 w-36 rounded-3xl"></Skeleton>
+                        <Skeleton className="h-8 w-36 rounded-3xl"></Skeleton>
+                      </div>
+                      <div className="flex items-center gap-2 py-8">
+                        <Skeleton className="h-36 w-80"></Skeleton>
+                        <Skeleton className="hidden h-36 w-80 md:block"></Skeleton>
+                        <Skeleton className="hidden h-36 w-80 md:block"></Skeleton>
+                        <Skeleton className="hidden h-36 w-80 md:block"></Skeleton>
+                      </div>
+                    </div>
+                  }
+                >
+                  <NewestComments />
+                </Suspense>
+              </div>
+            </Section>
 
-            <Suspense fallback={<div>Loading...</div>}>
-              <NewestComments />
-            </Suspense>
             <Suspense
               fallback={
                 <div className="mt-4 px-[2%]">

@@ -1,7 +1,7 @@
 "use client"
 
 import React from "react"
-import NextImage from "@/components/ui/image"
+
 import { Swiper, SwiperSlide } from "swiper/react"
 // import required modules
 import { FreeMode, Pagination, Scrollbar } from "swiper/modules"
@@ -23,14 +23,6 @@ const SwiperNewestComments = ({
 }: SwiperNewestCommentsProps) => {
   return (
     <>
-      <div className="relative hidden h-[280px] w-[280px] shrink-0 md:block">
-        <NextImage
-          fill
-          src="/anime-34.png"
-          alt="anime"
-          style={{ objectFit: "cover" }}
-        />
-      </div>
       <div className="flex w-[calc(100%-300px)] grow flex-col">
         <ul className="flex flex-wrap gap-2">
           <li className="flex items-center justify-center rounded-full border border-primary px-2 py-1 text-sm">
