@@ -11,7 +11,6 @@ import { FaCirclePlay } from "react-icons/fa6"
 import { useCallback, useMemo, useState } from "react"
 
 type EpisodesProps = {
-  episodeId?: string
   animeId: string
   episodeNumber?: number
   episodes?: IEpisode[]
@@ -20,12 +19,10 @@ type EpisodesProps = {
 }
 
 export default function Episodes({
-  episodeId,
   animeId,
   episodes,
   isLoading,
   episodeNumber,
-  slug,
 }: EpisodesProps) {
   const [query, setQuery] = useState("")
   const [interval, setInterval] = useState<[number, number]>([0, 99])

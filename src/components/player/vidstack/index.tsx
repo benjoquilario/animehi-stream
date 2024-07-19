@@ -33,10 +33,10 @@ const VideoPlayer = (props: VideoPlayerProps) => {
   const searchParams = useSearchParams()
   const isDub = searchParams.get("dub")
   const episodeNumber = Number(ep)
-  const episodeId = useMemo(
-    () => `${animeId}-${isDub ? "dub-" : ""}episode-${episodeNumber}`,
-    [animeId, episodeNumber, isDub]
-  )
+  // const episodeId = useMemo(
+  //   () => `${animeId}-${isDub ? "dub-" : ""}episode-${episodeNumber}`,
+  //   [animeId, episodeNumber, isDub]
+  // )
   const download = useWatchStore((store) => store.download)
   const [src, setSrc] = useState<string>("")
   const [isLoading, setIsLoading] = useState(false)
@@ -211,7 +211,7 @@ const VideoPlayer = (props: VideoPlayerProps) => {
   }
 
   async function fetchAndProcessSkipTimes() {
-    if (animeResponse.malId && episodeId) {
+    if (animeResponse.malId && currentEpisode?.id) {
       try {
         if (!animeResponse.malId) return
 
@@ -297,7 +297,6 @@ const VideoPlayer = (props: VideoPlayerProps) => {
         episodes={episodes}
         isLoading={isPending}
         animeId={anilistId}
-        episodeId={episodeId}
         episodeNumber={currentEpisode?.number}
       />
 
@@ -306,7 +305,7 @@ const VideoPlayer = (props: VideoPlayerProps) => {
       <Comments
         anilistId={anilistId}
         animeId={animeId}
-        episodeNumber={`${currentEpisode?.number}`}
+        episodeNumber={`${episodeNumber}`}
       />
     </>
   )
