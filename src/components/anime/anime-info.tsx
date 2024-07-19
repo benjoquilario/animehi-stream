@@ -225,7 +225,6 @@ export default function Anime({
               isLoading={isLoading}
               animeId={animeId}
               slug={slug}
-              isWatching={false}
             />
           )}
         </div>
