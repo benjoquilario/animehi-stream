@@ -14,7 +14,7 @@ export async function GET(
 
   const comments = await db.comment.findMany({
     where: {
-      episodeId,
+      episodeId: episodeId,
     },
     include: {
       user: {

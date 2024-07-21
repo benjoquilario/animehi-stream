@@ -104,7 +104,7 @@ export default function Anime({
               variant="shine"
               onClick={() =>
                 router.push(
-                  `/watch/${animeTitle}/${animeId}?episode=${episodes?.length !== 0 ? episodes?.[episodes.length - 1]?.number : 1}`
+                  `/watch?id=${animeId}&slug=${animeTitle}&ep=${episodes?.length !== 0 ? episodes?.[episodes.length - 1]?.number : 1}`
                 )
               }
             >

@@ -166,7 +166,7 @@ const VidstackPlayer = (props: VidstackPlayerProps) => {
   }
 
   function onTimeUpdate() {
-    if (player.current) {
+    if (player.current && currentEpisode) {
       const currentTime = player.current.currentTime
       const duration = player.current.duration || 1
       const playbackPercentage = (currentTime / duration) * 100

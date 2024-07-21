@@ -129,7 +129,7 @@ export default function CommentForm({
   }
 
   return (
-    <div className="flex w-full gap-2">
+    <div className="mb-4 flex w-full gap-2">
       <div>
         <Avatar className="h-8 w-8 md:h-10 md:w-10">
           <AvatarImage

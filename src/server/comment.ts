@@ -227,7 +227,7 @@ export async function addComment(comment: AddComment) {
   const createdComment = await db.comment.create({
     data: {
       animeId,
-      episodeId: `${animeId}-episode-${episodeNumber}`,
+      episodeId: `${anilistId}-episode-${episodeNumber}`,
       comment: commentText,
       episodeNumber,
       anilistId,

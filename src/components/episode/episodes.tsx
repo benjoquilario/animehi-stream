@@ -23,6 +23,7 @@ export default function Episodes({
   episodes,
   isLoading,
   episodeNumber,
+  slug,
 }: EpisodesProps) {
   const [query, setQuery] = useState("")
   const [interval, setInterval] = useState<[number, number]>([0, 99])
@@ -112,7 +113,7 @@ export default function Episodes({
                 {episodes?.length !== 0 ? (
                   displayedEpisodes?.map((episode, index) => (
                     <Link
-                      href={`/watch?id=${animeId}&slug=${animeId}&ep=${episode.number}`}
+                      href={`/watch?id=${animeId}&slug=${slug}&ep=${episode.number}`}
                       key={episode.id}
                       className={cn(
                         "justify-start p-3 text-[14px] font-medium transition-all odd:bg-secondary/30 even:bg-background hover:bg-secondary active:scale-[.98]",

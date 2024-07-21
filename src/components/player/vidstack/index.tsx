@@ -18,6 +18,8 @@ import type {
   AniSkipResult,
   IEpisode,
 } from "types/types"
+import { Badge } from "@/components/ui/badge"
+import { LuMessageSquare } from "react-icons/lu"
 
 type VideoPlayerProps = {
   animeId: string
@@ -94,7 +96,7 @@ const VideoPlayer = (props: VideoPlayerProps) => {
         setSelectedBackgroundImage(bannerImage)
       }
     }
-    if (animeResponse && currentEpisode?.id !== "0") {
+    if (animeResponse && currentEpisode) {
       updateBackgroundImage()
     }
   }, [animeResponse, currentEpisode])
@@ -244,6 +246,8 @@ const VideoPlayer = (props: VideoPlayerProps) => {
     }
   }
 
+  console.log(currentEpisode)
+
   return (
     <>
       {isPending ? (
@@ -265,11 +269,7 @@ const VideoPlayer = (props: VideoPlayerProps) => {
           skipTimes={skipTimes}
           currentTime={currentTime}
           textTracks={textTracks}
-          title={
-            currentEpisode?.title ??
-            animeResponse.title.english ??
-            animeResponse.title.romaji
-          }
+          title={`${animeResponse.title.english ?? animeResponse.title.romaji} / Episode ${episodeNumber}`}
         />
       ) : (
         <div>Please try again</div>
@@ -301,12 +301,34 @@ const VideoPlayer = (props: VideoPlayerProps) => {
       />
 
       <RelationWatch relations={animeResponse.relations} />
+      <div className="mt-4">
+        <h3 className="flex w-full items-center pt-2.5 text-left text-sm font-semibold md:text-base">
+          <div className="mr-2 h-6 w-2 rounded-md bg-primary md:h-8"></div>
+          Comments
+          <Badge className="ml-2">Beta</Badge>
+        </h3>
+        <div className="mt-2 w-full rounded-sm bg-destructive px-2 py-5 text-center text-sm md:text-base">
+          Respect others. Be nice. No spam. No hate speech.
+        </div>
+
+        <div className="my-4 flex items-center gap-2 text-xs md:text-sm">
+          <LuMessageSquare />
+
+          <span>Comments EP {episodeNumber}</span>
+        </div>
+      </div>
+
+      {!isPending && currentEpisode ? (
+        <Comments
+          anilistId={anilistId}
+          animeId={animeId}
+          episodeNumber={`${currentEpisode.number}`}
+        />
+      ) : (
+        <></>
+      )}
+
       {/* <Sharethis /> */}
-      <Comments
-        anilistId={anilistId}
-        animeId={animeId}
-        episodeNumber={`${episodeNumber}`}
-      />
     </>
   )
 }

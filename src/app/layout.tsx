@@ -22,8 +22,9 @@ export const viewport: Viewport = {
 export const metadata: Metadata = {
   metadataBase: new URL("https://animehi-stream.vercel.app"),
   title: "AnimeHi - Watch anime online with SUB and DUB without ads",
-  description:
-    "Watch anime shows, tv, movies for free without ads in your mobile, tablet or pc",
+  description: `AnimeHi is a Free anime streaming website which you can watch English
+          Subbed and Dubbed Anime online for free without ads in your mobile,
+          tablet or pc.`,
   keywords: [
     "Next.js",
     "React",
@@ -49,15 +50,17 @@ export const metadata: Metadata = {
     locale: "en_US",
     url: "https://animehi-stream.vercel.app/",
     title: "AnimeHI",
-    description:
-      "Watch anime shows, tv, movies for free without ads in your mobile, tablet or pc",
+    description: `AnimeHi is a Free anime streaming website which you can watch English
+          Subbed and Dubbed Anime online for free without ads in your mobile,
+          tablet or pc.`,
     siteName: "AnimeHi",
   },
   twitter: {
     card: "summary_large_image",
     title: "AnimeHi",
-    description:
-      "Watch anime shows, tv, movies for free without ads in your mobile, tablet or pc",
+    description: `AnimeHi is a Free anime streaming website which you can watch English
+          Subbed and Dubbed Anime online for free without ads in your mobile,
+          tablet or pc.`,
     creator: "@iambenjo",
   },
   icons: {
