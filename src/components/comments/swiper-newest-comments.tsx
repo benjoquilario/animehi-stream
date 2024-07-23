@@ -87,19 +87,25 @@ const SwiperNewestComments = ({
                     </div>
                   </div>
                   <div className="flex-1">
-                    <p className="line-clamp-3 italic text-foreground/90">
+                    <p
+                      title={newestComment.comment}
+                      className="line-clamp-3 italic text-foreground/80"
+                    >
                       {/* eslint-disable-next-line react/no-unescaped-entities */}
-                      "{newestComment.comment}"
+                      {newestComment.comment}
                     </p>
                   </div>
-                  <div className="mt-3 block overflow-hidden text-ellipsis">
+                  <div className="mt-3 line-clamp-1 flex items-center overflow-hidden text-ellipsis">
                     <Link
-                      title={newestComment.episodeId.split("-").join(" ")}
+                      title={newestComment.animeId}
                       href={`/watch?id=${newestComment.anilistId}&slug=${newestComment.animeId}&ep=${newestComment.episodeNumber}`}
                       className="line-clamp-1 text-primary hover:text-primary/90"
                     >
-                      {newestComment.episodeId.split("-").join(" ")}
+                      {newestComment.animeId}
                     </Link>
+                    <span className="ml-1 text-xs">
+                      ep {newestComment.episodeNumber}
+                    </span>
                   </div>
                 </div>
               </div>

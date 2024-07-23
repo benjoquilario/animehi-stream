@@ -116,7 +116,7 @@ export default function Episodes({
                       href={`/watch?id=${animeId}&slug=${slug}&ep=${episode.number}`}
                       key={episode.id}
                       className={cn(
-                        "justify-start p-3 text-[14px] font-medium transition-all odd:bg-secondary/30 even:bg-background hover:bg-secondary active:scale-[.98]",
+                        "justify-start p-2 text-[14px] font-medium transition-all odd:bg-secondary/30 even:bg-background hover:bg-secondary active:scale-[.98] md:p-3",
                         episodeNumber === index + 1
                           ? "!bg-primary !text-foreground hover:!bg-primary/80"
                           : "!odd:bg-secondary/30 even:bg-background"
@@ -124,7 +124,7 @@ export default function Episodes({
                     >
                       <div className="flex items-center gap-2">
                         <span className="text-xs">{episode.number}</span>
-                        <div className="line-clamp-1 italic text-muted-foreground/80 md:line-clamp-2">
+                        <div className="line-clamp-1 text-xs italic text-muted-foreground/80 md:line-clamp-2 md:text-sm">
                           {episode.title ?? `Episode ${episode.number}`}
                         </div>
                         {episodeNumber === index + 1 ? (

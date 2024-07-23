@@ -272,7 +272,7 @@ const RepliesItem = (props: ReplyItemProps) => {
                   <div className="relative inline-flex w-full align-middle">
                     <div className="base-[auto] w-full min-w-0 shrink grow">
                       <div
-                        className="relative m-1 inline-block max-w-full whitespace-normal break-words rounded bg-secondary text-foreground"
+                        className="relative m-1 inline-block max-w-full whitespace-normal break-words rounded text-foreground"
                         style={{ wordBreak: "break-word" }}
                       >
                         <div className="py-2 pl-4 pr-7">

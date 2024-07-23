@@ -24,7 +24,7 @@ const ColumnCard = ({ result }: ColumnCardProps) => {
         />
       </div>
       <div className="flex-1 px-1 md:px-3">
-        <h3 className="mb-1 line-clamp-2 text-sm font-medium !leading-5 hover:text-primary md:text-[15px]">
+        <h3 className="mb-1 line-clamp-2 text-sm font-medium !leading-5 hover:text-primary md:text-[14px]">
           {result.title.english || result.title.romaji}
         </h3>
 

@@ -26,7 +26,7 @@ const MostViewCard = ({ result, className, rank }: MostViewCardProps) => {
       </div>
       <div className="flex-1 px-3">
         <div className="inline-block">
-          <h3 className="mb-1 line-clamp-2 text-sm font-medium !leading-5 group-hover:text-primary md:text-[15px]">
+          <h3 className="mb-1 line-clamp-2 text-[12px] font-medium !leading-5 group-hover:text-primary md:text-[14px]">
             {result.title}
           </h3>
         </div>

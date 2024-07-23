@@ -43,6 +43,8 @@ const SwiperContinueWatching = (props: SwiperContinueWatchingProps) => {
     },
   })
 
+  console.log(results)
+
   return (
     <Swiper
       slidesPerView={3}
@@ -146,7 +148,7 @@ const SwiperContinueWatching = (props: SwiperContinueWatchingProps) => {
                     <div className="text-sm text-muted-foreground">
                       Watching Episode {result.episodeNumber}
                     </div>
-                    <h3>{result.animeId.split("-").join(" ")}</h3>
+                    <h3>{result.title}</h3>
                   </div>
                   <div className="mr-3 rounded-full p-2 text-foreground transition-all group-hover:bg-muted-foreground/90">
                     <BsPlayFill className="h-6 w-6" />

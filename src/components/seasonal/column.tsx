@@ -23,7 +23,7 @@ const Column = ({ results, seasonalTitle, browse }: ColumnProps) => {
       <div className="min-h-[300px] w-full">
         <Link
           href={browse}
-          className="group relative mb-4 flex items-center text-[12px] font-medium uppercase transition-all xl:text-lg"
+          className="group relative mb-4 flex items-center text-[11px] font-medium uppercase transition-all xl:text-base"
         >
           <div className="mr-2 h-6 w-1 rounded-md bg-primary md:w-2"></div>
           {seasonalTitle}

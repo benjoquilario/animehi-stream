@@ -12,7 +12,7 @@ export default async function MostView() {
   return (
     <div className="w-full pt-5 xl:w-80 xl:pt-0">
       <div className="block w-full">
-        <h3 className="mb-2 flex pr-4 text-[15px] font-medium uppercase md:text-lg">
+        <h3 className="mb-2 flex pr-4 text-sm font-medium uppercase md:text-lg">
           <div className="mr-2 h-6 w-2 rounded-md bg-primary md:h-8"></div>
           Most Watch in AnimeHi
         </h3>

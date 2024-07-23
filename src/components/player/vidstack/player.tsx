@@ -117,28 +117,32 @@ const VidstackPlayer = (props: VidstackPlayerProps) => {
   }, [anilistId, animeId])
 
   async function updateWatch() {
-    return await updateWatchlist({
-      episodeId: `${animeId}-episode-${episodeNumber}`,
-      episodeNumber: `${episodeNumber}`,
-      animeId,
-      image: currentEpisode?.image ?? animeResponse.image,
-    })
+    if (currentEpisode && animeId) {
+      return await updateWatchlist({
+        episodeId: `${animeId}-episode-${episodeNumber}`,
+        episodeNumber: `${episodeNumber}`,
+        animeId,
+        image: currentEpisode?.image ?? animeResponse.image,
+      })
+    }
   }
 
   useEffect(() => {
     if (!session) return
 
-    const createWatch = async function () {
-      return await createWatchlist({
-        animeId,
-        episodeNumber: `${episodeNumber}`,
-        title: animeResponse.title.english ?? animeResponse.title.romaji,
-        image: currentEpisode?.image ?? animeResponse.image,
-        anilistId,
-      })
-    }
+    if (animeId && currentEpisode) {
+      const createWatch = async function () {
+        return await createWatchlist({
+          animeId,
+          episodeNumber: `${episodeNumber}`,
+          title: animeResponse.title.english ?? animeResponse.title.romaji,
+          image: currentEpisode?.image ?? animeResponse.image,
+          anilistId,
+        })
+      }
 
-    createWatch()
+      createWatch()
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [session, anilistId, animeId, currentEpisode])
 
@@ -248,7 +252,7 @@ const VidstackPlayer = (props: VidstackPlayerProps) => {
           alt=""
           style={{ objectFit: "cover" }}
         />
-        {textTracks &&
+        {textTracks.length > 0 &&
           textTracks.map((track) => (
             <Track
               label={track.label}
