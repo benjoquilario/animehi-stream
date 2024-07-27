@@ -71,6 +71,8 @@ const VidstackPlayer = (props: VidstackPlayerProps) => {
   const { data: session } = useSession()
   const router = useRouter()
   const player = useRef<MediaPlayerInstance>(null)
+  const animeVideoTitle = title
+  const posterImage = banner
 
   const autoSkip = useStore(
     useAutoSkip,
@@ -223,7 +225,7 @@ const VidstackPlayer = (props: VidstackPlayerProps) => {
     <MediaPlayer
       key={src}
       className="font-geist-sans player relative"
-      title={title}
+      title={animeVideoTitle}
       src={{
         src: src,
         type: "application/x-mpegurl",
@@ -248,7 +250,7 @@ const VidstackPlayer = (props: VidstackPlayerProps) => {
       <MediaProvider>
         <Poster
           className="vds-poster"
-          src={`${env.NEXT_PUBLIC_PROXY_URI}=${banner}`}
+          src={`${env.NEXT_PUBLIC_PROXY_URI}=${posterImage}`}
           alt=""
           style={{ objectFit: "cover" }}
         />

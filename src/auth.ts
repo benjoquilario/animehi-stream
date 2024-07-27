@@ -5,6 +5,7 @@ import db from "@/lib/db"
 import bcrypt from "bcrypt"
 import { PrismaAdapter } from "@auth/prisma-adapter"
 import { credentialsValidator } from "@/lib/validations/credentials"
+import { env } from "./env.mjs"
 
 declare module "next-auth" {
   interface Session {
@@ -58,5 +59,27 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         return null
       },
     }),
+    {
+      id: "anilist",
+      name: "AniList",
+      type: "oauth",
+      authorization: {
+        url: "https://anilist.co/api/v2/oauth/authorize",
+        params: { scope: "", response_type: "code" },
+      },
+      token: "https://anilist.co/api/v2/oauth/token",
+      userinfo: `${env.NEXT_PUBLIC_APP_URL}/api/anilist/userinfo`,
+      clientId: env.CLIENT_ID,
+      clientSecret: env.CLIENT_SECRET,
+      profile(profile) {
+        return {
+          token: profile.token,
+          id: profile.sub,
+          name: profile?.name,
+          image: profile.image,
+          email: profile.email,
+        }
+      },
+    },
   ],
 })

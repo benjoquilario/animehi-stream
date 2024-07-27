@@ -275,7 +275,7 @@ const RepliesItem = (props: ReplyItemProps) => {
                         className="relative m-1 inline-block max-w-full whitespace-normal break-words rounded text-foreground"
                         style={{ wordBreak: "break-word" }}
                       >
-                        <div className="py-2 pl-4 pr-7">
+                        <div className="py-2 pr-7">
                           <div className="block py-[4px]">
                             <span
                               className="break-words"
@@ -287,7 +287,7 @@ const RepliesItem = (props: ReplyItemProps) => {
                               >
                                 <div
                                   dir="auto"
-                                  className="text-start font-sans"
+                                  className="text-start font-sans text-foreground/80s"
                                 >
                                   {reply.content}
                                 </div>

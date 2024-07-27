@@ -25,7 +25,7 @@ import Register from "./auth/register"
 import { useAuthStore } from "@/store"
 
 import Link from "next/link"
-import { signOut } from "next-auth/react"
+import { logout } from "@/server/auth"
 import { useSession } from "next-auth/react"
 import { ImSpinner8 } from "react-icons/im"
 
@@ -50,7 +50,7 @@ const AuthForm = () => {
   }
 
   console.log(status)
-
+  console.log(session)
   console.log(isAuthOpen)
 
   return (
@@ -104,7 +104,7 @@ const AuthForm = () => {
             <DropdownMenuSeparator />
             <DropdownMenuItem asChild>
               <button
-                onClick={() => signOut()}
+                onClick={() => logout()}
                 // variant="ghost"
                 className="relative h-8 w-full justify-start"
               >

@@ -1,11 +1,11 @@
-import { NextResponse } from "next/server"
+export const runtime = "edge"
 
 export async function GET(req: Request) {
   try {
     const authorization = req.headers.get("Authorization")
 
     if (!authorization) {
-      return NextResponse.json("Token is Required!", { status: 401 })
+      return Response.json("Token is Required!", { status: 401 })
     }
 
     const response = await fetch("https://graphql.anilist.co", {
@@ -24,7 +24,6 @@ export async function GET(req: Request) {
                     large
                     medium
                   }
-                  bannerImage
                 }
               }
             `,
@@ -32,8 +31,20 @@ export async function GET(req: Request) {
     })
     const data = await response.json()
 
-    return NextResponse.json(data)
+    const { id, name, avatar } = data.data.Viewer
+
+    return Response.json(
+      {
+        id: String(id),
+        username: name,
+        image_url: avatar.large,
+        email: `${name}@gmail.com`,
+      },
+      {
+        status: 200,
+      }
+    )
   } catch (error) {
-    return NextResponse.json(error, { status: 500 })
+    return Response.json(error, { status: 500 })
   }
 }

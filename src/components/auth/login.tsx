@@ -21,7 +21,7 @@ import { useTransition, useEffect, useState } from "react"
 import { Button } from "@/components/ui/button"
 import { DialogFooter } from "@/components/ui/dialog"
 import { useAuthStore } from "@/store"
-import { login } from "@/server/auth"
+import { login, loginAnilist } from "@/server/auth"
 
 const Login = () => {
   const router = useRouter()
@@ -51,56 +51,61 @@ const Login = () => {
   }
 
   return (
-    <Form {...form}>
-      <form onSubmit={form.handleSubmit(handleOnSubmit)}>
-        <div className="flex flex-col gap-3.5">
-          <FormField
-            control={form.control}
-            name="email"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel className="sr-only">Email</FormLabel>
-                <FormControl>
-                  <Input
-                    type="email"
-                    disabled={isPending}
-                    placeholder="Email"
-                    {...field}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-        </div>
-        <div className="flex flex-col gap-3.5">
-          <FormField
-            control={form.control}
-            name="password"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel className="sr-only">Password</FormLabel>
-                <FormControl>
-                  <Input
-                    placeholder="Password"
-                    type="password"
-                    disabled={isPending}
-                    {...field}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-        </div>
-        <div className="mt-3 text-destructive">{error}</div>
-        <DialogFooter className="mt-4">
-          <Button disabled={isPending} type="submit">
-            Sign In
-          </Button>
-        </DialogFooter>
-      </form>
-    </Form>
+    <>
+      <Form {...form}>
+        <form onSubmit={form.handleSubmit(handleOnSubmit)}>
+          <div className="flex flex-col gap-3.5">
+            <FormField
+              control={form.control}
+              name="email"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="sr-only">Email</FormLabel>
+                  <FormControl>
+                    <Input
+                      type="email"
+                      disabled={isPending}
+                      placeholder="Email"
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </div>
+          <div className="flex flex-col gap-3.5">
+            <FormField
+              control={form.control}
+              name="password"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="sr-only">Password</FormLabel>
+                  <FormControl>
+                    <Input
+                      placeholder="Password"
+                      type="password"
+                      disabled={isPending}
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </div>
+          <div className="mt-3 text-destructive">{error}</div>
+          <DialogFooter className="mt-4">
+            <Button disabled={isPending} type="submit">
+              Sign In
+            </Button>
+          </DialogFooter>
+        </form>
+      </Form>
+      <Button type="button" onClick={() => loginAnilist()}>
+        Sign In with Anilist
+      </Button>
+    </>
   )
 }
 

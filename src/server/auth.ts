@@ -7,7 +7,7 @@ import {
   type Register,
 } from "@/lib/validations/credentials"
 import bcrypt from "bcrypt"
-import { signIn } from "@/auth"
+import { signIn, signOut } from "@/auth"
 import { AuthError } from "next-auth"
 
 export async function login(values: Credentials) {
@@ -93,4 +93,12 @@ export async function register(values: Register) {
     ok: true,
     message: "Account Created",
   }
+}
+
+export async function loginAnilist() {
+  await signIn("anilist")
+}
+
+export async function logout() {
+  await signOut()
 }
