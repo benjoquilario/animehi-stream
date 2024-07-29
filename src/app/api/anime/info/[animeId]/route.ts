@@ -40,7 +40,7 @@ export async function GET(
   }
 
   const stringifyResult = JSON.stringify(results)
-  await redis.setex(`anime:${animeId}`, 60 * 60 * 84 + 84, stringifyResult)
+  await redis.setex(`anime:${animeId}`, 24 * 60 * 60, stringifyResult)
 
   return NextResponse.json(results)
 }

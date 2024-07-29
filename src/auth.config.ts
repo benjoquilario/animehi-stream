@@ -9,11 +9,15 @@ export const authConfig = {
   secret: env.AUTH_SECRET,
   callbacks: {
     jwt({ token, user }) {
-      return { ...token, ...user }
+      if (user) {
+        // User is available during sign-in
+        token.id = user.id
+      }
+      return token
     },
-    session({ session, token, user }) {
+    session({ session, token }) {
       // @ts-expect-error
-      rsession.user = token
+      session.user.id = token.id
       return session
     },
     authorized({ request, auth }) {

@@ -20,6 +20,7 @@ import type {
 } from "types/types"
 import { Badge } from "@/components/ui/badge"
 import { LuMessageSquare } from "react-icons/lu"
+import { Spinner } from "@vidstack/react"
 
 type VideoPlayerProps = {
   animeId: string
@@ -34,7 +35,7 @@ const VideoPlayer = (props: VideoPlayerProps) => {
 
   const searchParams = useSearchParams()
   const isDub = searchParams.get("dub")
-  const episodeNumber = Number(ep)
+  const episodeNumber = Number(ep) || 1
   // const episodeId = useMemo(
   //   () => `${animeId}-${isDub ? "dub-" : ""}episode-${episodeNumber}`,
   //   [animeId, episodeNumber, isDub]
@@ -103,8 +104,7 @@ const VideoPlayer = (props: VideoPlayerProps) => {
 
   async function fetchAndSetAnimeSource() {
     setIsLoading(true)
-    setSrc("")
-    setTextTracks([])
+
     try {
       if (currentEpisode) {
         const response = await fetch(
@@ -167,10 +167,13 @@ const VideoPlayer = (props: VideoPlayerProps) => {
     fetchAndSetAnimeSource()
     fetchAndProcessSkipTimes()
     return () => {
+      setSrc("")
+      setTextTracks([])
+      setSelectedBackgroundImage("")
       if (vttUrl) URL.revokeObjectURL(vttUrl)
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [animeId, animeResponse, isDub, episodeNumber, currentEpisode])
+  }, [currentEpisode?.id, currentEpisode?.number])
 
   function generateWebVTTFromSkipTimes(
     skipTimes: AniSkip,
@@ -255,22 +258,28 @@ const VideoPlayer = (props: VideoPlayerProps) => {
           <div className="relative h-0 w-full rounded-md bg-primary/10 pt-[56%]"></div>
         </div>
       ) : !error ? (
-        <VidstackPlayer
-          animeId={animeId}
-          animeResponse={animeResponse}
-          episodeNumber={currentEpisode?.number!}
-          currentEpisode={currentEpisode}
-          latestEpisodeNumber={latestEpisodeNumber}
-          anilistId={anilistId}
-          src={src}
-          banner={selectedBackgroundImage}
-          vttUrl={vttUrl}
-          setTotalDuration={setTotalDuration}
-          skipTimes={skipTimes}
-          currentTime={currentTime}
-          textTracks={textTracks}
-          title={`${animeResponse.title.english ?? animeResponse.title.romaji} / Episode ${episodeNumber}`}
-        />
+        isLoading && !currentEpisode ? (
+          <SpinLoader />
+        ) : (
+          currentEpisode && (
+            <VidstackPlayer
+              animeId={animeId}
+              animeResponse={animeResponse}
+              episodeNumber={currentEpisode.number}
+              currentEpisode={currentEpisode}
+              latestEpisodeNumber={latestEpisodeNumber}
+              anilistId={anilistId}
+              src={src}
+              banner={selectedBackgroundImage}
+              vttUrl={vttUrl}
+              setTotalDuration={setTotalDuration}
+              skipTimes={skipTimes}
+              currentTime={currentTime}
+              textTracks={textTracks}
+              title={`${animeResponse.title.english ?? animeResponse.title.romaji} / Episode ${episodeNumber}`}
+            />
+          )
+        )
       ) : (
         <div>Please try again</div>
       )}
@@ -330,6 +339,17 @@ const VideoPlayer = (props: VideoPlayerProps) => {
 
       {/* <Sharethis /> */}
     </>
+  )
+}
+
+function SpinLoader() {
+  return (
+    <div className="pointer-events-none absolute inset-0 z-50 flex h-full w-full items-center justify-center">
+      <Spinner.Root className="animate-spin text-white opacity-100" size={84}>
+        <Spinner.Track className="opacity-25" width={8} />
+        <Spinner.TrackFill className="opacity-75" width={8} />
+      </Spinner.Root>
+    </div>
   )
 }
 

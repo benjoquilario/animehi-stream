@@ -87,3 +87,20 @@ export const getNewestComments = cache(async () => {
 
   return comments
 })
+
+export const accessToken = async function () {
+  const session = await auth()
+
+  const userId = session?.user.id
+
+  if (userId) {
+    const account = await db.account.findFirst({
+      where: {
+        userId,
+        token_type: "bearer",
+      },
+    })
+
+    return account?.access_token
+  }
+}

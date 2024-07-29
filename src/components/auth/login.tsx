@@ -27,6 +27,7 @@ const Login = () => {
   const router = useRouter()
   const [error, setError] = useState<string | undefined>(undefined)
   const [isPending, startTransition] = useTransition()
+  const [isAnilistLoading, startTransitionAnilist] = useTransition()
   const form = useForm<Credentials>({
     resolver: zodResolver(credentialsValidator),
   })
@@ -96,15 +97,33 @@ const Login = () => {
           </div>
           <div className="mt-3 text-destructive">{error}</div>
           <DialogFooter className="mt-4">
-            <Button disabled={isPending} type="submit">
-              Sign In
-            </Button>
+            <div className="flex w-full flex-col items-center gap-1 md:flex-row">
+              <Button
+                className="w-full"
+                disabled={isPending || isAnilistLoading}
+                type="submit"
+              >
+                Sign In
+              </Button>
+              <span className="text-xs text-muted-foreground/80">or</span>
+              <Button
+                disabled={isAnilistLoading || isPending}
+                type="button"
+                className="w-full"
+                onClick={() => {
+                  startTransitionAnilist(async () => {
+                    await loginAnilist().then(() =>
+                      toast.success("Signed in successfully")
+                    )
+                  })
+                }}
+              >
+                Sign In with Anilist
+              </Button>
+            </div>
           </DialogFooter>
         </form>
       </Form>
-      <Button type="button" onClick={() => loginAnilist()}>
-        Sign In with Anilist
-      </Button>
     </>
   )
 }

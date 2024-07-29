@@ -73,10 +73,9 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       clientSecret: env.CLIENT_SECRET,
       profile(profile) {
         return {
-          token: profile.token,
-          id: profile.sub,
-          name: profile?.name,
-          image: profile.image,
+          id: profile.id,
+          name: profile?.username,
+          image: profile.image_url,
           email: profile.email,
         }
       },
