@@ -26,6 +26,7 @@ export async function createReplyComment(replies: {
           userName: true,
           image: true,
           email: true,
+          name: true,
         },
       },
       replyLike: {

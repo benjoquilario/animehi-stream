@@ -73,7 +73,7 @@ export default function Comments({
                   >
                     <CommentItem
                       comment={comment}
-                      animeId={animeId}
+                      animeId={anilistId}
                       episodeNumber={episodeNumber}
                     />
                   </motion.div>

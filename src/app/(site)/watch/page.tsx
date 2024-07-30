@@ -78,6 +78,8 @@ export default async function Watch({
 
   const currentUser = await getCurrentUser()
 
+  console.log(currentUser)
+
   return (
     <div className="mt-2 flex-1">
       <VideoPlayer

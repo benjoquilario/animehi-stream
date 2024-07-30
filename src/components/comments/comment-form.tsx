@@ -62,9 +62,9 @@ export default function CommentForm({
   const queryKey = useMemo(
     () => [
       QUERY_KEYS.GET_INFINITE_COMMENTS,
-      `${animeId}-episode-${episodeNumber}`,
+      `${anilistId}-episode-${episodeNumber}`,
     ],
-    [animeId, episodeNumber]
+    [anilistId, episodeNumber]
   )
 
   const form = useForm<z.infer<typeof commentSchema>>({

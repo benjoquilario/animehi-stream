@@ -146,6 +146,8 @@ const CommentItem: React.FC<CommentItemProps> = ({
     })
   }
 
+  console.log(comment)
+
   return (
     <div className="relative flex w-full gap-2">
       {isRepliesOpen || comment._count.replyComment > 0 ? (
@@ -155,7 +157,7 @@ const CommentItem: React.FC<CommentItemProps> = ({
         <Avatar className="h-8 w-8 md:h-10 md:w-10">
           <AvatarImage
             src={comment.user.image ?? ""}
-            alt={comment.user.userName ?? ""}
+            alt={comment.user.name ?? ""}
             className="h-8 w-8 md:h-10 md:w-10"
           />
           <AvatarFallback>
@@ -166,13 +168,16 @@ const CommentItem: React.FC<CommentItemProps> = ({
       <div className="flex w-full flex-col gap-1">
         <div className="flex items-center gap-3">
           <div className="flex items-center">
-            <Link className="inline" href={`/profile/${comment.userId}`}>
+            <Link
+              className="inline"
+              href={`/user/${comment.user.name}/${comment.user.id}`}
+            >
               <h4 className="inline-flex">
                 <span
                   className="max-w-full text-sm font-medium text-foreground underline-offset-1 hover:underline"
                   style={{ wordBreak: "break-word" }}
                 >
-                  {comment.user.userName}
+                  {comment.user.name}
                 </span>
               </h4>
             </Link>

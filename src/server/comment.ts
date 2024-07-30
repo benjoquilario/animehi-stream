@@ -237,6 +237,7 @@ export async function addComment(comment: AddComment) {
       user: {
         select: {
           id: true,
+          name: true,
           userName: true,
           image: true,
           email: true,

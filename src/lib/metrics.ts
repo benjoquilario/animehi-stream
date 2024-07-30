@@ -80,6 +80,7 @@ export const getNewestComments = cache(async () => {
           userName: true,
           image: true,
           email: true,
+          name: true,
         },
       },
     },
@@ -103,4 +104,14 @@ export const accessToken = async function () {
 
     return account?.access_token
   }
+}
+
+export const getBookmark = async function (userId: string) {
+  const bookMarks = await db.bookmark.findMany({
+    where: {
+      userId,
+    },
+  })
+
+  return bookMarks
 }

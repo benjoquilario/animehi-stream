@@ -1,5 +1,5 @@
 "use client"
-import React from "react"
+import React, { useTransition } from "react"
 import { Button, buttonVariants } from "./ui/button"
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
@@ -28,6 +28,8 @@ import Link from "next/link"
 import { logout } from "@/server/auth"
 import { useSession } from "next-auth/react"
 import { ImSpinner8 } from "react-icons/im"
+import { toast } from "sonner"
+import { loginAnilist } from "@/server/auth"
 
 const AuthForm = () => {
   const { data: session, status } = useSession()
@@ -35,6 +37,7 @@ const AuthForm = () => {
     store.isAuthOpen,
     store.setIsAuthOpen,
   ])
+  const [isAnilistLoading, startTransitionAnilist] = useTransition()
 
   const [isLogin, setIsLogin] = useAuthStore((store) => [
     store.isLogin,
@@ -48,10 +51,6 @@ const AuthForm = () => {
       </div>
     )
   }
-
-  console.log(status)
-  console.log(session)
-  console.log(isAuthOpen)
 
   return (
     <>
@@ -121,7 +120,7 @@ const AuthForm = () => {
 
       <Dialog open={isAuthOpen} onOpenChange={setIsAuthOpen}>
         <DialogContent className="pb-12 md:pb-6">
-          <DialogHeader>
+          {/* <DialogHeader>
             <DialogTitle>
               {!isLogin ? "Login" : "Create an account"}
             </DialogTitle>
@@ -154,7 +153,21 @@ const AuthForm = () => {
                 </button>
               </>
             )}
-          </div>
+          </div> */}
+          <Button
+            disabled={isAnilistLoading}
+            type="button"
+            className="w-full"
+            onClick={() => {
+              startTransitionAnilist(async () => {
+                await loginAnilist().then(() =>
+                  toast.success("Signed in successfully")
+                )
+              })
+            }}
+          >
+            Sign In with Anilist
+          </Button>
         </DialogContent>
       </Dialog>
     </>

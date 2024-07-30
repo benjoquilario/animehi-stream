@@ -12,6 +12,8 @@ export const likeReplyComment = async ({
   const session = await auth()
   const userId = session?.user.id
 
+  console.log(session)
+
   if (!session) return
 
   const isLiked = await db.likeReplyComment.count({
