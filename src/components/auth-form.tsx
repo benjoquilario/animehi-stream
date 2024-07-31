@@ -119,7 +119,7 @@ const AuthForm = () => {
       )}
 
       <Dialog open={isAuthOpen} onOpenChange={setIsAuthOpen}>
-        <DialogContent className="pb-12 md:pb-6">
+        <DialogContent className="p-8">
           {/* <DialogHeader>
             <DialogTitle>
               {!isLogin ? "Login" : "Create an account"}
