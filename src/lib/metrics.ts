@@ -115,3 +115,22 @@ export const getBookmark = async function (userId: string) {
 
   return bookMarks
 }
+
+export const getContinueWatching = async function () {
+  const session = await auth()
+
+  if (!session) return
+
+  const userId = session.user.id
+
+  const watching = await db.watchlist.findMany({
+    where: {
+      userId,
+    },
+    orderBy: {
+      updatedAt: "asc",
+    },
+  })
+
+  return watching
+}

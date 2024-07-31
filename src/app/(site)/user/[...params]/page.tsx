@@ -1,18 +1,72 @@
 import { auth } from "@/auth"
 import { queryAnilist } from "@/lib/anilist"
 import { profileQuery } from "@/lib/graphql"
-import { accessToken, getBookmark } from "@/lib/metrics"
+import { accessToken, getBookmark, getContinueWatching } from "@/lib/metrics"
 import { notFound } from "next/navigation"
 import NextImage from "@/components/ui/image"
 import { FaSearch } from "react-icons/fa"
 import { Button, buttonVariants } from "@/components/ui/button"
 import { BiSolidEditAlt } from "react-icons/bi"
 import { SiAnilist } from "react-icons/si"
-import ContinueWatching from "@/components/continue-watching"
+// import ContinueWatching from "@/components/continue-watching"
 import Link from "next/link"
 import React from "react"
 import { transformedTitle } from "@/lib/utils"
+import type { Metadata } from "next"
+import { env } from "@/env.mjs"
 
+export async function generateMetadata({
+  params,
+}: {
+  params: {
+    params: string[]
+  }
+}): Promise<Metadata | undefined> {
+  const [userName, userId] = params.params
+  const token = await accessToken()
+
+  const profile = await queryAnilist(profileQuery, token!, {
+    username: userName,
+  })
+
+  if (!profile) {
+    return
+  }
+
+  const title = profile.data.MediaListCollection.user.name
+  const description = profile.data.MediaListCollection.user.about
+  const imageUrl = profile.data.MediaListCollection.user.avatar.large
+
+  return {
+    title: `AnimeHi - ${title}'s profile`,
+    description,
+    openGraph: {
+      title,
+      description,
+      type: "profile",
+      url: `${env.NEXT_PUBLIC_APP_URL}/user/${userName}/${userId}`,
+      images: [
+        {
+          url: `${imageUrl}`,
+          width: 600,
+          height: 400,
+        },
+      ],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description,
+      images: [
+        {
+          url: `${imageUrl}`,
+          width: 600,
+          height: 400,
+        },
+      ],
+    },
+  }
+}
 const Profile = async ({
   params,
 }: {
@@ -33,6 +87,7 @@ const Profile = async ({
 
   if (profile) {
     const bookMarks = await getBookmark(userId)
+    const watching = await getContinueWatching()
     const time = convertMinutesToDays(
       profile.data.MediaListCollection.user.statistics.anime.minutesWatched
     )
@@ -77,12 +132,23 @@ const Profile = async ({
 
                 <div className="flex items-center gap-2">
                   <SiAnilist />
-                  <span>Create At: 2022-20-2</span>
+                  <span>Create At: </span>
+                  <UnixTimeConverter
+                    unixTime={profile.data.MediaListCollection.user.createdAt}
+                  />
                 </div>
               </div>
             </div>
             <div className="max-h-14 overflow-hidden rounded-md bg-secondary/30 p-3">
-              <span>No description</span>
+              {profile.data.MediaListCollection.user.about ? (
+                <div
+                  dangerouslySetInnerHTML={{
+                    __html: profile.data.MediaListCollection.user.about,
+                  }}
+                />
+              ) : (
+                <span>No description: </span>
+              )}
             </div>
             <div className="flex items-center justify-center gap-3 rounded-md bg-secondary/30 p-3 text-sm">
               <div className="flex flex-col items-center gap-1">
@@ -115,7 +181,7 @@ const Profile = async ({
               </div>
             </div>
             <div className="w-full space-y-3">
-              <h4 className="text-left text-2xl">Bookmark</h4>
+              <h4 className="text-left text-base md:text-2xl">Bookmark</h4>
               <div className="bg-secondary/30">
                 <div className="flex justify-between p-3">
                   <div>Title</div>
@@ -132,17 +198,47 @@ const Profile = async ({
                     />
                   ))
                 ) : (
-                  <div>No Bookmark</div>
+                  <div className="my-2 text-center">No Bookmark</div>
                 )}
               </div>
             </div>
+            {isCurrentUser ? (
+              <div className="w-full space-y-3">
+                <h4 className="text-left text-base md:text-2xl">
+                  Continue Watching on AnimeHi
+                </h4>
+                <div className="bg-secondary/30">
+                  <div className="flex justify-between p-3">
+                    <div>Title</div>
+                  </div>
+                  {watching?.length !== 0 ? (
+                    watching?.map((item) => (
+                      <CardItem
+                        key={item.id}
+                        id={item.anilistId}
+                        progress=""
+                        episodes=""
+                        title={item.title}
+                        cover={item.image}
+                      >
+                        <div className="text-sm text-muted-foreground">
+                          Watching Episode {item.episodeNumber}
+                        </div>
+                      </CardItem>
+                    ))
+                  ) : (
+                    <div className="my-2 text-center">No Bookmark</div>
+                  )}
+                </div>
+              </div>
+            ) : null}
 
             {/* <div>{session ? <ContinueWatching /> : null}</div> */}
           </div>
           <div className="mt-4 w-full space-y-3 md:mt-32">
             {profile.data.MediaListCollection.lists.map((list: any) => (
               <React.Fragment key={list.name}>
-                <h4 className="text-left text-2xl">{list.name}</h4>
+                <h4 className="text-left text-base md:text-2xl">{list.name}</h4>
                 <div className="bg-secondary/30">
                   <div className="flex justify-between p-3">
                     <div>Title</div>
@@ -193,12 +289,14 @@ function CardItem({
   progress,
   episodes,
   id,
+  children,
 }: {
   id: string
   title: string
   cover: string
   progress: string
   episodes: string
+  children?: React.ReactNode
 }) {
   return (
     <Link
@@ -214,7 +312,10 @@ function CardItem({
           style={{ objectFit: "cover" }}
           src={cover}
         />
-        <h4 className="text-xs">{title}</h4>
+        <div>
+          <h4 className="text-xs">{title}</h4>
+          {children}
+        </div>
       </div>
       {progress || episodes ? (
         <span className="text-xs">
@@ -240,6 +341,13 @@ function convertMinutesToDays(minutes: number) {
       ? { hours: `${hours}` }
       : { hours: `${hours.toFixed(1)}` }
   }
+}
+
+function UnixTimeConverter({ unixTime }: { unixTime: number }) {
+  const date = new Date(unixTime * 1000) // multiply by 1000 to convert to milliseconds
+  const formattedDate = date.toISOString().slice(0, 10) // format date to YYYY-MM-DD
+
+  return <p>{formattedDate}</p>
 }
 
 export default Profile

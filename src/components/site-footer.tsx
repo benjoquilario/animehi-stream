@@ -44,28 +44,34 @@ export default function SiteFooter() {
             <nav className="grid grid-cols-2 gap-3" aria-label="others links">
               <ul className="flex flex-col gap-3">
                 <li className="text-muted-foreground hover:text-muted-foreground">
-                  <Link href="/popular">This Season</Link>
+                  <Link
+                    href={`/browse?query=&season=${currentSeason.season}&format=TV&year=${currentSeason.year}&sort=POPULARITY_DESC`}
+                  >
+                    This Season
+                  </Link>
                 </li>
                 <li className="text-muted-foreground hover:text-muted-foreground">
-                  <Link href="/popular">Popular Anime</Link>
+                  <Link href="/browse?query=&sort=POPULARITY_DESC&format=TV">
+                    Popular Anime
+                  </Link>
                 </li>
                 <li className="text-muted-foreground hover:text-muted-foreground">
                   <Link href="/popular">Donate</Link>
                 </li>
                 <li className="text-muted-foreground hover:text-muted-foreground">
-                  <Link href="/popular">DMCA</Link>
+                  <Link href="/policies/terms-of-service">DMCA</Link>
                 </li>
               </ul>
 
               <ul className="flex flex-col gap-3">
                 <li className="text-muted-foreground hover:text-muted-foreground">
-                  <Link href="/popular">About</Link>
+                  <Link href="/about">About</Link>
                 </li>
                 <li className="text-muted-foreground hover:text-muted-foreground">
-                  <Link href="/popular">Privacy & Tos</Link>
+                  <Link href="/policies/terms-of-service">ToS</Link>
                 </li>
                 <li className="text-muted-foreground hover:text-muted-foreground">
-                  <Link href="/popular">Github</Link>
+                  <Link href="/policies/privacy-policy">Privacy Policy</Link>
                 </li>
                 <li className="text-muted-foreground hover:text-muted-foreground">
                   <Link href="/popular">Bug Report</Link>

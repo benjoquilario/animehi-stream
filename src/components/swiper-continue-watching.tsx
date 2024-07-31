@@ -1,6 +1,6 @@
 "use client"
 
-import React from "react"
+import React, { useState } from "react"
 import { Swiper, SwiperSlide } from "swiper/react"
 
 // Import Swiper styles
@@ -42,8 +42,6 @@ const SwiperContinueWatching = (props: SwiperContinueWatchingProps) => {
       return toast.dismiss()
     },
   })
-
-  console.log(results)
 
   return (
     <Swiper
