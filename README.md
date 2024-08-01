@@ -176,6 +176,17 @@ You are all set! Open [localhost:3000](http://localhost:3000/) to see the app.
 > [!NOTE]
 > This project is a work in progress, it still contains bugs and will constantly be updated to stay up-to-date with the latest framework changes.
 
+## Self-Hosting Notice
+
+**⚠️ RESTRICTED USE**
+
+> [!CAUTION]
+> Self-hosting this application is **strictly limited to personal use only**. Commercial utilization is **prohibited**, and the inclusion of advertisements on your self-hosted website may lead to serious consequences, including **potential site takedown measures**. Ensure compliance to avoid any legal or operational issues.
+
+## License 📝
+
+This project is governed by a Custom BY-NC License. What does this entail? Simply put, you are permitted to utilize, distribute, and modify the code for non-commercial purposes. However, it is imperative that due credit is accorded to our platform, [animehi-stream](https://www.animehi-stream.vercel.app). Any commercial utilization of this code is strictly prohibited. For comprehensive details, please refer to the [LICENSE](LICENSE) file. Should you have inquiries or require special permissions, do not hesitate to contact us.
+
 ## Contribution
 
 Your ideas, translations, design changes, code cleaning, real heavy code changes, or any help are always welcome. The more is the contribution, the better it gets.
