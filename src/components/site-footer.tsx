@@ -12,10 +12,10 @@ export default function SiteFooter() {
 
   return (
     <>
-      <footer className="mt-20 flex w-full flex-col border-t">
+      <footer className="mt-20 flex w-full flex-col bg-secondary/20">
         {/* <Separator className="my-4" /> */}
         <div className="flex flex-col">
-          <div className="mb-5 flex flex-col items-start justify-between gap-5 bg-background/80 px-[3%] pt-9 xl:flex-row xl:items-center">
+          <div className="mb-5 flex flex-col items-start justify-between gap-5 px-[3%] pt-9 xl:flex-row xl:items-center">
             <div>
               <Link href="/" className="p-1">
                 <div className="flex">

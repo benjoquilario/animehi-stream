@@ -93,7 +93,7 @@ export async function createViewCounter({
 }) {
   const isAnimeIdExist = await db.viewCounter.findFirst({
     where: {
-      animeId: animeId,
+      anilistId: anilistId,
     },
   })
 

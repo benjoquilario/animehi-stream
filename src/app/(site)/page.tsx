@@ -17,22 +17,7 @@ export default async function Home() {
   return (
     <>
       <section>
-        <Suspense
-          fallback={
-            <div className="relative h-[350px] w-full animate-pulse bg-background px-[2%] md:h-[500px]">
-              <div className="absolute bottom-[50px] top-auto z-[100] w-full max-w-[800px] space-y-3 md:bottom-[109px]">
-                <Skeleton className="h-[28px] w-[344px] md:h-[52px] md:w-[512px]" />
-                <Skeleton className="h-[42px] w-[344px] md:h-[58px] md:w-[512px]" />
-                <div className="flex items-center space-x-3">
-                  <Skeleton className="h-[40px] w-[114px]" />
-                  <Skeleton className="h-[40px] w-[114px]" />
-                </div>
-              </div>
-            </div>
-          }
-        >
-          <Banner />
-        </Suspense>
+        <Banner />
       </section>
       <section className="w-full px-[2%]">
         <div className="flex flex-col md:space-x-4">
@@ -84,20 +69,7 @@ export default async function Home() {
               </div>
             </Section>
 
-            <Suspense
-              fallback={
-                <div className="mt-4 px-[2%]">
-                  <div className="grid grid-cols-2 gap-2 md:gap-4 xl:grid-cols-4">
-                    <SeasonalSkeleton />
-                    <SeasonalSkeleton />
-                    <SeasonalSkeleton />
-                    <SeasonalSkeleton />
-                  </div>
-                </div>
-              }
-            >
-              <Seasonal />
-            </Suspense>
+            <Seasonal />
             <div className="flex flex-col md:space-x-4 xl:flex-row">
               <RecentEpisodes />
               {/* <RecentEpisodes recentEpisodes={recentResponse?.results} /> */}

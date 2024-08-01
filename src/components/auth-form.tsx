@@ -91,7 +91,10 @@ const AuthForm = () => {
             <DropdownMenuSeparator />
             <DropdownMenuGroup>
               <DropdownMenuItem asChild>
-                <Link className="w-full" href={`/profile/${session?.user?.id}`}>
+                <Link
+                  className="w-full"
+                  href={`/user/${session?.user?.name}/${session.user.id}`}
+                >
                   Profile
                 </Link>
               </DropdownMenuItem>

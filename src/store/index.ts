@@ -2,6 +2,13 @@ import { Source, SourcesResponse } from "types/types"
 import { create } from "zustand"
 import { persist } from "zustand/middleware"
 
+interface ISources {
+  isDub: boolean
+  defaultQuality: {
+    url: string
+  }
+}
+
 interface AuthInitialState {
   isAuthOpen: boolean
   setIsAuthOpen: (isAuthOpen: boolean) => void
@@ -19,8 +26,8 @@ export const useAuthStore = create<AuthInitialState>((set) => ({
 interface WatchInitialStore {
   url: string
   setUrl: (arg: string) => void
-  sources: Source[] | undefined
-  setSources: (args: Source[] | undefined) => void
+  sources: ISources | null
+  setSources: (args: ISources) => void
   isAutoNext: boolean
   enableAutoNext: () => void
   disabledAutoNext: () => void
@@ -45,9 +52,9 @@ export const useWatchStore = create<WatchInitialStore>((set) => ({
   disabledAutoNext: () => {
     set(() => ({ isAutoNext: false }))
   },
-  sources: undefined,
-  resetSources: () => set({ sources: [] }),
-  setSources: (sources: Source[] | undefined) => set({ sources }),
+  sources: null,
+  resetSources: () => set({ sources: null }),
+  setSources: (sources: ISources) => set({ sources }),
   download: "",
   setDownload: (download?: string) => set({ download }),
   sourceType: "default",

@@ -17,6 +17,7 @@ import { FaSpinner } from "react-icons/fa"
 import Recommendations from "@/components/anime/recommendations"
 import { env } from "@/env.mjs"
 import useAnimeInfo from "@/hooks/useAnimeInfo"
+import { fetchAnimeInfo, fetchAnimeData } from "@/lib/cache"
 
 export default function Anime({
   animeId,
@@ -26,16 +27,60 @@ export default function Anime({
   slug: string
 }) {
   const { data: episodes, isLoading, isError } = useEpisodes(animeId)
+  const [animeInfo, setAnimeInfo] = useState<IAnilistInfo | null>(null)
+  const [loading, setIsLoading] = useState(true)
 
-  const { data: animeInfo, isLoading: loading } =
-    useAnimeInfo<IAnilistInfo>(animeId)
+  useEffect(() => {
+    let isMounted = true
+    const fetchInfo = async () => {
+      if (!animeId) {
+        console.error("Anime ID is null.")
+        setIsLoading(false)
+        return
+      }
+      setIsLoading(true)
+      try {
+        const info = await fetchAnimeData(animeId)
 
+        console.log(info)
+        if (isMounted) {
+          setAnimeInfo(info)
+        }
+        setIsLoading(false)
+      } catch (error) {
+        try {
+          const fallbackInfo = await fetchAnimeInfo(animeId)
+          if (isMounted) {
+            setAnimeInfo(fallbackInfo)
+          }
+          setIsLoading(false)
+        } catch (fallbackError) {
+          console.error(
+            "Also failed to fetch anime info as a fallback:",
+            fallbackError
+          )
+        } finally {
+          setIsLoading(false)
+        }
+      }
+    }
+
+    fetchInfo()
+
+    return () => {
+      isMounted = false
+    }
+  }, [animeId])
+
+  console.log(loading)
   const router = useRouter()
 
   const animeTitle = useMemo(
     () => episodes?.[0]?.id.split?.("-episode-")[0] ?? slug,
     [episodes, slug]
   )
+
+  console.log(animeInfo)
 
   return (
     <div className="overflow-hidden">

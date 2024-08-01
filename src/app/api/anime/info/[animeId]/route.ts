@@ -2,6 +2,7 @@ import { NextResponse } from "next/server"
 import { redis } from "@/lib/redis"
 import { CACHE_MAX_AGE } from "@/lib/constant"
 import { env } from "@/env.mjs"
+import { fetchAnimeData, fetchAnimeInfo } from "@/lib/cache"
 
 export async function GET(
   req: Request,
@@ -12,35 +13,25 @@ export async function GET(
   if (!animeId)
     return NextResponse.json("Missing animeId for /anime/info", { status: 422 })
 
-  // const cachedResponse = await get(redis, )
+  // // const cachedResponse = await get(redis, )
 
-  const cachedResponse = await redis.get(`anime:${animeId}`)
+  // const cachedResponse = await redis.get(`anime:${animeId}`)
 
-  if (cachedResponse) {
-    return NextResponse.json(cachedResponse)
-  }
+  // if (cachedResponse) {
+  //   return NextResponse.json(cachedResponse)
+  // }
 
   let results
 
   try {
-    const response = await fetch(
-      `${env.ANIME_API_URI}/meta/anilist/data/${animeId}`
-    )
+    const data = await fetchAnimeData(animeId)
 
-    if (!response.ok) throw new Error("Error")
-
-    results = await response.json()
+    results = data
   } catch (error) {
-    const response = await fetch(
-      `${env.ANIME_API_URI}/meta/anilist/info/${animeId}`
-    )
-    if (!response.ok) throw new Error("Error")
+    const info = await fetchAnimeInfo(animeId)
 
-    results = await response.json()
+    results = info
   }
-
-  const stringifyResult = JSON.stringify(results)
-  await redis.setex(`anime:${animeId}`, 24 * 60 * 60, stringifyResult)
 
   return NextResponse.json(results)
 }

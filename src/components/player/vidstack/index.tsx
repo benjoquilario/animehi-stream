@@ -2,7 +2,6 @@
 
 import React, { useMemo, useEffect, useState, useCallback } from "react"
 import { IAnilistInfo } from "types/types"
-import VidstackPlayer from "./player"
 import Episodes from "@/components/episode/episodes"
 import { useRouter, useSearchParams } from "next/navigation"
 import useEpisodes from "@/hooks/useEpisodes"
@@ -21,6 +20,9 @@ import type {
 import { Badge } from "@/components/ui/badge"
 import { LuMessageSquare } from "react-icons/lu"
 import { Spinner } from "@vidstack/react"
+import dynamic from "next/dynamic"
+import VidstackPlayer from "./player"
+import { fetchAnimeEpisodes, fetchAnimeEpisodesFallback } from "@/lib/cache"
 
 type VideoPlayerProps = {
   animeId: string
@@ -41,44 +43,30 @@ const VideoPlayer = (props: VideoPlayerProps) => {
   //   [animeId, episodeNumber, isDub]
   // )
   const download = useWatchStore((store) => store.download)
-  const [src, setSrc] = useState<string>("")
-  const [isLoading, setIsLoading] = useState(false)
-  const setDownload = useWatchStore((store) => store.setDownload)
-  const [vttGenerated, setVttGenerated] = useState<boolean>(false)
-  const [textTracks, setTextTracks] = useState<ITracks[]>([])
+  // const [isLoading, setIsLoading] = useState(false)
+  const [isPending, setIsPending] = useState(false)
+  const [error, setError] = useState(false)
   const [selectedBackgroundImage, setSelectedBackgroundImage] =
     useState<string>("")
 
-  const [vttUrl, setVttUrl] = useState<string>("")
-  const [error, setError] = useState(false)
-  const [currentTime, setCurrentTime] = useState<number>(0)
-  const [skipTimes, setSkipTimes] = useState<AniSkipResult[]>([])
-  const [totalDuration, setTotalDuration] = useState<number>(0)
-
-  const {
-    data: episodes,
-    isLoading: isPending,
-    isError,
-  } = useEpisodes(anilistId)
-
-  const currentEpisode = useMemo(
-    () => episodes?.find((episode) => episode.number === episodeNumber),
-    [episodes, episodeNumber]
-  )
-
-  const latestEpisodeNumber = useMemo(
-    () =>
-      episodes?.length !== 0
-        ? episodes?.length ??
-          animeResponse.currentEpisode ??
-          animeResponse.nextAiringEpisode.episode - 1
-        : 1,
-    [animeResponse, episodes]
-  )
+  const [episodesList, setEpisodesLists] = useState<IEpisode[]>()
+  const [episodesNavigation, setEpisodeNavigation] = useState<{
+    id: string
+    title: string
+    description: string
+    number: number
+    image: string
+  } | null>({
+    id: "",
+    title: "",
+    description: "",
+    number: 1,
+    image: "",
+  })
 
   useEffect(() => {
     const updateBackgroundImage = () => {
-      const episodeImage = currentEpisode?.image
+      const episodeImage = episodesNavigation?.image
       const bannerImage = animeResponse?.cover || animeResponse?.image
       if (episodeImage && episodeImage !== animeResponse.image) {
         const img = new Image()
@@ -97,159 +85,98 @@ const VideoPlayer = (props: VideoPlayerProps) => {
         setSelectedBackgroundImage(bannerImage)
       }
     }
-    if (animeResponse && currentEpisode) {
+    if (animeResponse && episodesNavigation) {
       updateBackgroundImage()
     }
-  }, [animeResponse, currentEpisode])
-
-  async function fetchAndSetAnimeSource() {
-    setIsLoading(true)
-
-    try {
-      if (currentEpisode) {
-        const response = await fetch(
-          `${env.NEXT_PUBLIC_ANIME_API_URL}/anime/gogoanime/watch/${currentEpisode.id}`
-        )
-
-        if (!response.ok) throw Error
-
-        const data = (await response.json()) as SourcesResponse
-
-        const backupSource = data.sources.find(
-          (source) => source.quality === "default"
-        )
-
-        if (backupSource) {
-          setSrc(
-            `${env.NEXT_PUBLIC_PROXY_URI}=${encodeURIComponent(backupSource.url)}`
-          )
-          setDownload(data.download)
-          setIsLoading(false)
-        } else {
-          console.error("Backup source not found")
-        }
-      }
-    } catch (error) {
-      console.error("Failed to fetch anime streaming links", error)
-      const response = await fetch(
-        `${env.NEXT_PUBLIC_PROXY_URI}=${env.NEXT_PUBLIC_ANIME_API_URL_V3}/anime/info/${anilistId}`
-      )
-
-      const data = await response.json()
-      console.log(data)
-
-      const { episodesList } = data.data
-
-      const source = episodesList.find(
-        (episode: {
-          episodeId: number
-          id: string
-          number: number
-          title: string
-        }) => episode.number === episodeNumber
-      )
-
-      const fetchDataSources = await fetch(
-        `${env.NEXT_PUBLIC_PROXY_URI}=${env.NEXT_PUBLIC_ANIME_API_URL_V2}/anime/episode-srcs?id=${source.id}`
-      )
-
-      const videoSource = await fetchDataSources.json()
-
-      setSrc(videoSource.sources[0].url)
-      setTextTracks(videoSource.tracks)
-      setDownload("")
-    } finally {
-      setIsLoading(false)
-    }
-  }
+  }, [animeResponse, episodesNavigation])
 
   useEffect(() => {
-    fetchAndSetAnimeSource()
-    fetchAndProcessSkipTimes()
-    return () => {
-      setSrc("")
-      setTextTracks([])
-      setSelectedBackgroundImage("")
-      if (vttUrl) URL.revokeObjectURL(vttUrl)
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [currentEpisode?.id, currentEpisode?.number])
+    let isMounted = true
+    const fetchData = async function () {
+      setIsPending(true)
 
-  function generateWebVTTFromSkipTimes(
-    skipTimes: AniSkip,
-    totalDuration: number
-  ): string {
-    let vttString = "WEBVTT\n\n"
-    let previousEndTime = 0
-
-    const sortedSkipTimes = skipTimes.results.sort(
-      (a, b) => a.interval.startTime - b.interval.startTime
-    )
-
-    sortedSkipTimes.forEach((skipTime, index) => {
-      const { startTime, endTime } = skipTime.interval
-      const skipType =
-        skipTime.skipType.toUpperCase() === "OP" ? "Opening" : "Outro"
-
-      if (previousEndTime < startTime) {
-        vttString += `${formatTime(previousEndTime)} --> ${formatTime(startTime)}\n`
-        vttString += `${animeResponse.title.english ?? animeResponse.title.romaji} / Episode ${episodeNumber}\n\n`
-      }
-
-      vttString += `${formatTime(startTime)} --> ${formatTime(endTime)}\n`
-      vttString += `${skipType}\n\n`
-      previousEndTime = endTime
-
-      if (index === sortedSkipTimes.length - 1 && endTime < totalDuration) {
-        vttString += `${formatTime(endTime)} --> ${formatTime(totalDuration)}\n`
-        vttString += `${animeResponse.title.english ?? animeResponse.title.romaji} / Episode ${episodeNumber}\n\n`
-      }
-    })
-
-    return vttString
-  }
-
-  function formatTime(seconds: number): string {
-    const minutes = Math.floor(seconds / 60)
-    const remainingSeconds = Math.floor(seconds % 60)
-    return `${minutes.toString().padStart(2, "0")}:${remainingSeconds.toString().padStart(2, "0")}`
-  }
-
-  async function fetchAndProcessSkipTimes() {
-    if (animeResponse.malId && currentEpisode?.id) {
+      if (!anilistId) return
       try {
-        if (!animeResponse.malId) return
+        let results: IEpisode[]
+        const data = (await fetchAnimeEpisodes(anilistId)) as IEpisode[]
 
-        if (currentEpisode) {
-          const response = await fetch(
-            `https://api.aniskip.com/v2/skip-times/${animeResponse.malId}/${currentEpisode.number}?types=op&types=recap&types=mixed-op&types=ed&types=mixed-ed&episodeLength`
-          )
+        if (isMounted && data) {
+          if (data.length !== 0) {
+            results = data
+            setEpisodesLists(data)
 
-          if (!response.ok) return
-
-          const data = (await response.json()) as AniSkip
-          const filteredSkipTimes = data.results.filter(
-            ({ skipType }) => skipType === "op" || skipType === "ed"
-          )
-          if (!vttGenerated) {
-            const vttContent = generateWebVTTFromSkipTimes(
-              { results: filteredSkipTimes },
-              totalDuration
+            const currentEpisode = data.find(
+              (ep) => ep.number === episodeNumber
             )
-            const blob = new Blob([vttContent], { type: "text/vtt" })
-            const vttBlobUrl = URL.createObjectURL(blob)
-            setVttUrl(vttBlobUrl)
-            setSkipTimes(filteredSkipTimes)
-            setVttGenerated(true)
+
+            if (currentEpisode) {
+              setEpisodeNavigation({
+                id: currentEpisode.id,
+                title: currentEpisode.title,
+                description: currentEpisode.description || "",
+                number: currentEpisode.number,
+                image: currentEpisode.image,
+              })
+            }
+          } else {
+            const data = await fetchAnimeEpisodesFallback(anilistId)
+
+            setEpisodesLists(data.data.episodesList)
+
+            const currentEpisode = data.data.episodesList.find(
+              (ep: {
+                episodeId: number
+                id: string
+                number: number
+                title: string
+              }) => ep.number === episodeNumber
+            )
+
+            if (currentEpisode) {
+              setEpisodeNavigation({
+                id: currentEpisode.id,
+                title: `Episode ${currentEpisode.number}`,
+                description: currentEpisode.description ?? "",
+                number: currentEpisode.number,
+                image: currentEpisode.image ?? "",
+              })
+            }
           }
         }
       } catch (error) {
-        console.error("Failed to fetch skip times", error)
+        console.error("Error")
+      } finally {
+        setIsPending(false)
       }
     }
-  }
 
-  console.log(currentEpisode)
+    fetchData()
+    return () => {
+      setEpisodeNavigation(null)
+    }
+  }, [anilistId, episodeNumber])
+
+  useEffect(() => {
+    const mediaSession = navigator.mediaSession
+    if (!mediaSession) return
+
+    const poster = episodesNavigation?.image || animeResponse?.cover
+    const title = episodesNavigation?.title || animeResponse?.title?.romaji
+
+    const artwork = poster
+      ? [{ src: poster, sizes: "512x512", type: "image/jpeg" }]
+      : undefined
+
+    mediaSession.metadata = new MediaMetadata({
+      title: title,
+      artist: `Anime ${
+        title === animeResponse?.title?.romaji
+          ? "- Episode " + episodeNumber
+          : `- ${animeResponse?.title?.romaji || animeResponse?.title?.english}`
+      }`,
+      artwork,
+    })
+  }, [episodesNavigation, animeResponse, episodeNumber])
 
   return (
     <>
@@ -258,27 +185,23 @@ const VideoPlayer = (props: VideoPlayerProps) => {
           <div className="relative h-0 w-full rounded-md bg-primary/10 pt-[56%]"></div>
         </div>
       ) : !error ? (
-        isLoading && !currentEpisode ? (
-          <SpinLoader />
+        episodesNavigation ? (
+          <VidstackPlayer
+            malId={`${animeResponse.malId}`}
+            episodeId={episodesNavigation.id}
+            animeId={animeId}
+            animeResponse={animeResponse}
+            episodeNumber={episodesNavigation.number}
+            latestEpisodeNumber={10}
+            anilistId={anilistId}
+            banner={selectedBackgroundImage}
+            currentEpisode={episodesNavigation}
+            title={`${animeResponse.title.english ?? animeResponse.title.romaji} / Episode ${episodeNumber}`}
+          />
         ) : (
-          currentEpisode && (
-            <VidstackPlayer
-              animeId={animeId}
-              animeResponse={animeResponse}
-              episodeNumber={currentEpisode.number}
-              currentEpisode={currentEpisode}
-              latestEpisodeNumber={latestEpisodeNumber}
-              anilistId={anilistId}
-              src={src}
-              banner={selectedBackgroundImage}
-              vttUrl={vttUrl}
-              setTotalDuration={setTotalDuration}
-              skipTimes={skipTimes}
-              currentTime={currentTime}
-              textTracks={textTracks}
-              title={`${animeResponse.title.english ?? animeResponse.title.romaji} / Episode ${episodeNumber}`}
-            />
-          )
+          <div className="flex-center relative aspect-video h-full w-full">
+            <SpinLoader />
+          </div>
         )
       ) : (
         <div>Please try again</div>
@@ -290,23 +213,23 @@ const VideoPlayer = (props: VideoPlayerProps) => {
         animeId={animeId}
         anilistId={anilistId}
         currentUser={currentUser}
-        lastEpisode={currentEpisode?.number!}
+        lastEpisode={episodesNavigation?.number!}
       >
         <ButtonAction
           isLoading={isPending}
-          latestEpisodeNumber={latestEpisodeNumber}
+          latestEpisodeNumber={10}
           anilistId={anilistId}
-          lastEpisode={currentEpisode?.number!}
+          lastEpisode={episodesNavigation?.number!}
           animeTitle={animeId}
         />
       </Server>
 
       <Episodes
         slug={animeId}
-        episodes={episodes}
+        episodes={episodesList}
         isLoading={isPending}
         animeId={anilistId}
-        episodeNumber={currentEpisode?.number}
+        episodeNumber={episodesNavigation?.number!}
       />
 
       <RelationWatch relations={animeResponse.relations} />
@@ -327,11 +250,11 @@ const VideoPlayer = (props: VideoPlayerProps) => {
         </div>
       </div>
 
-      {!isPending && currentEpisode ? (
+      {!isPending && episodesNavigation ? (
         <Comments
           anilistId={anilistId}
           animeId={animeId}
-          episodeNumber={`${currentEpisode.number}`}
+          episodeNumber={`${episodesNavigation.number}`}
         />
       ) : (
         <></>

@@ -131,6 +131,22 @@ export const getSeason = () => {
   }
 }
 
+export const getNextSeason = (): string => {
+  const currentSeason = getSeason()
+  switch (currentSeason.season) {
+    case "SPRING":
+      return "SUMMER"
+    case "SUMMER":
+      return "FALL"
+    case "FALL":
+      return "WINTER"
+    case "WINTER":
+      return "SPRING"
+    default:
+      return "UNKNOWN" // Should never be reached
+  }
+}
+
 export const toBase64 = (str: string) => Buffer.from(str).toString("base64")
 
 export const solidImage = (color: string) => `

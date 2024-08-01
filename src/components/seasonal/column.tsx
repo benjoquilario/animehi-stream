@@ -14,9 +14,7 @@ type ColumnProps = {
 }
 
 const Column = ({ results, seasonalTitle, browse }: ColumnProps) => {
-  if (results.length === 0) {
-    return <div>{seasonalTitle} not found</div>
-  }
+  console.log(results)
 
   return (
     <div className="w-full">
