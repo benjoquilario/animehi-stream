@@ -202,7 +202,3 @@ Your ideas, translations, design changes, code cleaning, real heavy code changes
 - Portfolio: [@benjoquilario](https://benjoquilario.site)
 
 Please give this repository a ⭐️ if you liked this app. It seems like a little thing, but it helps a lot with the motivation.
-
-### License
-
-Licensed under [AG](./LICENSE.md)
