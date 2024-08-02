@@ -17,7 +17,12 @@ import { FaSpinner } from "react-icons/fa"
 import Recommendations from "@/components/anime/recommendations"
 import { env } from "@/env.mjs"
 import useAnimeInfo from "@/hooks/useAnimeInfo"
-import { fetchAnimeInfo, fetchAnimeData } from "@/lib/cache"
+import {
+  fetchAnimeInfo,
+  fetchAnimeData,
+  fetchAnimeEpisodes,
+  fetchAnimeEpisodesFallback,
+} from "@/lib/cache"
 
 export default function Anime({
   animeId,
@@ -26,9 +31,77 @@ export default function Anime({
   animeId: string
   slug: string
 }) {
-  const { data: episodes, isLoading, isError } = useEpisodes(animeId)
+  const [state, setState] = useState({
+    episodes: [] as IEpisode[],
+    loading: {
+      episodes: true,
+    },
+    error: null as string | null,
+  })
+
   const [animeInfo, setAnimeInfo] = useState<IAnilistInfo | null>(null)
   const [loading, setIsLoading] = useState(true)
+
+  useEffect(() => {
+    let isMounted = true
+    const fetchData = async function () {
+      if (!animeId) return
+      try {
+        setState((prevState) => ({ ...prevState, error: null }))
+        const data = (await fetchAnimeEpisodes(animeId)) as IEpisode[]
+
+        if (isMounted && data) {
+          if (data.length !== 0) {
+            setState((prevState) => ({
+              ...prevState,
+              episodes: data,
+            }))
+          } else {
+            const data = await fetchAnimeEpisodesFallback(animeId)
+
+            const transformEpisode: IEpisode[] = data.data.episodesList.map(
+              (episode: {
+                episodeId: number
+                id: string
+                number: number
+                title: string
+              }) => {
+                return {
+                  id: episode.episodeId,
+                  title: `Episode ${episode.number}`,
+                  image: null,
+                  imageHash: "hash",
+                  number: episode.number,
+                  createdAt: null,
+                  description: null,
+                  url: "",
+                }
+              }
+            )
+
+            setState((prevState) => ({
+              ...prevState,
+              episodes: transformEpisode,
+            }))
+          }
+        }
+      } catch (error) {
+        setState((prevState) => ({
+          ...prevState,
+          error: "An unexpected error occurred",
+        }))
+      } finally {
+        setState((prevState) => ({
+          ...prevState,
+          loading: {
+            episodes: false,
+          },
+        }))
+      }
+    }
+
+    fetchData()
+  }, [animeId])
 
   useEffect(() => {
     let isMounted = true
@@ -72,15 +145,12 @@ export default function Anime({
     }
   }, [animeId])
 
-  console.log(loading)
   const router = useRouter()
 
   const animeTitle = useMemo(
-    () => episodes?.[0]?.id.split?.("-episode-")[0] ?? slug,
-    [episodes, slug]
+    () => state.episodes?.[0]?.id.split?.("-episode-")[0] ?? slug,
+    [state.episodes, slug]
   )
-
-  console.log(animeInfo)
 
   return (
     <div className="overflow-hidden">
@@ -145,11 +215,11 @@ export default function Anime({
 
           <div className="flex items-center gap-2">
             <Button
-              disabled={isLoading}
+              disabled={state.loading.episodes}
               variant="shine"
               onClick={() =>
                 router.push(
-                  `/watch?id=${animeId}&slug=${animeTitle}&ep=${episodes?.length !== 0 ? episodes?.[episodes.length - 1]?.number : 1}`
+                  `/watch?id=${animeId}&slug=${animeTitle}&ep=${state.episodes?.length !== 0 ? state.episodes?.[state.episodes.length - 1]?.number : 1}`
                 )
               }
             >
@@ -260,14 +330,14 @@ export default function Anime({
         <div className="mt-14">
           <SectionTitle title="Episodes" />
 
-          {isError || episodes?.length === 0 ? (
+          {state.error || state.episodes?.length === 0 ? (
             <div className="mt-4">
               <div>No Episode found</div>
             </div>
           ) : (
             <Episodes
-              episodes={episodes}
-              isLoading={isLoading}
+              episodes={state.episodes}
+              isLoading={state.loading.episodes}
               animeId={animeId}
               slug={slug}
             />

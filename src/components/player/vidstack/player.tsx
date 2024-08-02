@@ -427,7 +427,7 @@ const VidstackPlayer = (props: VidstackPlayerProps) => {
     >
       <MediaProvider>
         <Poster
-          className="vds-poster"
+          className="vds-poster absolute	inset-0	h-full w-full translate-x-0 translate-y-0"
           src={`${env.NEXT_PUBLIC_PROXY_URI}?url=${posterImage}`}
           alt=""
           style={{ objectFit: "cover" }}

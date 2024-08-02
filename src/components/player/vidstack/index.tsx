@@ -1,6 +1,6 @@
 "use client"
 
-import React, { useEffect, useState, useCallback } from "react"
+import React, { useEffect, useState, useCallback, useMemo } from "react"
 import { IAnilistInfo } from "types/types"
 import Episodes from "@/components/episode/episodes"
 import { useSearchParams } from "next/navigation"
@@ -188,6 +188,16 @@ const VideoPlayer = (props: VideoPlayerProps) => {
     })
   }, [episodesNavigation, animeResponse, episodeNumber])
 
+  const latestEpisodeNumber = useMemo(
+    () =>
+      episodesList?.length !== 0
+        ? episodesList?.length ??
+          animeResponse.currentEpisode ??
+          animeResponse.nextAiringEpisode.episode - 1
+        : 1,
+    [animeResponse, episodesList]
+  )
+
   return (
     <>
       {isPending ? (
@@ -202,7 +212,7 @@ const VideoPlayer = (props: VideoPlayerProps) => {
             animeId={animeId}
             animeResponse={animeResponse}
             episodeNumber={episodesNavigation.number}
-            latestEpisodeNumber={10}
+            latestEpisodeNumber={latestEpisodeNumber}
             anilistId={anilistId}
             banner={selectedBackgroundImage}
             currentEpisode={episodesNavigation}
@@ -227,7 +237,7 @@ const VideoPlayer = (props: VideoPlayerProps) => {
       >
         <ButtonAction
           isLoading={isPending}
-          latestEpisodeNumber={10}
+          latestEpisodeNumber={latestEpisodeNumber}
           anilistId={anilistId}
           lastEpisode={episodesNavigation?.number!}
           animeTitle={animeId}
