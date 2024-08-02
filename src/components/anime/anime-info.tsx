@@ -116,7 +116,7 @@ export default function Anime({
         const info = await fetchAnimeData(animeId)
 
         console.log(info)
-        if (isMounted) {
+        if (isMounted && info) {
           setAnimeInfo(info)
         }
         setIsLoading(false)
@@ -330,7 +330,7 @@ export default function Anime({
         <div className="mt-14">
           <SectionTitle title="Episodes" />
 
-          {state.error || state.episodes?.length === 0 ? (
+          {state.error ? (
             <div className="mt-4">
               <div>No Episode found</div>
             </div>

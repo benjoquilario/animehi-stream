@@ -67,7 +67,7 @@ export default function SiteHeader() {
         "fixed left-0 z-[99999] h-[52px] w-full bg-background shadow-sm transition-all md:h-[64px] 2xl:h-[75px]"
       )}
     >
-      <div className="mx-auto flex h-[52px] w-full max-w-screen-2xl items-center justify-between gap-4 px-[2%] md:h-[64px] 2xl:h-[75px]">
+      <div className="mx-auto flex h-[52px] w-full max-w-screen-2xl items-center justify-between gap-4 bg-background px-[2%] md:h-[64px] 2xl:h-[75px]">
         <Link href="/" className="p-1">
           <div className="flex">
             <div
