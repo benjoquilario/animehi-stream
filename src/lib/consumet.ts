@@ -172,7 +172,10 @@ export const animeInfo = cache(async function (
   animeId: string,
   provider = "gogoanime"
 ) {
-  if (!animeId) throw new Error("Please provide a anime Id")
+  if (!animeId)
+    return {
+      message: "Please provide animeId",
+    }
 
   const params = new URLSearchParams({ provider })
   const response = await fetch(

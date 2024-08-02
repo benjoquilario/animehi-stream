@@ -2,31 +2,58 @@
 
 import EpisodeCard from "./episode-card"
 import Section from "./section"
-import {
-  ConsumetResponse as TConsumetResponse,
-  RecentEpisode as TRecentEpisode,
-} from "types/types"
 import { AiOutlineArrowLeft, AiOutlineArrowRight } from "react-icons/ai"
 import { Button } from "./ui/button"
 import { Skeleton } from "./ui/skeleton"
-import { useState } from "react"
-import { useQuery } from "@tanstack/react-query"
-import { env } from "@/env.mjs"
+import { useState, useEffect } from "react"
+import { fetchRecentEpisodes } from "@/lib/cache"
 
 export default function RecentEpisodes() {
   const [pageNumber, setPageNumber] = useState(1)
-
-  const fetcher = (page: number) =>
-    fetch(`${env.NEXT_PUBLIC_APP_URL}/api/anime/recents?page=${page}`).then(
-      (res) => res.json()
-    )
-
-  const { data, error, isLoading } = useQuery<IRecents[]>({
-    queryKey: ["recents", pageNumber],
-    queryFn: () => fetcher(pageNumber),
+  const [state, setState] = useState({
+    recentsAnime: [] as IRecents[],
+    loading: {
+      recents: true,
+    },
+    error: null as string | null,
   })
 
-  if (error) {
+  useEffect(() => {
+    let isMounted = true
+    const fetchData = async () => {
+      try {
+        setState((prevState) => ({ ...prevState, error: null }))
+        const recents = await fetchRecentEpisodes(pageNumber, 20)
+
+        if (isMounted && recents) {
+          setState((prevState) => ({
+            ...prevState,
+            recentsAnime: recents,
+          }))
+        }
+      } catch (fetchError) {
+        setState((prevState) => ({
+          ...prevState,
+          error: "An unexpected error occurred",
+        }))
+      } finally {
+        setState((prevState) => ({
+          ...prevState,
+          loading: {
+            recents: false,
+          },
+        }))
+      }
+    }
+
+    fetchData()
+
+    return () => {
+      isMounted = false
+    }
+  }, [pageNumber])
+
+  if (state.error) {
     return (
       <Section sectionName="recent">
         <div>
@@ -71,14 +98,14 @@ export default function RecentEpisodes() {
       </div>
 
       <ul className="relative grid grid-cols-3 gap-3 overflow-hidden md:grid-cols-4 lg:grid-cols-5">
-        {isLoading
+        {state.loading.recents
           ? Array.from(Array(20), (_, i) => (
               <div className="flex flex-col gap-2" key={i + 1}>
                 <Skeleton className="h-[150px] w-[112px] md:h-[260px] md:w-[185px]" />
                 <Skeleton className="h-[30px] w-[112px] md:w-[185px]" />
               </div>
             ))
-          : data?.map((result) => (
+          : state.recentsAnime?.map((result) => (
               <li
                 key={result.id}
                 className="col-span-1 overflow-hidden rounded-md"

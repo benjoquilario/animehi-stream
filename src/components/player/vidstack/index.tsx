@@ -1,22 +1,15 @@
 "use client"
 
-import React, { useMemo, useEffect, useState, useCallback } from "react"
+import React, { useEffect, useState, useCallback } from "react"
 import { IAnilistInfo } from "types/types"
 import Episodes from "@/components/episode/episodes"
-import { useRouter, useSearchParams } from "next/navigation"
-import useEpisodes from "@/hooks/useEpisodes"
+import { useSearchParams } from "next/navigation"
 import Server from "@/components/server"
 import ButtonAction from "@/components/button-action"
 import { useWatchStore } from "@/store"
 import RelationWatch from "@/components/watch/relation"
 import Comments from "@/components/comments/comments"
-import { env } from "@/env.mjs"
-import type {
-  SourcesResponse,
-  AniSkip,
-  AniSkipResult,
-  IEpisode,
-} from "types/types"
+import type { IEpisode } from "types/types"
 import { Badge } from "@/components/ui/badge"
 import { LuMessageSquare } from "react-icons/lu"
 import { Spinner } from "@vidstack/react"
@@ -38,10 +31,6 @@ const VideoPlayer = (props: VideoPlayerProps) => {
   const searchParams = useSearchParams()
   const isDub = searchParams.get("dub")
   const episodeNumber = Number(ep) || 1
-  // const episodeId = useMemo(
-  //   () => `${animeId}-${isDub ? "dub-" : ""}episode-${episodeNumber}`,
-  //   [animeId, episodeNumber, isDub]
-  // )
   const download = useWatchStore((store) => store.download)
   // const [isLoading, setIsLoading] = useState(false)
   const [isPending, setIsPending] = useState(false)
@@ -121,7 +110,27 @@ const VideoPlayer = (props: VideoPlayerProps) => {
           } else {
             const data = await fetchAnimeEpisodesFallback(anilistId)
 
-            setEpisodesLists(data.data.episodesList)
+            const transformEpisode: IEpisode[] = data.data.episodesList.map(
+              (episode: {
+                episodeId: number
+                id: string
+                number: number
+                title: string
+              }) => {
+                return {
+                  id: episode.episodeId,
+                  title: `Episode ${episode.number}`,
+                  image: null,
+                  imageHash: "hash",
+                  number: episode.number,
+                  createdAt: null,
+                  description: null,
+                  url: "",
+                }
+              }
+            )
+
+            setEpisodesLists(transformEpisode)
 
             const currentEpisode = data.data.episodesList.find(
               (ep: {
@@ -145,6 +154,7 @@ const VideoPlayer = (props: VideoPlayerProps) => {
         }
       } catch (error) {
         console.error("Error")
+        setError(true)
       } finally {
         setIsPending(false)
       }
@@ -169,7 +179,7 @@ const VideoPlayer = (props: VideoPlayerProps) => {
 
     mediaSession.metadata = new MediaMetadata({
       title: title,
-      artist: `Anime ${
+      artist: `AnimeHi ${
         title === animeResponse?.title?.romaji
           ? "- Episode " + episodeNumber
           : `- ${animeResponse?.title?.romaji || animeResponse?.title?.english}`

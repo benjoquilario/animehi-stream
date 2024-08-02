@@ -3,8 +3,8 @@ import { z } from "zod"
 
 export const env = createEnv({
   server: {
-    UPSTASH_REDIS_REST_URL: z.string(),
-    UPSTASH_REDIS_REST_TOKEN: z.string(),
+    UPSTASH_REDIS_REST_URL: z.string().nullish(),
+    UPSTASH_REDIS_REST_TOKEN: z.string().nullish(),
     CLIENT_ID: z.string(),
     CLIENT_SECRET: z.string(),
     GRAPHQL_ENDPOINT: z.string(),

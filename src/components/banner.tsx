@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from "react"
 import BannerSwiper from "./banner-swiper"
 import { ConsumetResponse, IAdvancedInfo } from "types/types"
-import { fetchTopAnime } from "@/lib/cache"
+import { fetchTopAnime, fetchTopAiringAnime } from "@/lib/cache"
 import { Skeleton } from "./ui/skeleton"
 
 export default function Banner() {
@@ -19,7 +19,7 @@ export default function Banner() {
     const fetchData = async () => {
       try {
         setState((prevState) => ({ ...prevState, error: null }))
-        const top = await fetchTopAnime(1, 10)
+        const top = await fetchTopAiringAnime(1, 10)
 
         setState((prevState) => ({
           ...prevState,

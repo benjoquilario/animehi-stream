@@ -399,21 +399,18 @@ export async function fetchSkipTimes({
 
 export async function fetchRecentEpisodes(
   page: number = 1,
-  perPage: number = 18,
-  provider: string = "gogoanime"
+  perPage: number = 18
 ) {
   const params = new URLSearchParams({
     page: page.toString(),
     perPage: perPage.toString(),
-    provider: provider,
   })
 
-  const url = `${BASE_URL}meta/anilist/recent-episodes?${params.toString()}`
+  const url = `${env.NEXT_PUBLIC_APP_URL}/api/anime/recents?${params.toString()}`
   const cacheKey = generateCacheKey(
     "recentEpisodes",
     page.toString(),
-    perPage.toString(),
-    provider
+    perPage.toString()
   )
 
   return fetchFromProxy(url, createCache("RecentEpisodes"), cacheKey)

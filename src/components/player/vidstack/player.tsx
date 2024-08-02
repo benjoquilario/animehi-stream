@@ -13,6 +13,7 @@ import {
   Captions,
   TextTrack,
   useMediaRemote,
+  useMediaStore,
   type MediaProviderAdapter,
   type MediaProviderChangeEvent,
   type MediaPlayerInstance,
@@ -84,6 +85,7 @@ const VidstackPlayer = (props: VidstackPlayerProps) => {
   const router = useRouter()
   const player = useRef<MediaPlayerInstance>(null)
   const remote = useMediaRemote(player)
+  const { duration } = useMediaStore(player)
   const animeVideoTitle = title
   const posterImage = banner
   const [src, setSrc] = useState<string>("")
@@ -113,65 +115,58 @@ const VidstackPlayer = (props: VidstackPlayerProps) => {
   )
   const [opButton, setOpButton] = useState(false)
   const [otButton, setEdButton] = useState(false)
+  const [isPlaying, setIsPlaying] = useState(false)
+  let intervalId: any
+
+  useEffect(() => {
+    if (isPlaying) {
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+      intervalId = setInterval(async function () {
+        if (currentEpisode && anilistId) {
+          await updateWatchlist({
+            episodeId: episodeId,
+            episodeNumber: `${episodeNumber}`,
+            anilistId,
+            image: currentEpisode.image ?? animeResponse.image,
+          })
+        }
+
+        if (!session) {
+          if (anilistId && currentEpisode) {
+            await createWatchlist({
+              animeId,
+              episodeNumber: `${episodeNumber}`,
+              title: animeResponse.title.english ?? animeResponse.title.romaji,
+              image: currentEpisode?.image ?? animeResponse.image,
+              anilistId,
+            })
+          }
+        }
+
+        await increment(anilistId, latestEpisodeNumber)
+
+        await createViewCounter({
+          animeId,
+          title: animeResponse.title.english ?? animeResponse.title.romaji,
+          image: animeResponse.image,
+          latestEpisodeNumber,
+          anilistId,
+        })
+      }, 5000)
+    } else {
+      clearInterval(intervalId)
+    }
+
+    return () => {
+      clearInterval(intervalId)
+    }
+  }, [session, isPlaying, duration])
 
   useEffect(() => {
     if (player.current && currentTime) {
       player.current.currentTime = currentTime
     }
   }, [currentTime])
-
-  useEffect(() => {
-    const updateViews = async function () {
-      return await increment(animeId, latestEpisodeNumber)
-    }
-
-    updateViews()
-  }, [animeId, latestEpisodeNumber])
-
-  useEffect(() => {
-    const createView = async function () {
-      return await createViewCounter({
-        animeId,
-        title: animeResponse.title.english ?? animeResponse.title.romaji,
-        image: animeResponse.image,
-        latestEpisodeNumber,
-        anilistId,
-      })
-    }
-
-    createView()
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [anilistId, animeId])
-
-  async function updateWatch() {
-    if (currentEpisode && animeId) {
-      return await updateWatchlist({
-        episodeId: `${animeId}-episode-${episodeNumber}`,
-        episodeNumber: `${episodeNumber}`,
-        animeId,
-        image: currentEpisode?.image ?? animeResponse.image,
-      })
-    }
-  }
-
-  useEffect(() => {
-    if (!session) return
-
-    if (animeId && currentEpisode) {
-      const createWatch = async function () {
-        return await createWatchlist({
-          animeId,
-          episodeNumber: `${episodeNumber}`,
-          title: animeResponse.title.english ?? animeResponse.title.romaji,
-          image: currentEpisode?.image ?? animeResponse.image,
-          anilistId,
-        })
-      }
-
-      createWatch()
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [session, anilistId, animeId, currentEpisode])
 
   useEffect(() => {
     if (autoPlay && player.current) {
@@ -289,20 +284,17 @@ const VidstackPlayer = (props: VidstackPlayerProps) => {
 
     async function fetchAndSetAnimeSource() {
       try {
-        if (currentEpisode) {
-          const data: SourcesResponse =
-            await fetchAnimeStreamingLinks(episodeId)
+        const data: SourcesResponse = await fetchAnimeStreamingLinks(episodeId)
 
-          const backupSource = data.sources.find(
-            (source) => source.quality === "default"
-          )
+        const backupSource = data.sources.find(
+          (source) => source.quality === "default"
+        )
 
-          if (backupSource) {
-            setSrc(backupSource.url)
-            setDownload(data.download)
-          } else {
-            console.error("Backup source not found")
-          }
+        if (backupSource) {
+          setSrc(backupSource.url)
+          setDownload(data.download)
+        } else {
+          console.error("Backup source not found")
         }
       } catch (error) {
         console.error("Failed to fetch anime streaming links", error)
@@ -334,26 +326,24 @@ const VidstackPlayer = (props: VidstackPlayerProps) => {
         try {
           if (!malId) return
 
-          if (currentEpisode) {
-            const response = (await fetchSkipTimes({
-              malId: malId.toString(),
-              episodeNumber: `${episodeNumber}`,
-            })) as AniSkip
+          const response = (await fetchSkipTimes({
+            malId: malId.toString(),
+            episodeNumber: `${episodeNumber}`,
+          })) as AniSkip
 
-            const filteredSkipTimes = response.results.filter(
-              ({ skipType }) => skipType === "op" || skipType === "ed"
+          const filteredSkipTimes = response.results.filter(
+            ({ skipType }) => skipType === "op" || skipType === "ed"
+          )
+          if (!vttGenerated) {
+            const vttContent = generateWebVTTFromSkipTimes(
+              { results: filteredSkipTimes },
+              totalDuration
             )
-            if (!vttGenerated) {
-              const vttContent = generateWebVTTFromSkipTimes(
-                { results: filteredSkipTimes },
-                totalDuration
-              )
-              const blob = new Blob([vttContent], { type: "text/vtt" })
-              const vttBlobUrl = URL.createObjectURL(blob)
-              setVttUrl(vttBlobUrl)
-              setSkipTimes(filteredSkipTimes)
-              setVttGenerated(true)
-            }
+            const blob = new Blob([vttContent], { type: "text/vtt" })
+            const vttBlobUrl = URL.createObjectURL(blob)
+            setVttUrl(vttBlobUrl)
+            setSkipTimes(filteredSkipTimes)
+            setVttGenerated(true)
           }
         } catch (error) {
           console.error("Failed to fetch skip times", error)
@@ -375,33 +365,6 @@ const VidstackPlayer = (props: VidstackPlayerProps) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [episodeId, malId])
 
-  console.log(src)
-
-  useEffect(() => {
-    return player.current!.subscribe(({ canPlay }) => {
-      if (canPlay) {
-        if (autoPlay) {
-          if (playerState?.currentTime === 0) {
-            remote.play()
-          } else {
-            if (playerState?.isPlaying) {
-              remote.play()
-            } else {
-              remote.pause()
-            }
-          }
-        } else {
-          if (playerState?.isPlaying) {
-            remote.play()
-          } else {
-            remote.pause()
-          }
-        }
-        remote.seek(playerState?.currentTime)
-      }
-    })
-  }, [autoPlay, playerState?.currentTime, playerState?.isPlaying, remote])
-
   useEffect(() => {
     const plyr = player.current
 
@@ -411,6 +374,32 @@ const VidstackPlayer = (props: VidstackPlayerProps) => {
       }
     }
   }, [episodeId])
+
+  useEffect(() => {
+    const plyr = player.current
+
+    function handlePlay() {
+      setIsPlaying(true)
+    }
+
+    function handlePause() {
+      setIsPlaying(false)
+    }
+
+    function handleEnd() {
+      setIsPlaying(false)
+    }
+
+    plyr?.addEventListener("play", handlePlay)
+    plyr?.addEventListener("pause", handlePause)
+    plyr?.addEventListener("ended", handleEnd)
+
+    return () => {
+      plyr?.removeEventListener("play", handlePlay)
+      plyr?.removeEventListener("pause", handlePause)
+      plyr?.removeEventListener("ended", handleEnd)
+    }
+  }, [episodeId, duration])
 
   return (
     <MediaPlayer
@@ -426,8 +415,6 @@ const VidstackPlayer = (props: VidstackPlayerProps) => {
       playsinline
       onLoadedMetadata={onLoadedMetadata}
       onProviderChange={onProviderChange}
-      onDestroy={() => updateWatch()}
-      onAbort={() => updateWatch()}
       onTimeUpdate={onTimeUpdate}
       ref={player}
       aspectRatio="16/9"

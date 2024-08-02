@@ -5,7 +5,7 @@ import { auth } from "@/auth"
 export async function increment(animeId: string, latestEpisodeNumber: number) {
   const data = await db.viewCounter.findFirst({
     where: {
-      animeId,
+      anilistId: animeId,
     },
   })
 
@@ -47,7 +47,7 @@ export async function createWatchlist({
 
   const checkEpisode = await db.watchlist.findFirst({
     where: {
-      animeId,
+      anilistId,
       userId: session.user.id,
     },
   })
@@ -116,14 +116,14 @@ export async function createViewCounter({
 type UpdateWatchlist = {
   episodeId: string
   episodeNumber: string
-  animeId: string
+  anilistId: string
   image: string
 }
 
 export async function updateWatchlist({
   episodeId,
   episodeNumber,
-  animeId,
+  anilistId,
   image,
 }: UpdateWatchlist) {
   const session = await auth()
@@ -132,7 +132,7 @@ export async function updateWatchlist({
 
   const checkAnime = await db.watchlist.findFirst({
     where: {
-      animeId,
+      anilistId,
       userId: session.user.id,
     },
   })
