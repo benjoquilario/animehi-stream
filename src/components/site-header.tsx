@@ -73,7 +73,7 @@ export default function SiteHeader() {
             <div
               className={cn(
                 permanentMarker.className,
-                "text-base font-bold uppercase md:text-3xl"
+                "text-base font-bold uppercase text-foreground md:text-3xl"
               )}
             >
               <span className="text-base font-extrabold text-primary md:text-4xl">
