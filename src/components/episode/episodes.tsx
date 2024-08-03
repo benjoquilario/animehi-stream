@@ -119,7 +119,7 @@ export default function Episodes({
               <div className="flex flex-col odd:bg-secondary/30 even:bg-background">
                 {episodes?.length !== 0 ? (
                   displayedEpisodes?.map((episode, index) => {
-                    const isSelected = episodeNumber === index + 1
+                    const isSelected = episodeNumber === episode.number
 
                     return (
                       <Button

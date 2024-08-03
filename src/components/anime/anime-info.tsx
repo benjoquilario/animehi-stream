@@ -342,9 +342,8 @@ export default function Anime({
               onEpisodeSelect={(epNum: number) => {
                 const episode = state.episodes?.find((e) => e.number === epNum)
                 if (episode) {
-                  router.push(
-                    `/watch?id=${animeId}&slug=${slug}&ep=${episode.number}`
-                  )
+                  // console.log("click", epNum)
+                  router.push(`/watch/${animeId}?ep=${episode.number}`)
                 }
               }}
             />

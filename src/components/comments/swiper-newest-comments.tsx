@@ -100,7 +100,7 @@ const SwiperNewestComments = ({
                   <div className="mt-3 line-clamp-1 flex items-center overflow-hidden text-ellipsis">
                     <Link
                       title={newestComment.animeId}
-                      href={`/watch?id=${newestComment.anilistId}&slug=${newestComment.animeId}&ep=${newestComment.episodeNumber}`}
+                      href={`/watch/${newestComment.anilistId}&ep=${newestComment.episodeNumber}`}
                       className="line-clamp-1 text-primary hover:text-primary/90"
                     >
                       {newestComment.animeId}
