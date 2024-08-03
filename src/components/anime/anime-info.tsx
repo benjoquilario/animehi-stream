@@ -219,7 +219,7 @@ export default function Anime({
               variant="shine"
               onClick={() =>
                 router.push(
-                  `/watch?id=${animeId}&slug=${animeTitle}&ep=${state.episodes?.length !== 0 ? state.episodes?.[state.episodes.length - 1]?.number : 1}`
+                  `/watch/${animeId}?slug=${animeTitle}&ep=${state.episodes?.length !== 0 ? state.episodes?.[state.episodes.length - 1]?.number : 1}`
                 )
               }
             >
@@ -339,7 +339,14 @@ export default function Anime({
               episodes={state.episodes}
               isLoading={state.loading.episodes}
               animeId={animeId}
-              slug={slug}
+              onEpisodeSelect={(epNum: number) => {
+                const episode = state.episodes?.find((e) => e.number === epNum)
+                if (episode) {
+                  router.push(
+                    `/watch?id=${animeId}&slug=${slug}&ep=${episode.number}`
+                  )
+                }
+              }}
             />
           )}
         </div>

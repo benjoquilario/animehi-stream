@@ -30,7 +30,6 @@ type ServerProps = {
 
 export default function Server({
   animeResult,
-  animeId,
   anilistId,
   currentUser,
   lastEpisode,
@@ -179,7 +178,7 @@ export default function Server({
         <div className="flex items-center">
           {children}
           <BookmarkForm
-            animeId={animeId}
+            animeId={anilistId}
             userId={currentUser?.id}
             bookmarks={currentUser?.bookMarks}
             animeResult={animeResult}

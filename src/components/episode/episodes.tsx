@@ -15,7 +15,7 @@ type EpisodesProps = {
   episodeNumber?: number
   episodes?: IEpisode[]
   isLoading: boolean
-  slug: string
+  onEpisodeSelect: (epNum: number) => void
 }
 
 export default function Episodes({
@@ -23,10 +23,17 @@ export default function Episodes({
   episodes,
   isLoading,
   episodeNumber,
-  slug,
+  onEpisodeSelect,
 }: EpisodesProps) {
   const [query, setQuery] = useState("")
   const [interval, setInterval] = useState<[number, number]>([0, 99])
+
+  const handleEpisodeSelect = useCallback(
+    (epNumber: number) => {
+      onEpisodeSelect(epNumber)
+    },
+    [onEpisodeSelect]
+  )
 
   const intervalOptions = useMemo(() => {
     if (!isLoading) {
@@ -111,30 +118,35 @@ export default function Episodes({
             <div className="no-scrollbar max-h-96 w-full overflow-auto rounded-md">
               <div className="flex flex-col odd:bg-secondary/30 even:bg-background">
                 {episodes?.length !== 0 ? (
-                  displayedEpisodes?.map((episode, index) => (
-                    <Link
-                      href={`/watch?id=${animeId}&slug=${slug}&ep=${episode.number}`}
-                      key={episode.id}
-                      className={cn(
-                        "justify-start p-2 text-[14px] font-medium transition-all odd:bg-secondary/30 even:bg-background hover:bg-secondary active:scale-[.98] md:p-3",
-                        episodeNumber === index + 1
-                          ? "!bg-primary !text-foreground hover:!bg-primary/80"
-                          : "!odd:bg-secondary/30 even:bg-background"
-                      )}
-                    >
-                      <div className="flex items-center gap-2">
-                        <span className="text-xs">{episode.number}</span>
-                        <div className="line-clamp-1 text-xs italic text-muted-foreground/80 md:line-clamp-2 md:text-sm">
-                          {episode.title ?? `Episode ${episode.number}`}
+                  displayedEpisodes?.map((episode, index) => {
+                    const isSelected = episodeNumber === index + 1
+
+                    return (
+                      <Button
+                        onClick={() => handleEpisodeSelect(episode.number)}
+                        // href={`/watch?id=${animeId}&slug=${slug}&ep=${episode.number}`}
+                        key={episode.id}
+                        className={cn(
+                          "justify-start p-2 text-[14px] font-medium transition-all odd:bg-secondary/30 even:bg-background hover:bg-secondary active:scale-[.98] md:p-3",
+                          isSelected
+                            ? "!bg-primary !text-foreground hover:!bg-primary/80"
+                            : "!odd:bg-secondary/30 even:bg-background"
+                        )}
+                      >
+                        <div className="flex items-center gap-2">
+                          <span className="text-xs">{episode.number}</span>
+                          <div className="line-clamp-1 text-xs italic text-muted-foreground/80 md:line-clamp-2 md:text-sm">
+                            {episode.title ?? `Episode ${episode.number}`}
+                          </div>
+                          {isSelected ? (
+                            <span>
+                              <FaCirclePlay />
+                            </span>
+                          ) : null}
                         </div>
-                        {episodeNumber === index + 1 ? (
-                          <span>
-                            <FaCirclePlay />
-                          </span>
-                        ) : null}
-                      </div>
-                    </Link>
-                  ))
+                      </Button>
+                    )
+                  })
                 ) : (
                   <div className="p-3">No Episode Found</div>
                 )}

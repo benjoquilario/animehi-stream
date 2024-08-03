@@ -50,36 +50,28 @@ import { useWatchStore } from "@/store"
 import { AniSkipResult, AniSkip } from "types/types"
 
 type VidstackPlayerProps = {
-  animeId: string
   episodeNumber: number
   animeResponse: IAnilistInfo
-  currentEpisode?: {
-    id: string
-    title: string
-    description: string
-    number: number
-    image: string
-  }
+  currentEpisode?: IEpisode
   anilistId: string
   latestEpisodeNumber: number
-  banner: string
   title: string
   episodeId: string
   malId: string
+  banner: string
 }
 
 const VidstackPlayer = (props: VidstackPlayerProps) => {
   const {
-    animeId,
     episodeId,
     episodeNumber,
     animeResponse,
     currentEpisode,
     anilistId,
     latestEpisodeNumber,
-    banner,
     title,
     malId,
+    banner,
   } = props
   const { data: session } = useSession()
   const router = useRouter()
@@ -134,7 +126,7 @@ const VidstackPlayer = (props: VidstackPlayerProps) => {
         if (!session) {
           if (anilistId && currentEpisode) {
             await createWatchlist({
-              animeId,
+              animeId: currentEpisode.id,
               episodeNumber: `${episodeNumber}`,
               title: animeResponse.title.english ?? animeResponse.title.romaji,
               image: currentEpisode?.image ?? animeResponse.image,
@@ -145,13 +137,15 @@ const VidstackPlayer = (props: VidstackPlayerProps) => {
 
         await increment(anilistId, latestEpisodeNumber)
 
-        await createViewCounter({
-          animeId,
-          title: animeResponse.title.english ?? animeResponse.title.romaji,
-          image: animeResponse.image,
-          latestEpisodeNumber,
-          anilistId,
-        })
+        if (currentEpisode) {
+          await createViewCounter({
+            animeId: currentEpisode.id,
+            title: animeResponse.title.english ?? animeResponse.title.romaji,
+            image: animeResponse.image,
+            latestEpisodeNumber,
+            anilistId,
+          })
+        }
       }, 5000)
     } else {
       clearInterval(intervalId)
@@ -235,7 +229,7 @@ const VidstackPlayer = (props: VidstackPlayerProps) => {
     if (latestEpisodeNumber === episodeNumber) return
 
     if (autoNext) {
-      router.replace(`?id=${anilistId}&slug=${animeId}&ep=${episodeNumber + 1}`)
+      router.replace(`?id=${anilistId}&ep=${episodeNumber + 1}`)
     }
   }
 
@@ -427,7 +421,7 @@ const VidstackPlayer = (props: VidstackPlayerProps) => {
     >
       <MediaProvider>
         <Poster
-          className="vds-poster absolute	inset-0	h-full w-full translate-x-0 translate-y-0"
+          className="vds-poster absolute inset-0	h-full w-full translate-x-0 translate-y-0"
           src={`${env.NEXT_PUBLIC_PROXY_URI}?url=${posterImage}`}
           alt=""
           style={{ objectFit: "cover" }}

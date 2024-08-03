@@ -16,17 +16,17 @@ export default async function MostView() {
           <div className="mr-2 h-6 w-2 rounded-md bg-primary md:h-8"></div>
           Most Watch in AnimeHi
         </h3>
-        <div className="bg-background/80">
+        <div className="bg-background">
           <ul className="">
             {mostViewAnime.map((mostView, index) => (
               <li
                 key={mostView?.id}
-                className="relative flex w-full items-center justify-between border-b py-4"
+                className="relative flex w-full items-center justify-between border-b bg-background py-4"
               >
                 <Link
                   href={`/anime/${transformedTitle(mostView.title)}/${mostView.anilistId}`}
                   aria-label={mostView.title}
-                  className="relation group flex h-full w-full items-center justify-between rounded-md bg-card/80 transition-all hover:scale-[1.03]"
+                  className="relation group flex h-full w-full items-center justify-between rounded-md bg-background transition-all hover:scale-[1.03]"
                 >
                   <MostViewCard result={mostView} rank={index + 1} />
                 </Link>

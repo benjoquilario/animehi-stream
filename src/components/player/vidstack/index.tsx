@@ -3,7 +3,7 @@
 import React, { useEffect, useState, useCallback, useMemo } from "react"
 import { IAnilistInfo } from "types/types"
 import Episodes from "@/components/episode/episodes"
-import { useSearchParams } from "next/navigation"
+import { useRouter, useSearchParams } from "next/navigation"
 import Server from "@/components/server"
 import ButtonAction from "@/components/button-action"
 import { useWatchStore } from "@/store"
@@ -16,20 +16,20 @@ import { Spinner } from "@vidstack/react"
 import dynamic from "next/dynamic"
 import VidstackPlayer from "./player"
 import { fetchAnimeEpisodes, fetchAnimeEpisodesFallback } from "@/lib/cache"
+import { AspectRatio } from "@/components/ui/aspect-ratio"
 
 type VideoPlayerProps = {
-  animeId: string
   animeResponse: IAnilistInfo
   anilistId: string
   currentUser: any
-  ep: string
 }
 
 const VideoPlayer = (props: VideoPlayerProps) => {
-  const { animeId, animeResponse, anilistId, currentUser, ep } = props
+  const { animeResponse, anilistId, currentUser } = props
 
   const searchParams = useSearchParams()
   const isDub = searchParams.get("dub")
+  const ep = searchParams.get("ep")
   const episodeNumber = Number(ep) || 1
   const download = useWatchStore((store) => store.download)
   // const [isLoading, setIsLoading] = useState(false)
@@ -37,21 +37,13 @@ const VideoPlayer = (props: VideoPlayerProps) => {
   const [error, setError] = useState(false)
   const [selectedBackgroundImage, setSelectedBackgroundImage] =
     useState<string>("")
-
+  const [isEpisodeChanging, setIsEpisodeChanging] = useState(false)
   const [episodesList, setEpisodesLists] = useState<IEpisode[]>()
-  const [episodesNavigation, setEpisodeNavigation] = useState<{
-    id: string
-    title: string
-    description: string
-    number: number
-    image: string
-  } | null>({
-    id: "",
-    title: "",
-    description: "",
-    number: 1,
-    image: "",
-  })
+  const [episodesNavigation, setEpisodeNavigation] = useState<IEpisode | null>(
+    null
+  )
+
+  const router = useRouter()
 
   useEffect(() => {
     const updateBackgroundImage = () => {
@@ -79,6 +71,29 @@ const VideoPlayer = (props: VideoPlayerProps) => {
     }
   }, [animeResponse, episodesNavigation])
 
+  const handleEpisodeSelect = useCallback(
+    async (selectedEpisode: IEpisode) => {
+      setIsEpisodeChanging(true)
+      setEpisodeNavigation({
+        id: selectedEpisode.id,
+        number: selectedEpisode.number,
+        image: selectedEpisode.image,
+        title: selectedEpisode.title,
+        description: selectedEpisode.description,
+        createdAt: "",
+        imageHash: "",
+        url: "",
+      })
+
+      await new Promise((resolve) => setTimeout(resolve, 100))
+      const params = new URLSearchParams(searchParams.toString())
+      params.set("ep", `${selectedEpisode.number}`)
+      window.history.pushState(null, "", `?${params.toString()}`)
+      setIsEpisodeChanging(false)
+    },
+    [searchParams]
+  )
+
   useEffect(() => {
     let isMounted = true
     const fetchData = async function () {
@@ -105,6 +120,9 @@ const VideoPlayer = (props: VideoPlayerProps) => {
                 description: currentEpisode.description || "",
                 number: currentEpisode.number,
                 image: currentEpisode.image,
+                createdAt: "",
+                imageHash: "",
+                url: "",
               })
             }
           } else {
@@ -147,7 +165,10 @@ const VideoPlayer = (props: VideoPlayerProps) => {
                 title: `Episode ${currentEpisode.number}`,
                 description: currentEpisode.description ?? "",
                 number: currentEpisode.number,
-                image: currentEpisode.image ?? "",
+                image: currentEpisode.image,
+                createdAt: "",
+                imageHash: "",
+                url: "",
               })
             }
           }
@@ -161,9 +182,7 @@ const VideoPlayer = (props: VideoPlayerProps) => {
     }
 
     fetchData()
-    return () => {
-      setEpisodeNavigation(null)
-    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [anilistId, episodeNumber])
 
   useEffect(() => {
@@ -205,23 +224,22 @@ const VideoPlayer = (props: VideoPlayerProps) => {
           <div className="relative h-0 w-full rounded-md bg-primary/10 pt-[56%]"></div>
         </div>
       ) : !error ? (
-        episodesNavigation ? (
+        isEpisodeChanging ? (
+          <AspectRatio ratio={16 / 9}>
+            <SpinLoader />
+          </AspectRatio>
+        ) : (
           <VidstackPlayer
             malId={`${animeResponse.malId}`}
-            episodeId={episodesNavigation.id}
-            animeId={animeId}
+            episodeId={episodesNavigation?.id!}
             animeResponse={animeResponse}
-            episodeNumber={episodesNavigation.number}
+            episodeNumber={episodesNavigation?.number!}
             latestEpisodeNumber={latestEpisodeNumber}
             anilistId={anilistId}
             banner={selectedBackgroundImage}
-            currentEpisode={episodesNavigation}
+            currentEpisode={episodesNavigation!}
             title={`${animeResponse.title.english ?? animeResponse.title.romaji} / Episode ${episodeNumber}`}
           />
-        ) : (
-          <div className="flex-center relative aspect-video h-full w-full">
-            <SpinLoader />
-          </div>
         )
       ) : (
         <div>Please try again</div>
@@ -230,7 +248,7 @@ const VideoPlayer = (props: VideoPlayerProps) => {
       <Server
         download={download ?? ""}
         animeResult={animeResponse}
-        animeId={animeId}
+        animeId={anilistId}
         anilistId={anilistId}
         currentUser={currentUser}
         lastEpisode={episodesNavigation?.number!}
@@ -240,16 +258,23 @@ const VideoPlayer = (props: VideoPlayerProps) => {
           latestEpisodeNumber={latestEpisodeNumber}
           anilistId={anilistId}
           lastEpisode={episodesNavigation?.number!}
-          animeTitle={animeId}
+          animeTitle={anilistId}
         />
       </Server>
 
       <Episodes
-        slug={animeId}
         episodes={episodesList}
         isLoading={isPending}
         animeId={anilistId}
         episodeNumber={episodesNavigation?.number!}
+        onEpisodeSelect={(epNum: number) => {
+          if (episodesList) {
+            const episode = episodesList?.find((e) => e.number === epNum)
+            if (episode) {
+              handleEpisodeSelect(episode)
+            }
+          }
+        }}
       />
 
       <RelationWatch relations={animeResponse.relations} />
@@ -273,7 +298,6 @@ const VideoPlayer = (props: VideoPlayerProps) => {
       {!isPending && episodesNavigation ? (
         <Comments
           anilistId={anilistId}
-          animeId={animeId}
           episodeNumber={`${episodesNavigation.number}`}
         />
       ) : (

@@ -7,7 +7,7 @@ import { Suspense } from "react"
 
 type Params = {
   params: {
-    params: string[]
+    animeId: string
   }
   searchParams: { [key: string]: string | string[] | undefined }
 }
@@ -15,21 +15,17 @@ type Params = {
 export async function generateMetadata({
   params,
   searchParams,
-}: {
-  params: {
-    params: string[]
-  }
-  searchParams: { [key: string]: string | string[] | undefined }
-}): Promise<Metadata | undefined> {
-  const id = searchParams.id as string
-  const slug = searchParams.slug as string
+}: Params): Promise<Metadata | undefined> {
+  const animeId = params.animeId
   const ep = searchParams.ep as string
 
-  const animeResponse = (await animeInfo(id)) as IAnilistInfo
+  const animeResponse = (await animeInfo(animeId)) as IAnilistInfo
 
   if (!animeResponse) {
     return
   }
+
+  console.log(ep)
 
   const title = animeResponse.title.english ?? animeResponse.title.romaji
   const description = animeResponse.description
@@ -42,7 +38,7 @@ export async function generateMetadata({
       title: `Watch ${title} Episode ${ep} - AnimeHi`,
       description,
       type: "website",
-      url: `${process.env.NEXT_PUBLIC_APP_URL}/watch?id=${id}&slug=${slug}?ep=${ep}`,
+      url: `${process.env.NEXT_PUBLIC_APP_URL}/watch/${animeId}?ep=${ep}`,
       images: [
         {
           url: `${imageUrl}`,
@@ -66,28 +62,21 @@ export async function generateMetadata({
   }
 }
 
-export default async function Watch({
-  params: { params },
-  searchParams,
-}: Params) {
-  const id = searchParams.id as string
-  const slug = searchParams.slug as string
-  const ep = searchParams.ep as string
-
-  const animeResponse = (await animeInfo(id)) as IAnilistInfo
-
+export default async function Watch({ params, searchParams }: Params) {
+  const animeId = params.animeId
+  const animeResponse = (await animeInfo(animeId)) as IAnilistInfo
   const currentUser = await getCurrentUser()
 
-  console.log(currentUser)
+  const ep = searchParams.ep
+
+  // console.log(ep)
 
   return (
     <div className="mt-2 flex-1">
       <VideoPlayer
-        anilistId={id}
-        animeId={slug}
+        anilistId={animeId}
         animeResponse={animeResponse}
         currentUser={currentUser}
-        ep={ep}
       />
     </div>
   )

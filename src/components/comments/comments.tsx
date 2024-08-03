@@ -14,16 +14,11 @@ import { Button } from "../ui/button"
 import type { IComment } from "@/hooks/useLikeUnlikeMutation"
 
 type CommentsProps = {
-  animeId: string
   episodeNumber: string
   anilistId: string
 }
 
-export default function Comments({
-  animeId,
-  episodeNumber,
-  anilistId,
-}: CommentsProps) {
+export default function Comments({ episodeNumber, anilistId }: CommentsProps) {
   const {
     data: comments,
     isPending,
@@ -54,11 +49,7 @@ export default function Comments({
         </div>
       ) : (
         <div>
-          <CommentForm
-            animeId={animeId}
-            episodeNumber={episodeNumber}
-            anilistId={anilistId}
-          />
+          <CommentForm episodeNumber={episodeNumber} anilistId={anilistId} />
 
           <AnimatePresence>
             {comments?.pages.map((page) =>
