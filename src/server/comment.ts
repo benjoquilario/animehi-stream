@@ -202,7 +202,7 @@ export async function unDislikeComment({ commentId }: { commentId: string }) {
 export async function addComment(comment: AddComment) {
   const ip = headers().get("x-forwarded-for")
 
-  const { commentText, animeId, episodeNumber, anilistId } = comment
+  const { commentText, animeId, episodeNumber, anilistId, animeTitle } = comment
 
   const ratelimit = new Ratelimit({
     redis: Redis.fromEnv(),
@@ -232,6 +232,7 @@ export async function addComment(comment: AddComment) {
       episodeNumber,
       anilistId,
       userId: session.user.id,
+      title: animeTitle,
     },
     include: {
       user: {

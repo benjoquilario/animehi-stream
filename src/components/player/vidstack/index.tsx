@@ -299,6 +299,7 @@ const VideoPlayer = (props: VideoPlayerProps) => {
         <Comments
           anilistId={anilistId}
           episodeNumber={`${episodesNavigation.number}`}
+          animeTitle={animeResponse.title.english ?? animeResponse.title.romaji}
         />
       ) : (
         <></>

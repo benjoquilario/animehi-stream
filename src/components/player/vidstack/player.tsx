@@ -111,6 +111,14 @@ const VidstackPlayer = (props: VidstackPlayerProps) => {
   let intervalId: any
 
   useEffect(() => {
+    const updateViews = async function () {
+      return await increment(anilistId, latestEpisodeNumber)
+    }
+
+    updateViews()
+  }, [anilistId, latestEpisodeNumber])
+
+  useEffect(() => {
     if (isPlaying) {
       // eslint-disable-next-line react-hooks/exhaustive-deps
       intervalId = setInterval(async function () {
@@ -134,8 +142,6 @@ const VidstackPlayer = (props: VidstackPlayerProps) => {
             })
           }
         }
-
-        await increment(anilistId, latestEpisodeNumber)
 
         if (currentEpisode) {
           await createViewCounter({
@@ -420,12 +426,12 @@ const VidstackPlayer = (props: VidstackPlayerProps) => {
       onEnded={handlePlaybackEnded}
     >
       <MediaProvider>
-        <Poster
+        {/* <Poster
           className="vds-poster absolute inset-0	h-full w-full translate-x-0 translate-y-0"
           src={`${env.NEXT_PUBLIC_PROXY_URI}?url=${posterImage}`}
           alt=""
           style={{ objectFit: "cover" }}
-        />
+        /> */}
         {textTracks.length > 0 &&
           textTracks.map((track) => (
             <Track

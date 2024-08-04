@@ -16,9 +16,14 @@ import type { IComment } from "@/hooks/useLikeUnlikeMutation"
 type CommentsProps = {
   episodeNumber: string
   anilistId: string
+  animeTitle: string
 }
 
-export default function Comments({ episodeNumber, anilistId }: CommentsProps) {
+export default function Comments({
+  episodeNumber,
+  anilistId,
+  animeTitle,
+}: CommentsProps) {
   const {
     data: comments,
     isPending,
@@ -49,7 +54,11 @@ export default function Comments({ episodeNumber, anilistId }: CommentsProps) {
         </div>
       ) : (
         <div>
-          <CommentForm episodeNumber={episodeNumber} anilistId={anilistId} />
+          <CommentForm
+            animeTitle={animeTitle}
+            episodeNumber={episodeNumber}
+            anilistId={anilistId}
+          />
 
           <AnimatePresence>
             {comments?.pages.map((page) =>

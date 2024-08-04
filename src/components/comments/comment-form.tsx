@@ -40,6 +40,7 @@ type Inputs = z.infer<typeof commentSchema>
 type CommentFormProps = {
   episodeNumber: string
   anilistId: string
+  animeTitle: string
 }
 
 export type TPage<TData> = {
@@ -51,6 +52,7 @@ export type TPage<TData> = {
 export default function CommentForm({
   episodeNumber,
   anilistId,
+  animeTitle,
 }: CommentFormProps) {
   const setIsAuthOpen = useAuthStore((store) => store.setIsAuthOpen)
   const { data: session, status } = useSession()
@@ -111,6 +113,7 @@ export default function CommentForm({
       animeId: anilistId,
       episodeNumber,
       anilistId,
+      animeTitle,
     })
 
     if (!response.ok) {

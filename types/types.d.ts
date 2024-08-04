@@ -444,4 +444,5 @@ export type AddComment = {
   animeId: string
   episodeNumber: string
   anilistId: string
+  animeTitle: string
 }
