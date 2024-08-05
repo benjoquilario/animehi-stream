@@ -64,3 +64,12 @@ interface IRecents {
   totalEpisodes: number
   year: number
 }
+
+interface IEpisodesFallback {
+  providerId: "shash" | "roro"
+  episodes: {
+    id: string
+    title: string
+    number: number
+  }[]
+}

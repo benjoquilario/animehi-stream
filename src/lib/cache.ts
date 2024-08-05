@@ -322,19 +322,9 @@ export const fetchTopAiringAnime = (page: number, perPage: number) =>
 export const fetchUpcomingSeasons = (page: number, perPage: number) =>
   fetchList("Upcoming", page, perPage)
 
-export async function fetchAnimeEpisodes(
-  animeId: string,
-  provider: string = "gogoanime",
-  dub: boolean = false
-) {
-  const params = new URLSearchParams({ provider, dub: dub ? "true" : "false" })
-  const url = `${BASE_URL}meta/anilist/episodes/${animeId}?${params.toString()}`
-  const cacheKey = generateCacheKey(
-    "animeEpisodes",
-    animeId,
-    provider,
-    dub ? "dub" : "sub"
-  )
+export async function fetchAnimeEpisodes(animeId: string) {
+  const url = `${env.NEXT_PUBLIC_ANIME_API_URI}/episodes?id=${animeId}`
+  const cacheKey = generateCacheKey("animeEpisodes", animeId)
 
   return fetchFromProxy(url, animeEpisodesCache, cacheKey)
 }
@@ -365,7 +355,7 @@ export async function fetchAnimeStreamingLinksFallback(episodeId: string) {
 }
 
 export async function fetchAnimeEpisodesFallback(animeId: string) {
-  const url = `${env.NEXT_PUBLIC_PROXY_URI}?url=${env.NEXT_PUBLIC_ANIME_API_URL_V3}/anime/info/${animeId}`
+  const url = `${env.NEXT_PUBLIC_ANIME_API_URI}/episodes?id=${animeId}`
   const cacheKey = generateCacheKey("animeEpisodesFallback", animeId)
 
   return fetchFromProxy(url, createCache("animeEpisodesFallback"), cacheKey)

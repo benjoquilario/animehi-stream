@@ -102,14 +102,30 @@ const VideoPlayer = (props: VideoPlayerProps) => {
       if (!anilistId) return
       try {
         let results: IEpisode[]
-        const data = (await fetchAnimeEpisodes(anilistId)) as IEpisode[]
+        const data = (await fetchAnimeEpisodes(
+          anilistId
+        )) as IEpisodesFallback[]
 
         if (isMounted && data) {
           if (data.length !== 0) {
-            results = data
-            setEpisodesLists(data)
+            const eps = data.find((ep) => ep.providerId === "shash")
 
-            const currentEpisode = data.find(
+            const transformEpisodes = eps?.episodes.map((ep) => {
+              return {
+                id: ep.id,
+                title: `Episode ${ep.number}`,
+                description: "",
+                number: ep.number,
+                image: selectedBackgroundImage,
+                createdAt: "",
+                imageHash: "",
+                url: "",
+              }
+            })
+
+            setEpisodesLists(transformEpisodes)
+
+            const currentEpisode = transformEpisodes?.find(
               (ep) => ep.number === episodeNumber
             )
 
@@ -118,52 +134,6 @@ const VideoPlayer = (props: VideoPlayerProps) => {
                 id: currentEpisode.id,
                 title: currentEpisode.title,
                 description: currentEpisode.description || "",
-                number: currentEpisode.number,
-                image: currentEpisode.image,
-                createdAt: "",
-                imageHash: "",
-                url: "",
-              })
-            }
-          } else {
-            const data = await fetchAnimeEpisodesFallback(anilistId)
-
-            const transformEpisode: IEpisode[] = data.data.episodesList.map(
-              (episode: {
-                episodeId: number
-                id: string
-                number: number
-                title: string
-              }) => {
-                return {
-                  id: episode.episodeId,
-                  title: `Episode ${episode.number}`,
-                  image: null,
-                  imageHash: "hash",
-                  number: episode.number,
-                  createdAt: null,
-                  description: null,
-                  url: "",
-                }
-              }
-            )
-
-            setEpisodesLists(transformEpisode)
-
-            const currentEpisode = data.data.episodesList.find(
-              (ep: {
-                episodeId: number
-                id: string
-                number: number
-                title: string
-              }) => ep.number === episodeNumber
-            )
-
-            if (currentEpisode) {
-              setEpisodeNavigation({
-                id: currentEpisode.id,
-                title: `Episode ${currentEpisode.number}`,
-                description: currentEpisode.description ?? "",
                 number: currentEpisode.number,
                 image: currentEpisode.image,
                 createdAt: "",
@@ -224,23 +194,17 @@ const VideoPlayer = (props: VideoPlayerProps) => {
           <div className="relative h-0 w-full rounded-md bg-primary/10 pt-[56%]"></div>
         </div>
       ) : !error ? (
-        isEpisodeChanging ? (
-          <AspectRatio ratio={16 / 9}>
-            <SpinLoader />
-          </AspectRatio>
-        ) : (
-          <VidstackPlayer
-            malId={`${animeResponse.malId}`}
-            episodeId={episodesNavigation?.id!}
-            animeResponse={animeResponse}
-            episodeNumber={episodesNavigation?.number!}
-            latestEpisodeNumber={latestEpisodeNumber}
-            anilistId={anilistId}
-            banner={selectedBackgroundImage}
-            currentEpisode={episodesNavigation!}
-            title={`${animeResponse.title.english ?? animeResponse.title.romaji} / Episode ${episodeNumber}`}
-          />
-        )
+        <VidstackPlayer
+          malId={`${animeResponse.malId}`}
+          episodeId={episodesNavigation?.id!}
+          animeResponse={animeResponse}
+          episodeNumber={episodesNavigation?.number!}
+          latestEpisodeNumber={latestEpisodeNumber}
+          anilistId={anilistId}
+          banner={selectedBackgroundImage}
+          currentEpisode={episodesNavigation!}
+          title={`${animeResponse.title.english ?? animeResponse.title.romaji} / Episode ${episodeNumber}`}
+        />
       ) : (
         <div>Please try again</div>
       )}

@@ -20,6 +20,7 @@ export const env = createEnv({
     NEXT_PUBLIC_ANIME_API_URL_V2: z.string().url(),
     NEXT_PUBLIC_ANIME_API_URL_V3: z.string().url(),
     NEXT_PUBLIC_SKIP_TIMES: z.string().url(),
+    NEXT_PUBLIC_ANIME_API_URI: z.string().url(),
   },
   runtimeEnv: {
     UPSTASH_REDIS_REST_URL: process.env.UPSTASH_REDIS_REST_URL,
@@ -37,5 +38,6 @@ export const env = createEnv({
     NEXT_PUBLIC_ANIME_API_URL_V2: process.env.NEXT_PUBLIC_ANIME_API_URL_V2,
     NEXT_PUBLIC_ANIME_API_URL_V3: process.env.NEXT_PUBLIC_ANIME_API_URL_V3,
     NEXT_PUBLIC_SKIP_TIMES: process.env.NEXT_PUBLIC_SKIP_TIMES,
+    NEXT_PUBLIC_ANIME_API_URI: process.env.NEXT_PUBLIC_ANIME_API_URI,
   },
 })

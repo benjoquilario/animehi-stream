@@ -48,41 +48,31 @@ export default function Anime({
       if (!animeId) return
       try {
         setState((prevState) => ({ ...prevState, error: null }))
-        const data = (await fetchAnimeEpisodes(animeId)) as IEpisode[]
+        const data = (await fetchAnimeEpisodes(animeId)) as IEpisodesFallback[]
 
         if (isMounted && data) {
           if (data.length !== 0) {
-            setState((prevState) => ({
-              ...prevState,
-              episodes: data,
-            }))
-          } else {
-            const data = await fetchAnimeEpisodesFallback(animeId)
+            const eps = data.find((ep) => ep.providerId === "shash")
 
-            const transformEpisode: IEpisode[] = data.data.episodesList.map(
-              (episode: {
-                episodeId: number
-                id: string
-                number: number
-                title: string
-              }) => {
+            if (eps) {
+              const transformEpisodes: IEpisode[] = eps.episodes.map((ep) => {
                 return {
-                  id: episode.episodeId,
-                  title: `Episode ${episode.number}`,
-                  image: null,
-                  imageHash: "hash",
-                  number: episode.number,
-                  createdAt: null,
-                  description: null,
+                  id: ep.id,
+                  title: `Episode ${ep.number}`,
+                  description: "",
+                  number: ep.number,
+                  image: "",
+                  createdAt: "",
+                  imageHash: "",
                   url: "",
                 }
-              }
-            )
+              })
 
-            setState((prevState) => ({
-              ...prevState,
-              episodes: transformEpisode,
-            }))
+              setState((prevState) => ({
+                ...prevState,
+                episodes: transformEpisodes,
+              }))
+            }
           }
         }
       } catch (error) {

@@ -297,25 +297,19 @@ const VidstackPlayer = (props: VidstackPlayerProps) => {
           console.error("Backup source not found")
         }
       } catch (error) {
-        console.error("Failed to fetch anime streaming links", error)
-        const response = await fetchAnimeInfoFallback(anilistId)
+        console.error("")
+        const data: SourcesResponse = await fetchAnimeStreamingLinks(episodeId)
 
-        const { episodesList } = response.data
-
-        const source = episodesList.find(
-          (episode: {
-            episodeId: number
-            id: string
-            number: number
-            title: string
-          }) => episode.number === episodeNumber
+        const backupSource = data.sources.find(
+          (source) => source.quality === "default"
         )
 
-        const videoSource = await fetchAnimeStreamingLinksFallback(source.id)
-
-        setSrc(videoSource.sources[0].url)
-        setTextTracks(videoSource.tracks)
-        setDownload("")
+        if (backupSource) {
+          setSrc(backupSource.url)
+          setDownload(data.download)
+        } else {
+          console.error("Backup source not found")
+        }
       } finally {
         console.log("FInist")
       }
