@@ -96,7 +96,7 @@ const VideoPlayer = (props: VideoPlayerProps) => {
           if (data.length !== 0) {
             setEpisodesLists(data)
           } else {
-            const data = (await fetchAnimeEpisodes(
+            const data = (await fetchAnimeEpisodesFallback(
               anilistId
             )) as IEpisodesFallback[]
 

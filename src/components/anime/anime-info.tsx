@@ -48,10 +48,18 @@ export default function Anime({
       if (!animeId) return
       try {
         setState((prevState) => ({ ...prevState, error: null }))
-        const data = (await fetchAnimeEpisodes(animeId)) as IEpisodesFallback[]
+        const data = (await fetchAnimeEpisodes(animeId)) as IEpisode[]
 
         if (isMounted && data) {
           if (data.length !== 0) {
+            setState((prevState) => ({
+              ...prevState,
+              episodes: data,
+            }))
+          } else {
+            const data = (await fetchAnimeEpisodesFallback(
+              animeId
+            )) as IEpisodesFallback[]
             const eps = data.find((ep) => ep.providerId === "shash")
 
             if (eps) {
