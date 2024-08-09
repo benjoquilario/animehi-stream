@@ -249,46 +249,6 @@ const VidstackPlayer = (props: VidstackPlayerProps) => {
     }
   }
 
-  function generateWebVTTFromSkipTimes(
-    skipTimes: AniSkip,
-    totalDuration: number
-  ): string {
-    let vttString = "WEBVTT\n\n"
-    let previousEndTime = 0
-
-    const sortedSkipTimes = skipTimes.results.sort(
-      (a, b) => a.interval.startTime - b.interval.startTime
-    )
-
-    sortedSkipTimes.forEach((skipTime, index) => {
-      const { startTime, endTime } = skipTime.interval
-      const skipType =
-        skipTime.skipType.toUpperCase() === "OP" ? "Opening" : "Outro"
-
-      if (previousEndTime < startTime) {
-        vttString += `${formatTime(previousEndTime)} --> ${formatTime(startTime)}\n`
-        vttString += `${animeResponse.title.english ?? animeResponse.title.romaji} / Episode ${episodeNumber}\n\n`
-      }
-
-      vttString += `${formatTime(startTime)} --> ${formatTime(endTime)}\n`
-      vttString += `${skipType}\n\n`
-      previousEndTime = endTime
-
-      if (index === sortedSkipTimes.length - 1 && endTime < totalDuration) {
-        vttString += `${formatTime(endTime)} --> ${formatTime(totalDuration)}\n`
-        vttString += `${animeResponse.title.english ?? animeResponse.title.romaji} / Episode ${episodeNumber}\n\n`
-      }
-    })
-
-    return vttString
-  }
-
-  function formatTime(seconds: number): string {
-    const minutes = Math.floor(seconds / 60)
-    const remainingSeconds = Math.floor(seconds % 60)
-    return `${minutes.toString().padStart(2, "0")}:${remainingSeconds.toString().padStart(2, "0")}`
-  }
-
   useEffect(() => {
     setCurrentTime(parseFloat(localStorage.getItem("currentTime") || "0"))
     setDownload(data?.download)

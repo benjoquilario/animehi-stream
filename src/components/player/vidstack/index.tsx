@@ -16,6 +16,7 @@ import { LuMessageSquare } from "react-icons/lu"
 // import dynamic from "next/dynamic"
 import VidstackPlayer from "./player"
 import { fetchAnimeEpisodes, fetchAnimeEpisodesFallback } from "@/lib/cache"
+import ClientOnly from "@/components/ui/client-only"
 // import { AspectRatio } from "@/components/ui/aspect-ratio"
 
 type VideoPlayerProps = {
@@ -89,12 +90,16 @@ const VideoPlayer = (props: VideoPlayerProps) => {
       if (!anilistId) return
       try {
         let results: IEpisode[]
-        const data = (await fetchAnimeEpisodes(
-          anilistId
-        )) as IEpisodesFallback[]
+        const data = (await fetchAnimeEpisodes(anilistId)) as IEpisode[]
 
         if (isMounted && data) {
           if (data.length !== 0) {
+            setEpisodesLists(data)
+          } else {
+            const data = (await fetchAnimeEpisodes(
+              anilistId
+            )) as IEpisodesFallback[]
+
             const eps = data.find((ep) => ep.providerId === "shash")
 
             const transformEpisodes = eps?.episodes.map((ep) => {
@@ -179,7 +184,7 @@ const VideoPlayer = (props: VideoPlayerProps) => {
   )
 
   return (
-    <>
+    <ClientOnly>
       {isPending ? (
         <div className="flex animate-pulse">
           <div className="relative h-0 w-full rounded-md bg-primary/10 pt-[56%]"></div>
@@ -263,7 +268,7 @@ const VideoPlayer = (props: VideoPlayerProps) => {
       )}
 
       {/* <Sharethis /> */}
-    </>
+    </ClientOnly>
   )
 }
 

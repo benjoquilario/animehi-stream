@@ -322,8 +322,13 @@ export const fetchTopAiringAnime = (page: number, perPage: number) =>
 export const fetchUpcomingSeasons = (page: number, perPage: number) =>
   fetchList("Upcoming", page, perPage)
 
-export async function fetchAnimeEpisodes(animeId: string) {
-  const url = `${env.NEXT_PUBLIC_ANIME_API_URI}/episodes?id=${animeId}`
+export async function fetchAnimeEpisodes(
+  animeId: string,
+  provider: string = "gogoanime",
+  dub: boolean = false
+) {
+  const params = new URLSearchParams({ provider, dub: dub ? "true" : "falase" })
+  const url = `${BASE_URL}meta/anilist/episodes/${animeId}?${params.toString()}`
   const cacheKey = generateCacheKey("animeEpisodes", animeId)
 
   return fetchFromProxy(url, animeEpisodesCache, cacheKey)
