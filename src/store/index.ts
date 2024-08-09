@@ -2,13 +2,6 @@ import { Source, SourcesResponse } from "types/types"
 import { create } from "zustand"
 import { persist } from "zustand/middleware"
 
-interface ISources {
-  isDub: boolean
-  defaultQuality: {
-    url: string
-  }
-}
-
 interface AuthInitialState {
   isAuthOpen: boolean
   setIsAuthOpen: (isAuthOpen: boolean) => void
@@ -25,9 +18,15 @@ export const useAuthStore = create<AuthInitialState>((set) => ({
 
 interface WatchInitialStore {
   url: string
+  selectedBackgroundImage: string
+  vttUrl: string
   setUrl: (arg: string) => void
-  sources: ISources | null
-  setSources: (args: ISources) => void
+  sources: Source[]
+  setSources: (
+    args: Source[],
+    selectedBackgroundImage: string,
+    vttUrl: string
+  ) => void
   isAutoNext: boolean
   enableAutoNext: () => void
   disabledAutoNext: () => void
@@ -43,7 +42,7 @@ interface WatchInitialStore {
 }
 
 export const useWatchStore = create<WatchInitialStore>((set) => ({
-  url: "https://example.com/404",
+  url: "",
   setUrl: (arg: string) => set(() => ({ url: arg })),
   isAutoNext: false,
   enableAutoNext: () => {
@@ -52,9 +51,33 @@ export const useWatchStore = create<WatchInitialStore>((set) => ({
   disabledAutoNext: () => {
     set(() => ({ isAutoNext: false }))
   },
-  sources: null,
-  resetSources: () => set({ sources: null }),
-  setSources: (sources: ISources) => set({ sources }),
+  sources: [
+    {
+      quality: "",
+      isM3U8: true,
+      url: "",
+    },
+  ],
+  selectedBackgroundImage: "",
+  vttUrl: "",
+  resetSources: () =>
+    set((state) => ({
+      url: state.url,
+      selectedBackgroundImage: state.selectedBackgroundImage,
+      vttUrl: state.vttUrl,
+    })),
+  setSources: (
+    sources: Source[],
+    selectedBackgroundImage: string,
+    vttUrl: string
+  ) =>
+    set((state) => {
+      const currentSource = sources.find(
+        (source) => source.quality === "default"
+      )
+
+      return { url: currentSource?.url, selectedBackgroundImage, vttUrl }
+    }),
   download: "",
   setDownload: (download?: string) => set({ download }),
   sourceType: "default",

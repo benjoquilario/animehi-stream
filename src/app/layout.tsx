@@ -91,23 +91,23 @@ export default function RootLayout({
           tablet or pc.
         </p>
         <AuthContext>
-          <ThemeProvider attribute="class" defaultTheme="dark">
-            {/* <NextTopLoader height={4} color="#6d28d9" /> */}
-            <HolyLoader
-              color="#6d28d9"
-              height="4px"
-              speed={250}
-              easing="linear"
-              showSpinner
-            />
-            <QueryProvider>
+          {/* <NextTopLoader height={4} color="#6d28d9" /> */}
+          <HolyLoader
+            color="#6d28d9"
+            height="4px"
+            speed={250}
+            easing="linear"
+            showSpinner
+          />
+          <QueryProvider>
+            <ThemeProvider attribute="class" defaultTheme="dark">
               <div className="flex min-h-full flex-col">
                 <SiteHeader />
                 <main className="flex-1 pt-16">{children}</main>
                 <SiteFooter />
               </div>
-            </QueryProvider>
-          </ThemeProvider>
+            </ThemeProvider>
+          </QueryProvider>
         </AuthContext>
         <Toaster />
       </body>

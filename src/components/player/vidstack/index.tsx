@@ -12,11 +12,11 @@ import Comments from "@/components/comments/comments"
 import type { IEpisode } from "types/types"
 import { Badge } from "@/components/ui/badge"
 import { LuMessageSquare } from "react-icons/lu"
-import { Spinner } from "@vidstack/react"
-import dynamic from "next/dynamic"
+// import { Spinner } from "@vidstack/react"
+// import dynamic from "next/dynamic"
 import VidstackPlayer from "./player"
 import { fetchAnimeEpisodes, fetchAnimeEpisodesFallback } from "@/lib/cache"
-import { AspectRatio } from "@/components/ui/aspect-ratio"
+// import { AspectRatio } from "@/components/ui/aspect-ratio"
 
 type VideoPlayerProps = {
   animeResponse: IAnilistInfo
@@ -73,23 +73,10 @@ const VideoPlayer = (props: VideoPlayerProps) => {
 
   const handleEpisodeSelect = useCallback(
     async (selectedEpisode: IEpisode) => {
-      setIsEpisodeChanging(true)
-      setEpisodeNavigation({
-        id: selectedEpisode.id,
-        number: selectedEpisode.number,
-        image: selectedEpisode.image,
-        title: selectedEpisode.title,
-        description: selectedEpisode.description,
-        createdAt: "",
-        imageHash: "",
-        url: "",
-      })
-
-      await new Promise((resolve) => setTimeout(resolve, 100))
+      // await new Promise((resolve) => setTimeout(resolve, 100))
       const params = new URLSearchParams(searchParams.toString())
       params.set("ep", `${selectedEpisode.number}`)
       window.history.pushState(null, "", `?${params.toString()}`)
-      setIsEpisodeChanging(false)
     },
     [searchParams]
   )
@@ -124,23 +111,6 @@ const VideoPlayer = (props: VideoPlayerProps) => {
             })
 
             setEpisodesLists(transformEpisodes)
-
-            const currentEpisode = transformEpisodes?.find(
-              (ep) => ep.number === episodeNumber
-            )
-
-            if (currentEpisode) {
-              setEpisodeNavigation({
-                id: currentEpisode.id,
-                title: currentEpisode.title,
-                description: currentEpisode.description || "",
-                number: currentEpisode.number,
-                image: currentEpisode.image,
-                createdAt: "",
-                imageHash: "",
-                url: "",
-              })
-            }
           }
         }
       } catch (error) {
@@ -154,6 +124,27 @@ const VideoPlayer = (props: VideoPlayerProps) => {
     fetchData()
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [anilistId, episodeNumber])
+
+  useEffect(() => {
+    if (episodesList) {
+      const currentEpisode = episodesList.find(
+        (ep) => ep.number === episodeNumber
+      )
+
+      if (currentEpisode) {
+        setEpisodeNavigation({
+          id: currentEpisode.id,
+          title: currentEpisode.title,
+          description: currentEpisode.description || "",
+          number: currentEpisode.number,
+          image: currentEpisode.image,
+          createdAt: "",
+          imageHash: "",
+          url: "",
+        })
+      }
+    }
+  }, [episodeNumber, episodesList])
 
   useEffect(() => {
     const mediaSession = navigator.mediaSession
@@ -194,17 +185,19 @@ const VideoPlayer = (props: VideoPlayerProps) => {
           <div className="relative h-0 w-full rounded-md bg-primary/10 pt-[56%]"></div>
         </div>
       ) : !error ? (
-        <VidstackPlayer
-          malId={`${animeResponse.malId}`}
-          episodeId={episodesNavigation?.id!}
-          animeResponse={animeResponse}
-          episodeNumber={episodesNavigation?.number!}
-          latestEpisodeNumber={latestEpisodeNumber}
-          anilistId={anilistId}
-          banner={selectedBackgroundImage}
-          currentEpisode={episodesNavigation!}
-          title={`${animeResponse.title.english ?? animeResponse.title.romaji} / Episode ${episodeNumber}`}
-        />
+        episodesNavigation && (
+          <VidstackPlayer
+            malId={`${animeResponse.malId}`}
+            episodeId={episodesNavigation.id}
+            animeResponse={animeResponse}
+            episodeNumber={episodesNavigation.number}
+            latestEpisodeNumber={latestEpisodeNumber}
+            anilistId={anilistId}
+            banner={selectedBackgroundImage}
+            currentEpisode={episodesNavigation}
+            title={`${animeResponse.title.english ?? animeResponse.title.romaji} / Episode ${episodeNumber}`}
+          />
+        )
       ) : (
         <div>Please try again</div>
       )}
@@ -271,17 +264,6 @@ const VideoPlayer = (props: VideoPlayerProps) => {
 
       {/* <Sharethis /> */}
     </>
-  )
-}
-
-function SpinLoader() {
-  return (
-    <div className="pointer-events-none absolute inset-0 z-50 flex h-full w-full items-center justify-center">
-      <Spinner.Root className="animate-spin text-white opacity-100" size={84}>
-        <Spinner.Track className="opacity-25" width={8} />
-        <Spinner.TrackFill className="opacity-75" width={8} />
-      </Spinner.Root>
-    </div>
   )
 }
 

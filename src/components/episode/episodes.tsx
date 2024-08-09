@@ -9,6 +9,7 @@ import { Button } from "../ui/button"
 import { FaSpinner } from "react-icons/fa"
 import { FaCirclePlay } from "react-icons/fa6"
 import { useCallback, useMemo, useState } from "react"
+import { usePathname, useSearchParams } from "next/navigation"
 
 type EpisodesProps = {
   animeId: string
@@ -124,7 +125,6 @@ export default function Episodes({
                     return (
                       <Button
                         onClick={() => handleEpisodeSelect(episode.number)}
-                        // href={`/watch?id=${animeId}&slug=${slug}&ep=${episode.number}`}
                         key={episode.id}
                         className={cn(
                           "justify-start p-2 text-[14px] font-medium transition-all odd:bg-secondary/30 even:bg-background hover:bg-secondary active:scale-[.98] md:p-3",

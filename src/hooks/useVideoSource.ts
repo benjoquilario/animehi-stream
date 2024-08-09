@@ -1,18 +1,15 @@
 import { env } from "@/env.mjs"
 import { useQuery } from "@tanstack/react-query"
+import useSWR from "swr"
 
 const useVideoSource = <T>(episodeId: string) => {
-  const { data, error, isLoading } = useQuery<T>({
-    queryKey: [episodeId],
-    queryFn: async () => {
-      const response = await fetch(
-        `${env.NEXT_PUBLIC_ANIME_API_URL}/meta/anilist/watch/${episodeId}`
-      )
+  const fetcher = async (episodeId: string) =>
+    fetch(
+      `${env.NEXT_PUBLIC_ANIME_API_URL}/meta/anilist/watch/${episodeId}`
+    ).then((res) => res.json())
 
-      const data = await response.json()
-
-      return data
-    },
+  const { data, error, isLoading } = useSWR([episodeId], fetcher, {
+    revalidateOnFocus: false,
   })
 
   return {

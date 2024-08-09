@@ -10,6 +10,8 @@ import { auth } from "@/auth"
 import Section from "@/components/section"
 // export const revalidate = 60 * 60 * 3
 import NextImage from "@/components/ui/image"
+import Row from "@/components/row/content"
+import RowContent from "@/components/row/row-content"
 
 export default async function Home() {
   const session = await auth()
@@ -19,12 +21,12 @@ export default async function Home() {
       <section>
         <Banner />
       </section>
-      <section className="w-full px-[2%]">
+      <section className="w-full">
         <div className="flex flex-col md:space-x-4">
           <div className="relative flex-1 overflow-hidden">
             {session ? (
               <>
-                <div className="mt-10 flex scroll-m-20 items-center pb-2 text-base font-semibold tracking-tight transition-colors first:mt-0 md:text-3xl">
+                <div className="ml-[2%] mt-10 flex scroll-m-20 items-center pb-2 text-base font-semibold tracking-tight transition-colors first:mt-0 md:text-3xl">
                   Welcome, <h2 className="ml-2"> {session.user.name}</h2>
                 </div>
 
@@ -38,7 +40,7 @@ export default async function Home() {
               </p>
               <Sharethis />
             </div> */}
-            <Section sectionName="newest-comments" className="relative">
+            <Section sectionName="newest-comments" className="relative px-[2%]">
               <div className="flex pt-4">
                 <div className="relative hidden h-[280px] w-[280px] shrink-0 md:block">
                   <NextImage
@@ -57,7 +59,7 @@ export default async function Home() {
                       </div>
                       <div className="flex items-center gap-2 py-8">
                         <Skeleton className="h-36 w-80"></Skeleton>
-                        <Skeleton className="hidden h-36 w-80 md:block"></Skeleton>
+                        <Skeleton className="h-36 w-80 md:w-10"></Skeleton>
                         <Skeleton className="hidden h-36 w-80 md:block"></Skeleton>
                         <Skeleton className="hidden h-36 w-80 md:block"></Skeleton>
                       </div>
@@ -69,8 +71,9 @@ export default async function Home() {
               </div>
             </Section>
 
-            <Seasonal />
-            <div className="flex flex-col md:space-x-4 xl:flex-row">
+            <RowContent />
+            {/* <Seasonal /> */}
+            <div className="flex flex-col px-[2%] md:space-x-4 xl:flex-row">
               <RecentEpisodes />
               {/* <RecentEpisodes recentEpisodes={recentResponse?.results} /> */}
               <div className="flex flex-row sm:flex-col xl:flex-col">

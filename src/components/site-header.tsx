@@ -8,6 +8,7 @@ import ThemeToggle from "./theme-toggle"
 import { buttonVariants } from "./ui/button"
 import { useState, useEffect } from "react"
 import { permanentMarker } from "@/lib/fonts"
+import ClientOnly from "./ui/client-only"
 
 export default function SiteHeader() {
   const [isFixed, setIsFixed] = useState(false)
@@ -124,9 +125,13 @@ export default function SiteHeader() {
           </div>
         </nav>
         <div className="flex items-center space-x-3">
-          <ThemeToggle />
-          <Combobox />
-          <AuthForm />
+          <ClientOnly>
+            <>
+              <ThemeToggle />
+              <Combobox />
+              <AuthForm />
+            </>
+          </ClientOnly>
           {/* <Button onClick={() => signOut()}>Log out</Button> */}
         </div>
       </div>

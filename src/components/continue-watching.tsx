@@ -12,8 +12,8 @@ export default function ContinueWatching() {
   })
 
   return (
-    <Section sectionName="recently-watch" className="relative">
-      <h3 className="flex w-full pt-2.5 text-left text-2xl font-semibold">
+    <Section sectionName="recently-watch" className="relative px-[2%]">
+      <h3 className="flex w-full pt-2.5 text-left text-sm font-semibold md:text-2xl">
         <div className="mr-2 h-8 w-2 rounded-md bg-primary"></div>
         Recently Watched
       </h3>
@@ -22,8 +22,8 @@ export default function ContinueWatching() {
       </span>
       {isLoading ? (
         <div className="flex items-center gap-2">
-          <Skeleton className="h-44 w-full md:w-80"></Skeleton>
-          <Skeleton className="hidden h-44 w-80 md:block"></Skeleton>
+          <Skeleton className="h-44 w-full md:w-72"></Skeleton>
+          <Skeleton className="h-44 w-8 md:w-80"></Skeleton>
           <Skeleton className="hidden h-44 w-80 md:block"></Skeleton>
           <Skeleton className="hidden h-44 w-80 md:block"></Skeleton>
         </div>

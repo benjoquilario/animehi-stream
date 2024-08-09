@@ -14,6 +14,7 @@ import {
   TextTrack,
   useMediaRemote,
   useMediaStore,
+  Spinner,
   type MediaProviderAdapter,
   type MediaProviderChangeEvent,
   type MediaPlayerInstance,
@@ -48,6 +49,8 @@ import {
 } from "@/lib/cache"
 import { useWatchStore } from "@/store"
 import { AniSkipResult, AniSkip } from "types/types"
+import useVideoSource from "@/hooks/useVideoSource"
+import { AspectRatio } from "@/components/ui/aspect-ratio"
 
 type VidstackPlayerProps = {
   episodeNumber: number
@@ -77,7 +80,7 @@ const VidstackPlayer = (props: VidstackPlayerProps) => {
   const router = useRouter()
   const player = useRef<MediaPlayerInstance>(null)
   const remote = useMediaRemote(player)
-  const { duration } = useMediaStore(player)
+  // const { duration } = useMediaStore(player)
   const animeVideoTitle = title
   const posterImage = banner
   const [src, setSrc] = useState<string>("")
@@ -92,6 +95,13 @@ const VidstackPlayer = (props: VidstackPlayerProps) => {
     currentTime: 0,
     isPlaying: false,
   })
+
+  const { data, isError, isLoading } = useVideoSource(episodeId)
+
+  const sources = useMemo(
+    () => data?.sources.find((source: Source) => source.quality === "default"),
+    [data]
+  )
 
   const autoSkip = useStore(
     useAutoSkip,
@@ -160,7 +170,7 @@ const VidstackPlayer = (props: VidstackPlayerProps) => {
     return () => {
       clearInterval(intervalId)
     }
-  }, [session, isPlaying, duration])
+  }, [session, isPlaying])
 
   useEffect(() => {
     if (player.current && currentTime) {
@@ -281,75 +291,28 @@ const VidstackPlayer = (props: VidstackPlayerProps) => {
 
   useEffect(() => {
     setCurrentTime(parseFloat(localStorage.getItem("currentTime") || "0"))
-
-    async function fetchAndSetAnimeSource() {
-      try {
-        const data: SourcesResponse = await fetchAnimeStreamingLinks(episodeId)
-
-        const backupSource = data.sources.find(
-          (source) => source.quality === "default"
-        )
-
-        if (backupSource) {
-          setSrc(backupSource.url)
-          setDownload(data.download)
-        } else {
-          console.error("Backup source not found")
-        }
-      } catch (error) {
-        console.error("")
-        const data: SourcesResponse = await fetchAnimeStreamingLinks(episodeId)
-
-        const backupSource = data.sources.find(
-          (source) => source.quality === "default"
-        )
-
-        if (backupSource) {
-          setSrc(backupSource.url)
-          setDownload(data.download)
-        } else {
-          console.error("Backup source not found")
-        }
-      } finally {
-        console.log("FInist")
-      }
-    }
+    setDownload(data?.download)
 
     async function fetchAndProcessSkipTimes() {
       if (malId) {
         try {
           if (!malId) return
 
-          const response = (await fetchSkipTimes({
+          const data = (await fetchSkipTimes({
             malId: malId.toString(),
             episodeNumber: `${episodeNumber}`,
           })) as AniSkip
 
-          const filteredSkipTimes = response.results.filter(
-            ({ skipType }) => skipType === "op" || skipType === "ed"
-          )
-          if (!vttGenerated) {
-            const vttContent = generateWebVTTFromSkipTimes(
-              { results: filteredSkipTimes },
-              totalDuration
-            )
-            const blob = new Blob([vttContent], { type: "text/vtt" })
-            const vttBlobUrl = URL.createObjectURL(blob)
-            setVttUrl(vttBlobUrl)
-            setSkipTimes(filteredSkipTimes)
-            setVttGenerated(true)
-          }
+          setSkipTimes(data.results)
         } catch (error) {
           console.error("Failed to fetch skip times", error)
         }
       }
     }
 
-    fetchAndSetAnimeSource()
+    // fetchAndSetAnimeSource()
     fetchAndProcessSkipTimes()
     return () => {
-      setSrc("")
-      setVttUrl("")
       setPlayerState({
         currentTime: 0,
         isPlaying: false,
@@ -358,6 +321,29 @@ const VidstackPlayer = (props: VidstackPlayerProps) => {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [episodeId, malId])
+
+  function onCanPlay() {
+    if (skipTimes && skipTimes.length > 0) {
+      const track = new TextTrack({
+        kind: "chapters",
+        default: true,
+        label: "English",
+        language: "en-US",
+        type: "json",
+      })
+      for (const cue of skipTimes) {
+        track.addCue(
+          new window.VTTCue(
+            Number(cue.interval.startTime),
+            Number(cue.interval.endTime),
+            cue.skipType === "op" ? "Opening" : "Outro"
+          )
+        )
+      }
+
+      player?.current?.textTracks.add(track)
+    }
+  }
 
   useEffect(() => {
     const plyr = player.current
@@ -393,17 +379,34 @@ const VidstackPlayer = (props: VidstackPlayerProps) => {
       plyr?.removeEventListener("pause", handlePause)
       plyr?.removeEventListener("ended", handleEnd)
     }
-  }, [episodeId, duration])
+  }, [episodeId])
+
+  if (isLoading) {
+    return (
+      <AspectRatio ratio={16 / 9}>
+        <div className="pointer-events-none absolute inset-0 z-50 flex h-full w-full items-center justify-center">
+          <Spinner.Root
+            className="animate-spin text-white opacity-100"
+            size={84}
+          >
+            <Spinner.Track className="opacity-25" width={8} />
+            <Spinner.TrackFill className="opacity-75" width={8} />
+          </Spinner.Root>
+        </div>
+      </AspectRatio>
+    )
+  }
 
   return (
     <MediaPlayer
-      key={src}
+      key={sources.url}
       className="font-geist-sans player relative"
       title={animeVideoTitle}
       src={{
-        src: src,
+        src: sources.url,
         type: "application/vnd.apple.mpegurl",
       }}
+      onCanPlay={onCanPlay}
       autoplay={autoPlay}
       crossorigin="anonymous"
       playsinline
@@ -420,12 +423,12 @@ const VidstackPlayer = (props: VidstackPlayerProps) => {
       onEnded={handlePlaybackEnded}
     >
       <MediaProvider>
-        {/* <Poster
+        <Poster
           className="vds-poster absolute inset-0	h-full w-full translate-x-0 translate-y-0"
           src={`${env.NEXT_PUBLIC_PROXY_URI}?url=${posterImage}`}
           alt=""
           style={{ objectFit: "cover" }}
-        /> */}
+        />
         {textTracks.length > 0 &&
           textTracks.map((track) => (
             <Track
@@ -436,9 +439,6 @@ const VidstackPlayer = (props: VidstackPlayerProps) => {
               key={track.file}
             />
           ))}
-        {vttUrl && (
-          <Track kind="chapters" src={vttUrl} default label="Skip Times" />
-        )}
       </MediaProvider>
       {opButton && (
         <Button
