@@ -346,11 +346,11 @@ const VidstackPlayer = (props: VidstackPlayerProps) => {
       <AspectRatio ratio={16 / 9}>
         <div className="pointer-events-none absolute inset-0 z-50 flex h-full w-full items-center justify-center">
           <Spinner.Root
-            className="animate-spin text-white opacity-100"
+            className="animate-spin text-foreground opacity-100"
             size={84}
           >
-            <Spinner.Track className="opacity-25" width={8} />
-            <Spinner.TrackFill className="opacity-75" width={8} />
+            <Spinner.Track className="opacity-25" width={6} />
+            <Spinner.TrackFill className="opacity-75" width={6} />
           </Spinner.Root>
         </div>
       </AspectRatio>
@@ -358,76 +358,78 @@ const VidstackPlayer = (props: VidstackPlayerProps) => {
   }
 
   return (
-    <MediaPlayer
-      key={sources.url}
-      className="font-geist-sans player relative"
-      title={animeVideoTitle}
-      src={{
-        src: sources.url,
-        type: "application/vnd.apple.mpegurl",
-      }}
-      onCanPlay={onCanPlay}
-      autoplay={autoPlay}
-      crossorigin="anonymous"
-      playsinline
-      onLoadedMetadata={onLoadedMetadata}
-      onProviderChange={onProviderChange}
-      onTimeUpdate={onTimeUpdate}
-      ref={player}
-      aspectRatio="16/9"
-      load="idle"
-      posterLoad="idle"
-      streamType="on-demand"
-      storage="storage-key"
-      keyTarget="player"
-      onEnded={handlePlaybackEnded}
-    >
-      <MediaProvider>
-        <Poster
-          className="vds-poster absolute inset-0	h-full w-full translate-x-0 translate-y-0"
-          src={`${env.NEXT_PUBLIC_PROXY_URI}?url=${posterImage}`}
-          alt=""
-          style={{ objectFit: "cover" }}
-        />
-        {textTracks.length > 0 &&
-          textTracks.map((track) => (
-            <Track
-              label={track.label}
-              kind={track.kind === "thumbnails" ? "chapters" : "captions"}
-              src={track.file}
-              default={track.default}
-              key={track.file}
-            />
-          ))}
-      </MediaProvider>
-      {opButton && (
-        <Button
-          onClick={() =>
-            Object.assign(player.current ?? {}, {
-              currentTime: skipTimes[0]?.interval.endTime ?? 0,
-            })
-          }
-          variant="secondary"
-          className="absolute bottom-[70px] right-4 z-40 rounded-md px-3 py-2 text-sm sm:bottom-[83px]"
-        >
-          Skip Opening
-        </Button>
-      )}
-      {otButton && (
-        <Button
-          variant="secondary"
-          onClick={() =>
-            Object.assign(player.current ?? {}, {
-              currentTime: skipTimes[1]?.interval.endTime ?? 0,
-            })
-          }
-          className="absolute bottom-[70px] right-4 z-40 rounded-[6px] px-3 py-2 text-sm sm:bottom-[83px]"
-        >
-          Skip Ending
-        </Button>
-      )}
-      <DefaultVideoLayout thumbnails={vttUrl} icons={defaultLayoutIcons} />
-    </MediaPlayer>
+    <>
+      <MediaPlayer
+        key={sources.url}
+        className="font-geist-sans player relative"
+        title={animeVideoTitle}
+        src={{
+          src: sources.url,
+          type: "application/vnd.apple.mpegurl",
+        }}
+        onCanPlay={onCanPlay}
+        autoplay={autoPlay}
+        crossorigin="anonymous"
+        playsinline
+        onLoadedMetadata={onLoadedMetadata}
+        onProviderChange={onProviderChange}
+        onTimeUpdate={onTimeUpdate}
+        ref={player}
+        aspectRatio="16/9"
+        load="idle"
+        posterLoad="idle"
+        streamType="on-demand"
+        storage="storage-key"
+        keyTarget="player"
+        onEnded={handlePlaybackEnded}
+      >
+        <MediaProvider>
+          <Poster
+            className="vds-poster absolute inset-0	h-full w-full translate-x-0 translate-y-0"
+            src={`${env.NEXT_PUBLIC_PROXY_URI}?url=${posterImage}`}
+            alt=""
+            style={{ objectFit: "cover" }}
+          />
+          {textTracks.length > 0 &&
+            textTracks.map((track) => (
+              <Track
+                label={track.label}
+                kind={track.kind === "thumbnails" ? "chapters" : "captions"}
+                src={track.file}
+                default={track.default}
+                key={track.file}
+              />
+            ))}
+        </MediaProvider>
+        {opButton && (
+          <Button
+            onClick={() =>
+              Object.assign(player.current ?? {}, {
+                currentTime: skipTimes[0]?.interval.endTime ?? 0,
+              })
+            }
+            variant="secondary"
+            className="absolute bottom-[70px] right-4 z-40 rounded-md px-3 py-2 text-sm sm:bottom-[83px]"
+          >
+            Skip Opening
+          </Button>
+        )}
+        {otButton && (
+          <Button
+            variant="secondary"
+            onClick={() =>
+              Object.assign(player.current ?? {}, {
+                currentTime: skipTimes[1]?.interval.endTime ?? 0,
+              })
+            }
+            className="absolute bottom-[70px] right-4 z-40 rounded-[6px] px-3 py-2 text-sm sm:bottom-[83px]"
+          >
+            Skip Ending
+          </Button>
+        )}
+        <DefaultVideoLayout thumbnails={vttUrl} icons={defaultLayoutIcons} />
+      </MediaPlayer>
+    </>
   )
 }
 export default VidstackPlayer

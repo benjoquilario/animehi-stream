@@ -217,7 +217,7 @@ export default function Anime({
               variant="shine"
               onClick={() =>
                 router.push(
-                  `/watch/${animeId}?slug=${animeTitle}&ep=${state.episodes?.length !== 0 ? state.episodes?.[state.episodes.length - 1]?.number : 1}`
+                  `/watch/${animeId}?ep=${state.episodes?.length !== 0 ? state.episodes?.[state.episodes.length - 1]?.number : 1}`
                 )
               }
             >

@@ -72,15 +72,11 @@ const VideoPlayer = (props: VideoPlayerProps) => {
     }
   }, [animeResponse, episodesNavigation])
 
-  const handleEpisodeSelect = useCallback(
-    async (selectedEpisode: IEpisode) => {
-      // await new Promise((resolve) => setTimeout(resolve, 100))
-      const params = new URLSearchParams(searchParams.toString())
-      params.set("ep", `${selectedEpisode.number}`)
-      window.history.pushState(null, "", `?${params.toString()}`)
-    },
-    [searchParams]
-  )
+  const handleEpisodeSelect = (selectedEpisode: IEpisode) => {
+    const params = new URLSearchParams(searchParams.toString())
+    params.set("ep", `${selectedEpisode.number}`)
+    window.history.pushState(null, "", `?${params.toString()}`)
+  }
 
   useEffect(() => {
     let isMounted = true
