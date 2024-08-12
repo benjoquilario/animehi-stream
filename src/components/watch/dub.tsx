@@ -14,17 +14,31 @@ const Dub = (props: DubProps) => {
   const { episodeNumber } = props
   const searchParams = useSearchParams()
 
-  const isDub = searchParams.get("dub")
+  const handleSelectType = function (
+    name: string,
+    value: string,
+    provider: string
+  ) {
+    const params = new URLSearchParams(searchParams.toString())
+    // params.set("ep", `${lastEpisode}`)
+    params.set("provider", provider)
+    params.set(name, value)
+    window.history.pushState(null, "", `?${params.toString()}`)
+  }
 
-  const router = useRouter()
+  const type = searchParams.get("type")
+  const provider = searchParams.get("provider")
+
   return (
     <div className="flex items-center gap-2">
       <div className="">
         <button
-          onClick={() => router.replace(`?episode=${episodeNumber}&dub=true`)}
+          onClick={() => handleSelectType("type", "dub", "gogoanime")}
           className={cn(
             "inline-flex h-9 items-center justify-center rounded-md px-3 text-xs font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50",
-            isDub ? "bg-primary" : "bg-background/60 hover:bg-background"
+            provider === "gogoanime" && type === "dub"
+              ? "bg-primary"
+              : "bg-background/60 hover:bg-background"
           )}
         >
           Dub

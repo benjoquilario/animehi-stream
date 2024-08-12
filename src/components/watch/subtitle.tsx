@@ -15,16 +15,31 @@ const Sub = (props: SubProps) => {
   const router = useRouter()
   const searchParams = useSearchParams()
 
-  const isDub = searchParams.get("dub")
+  const provider = searchParams.get("provider")
+  const type = searchParams.get("type")
+
+  const handleSelectProvider = function (
+    name: string,
+    value: string,
+    provider: string
+  ) {
+    const params = new URLSearchParams(searchParams.toString())
+    // params.set("ep", `${lastEpisode}`)
+    params.set(name, value)
+    params.set("provider", provider)
+    window.history.pushState(null, "", `?${params.toString()}`)
+  }
 
   return (
     <div className="flex items-center gap-2">
       <div className="">
         <button
-          onClick={() => router.replace(`?episode=${episodeNumber}`)}
+          onClick={() => handleSelectProvider("type", "sub", "gogoanime")}
           className={cn(
             "inline-flex h-9 items-center justify-center rounded-md px-3 text-xs font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50",
-            isDub ? "bg-background/60 hover:bg-background/80" : "bg-primary"
+            provider === "gogoanime" && type === "sub"
+              ? "bg-primary"
+              : "bg-background/60 hover:bg-background/80"
           )}
         >
           Sub

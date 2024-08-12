@@ -62,6 +62,7 @@ type VidstackPlayerProps = {
   episodeId: string
   malId: string
   banner: string
+  provider: string
 }
 
 const VidstackPlayer = (props: VidstackPlayerProps) => {
@@ -74,6 +75,7 @@ const VidstackPlayer = (props: VidstackPlayerProps) => {
     latestEpisodeNumber,
     title,
     malId,
+    provider,
     banner,
   } = props
   const { data: session } = useSession()
@@ -85,7 +87,7 @@ const VidstackPlayer = (props: VidstackPlayerProps) => {
   const posterImage = banner
   const [src, setSrc] = useState<string>("")
   const setDownload = useWatchStore((store) => store.setDownload)
-  const [vttUrl, setVttUrl] = useState<string>("")
+  // const [vttUrl, setVttUrl] = useState<string>("")
   const [skipTimes, setSkipTimes] = useState<AniSkipResult[]>([])
   const [vttGenerated, setVttGenerated] = useState<boolean>(false)
   const [totalDuration, setTotalDuration] = useState<number>(0)
@@ -96,10 +98,12 @@ const VidstackPlayer = (props: VidstackPlayerProps) => {
     isPlaying: false,
   })
 
-  const { data, isError, isLoading } = useVideoSource(episodeId)
+  const { data, isError, isLoading } = useVideoSource(episodeId, provider)
 
   const sources = useMemo(
-    () => data?.sources.find((source: Source) => source.quality === "default"),
+    () =>
+      data?.sources.find((source: Source) => source.quality === "default") ??
+      data?.sources[0],
     [data]
   )
 
@@ -119,6 +123,28 @@ const VidstackPlayer = (props: VidstackPlayerProps) => {
   const [otButton, setEdButton] = useState(false)
   const [isPlaying, setIsPlaying] = useState(false)
   let intervalId: any
+
+  useEffect(() => {
+    return player.current?.subscribe(({ currentTime, duration }) => {
+      if (skipTimes && skipTimes.length > 0) {
+        const opStart = skipTimes[0]?.interval.startTime ?? 0
+        const opEnd = skipTimes[0]?.interval.endTime ?? 0
+
+        const epStart = skipTimes[1]?.interval.startTime ?? 0
+        const epEnd = skipTimes[1]?.interval.endTime ?? 0
+
+        const opButtonText = skipTimes[0]?.skipType
+        const edButtonText = skipTimes[1]?.skipType
+
+        setOpButton(
+          opButtonText === "op" && currentTime > opStart && currentTime < opEnd
+        )
+        setEdButton(
+          edButtonText === "ed" && currentTime > epStart && currentTime < epEnd
+        )
+      }
+    })
+  }, [skipTimes, episodeId])
 
   useEffect(() => {
     const updateViews = async function () {
@@ -211,22 +237,6 @@ const VidstackPlayer = (props: VidstackPlayerProps) => {
         playbackPercentage,
       }
 
-      const opStart = skipTimes[0]?.interval.startTime ?? 0
-      const opEnd = skipTimes[0]?.interval.endTime ?? 0
-
-      const epStart = skipTimes[1]?.interval.startTime ?? 0
-      const epEnd = skipTimes[1]?.interval.endTime ?? 0
-
-      const opButtonText = skipTimes[0]?.skipType
-      const edButtonText = skipTimes[1]?.skipType
-
-      setOpButton(
-        opButtonText === "op" && currentTime > opStart && currentTime < opEnd
-      )
-      setEdButton(
-        edButtonText === "ed" && currentTime > epStart && currentTime < epEnd
-      )
-
       if (autoSkip && skipTimes.length) {
         const skipInterval = skipTimes.find(
           ({ interval }) =>
@@ -277,7 +287,6 @@ const VidstackPlayer = (props: VidstackPlayerProps) => {
         currentTime: 0,
         isPlaying: false,
       })
-      if (vttUrl) URL.revokeObjectURL(vttUrl)
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [episodeId, malId])
@@ -305,15 +314,15 @@ const VidstackPlayer = (props: VidstackPlayerProps) => {
     }
   }
 
-  useEffect(() => {
-    const plyr = player.current
+  // useEffect(() => {
+  //   const plyr = player.current
 
-    return () => {
-      if (plyr) {
-        plyr.destroy()
-      }
-    }
-  }, [episodeId])
+  //   return () => {
+  //     if (plyr) {
+  //       plyr.destroy()
+  //     }
+  //   }
+  // }, [episodeId])
 
   useEffect(() => {
     const plyr = player.current
@@ -349,24 +358,23 @@ const VidstackPlayer = (props: VidstackPlayerProps) => {
             className="animate-spin text-foreground opacity-100"
             size={84}
           >
-            <Spinner.Track className="opacity-25" width={6} />
-            <Spinner.TrackFill className="opacity-75" width={6} />
+            <Spinner.Track className="opacity-25" width={8} />
+            <Spinner.TrackFill className="opacity-75" width={8} />
           </Spinner.Root>
         </div>
       </AspectRatio>
     )
   }
 
+  console.log(opButton)
+
   return (
     <>
       <MediaPlayer
         key={sources.url}
         className="font-geist-sans player relative"
-        title={animeVideoTitle}
-        src={{
-          src: sources.url,
-          type: "application/vnd.apple.mpegurl",
-        }}
+        title={animeVideoTitle || animeResponse.title.english}
+        src={`${env.NEXT_PUBLIC_PROXY_URI}?url=${sources.url}`}
         onCanPlay={onCanPlay}
         autoplay={autoPlay}
         crossorigin="anonymous"
@@ -427,7 +435,7 @@ const VidstackPlayer = (props: VidstackPlayerProps) => {
             Skip Ending
           </Button>
         )}
-        <DefaultVideoLayout thumbnails={vttUrl} icons={defaultLayoutIcons} />
+        <DefaultVideoLayout icons={defaultLayoutIcons} />
       </MediaPlayer>
     </>
   )

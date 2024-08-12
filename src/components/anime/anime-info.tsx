@@ -145,11 +145,6 @@ export default function Anime({
 
   const router = useRouter()
 
-  const animeTitle = useMemo(
-    () => state.episodes?.[0]?.id.split?.("-episode-")[0] ?? slug,
-    [state.episodes, slug]
-  )
-
   return (
     <div className="overflow-hidden">
       <div className="relative z-0 h-[200px] w-full md:h-[400px]">
@@ -217,7 +212,7 @@ export default function Anime({
               variant="shine"
               onClick={() =>
                 router.push(
-                  `/watch/${animeId}?ep=${state.episodes?.length !== 0 ? state.episodes?.[state.episodes.length - 1]?.number : 1}`
+                  `/watch/${animeId}?ep=${state.episodes?.length !== 0 ? state.episodes?.[state.episodes.length - 1]?.number : 1}&provider=gogoanime&type=sub`
                 )
               }
             >
@@ -341,7 +336,9 @@ export default function Anime({
                 const episode = state.episodes?.find((e) => e.number === epNum)
                 if (episode) {
                   // console.log("click", epNum)
-                  router.push(`/watch/${animeId}?ep=${episode.number}`)
+                  router.push(
+                    `/watch/${animeId}?ep=${episode.number}&provider=gogoanime&type=sub`
+                  )
                 }
               }}
             />

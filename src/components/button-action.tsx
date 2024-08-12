@@ -9,6 +9,7 @@ type ButtonActionProps = {
   latestEpisodeNumber: number
   isLoading: boolean
   animeTitle: string
+  provider: string
 }
 
 const ButtonAction = ({
@@ -17,6 +18,7 @@ const ButtonAction = ({
   isLoading,
   lastEpisode,
   animeTitle,
+  provider,
 }: ButtonActionProps) => {
   const router = useRouter()
 
@@ -25,7 +27,7 @@ const ButtonAction = ({
       <Button
         onClick={() =>
           router.push(
-            `?id=${anilistId}&slug=${animeTitle}&ep=${lastEpisode - 1}`
+            `/watch/${anilistId}?ep=${lastEpisode - 1}&provider=${provider}`
           )
         }
         size="sm"
@@ -39,7 +41,7 @@ const ButtonAction = ({
       <Button
         onClick={() => {
           router.push(
-            `?id=${anilistId}&slug=${animeTitle}&ep=${lastEpisode + 1}`
+            `/watch/${anilistId}?ep=${lastEpisode + 1}&provider=${provider}`
           )
         }}
         size="sm"

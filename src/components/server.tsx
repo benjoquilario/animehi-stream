@@ -17,6 +17,8 @@ import ClientOnly from "./ui/client-only"
 import { MdCheckBoxOutlineBlank, MdOutlineCheckBox } from "react-icons/md"
 import { FaCheck } from "react-icons/fa6"
 import { IoCloseSharp, IoAlertCircleOutline } from "react-icons/io5"
+import { useSearchParams } from "next/navigation"
+import { cn } from "@/lib/utils"
 
 type ServerProps = {
   animeResult?: IAnilistInfo
@@ -47,71 +49,38 @@ export default function Server({
     [currentUser, animeResult]
   )
 
-  const isAutoSkip = useStore(useAutoSkip, (store: any) => store.autoSkip)
-  const isAutoPlay = useStore(useAutoPlay, (store: any) => store.autoPlay)
-  const isAutoNext = useStore(useAutoNext, (store: any) => store.autoNext)
+  const autoSkip = useStore(useAutoSkip, (store) => store.autoSkip)
+  const autoPlay = useStore(useAutoPlay, (store) => store.autoPlay)
+  const autoNext = useStore(useAutoNext, (store) => store.autoNext)
 
   const changeAutoSkip = function () {
-    useAutoSkip.setState({ autoSkip: isAutoSkip ? false : true })
+    useAutoSkip.setState({ autoSkip: autoSkip ? false : true })
   }
 
   const changeAutoPlay = function () {
-    useAutoPlay.setState({ autoPlay: isAutoPlay ? false : true })
+    useAutoPlay.setState({ autoPlay: autoPlay ? false : true })
   }
+
   const changeAutoNext = function () {
-    useAutoNext.setState({ autoNext: isAutoNext ? false : true })
+    useAutoNext.setState({ autoNext: autoNext ? false : true })
   }
 
-  console.log(isAutoSkip)
+  const searchParams = useSearchParams()
 
-  // const setEmbeddedUrl = useWatchStore((store) => store.setEmbeddedUrl)
-  // const [isLoading, setIsLoading] = useState(true)
+  const handleSelectProvider = function (
+    name: string,
+    value: string,
+    provider: string
+  ) {
+    const params = new URLSearchParams(searchParams.toString())
+    // params.set("ep", `${lastEpisode}`)
+    params.set(name, value)
+    params.set("provider", provider)
+    window.history.pushState(null, "", `?${params.toString()}`)
+  }
 
-  // console.log(sourceType)
-
-  // useEffect(() => {
-  //   let isMounted = false
-
-  //   async function fetchEmbeddedUrls() {
-  //     if (!episodeId) {
-  //       console.log("Error")
-  //       setIsLoading(false)
-  //       return
-  //     }
-  //     setIsLoading(true)
-  //     try {
-  //       const response = await fetch(
-  //         `${process.env.ANIME_API_URI}/meta/anilist/servers/${episodeId}?provider=gogoanime`
-  //       )
-
-  //       if (!response.ok) throw new Error("Failed to fetch servers")
-
-  //       const data = (await response.json()) as { name: string; url: string }[]
-
-  //       if (isMounted && data.length > 0) {
-  //         const vidstreamingUrl =
-  //           data.find((d) => d.name === "vidstreaming") || data[0]
-
-  //         const gogoServer = data.find((d) => d.name == "Gogo server")
-  //         if (sourceType === "vidstreaming") {
-  //           setEmbeddedUrl(vidstreamingUrl?.url)
-  //         } else if (sourceType === "gogo") {
-  //           setEmbeddedUrl(gogoServer?.url)
-  //         }
-  //       }
-  //     } catch (error) {
-  //       console.log("Error Again")
-  //     } finally {
-  //       if (isMounted) setIsLoading(false)
-  //     }
-  //   }
-
-  //   fetchEmbeddedUrls()
-
-  //   return () => {
-  //     isMounted = false
-  //   }
-  // }, [episodeId, setEmbeddedUrl, sourceType])
+  const provider = searchParams.get("provider")
+  const type = searchParams.get("type")
 
   return (
     <div className="flex flex-col gap-2">
@@ -123,7 +92,7 @@ export default function Server({
               onClick={changeAutoSkip}
             >
               <ClientOnly>
-                {isAutoSkip ? (
+                {autoSkip ? (
                   <FaCheck aria-hidden className="text-primary" size={15} />
                 ) : (
                   <MdCheckBoxOutlineBlank
@@ -142,7 +111,7 @@ export default function Server({
               onClick={changeAutoNext}
             >
               <ClientOnly>
-                {isAutoNext ? (
+                {autoNext ? (
                   <FaCheck aria-hidden className="text-primary" size={15} />
                 ) : (
                   <MdCheckBoxOutlineBlank
@@ -161,7 +130,7 @@ export default function Server({
               onClick={changeAutoPlay}
             >
               <ClientOnly>
-                {isAutoPlay ? (
+                {autoPlay ? (
                   <FaCheck aria-hidden className="text-primary" size={15} />
                 ) : (
                   <MdCheckBoxOutlineBlank
@@ -220,24 +189,34 @@ export default function Server({
               <FaClosedCaptioning />
             </span>
             <Sub episodeNumber={lastEpisode} />
-            <Button
-              variant="ghost"
-              className="bg-background/60 hover:bg-background/80"
+            <button
+              onClick={() => handleSelectProvider("type", "sub", "zoro")}
+              className={cn(
+                "inline-flex h-9 items-center justify-center rounded-md px-3 text-xs font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50",
+                provider === "zoro" && type === "sub"
+                  ? "bg-primary"
+                  : "bg-background/60 hover:bg-background/80"
+              )}
             >
-              Vidstreaming
-            </Button>
+              Zoro
+            </button>
           </div>
           <div className="flex items-center gap-2">
             <span>
               <FaMicrophone />
             </span>
             <Dub episodeNumber={lastEpisode} />
-            <Button
-              variant="ghost"
-              className="bg-background/60 hover:bg-background/80"
+            <button
+              className={cn(
+                "inline-flex h-9 items-center justify-center rounded-md px-3 text-xs font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50",
+                provider === "zoro" && type === "dub"
+                  ? "bg-primary"
+                  : "bg-background/60 hover:bg-background/80"
+              )}
+              onClick={() => handleSelectProvider("type", "dub", "zoro")}
             >
-              Vidstreaming
-            </Button>
+              Zoro
+            </button>
           </div>
         </div>
       </div>

@@ -329,7 +329,12 @@ export async function fetchAnimeEpisodes(
 ) {
   const params = new URLSearchParams({ provider, dub: dub ? "true" : "falase" })
   const url = `${BASE_URL}meta/anilist/episodes/${animeId}?${params.toString()}`
-  const cacheKey = generateCacheKey("animeEpisodes", animeId)
+  const cacheKey = generateCacheKey(
+    "animeEpisodes",
+    animeId,
+    provider,
+    dub ? "dub" : "sub"
+  )
 
   return fetchFromProxy(url, animeEpisodesCache, cacheKey)
 }

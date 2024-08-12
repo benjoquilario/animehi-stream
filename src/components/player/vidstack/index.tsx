@@ -29,22 +29,19 @@ const VideoPlayer = (props: VideoPlayerProps) => {
   const { animeResponse, anilistId, currentUser } = props
 
   const searchParams = useSearchParams()
-  const isDub = searchParams.get("dub")
+  const type = searchParams.get("type") || "sub"
   const ep = searchParams.get("ep")
+  const provider = searchParams.get("provider") || "gogoanime"
   const episodeNumber = Number(ep) || 1
   const download = useWatchStore((store) => store.download)
-  // const [isLoading, setIsLoading] = useState(false)
   const [isPending, setIsPending] = useState(false)
   const [error, setError] = useState(false)
   const [selectedBackgroundImage, setSelectedBackgroundImage] =
     useState<string>("")
-  const [isEpisodeChanging, setIsEpisodeChanging] = useState(false)
   const [episodesList, setEpisodesLists] = useState<IEpisode[]>()
   const [episodesNavigation, setEpisodeNavigation] = useState<IEpisode | null>(
     null
   )
-
-  const router = useRouter()
 
   useEffect(() => {
     const updateBackgroundImage = () => {
@@ -85,33 +82,39 @@ const VideoPlayer = (props: VideoPlayerProps) => {
 
       if (!anilistId) return
       try {
-        let results: IEpisode[]
-        const data = (await fetchAnimeEpisodes(anilistId)) as IEpisode[]
+        const dub = type === "dub" ? true : false
+        if (provider && type) {
+          const data = (await fetchAnimeEpisodes(
+            anilistId,
+            provider,
+            dub
+          )) as IEpisode[]
 
-        if (isMounted && data) {
-          if (data.length !== 0) {
-            setEpisodesLists(data)
-          } else {
-            const data = (await fetchAnimeEpisodesFallback(
-              anilistId
-            )) as IEpisodesFallback[]
+          if (isMounted && data) {
+            if (data.length !== 0) {
+              setEpisodesLists(data)
+            } else {
+              const data = (await fetchAnimeEpisodesFallback(
+                anilistId
+              )) as IEpisodesFallback[]
 
-            const eps = data.find((ep) => ep.providerId === "shash")
+              const eps = data.find((ep) => ep.providerId === "shash")
 
-            const transformEpisodes = eps?.episodes.map((ep) => {
-              return {
-                id: ep.id,
-                title: `Episode ${ep.number}`,
-                description: "",
-                number: ep.number,
-                image: selectedBackgroundImage,
-                createdAt: "",
-                imageHash: "",
-                url: "",
-              }
-            })
+              const transformEpisodes = eps?.episodes.map((ep) => {
+                return {
+                  id: ep.id,
+                  title: `Episode ${ep.number}`,
+                  description: "",
+                  number: ep.number,
+                  image: selectedBackgroundImage,
+                  createdAt: "",
+                  imageHash: "",
+                  url: "",
+                }
+              })
 
-            setEpisodesLists(transformEpisodes)
+              setEpisodesLists(transformEpisodes)
+            }
           }
         }
       } catch (error) {
@@ -124,7 +127,7 @@ const VideoPlayer = (props: VideoPlayerProps) => {
 
     fetchData()
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [anilistId, episodeNumber])
+  }, [anilistId, episodeNumber, type, provider])
 
   useEffect(() => {
     if (episodesList) {
@@ -188,6 +191,7 @@ const VideoPlayer = (props: VideoPlayerProps) => {
       ) : !error ? (
         episodesNavigation && (
           <VidstackPlayer
+            provider={provider}
             malId={`${animeResponse.malId}`}
             episodeId={episodesNavigation.id}
             animeResponse={animeResponse}
@@ -202,23 +206,25 @@ const VideoPlayer = (props: VideoPlayerProps) => {
       ) : (
         <div>Please try again</div>
       )}
-
-      <Server
-        download={download ?? ""}
-        animeResult={animeResponse}
-        animeId={anilistId}
-        anilistId={anilistId}
-        currentUser={currentUser}
-        lastEpisode={episodesNavigation?.number!}
-      >
-        <ButtonAction
-          isLoading={isPending}
-          latestEpisodeNumber={latestEpisodeNumber}
+      {provider && episodesNavigation ? (
+        <Server
+          download={download ?? ""}
+          animeResult={animeResponse}
+          animeId={anilistId}
           anilistId={anilistId}
+          currentUser={currentUser}
           lastEpisode={episodesNavigation?.number!}
-          animeTitle={anilistId}
-        />
-      </Server>
+        >
+          <ButtonAction
+            isLoading={isPending}
+            latestEpisodeNumber={latestEpisodeNumber}
+            anilistId={anilistId}
+            lastEpisode={episodesNavigation?.number!}
+            animeTitle={anilistId}
+            provider={provider}
+          />
+        </Server>
+      ) : null}
 
       <Episodes
         episodes={episodesList}

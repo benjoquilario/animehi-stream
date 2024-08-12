@@ -94,7 +94,7 @@ interface IAutoNext {
 }
 
 export const useAutoNext = create(
-  persist(
+  persist<IAutoNext>(
     (set, get) => ({
       autoNext: false,
       setAutoNext: (autoNext: boolean) => set({ autoNext }),
@@ -105,8 +105,13 @@ export const useAutoNext = create(
   )
 )
 
+interface IAutoPlay {
+  autoPlay: boolean
+  setAutoPlay: (autoSkip: boolean) => void
+}
+
 export const useAutoPlay = create(
-  persist(
+  persist<IAutoPlay>(
     (set, get) => ({
       autoPlay: false,
       setAutoPlay: (autoPlay: boolean) => set({ autoPlay }),
@@ -117,8 +122,13 @@ export const useAutoPlay = create(
   )
 )
 
+interface IAutoSkip {
+  autoSkip: boolean
+  setAutoSkip: (autoSkip: boolean) => void
+}
+
 export const useAutoSkip = create(
-  persist(
+  persist<IAutoSkip>(
     (set, get) => ({
       autoSkip: false,
       setAutoSkip: (autoSkip: boolean) => set({ autoSkip }),
