@@ -72,6 +72,7 @@ export default function Episodes({
       if (!query) {
         return episodes?.slice(interval[0], interval[1] + 1)
       }
+
       return filteredEpisode
     }
   }, [episodes, interval, isLoading, query, filteredEpisode])

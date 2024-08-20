@@ -39,11 +39,13 @@ interface WatchInitialStore {
   setEmbeddedUrl: (embeddedUrl?: string) => void
   lastEpisode: number
   setLastEpisode: (episode: number) => void
+  resetUrl: () => void
 }
 
 export const useWatchStore = create<WatchInitialStore>((set) => ({
   url: "",
-  setUrl: (arg: string) => set(() => ({ url: arg })),
+  setUrl: (url: string) => set(() => ({ url })),
+  resetUrl: () => set(() => ({ url: "" })),
   isAutoNext: false,
   enableAutoNext: () => {
     set(() => ({ isAutoNext: true }))

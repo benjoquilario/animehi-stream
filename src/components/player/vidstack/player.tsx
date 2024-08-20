@@ -63,6 +63,7 @@ type VidstackPlayerProps = {
   malId: string
   banner: string
   provider: string
+  type: string
 }
 
 const VidstackPlayer = (props: VidstackPlayerProps) => {
@@ -76,6 +77,7 @@ const VidstackPlayer = (props: VidstackPlayerProps) => {
     title,
     malId,
     provider,
+    type,
     banner,
   } = props
   const { data: session } = useSession()
@@ -87,7 +89,7 @@ const VidstackPlayer = (props: VidstackPlayerProps) => {
   const posterImage = banner
   const [src, setSrc] = useState<string>("")
   const setDownload = useWatchStore((store) => store.setDownload)
-  // const [vttUrl, setVttUrl] = useState<string>("")
+  const [vttUrl, setVttUrl] = useState<string>("")
   const [skipTimes, setSkipTimes] = useState<AniSkipResult[]>([])
   const [vttGenerated, setVttGenerated] = useState<boolean>(false)
   const [totalDuration, setTotalDuration] = useState<number>(0)
@@ -97,6 +99,12 @@ const VidstackPlayer = (props: VidstackPlayerProps) => {
     currentTime: 0,
     isPlaying: false,
   })
+  const url = useWatchStore((store) => store.url)
+  const [setUrl, resetUrl] = useWatchStore((store) => [
+    store.setUrl,
+    store.resetUrl,
+  ])
+  const [skipTimesLoading, setSkiptimeLoading] = useState(true)
 
   const { data, isError, isLoading } = useVideoSource(episodeId, provider)
 
@@ -115,6 +123,7 @@ const VidstackPlayer = (props: VidstackPlayerProps) => {
     useAutoPlay,
     (store: any) => store.autoPlay as boolean
   )
+
   const autoNext = useStore(
     useAutoNext,
     (store: any) => store.autoNext as boolean
@@ -125,25 +134,7 @@ const VidstackPlayer = (props: VidstackPlayerProps) => {
   let intervalId: any
 
   useEffect(() => {
-    return player.current?.subscribe(({ currentTime, duration }) => {
-      if (skipTimes && skipTimes.length > 0) {
-        const opStart = skipTimes[0]?.interval.startTime ?? 0
-        const opEnd = skipTimes[0]?.interval.endTime ?? 0
-
-        const epStart = skipTimes[1]?.interval.startTime ?? 0
-        const epEnd = skipTimes[1]?.interval.endTime ?? 0
-
-        const opButtonText = skipTimes[0]?.skipType
-        const edButtonText = skipTimes[1]?.skipType
-
-        setOpButton(
-          opButtonText === "op" && currentTime > opStart && currentTime < opEnd
-        )
-        setEdButton(
-          edButtonText === "ed" && currentTime > epStart && currentTime < epEnd
-        )
-      }
-    })
+    return player.current?.subscribe(({ currentTime, duration }) => {})
   }, [skipTimes, episodeId])
 
   useEffect(() => {
@@ -237,7 +228,25 @@ const VidstackPlayer = (props: VidstackPlayerProps) => {
         playbackPercentage,
       }
 
-      if (autoSkip && skipTimes.length) {
+      if (skipTimes && skipTimes.length > 0) {
+        const opStart = skipTimes[0]?.interval.startTime ?? 0
+        const opEnd = skipTimes[0]?.interval.endTime ?? 0
+
+        const epStart = skipTimes[1]?.interval.startTime ?? 0
+        const epEnd = skipTimes[1]?.interval.endTime ?? 0
+
+        const opButtonText = skipTimes[0]?.skipType
+        const edButtonText = skipTimes[1]?.skipType
+
+        setOpButton(
+          opButtonText === "op" && currentTime > opStart && currentTime < opEnd
+        )
+        setEdButton(
+          edButtonText === "ed" && currentTime > epStart && currentTime < epEnd
+        )
+      }
+
+      if (autoSkip && skipTimes.length > 0) {
         const skipInterval = skipTimes.find(
           ({ interval }) =>
             currentTime >= interval.startTime && currentTime < interval.endTime
@@ -255,7 +264,9 @@ const VidstackPlayer = (props: VidstackPlayerProps) => {
     if (latestEpisodeNumber === episodeNumber) return
 
     if (autoNext) {
-      router.replace(`?id=${anilistId}&ep=${episodeNumber + 1}`)
+      router.replace(
+        `?id=${anilistId}&ep=${episodeNumber + 1}&provider=${provider}&type=${type}`
+      )
     }
   }
 
@@ -263,25 +274,23 @@ const VidstackPlayer = (props: VidstackPlayerProps) => {
     setCurrentTime(parseFloat(localStorage.getItem("currentTime") || "0"))
     setDownload(data?.download)
 
-    async function fetchAndProcessSkipTimes() {
-      if (malId) {
-        try {
-          if (!malId) return
+    async function fetchProcessAndSkipTimes() {
+      if (!malId) return
 
-          const data = (await fetchSkipTimes({
-            malId: malId.toString(),
-            episodeNumber: `${episodeNumber}`,
-          })) as AniSkip
+      const data = (await fetchSkipTimes({
+        malId: malId.toString(),
+        episodeNumber: `${episodeNumber}`,
+      })) as AniSkip
 
-          setSkipTimes(data.results)
-        } catch (error) {
-          console.error("Failed to fetch skip times", error)
-        }
-      }
+      const filteredSkipTimes = data.results.filter(
+        ({ skipType }) => skipType === "op" || skipType === "ed"
+      )
+
+      setSkipTimes(filteredSkipTimes)
     }
 
     // fetchAndSetAnimeSource()
-    fetchAndProcessSkipTimes()
+    fetchProcessAndSkipTimes()
     return () => {
       setPlayerState({
         currentTime: 0,
@@ -290,6 +299,12 @@ const VidstackPlayer = (props: VidstackPlayerProps) => {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [episodeId, malId])
+
+  // function formatTime(seconds: number): string {
+  //   const minutes = Math.floor(seconds / 60)
+  //   const remainingSeconds = Math.floor(seconds % 60)
+  //   return `${minutes.toString().padStart(2, "0")}:${remainingSeconds.toString().padStart(2, "0")}`
+  // }
 
   function onCanPlay() {
     if (skipTimes && skipTimes.length > 0) {
@@ -300,15 +315,44 @@ const VidstackPlayer = (props: VidstackPlayerProps) => {
         language: "en-US",
         type: "json",
       })
-      for (const cue of skipTimes) {
-        track.addCue(
-          new window.VTTCue(
-            Number(cue.interval.startTime),
-            Number(cue.interval.endTime),
-            cue.skipType === "op" ? "Opening" : "Outro"
+
+      let previousEndTime = 0
+
+      const sortedSkipTimes = skipTimes.sort(
+        (a, b) => a.interval.startTime - b.interval.startTime
+      )
+
+      skipTimes.forEach((skipTime, index) => {
+        const { startTime, endTime } = skipTime.interval
+        const skipType =
+          skipTime.skipType.toUpperCase() === "OP" ? "Opening" : "Outro"
+
+        if (previousEndTime < startTime) {
+          track.addCue(
+            new window.VTTCue(
+              previousEndTime,
+              startTime,
+              `${animeVideoTitle} - Episode ${episodeNumber}\n\n`
+            )
           )
+        }
+
+        track.addCue(
+          new window.VTTCue(Number(startTime), Number(endTime), skipType)
         )
-      }
+
+        previousEndTime = endTime
+
+        if (index === sortedSkipTimes.length - 1 && endTime < totalDuration) {
+          track.addCue(
+            new window.VTTCue(
+              endTime,
+              totalDuration,
+              `${animeVideoTitle} - Episode ${episodeNumber}\n\n`
+            )
+          )
+        }
+      })
 
       player?.current?.textTracks.add(track)
     }
@@ -350,31 +394,41 @@ const VidstackPlayer = (props: VidstackPlayerProps) => {
     }
   }, [episodeId])
 
-  if (isLoading) {
-    return (
-      <AspectRatio ratio={16 / 9}>
-        <div className="pointer-events-none absolute inset-0 z-50 flex h-full w-full items-center justify-center">
-          <Spinner.Root
-            className="animate-spin text-foreground opacity-100"
-            size={84}
-          >
-            <Spinner.Track className="opacity-25" width={8} />
-            <Spinner.TrackFill className="opacity-75" width={8} />
-          </Spinner.Root>
-        </div>
-      </AspectRatio>
-    )
-  }
+  useEffect(() => {
+    if (isLoading) {
+      resetUrl()
+    }
 
-  console.log(opButton)
+    if (sources) {
+      setUrl(sources.url)
+    }
+  }, [isLoading, resetUrl, setUrl, sources])
+
+  // if (isLoading) {
+  //   return (
+  //     <AspectRatio ratio={16 / 9}>
+  //       <div className="pointer-events-none absolute inset-0 z-50 flex h-full w-full items-center justify-center">
+  //         <Spinner.Root
+  //           className="animate-spin text-foreground opacity-100"
+  //           size={84}
+  //         >
+  //           <Spinner.Track className="opacity-25" width={8} />
+  //           <Spinner.TrackFill className="opacity-75" width={8} />
+  //         </Spinner.Root>
+  //       </div>
+  //     </AspectRatio>
+  //   )
+  // }
+
+  // console.log(opButton)
 
   return (
     <>
       <MediaPlayer
-        key={sources.url}
+        key={url}
         className="font-geist-sans player relative"
         title={animeVideoTitle || animeResponse.title.english}
-        src={`${env.NEXT_PUBLIC_PROXY_URI}?url=${sources.url}`}
+        src={`${env.NEXT_PUBLIC_PROXY_URI}?url=${url}`}
         onCanPlay={onCanPlay}
         autoplay={autoPlay}
         crossorigin="anonymous"
@@ -398,6 +452,7 @@ const VidstackPlayer = (props: VidstackPlayerProps) => {
             alt=""
             style={{ objectFit: "cover" }}
           />
+
           {textTracks.length > 0 &&
             textTracks.map((track) => (
               <Track

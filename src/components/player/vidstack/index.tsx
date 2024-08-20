@@ -81,6 +81,7 @@ const VideoPlayer = (props: VideoPlayerProps) => {
       setIsPending(true)
 
       if (!anilistId) return
+
       try {
         const dub = type === "dub" ? true : false
         if (provider && type) {
@@ -191,6 +192,7 @@ const VideoPlayer = (props: VideoPlayerProps) => {
       ) : !error ? (
         episodesNavigation && (
           <VidstackPlayer
+            type={type}
             provider={provider}
             malId={`${animeResponse.malId}`}
             episodeId={episodesNavigation.id}
@@ -200,13 +202,13 @@ const VideoPlayer = (props: VideoPlayerProps) => {
             anilistId={anilistId}
             banner={selectedBackgroundImage}
             currentEpisode={episodesNavigation}
-            title={`${animeResponse.title.english ?? animeResponse.title.romaji} / Episode ${episodeNumber}`}
+            title={`${animeResponse.title.english ?? animeResponse.title.romaji}`}
           />
         )
       ) : (
         <div>Please try again</div>
       )}
-      {provider && episodesNavigation ? (
+      {provider && episodesNavigation && type ? (
         <Server
           download={download ?? ""}
           animeResult={animeResponse}
@@ -222,6 +224,7 @@ const VideoPlayer = (props: VideoPlayerProps) => {
             lastEpisode={episodesNavigation?.number!}
             animeTitle={anilistId}
             provider={provider}
+            type={type}
           />
         </Server>
       ) : null}

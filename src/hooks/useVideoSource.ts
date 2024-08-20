@@ -7,7 +7,7 @@ const useVideoSource = <T>(
 ) => {
   const fetcher = async (episodeId: string) =>
     fetch(
-      `${env.NEXT_PUBLIC_ANIME_API_URL}/meta/anilist/watch/${episodeId}?provider=${provider}`
+      `${env.NEXT_PUBLIC_ANIME_API_URL}/meta/anilist/watch/${episodeId}?provider=${provider}&server=vidstreaming`
     ).then((res) => res.json())
 
   const { data, error, isLoading } = useSWR([episodeId], fetcher, {
