@@ -428,7 +428,7 @@ const VidstackPlayer = (props: VidstackPlayerProps) => {
         key={url}
         className="font-geist-sans player relative"
         title={animeVideoTitle || animeResponse.title.english}
-        src={`${env.NEXT_PUBLIC_PROXY_URI}?url=${url}`}
+        src={url}
         onCanPlay={onCanPlay}
         autoplay={autoPlay}
         crossorigin="anonymous"
@@ -438,8 +438,8 @@ const VidstackPlayer = (props: VidstackPlayerProps) => {
         onTimeUpdate={onTimeUpdate}
         ref={player}
         aspectRatio="16/9"
-        load="idle"
-        posterLoad="idle"
+        load="eager"
+        posterLoad="eager"
         streamType="on-demand"
         storage="storage-key"
         keyTarget="player"

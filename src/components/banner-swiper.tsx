@@ -64,7 +64,7 @@ const BannerSwiper = ({ trendingAnime }: BannerSwiperProps) => {
                     >
                       {trending.title.english || trending.title.romaji}
                     </h2>
-                    <div className="flex items-center gap-3 text-xs md:text-base">
+                    {/* <div className="flex items-center gap-3 text-xs md:text-base">
                       <div className="flex items-center gap-1">
                         <BsFillPlayFill />
                         {trending.type}
@@ -80,7 +80,7 @@ const BannerSwiper = ({ trendingAnime }: BannerSwiperProps) => {
                         <FaCalendar />
                         {trending.releaseDate}
                       </div>
-                    </div>
+                    </div> */}
                     <p
                       title={trending.description}
                       className="mx-0 my-3 line-clamp-3 w-full max-w-lg pr-6 text-left text-sm text-foreground/90 md:line-clamp-3"
