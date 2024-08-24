@@ -461,7 +461,7 @@ const VidstackPlayer = (props: VidstackPlayerProps) => {
             textTracks.map((track) => (
               <Track
                 label={track.label}
-                kind={track.kind}
+                kind={track.kind === "captions" ? "captions" : "chapters"}
                 src={track.file}
                 default={track.default}
                 key={track.file}
