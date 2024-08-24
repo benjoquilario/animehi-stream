@@ -274,6 +274,10 @@ const VidstackPlayer = (props: VidstackPlayerProps) => {
     setCurrentTime(parseFloat(localStorage.getItem("currentTime") || "0"))
     setDownload(data?.download)
 
+    if (provider === "zoro" && data?.tracks) {
+      setTextTracks(data?.tracks)
+    }
+
     async function fetchProcessAndSkipTimes() {
       if (!malId) return
 
@@ -457,7 +461,7 @@ const VidstackPlayer = (props: VidstackPlayerProps) => {
             textTracks.map((track) => (
               <Track
                 label={track.label}
-                kind={track.kind === "thumbnails" ? "chapters" : "captions"}
+                kind={track.kind}
                 src={track.file}
                 default={track.default}
                 key={track.file}
