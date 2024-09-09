@@ -1,4 +1,8 @@
-import { topAiring, trendingAnime } from "@/lib/consumet"
+import {
+  fetchPopularAnime,
+  fetchTopAiringAnime,
+  fetchTopAnime,
+} from "@/lib/consumet"
 import { env } from "@/env.mjs"
 import {
   ConsumetResponse as TConsumetResponse,
@@ -16,22 +20,20 @@ async function generateSiteMap() {
     priority: 1.0,
   }
 
-  const fetchPopularAnime = await trendingAnime()
-  const topAnime = await topAiring()
   const responseRecentEpisode = await fetch(
     `${env.NEXT_PUBLIC_ANIME_API_URL}/meta/anilist/recent-episodes?page=1&perPage=20`
   )
   const data =
     (await responseRecentEpisode.json()) as TConsumetResponse<TRecentEpisode>
 
-  const [popular, recent, top] = await Promise.all([
-    fetchPopularAnime,
-    data,
-    topAnime,
+  const [popular, topAiring, top] = await Promise.all([
+    fetchPopularAnime(1, 20),
+    fetchTopAiringAnime(1, 20),
+    fetchTopAnime(1, 20),
   ])
 
   const animeMap = [
-    ...recent.results.map((anime) => ({
+    ...data.results.map((anime) => ({
       url: `${url}/anime/${transformedTitle(anime.title.english ?? anime.title.romaji)}/${anime.id}`,
       lastModified: new Date().toISOString(),
       changeFreq: "weekly",
@@ -44,6 +46,12 @@ async function generateSiteMap() {
       priority: 0.9,
     })),
     ...top.results.map((anime: any) => ({
+      url: `${url}/anime/${transformedTitle(anime.title.english ?? anime.title.romaji)}/${anime.id}`,
+      lastModified: new Date().toISOString(),
+      changeFreq: "weekly",
+      priority: 0.9,
+    })),
+    ...topAiring.results.map((anime: any) => ({
       url: `${url}/anime/${transformedTitle(anime.title.english ?? anime.title.romaji)}/${anime.id}`,
       lastModified: new Date().toISOString(),
       changeFreq: "weekly",
