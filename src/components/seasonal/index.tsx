@@ -3,12 +3,6 @@
 import React, { useState, useEffect } from "react"
 import Column from "./column"
 import Section from "../section"
-import {
-  popularThisSeason,
-  popularAnime,
-  mostfavoriteAnime,
-  topAiring,
-} from "@/lib/consumet"
 import { getSeason } from "@/lib/utils"
 import { ConsumetResponse, IAdvancedInfo, IAnilistInfo } from "types/types"
 import {
