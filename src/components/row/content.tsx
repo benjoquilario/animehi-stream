@@ -20,44 +20,15 @@ type RowProps = {
   browse: string
   results: IAdvancedInfo[]
   seasonalTitle: string
+  isNextSeason?: boolean
 }
 
-const Row = ({ browse, results, seasonalTitle }: RowProps) => {
-  const [state, setState] = useState({
-    trendingAnime: {} as ConsumetResponse<IAdvancedInfo>,
-    loading: {
-      trending: true,
-    },
-  })
-
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        setState((prevState) => ({ ...prevState, error: null }))
-        const trending = await fetchTrendingAnime(1, 20)
-
-        setState((prevState) => ({
-          ...prevState,
-          trendingAnime: trending,
-        }))
-      } catch (error) {
-        setState((prevState) => ({
-          ...prevState,
-          error: "An unexpected error occurred",
-        }))
-      } finally {
-        setState((prevState) => ({
-          ...prevState,
-          loading: {
-            trending: false,
-          },
-        }))
-      }
-    }
-
-    fetchData()
-  }, [])
-
+const Row = ({
+  browse,
+  results,
+  seasonalTitle,
+  isNextSeason = false,
+}: RowProps) => {
   return (
     <div className="mt-4 flex flex-col gap-2">
       <Link
@@ -84,7 +55,7 @@ const Row = ({ browse, results, seasonalTitle }: RowProps) => {
                 key={result.id}
                 className="col-span-1 overflow-hidden rounded-md"
               >
-                <CardRow results={result} />
+                <CardRow isNextSeason={isNextSeason} results={result} />
               </div>
             </CarouselItem>
           ))}

@@ -100,6 +100,7 @@ const VidstackPlayer = (props: VidstackPlayerProps) => {
     isPlaying: false,
   })
   const url = useWatchStore((store) => store.url)
+
   const [setUrl, resetUrl] = useWatchStore((store) => [
     store.setUrl,
     store.resetUrl,
@@ -131,7 +132,7 @@ const VidstackPlayer = (props: VidstackPlayerProps) => {
   const [opButton, setOpButton] = useState(false)
   const [otButton, setEdButton] = useState(false)
   const [isPlaying, setIsPlaying] = useState(false)
-  let intervalId: any
+  let intervalId: NodeJS.Timeout
 
   useEffect(() => {
     return player.current?.subscribe(({ currentTime, duration }) => {})
@@ -304,12 +305,6 @@ const VidstackPlayer = (props: VidstackPlayerProps) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [episodeId, malId])
 
-  // function formatTime(seconds: number): string {
-  //   const minutes = Math.floor(seconds / 60)
-  //   const remainingSeconds = Math.floor(seconds % 60)
-  //   return `${minutes.toString().padStart(2, "0")}:${remainingSeconds.toString().padStart(2, "0")}`
-  // }
-
   function onCanPlay() {
     if (skipTimes && skipTimes.length > 0) {
       const track = new TextTrack({
@@ -362,42 +357,6 @@ const VidstackPlayer = (props: VidstackPlayerProps) => {
     }
   }
 
-  // useEffect(() => {
-  //   const plyr = player.current
-
-  //   return () => {
-  //     if (plyr) {
-  //       plyr.destroy()
-  //     }
-  //   }
-  // }, [episodeId])
-
-  useEffect(() => {
-    const plyr = player.current
-
-    function handlePlay() {
-      setIsPlaying(true)
-    }
-
-    function handlePause() {
-      setIsPlaying(false)
-    }
-
-    function handleEnd() {
-      setIsPlaying(false)
-    }
-
-    plyr?.addEventListener("play", handlePlay)
-    plyr?.addEventListener("pause", handlePause)
-    plyr?.addEventListener("ended", handleEnd)
-
-    return () => {
-      plyr?.removeEventListener("play", handlePlay)
-      plyr?.removeEventListener("pause", handlePause)
-      plyr?.removeEventListener("ended", handleEnd)
-    }
-  }, [episodeId])
-
   useEffect(() => {
     if (isLoading) {
       resetUrl()
@@ -408,23 +367,21 @@ const VidstackPlayer = (props: VidstackPlayerProps) => {
     }
   }, [isLoading, resetUrl, setUrl, sources])
 
-  // if (isLoading) {
-  //   return (
-  //     <AspectRatio ratio={16 / 9}>
-  //       <div className="pointer-events-none absolute inset-0 z-50 flex h-full w-full items-center justify-center">
-  //         <Spinner.Root
-  //           className="animate-spin text-foreground opacity-100"
-  //           size={84}
-  //         >
-  //           <Spinner.Track className="opacity-25" width={8} />
-  //           <Spinner.TrackFill className="opacity-75" width={8} />
-  //         </Spinner.Root>
-  //       </div>
-  //     </AspectRatio>
-  //   )
-  // }
+  const handlePlay = () => setIsPlaying(true)
 
-  // console.log(opButton)
+  const handlePause = () => setIsPlaying(false)
+
+  const handleEnd = () => setIsPlaying(false)
+
+  const subtitle = useMemo(
+    () => (data?.subtitles ? data?.subtitles[0].url : null),
+    [data]
+  )
+
+  const thumbnails = useMemo(
+    () => (data?.subtitles ? data?.subtitles[1].url : ""),
+    [data]
+  )
 
   return (
     <>
@@ -447,6 +404,9 @@ const VidstackPlayer = (props: VidstackPlayerProps) => {
         streamType="on-demand"
         storage="storage-key"
         keyTarget="player"
+        onPause={handlePause}
+        onEnd={handleEnd}
+        onPlay={handlePlay}
         onEnded={handlePlaybackEnded}
       >
         <MediaProvider>
@@ -457,16 +417,15 @@ const VidstackPlayer = (props: VidstackPlayerProps) => {
             style={{ objectFit: "cover" }}
           />
 
-          {textTracks.length > 0 &&
-            textTracks.map((track) => (
-              <Track
-                label={track.label}
-                kind={track.kind === "captions" ? "captions" : "chapters"}
-                src={track.file}
-                default={track.default}
-                key={track.file}
-              />
-            ))}
+          {subtitle && provider === "zoro" ? (
+            <Track
+              label="English"
+              kind="captions"
+              src={subtitle}
+              default={true}
+              key={subtitle}
+            />
+          ) : null}
         </MediaProvider>
         {opButton && (
           <Button
@@ -494,7 +453,10 @@ const VidstackPlayer = (props: VidstackPlayerProps) => {
             Skip Ending
           </Button>
         )}
-        <DefaultVideoLayout icons={defaultLayoutIcons} />
+        <DefaultVideoLayout
+          thumbnails={thumbnails ?? ""}
+          icons={defaultLayoutIcons}
+        />
       </MediaPlayer>
     </>
   )

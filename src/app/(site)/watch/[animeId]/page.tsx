@@ -4,6 +4,7 @@ import type { IAnilistInfo } from "types/types"
 import { getCurrentUser } from "@/lib/current-user"
 import VideoPlayer from "@/components/player/vidstack"
 import { Suspense } from "react"
+import { notFound } from "next/navigation"
 
 type Params = {
   params: {
@@ -67,7 +68,9 @@ export default async function Watch({ params, searchParams }: Params) {
   const animeResponse = (await animeInfo(animeId)) as IAnilistInfo
   const currentUser = await getCurrentUser()
 
-  const ep = searchParams.ep
+  // const ep = searchParams.ep
+
+  if (!animeResponse || !animeId) notFound()
 
   // console.log(ep)
 

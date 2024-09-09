@@ -6,12 +6,14 @@ import { IAdvancedInfo } from "types/types"
 import NextImage from "@/components/ui/image"
 import Link from "next/link"
 import { transformedTitle } from "@/lib/utils"
+import { cn } from "@/lib/utils"
 
 type CardRowProps = {
   results: IAdvancedInfo
+  isNextSeason?: boolean
 }
 
-const CardRow = ({ results }: CardRowProps) => {
+const CardRow = ({ results, isNextSeason = false }: CardRowProps) => {
   return (
     <>
       <div className="relative mb-2 w-full overflow-hidden rounded-md pb-[140%]">
@@ -36,7 +38,12 @@ const CardRow = ({ results }: CardRowProps) => {
         <div className="absolute bottom-0 z-30 h-1/4 w-full bg-gradient-to-t from-background/80 from-25% to-transparent transition-all duration-300 ease-out group-hover:to-background/40"></div>
       </div>
       <div className="grid grid-cols-[15px_1fr] items-start">
-        <div className="mr-2 mt-1 h-2 w-2 rounded-full bg-green-500"></div>
+        <div
+          className={cn(
+            "mr-2 mt-1 h-2 w-2 rounded-full",
+            !isNextSeason ? "bg-green-600" : "bg-red-600"
+          )}
+        ></div>
         <h3
           title={results.title.english ?? results.title.romaji}
           className="line-clamp-2  text-left text-xs font-medium leading-5 md:text-sm"

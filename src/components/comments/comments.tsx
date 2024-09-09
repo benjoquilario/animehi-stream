@@ -47,7 +47,7 @@ export default function Comments({
   console.log(comments)
 
   return (
-    <div className="mt-2 rounded-lg">
+    <div className="mt-2 rounded-lg px-[2%] lg:px-0">
       {isPending ? (
         <div className="relative flex items-center justify-center">
           <div className="loader"></div>

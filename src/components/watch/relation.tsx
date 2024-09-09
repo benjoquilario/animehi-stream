@@ -17,7 +17,7 @@ const RelationWatch = ({ relations }: { relations: IRelationItem[] }) => {
   if (sequels.length === 0 && prequels.length === 0) return <></>
 
   return (
-    <div className="my-4 rounded-md">
+    <div className="my-4 rounded-md px-[2%] lg:px-0">
       <div className="text-sm uppercase md:text-lg">seasons</div>
 
       <div className="mt-4 flex flex-col flex-wrap justify-center gap-2 bg-secondary p-4 md:flex-row">

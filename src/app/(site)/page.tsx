@@ -11,7 +11,8 @@ import Section from "@/components/section"
 // export const revalidate = 60 * 60 * 3
 import NextImage from "@/components/ui/image"
 import Row from "@/components/row/content"
-import RowContent from "@/components/row/row-content"
+import RowContent, { RowUpComing } from "@/components/row/row-content"
+import RowSkeleton from "@/components/row/skeleton-row"
 
 export default async function Home() {
   const session = await auth()
@@ -19,7 +20,22 @@ export default async function Home() {
   return (
     <>
       <section>
-        <Banner />
+        <Suspense
+          fallback={
+            <div className="relative h-[350px] w-full animate-pulse bg-background px-[2%] md:h-[500px]">
+              <div className="absolute bottom-[50px] top-auto z-[100] w-full max-w-[800px] space-y-3 md:bottom-[109px]">
+                <Skeleton className="h-[28px] w-[344px] md:h-[52px] md:w-[512px]" />
+                <Skeleton className="h-[42px] w-[344px] md:h-[58px] md:w-[512px]" />
+                <div className="flex items-center space-x-3">
+                  <Skeleton className="h-[40px] w-[114px]" />
+                  <Skeleton className="h-[40px] w-[114px]" />
+                </div>
+              </div>
+            </div>
+          }
+        >
+          <Banner />
+        </Suspense>
       </section>
       <section className="w-full">
         <div className="flex flex-col md:space-x-4">
@@ -34,12 +50,29 @@ export default async function Home() {
               </>
             ) : null}
 
-            {/* <div className="mt-4 flex flex-col items-start rounded-md py-2">
-              <p className="mb-2 pl-3 text-xs text-muted-foreground/90">
-                Please help us by sharing the site to your friends
-              </p>
-              <Sharethis />
-            </div> */}
+            <Suspense
+              fallback={
+                <div className="flex flex-col gap-2">
+                  <RowSkeleton />
+                  <RowSkeleton />
+                  <RowSkeleton />
+                  <RowSkeleton />
+                </div>
+              }
+            >
+              <RowContent />
+            </Suspense>
+            {/* <Seasonal /> */}
+            <div className="flex flex-col px-[2%] md:space-x-4 xl:flex-row">
+              <RecentEpisodes />
+              {/* <RecentEpisodes recentEpisodes={recentResponse?.results} /> */}
+              <div className="flex flex-row sm:flex-col xl:flex-col">
+                <Suspense fallback={<SeasonalSkeleton />}>
+                  <MostView />
+                </Suspense>
+                {/* <Popular popularResults={popularResults?.results} /> */}
+              </div>
+            </div>
             <Section sectionName="newest-comments" className="relative px-[2%]">
               <div className="flex pt-4">
                 <div className="relative hidden h-[280px] w-[280px] shrink-0 md:block">
@@ -70,19 +103,15 @@ export default async function Home() {
                 </Suspense>
               </div>
             </Section>
-
-            <RowContent />
-            {/* <Seasonal /> */}
-            <div className="flex flex-col px-[2%] md:space-x-4 xl:flex-row">
-              <RecentEpisodes />
-              {/* <RecentEpisodes recentEpisodes={recentResponse?.results} /> */}
-              <div className="flex flex-row sm:flex-col xl:flex-col">
-                <Suspense fallback={<SeasonalSkeleton />}>
-                  <MostView />
-                </Suspense>
-                {/* <Popular popularResults={popularResults?.results} /> */}
-              </div>
-            </div>
+            <Suspense
+              fallback={
+                <div>
+                  <RowSkeleton />
+                </div>
+              }
+            >
+              <RowUpComing />
+            </Suspense>
           </div>
         </div>
       </section>

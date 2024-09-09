@@ -245,7 +245,7 @@ const VideoPlayer = (props: VideoPlayerProps) => {
       />
 
       <RelationWatch relations={animeResponse.relations} />
-      <div className="mt-4">
+      <div className="mt-4 px-[2%] lg:px-0">
         <h3 className="flex w-full items-center pt-2.5 text-left text-sm font-semibold md:text-base">
           <div className="mr-2 h-6 w-2 rounded-md bg-primary md:h-8"></div>
           Comments

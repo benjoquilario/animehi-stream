@@ -1,160 +1,137 @@
 import "server-only"
 
 import { cache } from "react"
-import { redis } from "./redis"
 import { getSeason } from "./utils"
 import { env } from "@/env.mjs"
 
 const animeApi = env.ANIME_API_URI
-const publicUrl = env.NEXT_PUBLIC_APP_URL
 
-export async function popularThisSeason() {
-  const currentSeason = getSeason()
-  const url = `${process.env.ANIME_API_URI}/meta/anilist/advanced-search?type=ANIME&page=1&perPage=5&season=${currentSeason.season}&format=TV&year=${currentSeason.year}&sort=["POPULARITY_DESC","SCORE_DESC"]`
+interface FetchOptions {
+  type?: string
+  season?: string
+  format?: string
+  sort?: string[]
+  genres?: string[]
+  id?: string
+  year?: string
+  status?: string
+}
 
-  const response = await fetch(url)
+async function fetchFromProxy(url: string) {
+  try {
+    const response = await fetch(url, { next: { revalidate: 21600 } })
 
-  if (!response.ok) {
-    return {
-      results: [],
-      ok: false,
-      message: "Trending Anime Not Found",
+    if (response.status !== 200) {
+      const errorMessage = response.statusText || "Unknown server error"
+      throw new Error(
+        `Server error: ${
+          response.statusText || response.status
+        } ${errorMessage}`
+      )
     }
-  }
 
-  const data = await response.json()
-  return {
-    results: data.results,
-    ok: true,
-    message: "Success",
+    const data = await response.json()
+
+    return data
+  } catch (error) {
+    throw error
   }
 }
 
-export async function popularAnime() {
-  const url = `${animeApi}/meta/anilist/advanced-search?type=ANIME&page=1&perPage=5&format=TV&sort=["POPULARITY_DESC","SCORE_DESC"]`
+async function fetchList(
+  type: string,
+  page: number = 1,
+  perPage: number = 16,
+  options: FetchOptions = {}
+) {
+  let url: string
+  const params = new URLSearchParams({
+    page: page.toString(),
+    perPage: perPage.toString(),
+  })
+  const { year, season } = getSeason()
 
-  const cachedResponse = await redis.get("popular")
+  if (
+    [
+      "TopRated",
+      "Trending",
+      "PopularThisSeason",
+      "TopAiring",
+      "Upcoming",
+      "MostPopular",
+      "MostFavorite",
+    ].includes(type)
+  ) {
+    url = `${animeApi}/meta/anilist/${type.toLowerCase()}`
 
-  if (cachedResponse) {
-    return {
-      results: cachedResponse,
-      ok: true,
-      message: "Success",
-    }
-  }
-
-  const response = await fetch(url)
-
-  if (!response.ok) {
-    return {
-      results: [],
-      ok: false,
-      message: "Trending Anime Not Found",
-    }
-  }
-
-  const data = await response.json()
-  return {
-    results: data.results,
-    ok: true,
-    message: "Success",
-  }
-}
-
-export async function mostfavoriteAnime() {
-  const cachedResponse = await redis.get("favorite")
-
-  if (cachedResponse) {
-    return {
-      results: cachedResponse,
-      ok: true,
-      message: "Success",
-    }
-  }
-
-  const url = `${env.ANIME_API_URI}/meta/anilist/advanced-search?type=ANIME&page=1&perPage=5&format=TV&sort=["FAVOURITES_DESC", "SCORE_DESC"]`
-
-  const response = await fetch(url)
-  if (!response.ok) {
-    return {
-      results: [],
-      ok: false,
-      message: "Trending Anime Not Found",
-    }
-  }
-
-  const data = await response.json()
-  return {
-    results: data.results,
-    ok: true,
-    message: "Success",
-  }
-}
-
-export async function topAiring() {
-  const currentSeason = getSeason()
-  const url = `${animeApi}/meta/anilist/advanced-search?type=ANIME&page=1&perPage=5&season=${currentSeason.season}&year=${currentSeason.year}&format=TV&sort=["SCORE_DESC"]`
-
-  const response = await fetch(url)
-
-  if (!response.ok) {
-    const cachedResponse = await redis.get("popular")
-
-    if (cachedResponse) {
-      return {
-        results: cachedResponse,
-        ok: true,
-        message: "Success",
+    if (type === "TopRated") {
+      options = {
+        type: "ANIME",
+        sort: ['["SCORE_DESC"]'],
       }
-    }
-
-    return {
-      results: [],
-      ok: false,
-      message: "Trending Anime Not Found",
-    }
-  }
-
-  const data = await response.json()
-
-  return {
-    results: data.results,
-    ok: true,
-    message: "Success",
-  }
-}
-
-export async function trendingAnime() {
-  const currentSeason = getSeason()
-  const url = `${animeApi}/meta/anilist/advanced-search?type=ANIME&page=1&perPage=10&season=${currentSeason.season}&format=TV&sort=["TRENDING_DESC","SCORE_DESC"]`
-
-  const response = await fetch(url)
-
-  if (!response.ok) {
-    const cachedResponse = await redis.get("trending")
-
-    if (cachedResponse) {
-      return {
-        results: cachedResponse,
-        ok: true,
-        message: "Success",
+      url = `${animeApi}/meta/anilist/advanced-search?type=${options.type}&sort=${options.sort}&`
+    } else if (type === "PopularThisSeason") {
+      options = {
+        season: season,
+        year: year.toString(),
+        type: "ANIME",
+        sort: ['["POPULARITY_DESC", "SCORE_DESC"]'],
       }
+      url = `${animeApi}/meta/anilist/advanced-search?type=${options.type}&sort=${options.sort}&season=${options.season}&year=${options.year}&`
+    } else if (type === "Upcoming") {
+      options = {
+        type: "ANIME",
+        season: season,
+        year: year.toString(),
+        status: "NOT_YET_RELEASED",
+        sort: ['["POPULARITY_DESC"]'],
+      }
+      url = `${animeApi}/meta/anilist/advanced-search?type=${options.type}&status=${options.status}&sort=${options.sort}&season=${options.season}&year=${options.year}&`
+    } else if (type === "TopAiring") {
+      options = {
+        type: "ANIME",
+        season: season,
+        year: year.toString(),
+        status: "RELEASING",
+        sort: ['["POPULARITY_DESC"]'],
+      }
+      url = `${animeApi}/meta/anilist/advanced-search?type=${options.type}&status=${options.status}&sort=${options.sort}&season=${options.season}&year=${options.year}&`
+    } else if (type === "MostPopular") {
+      options = {
+        type: "ANIME",
+        sort: ['["POPULARITY_DESC","SCORE_DESC"]'],
+        format: "TV",
+      }
+      url = `${animeApi}/meta/anilist/advanced-search?type=${options.type}&sort=${options.sort}&format=${options.format}&`
+    } else if (type === "MostFavorite") {
+      options = {
+        type: "ANIME",
+        sort: ['["FAVOURITES_DESC", "SCORE_DESC"]'],
+        format: "TV",
+      }
+      url = `${animeApi}/meta/anilist/advanced-search?type=${options.type}&sort=${options.sort}&format=${options.format}&`
     }
-
-    return {
-      results: [],
-      ok: false,
-      message: "Trending Anime Not Found",
-    }
+  } else {
+    url = `${animeApi}/meta/anilist/${type.toLowerCase()}`
   }
 
-  const data = await response.json()
-  return {
-    results: data.results,
-    ok: true,
-    message: "Success",
-  }
+  return fetchFromProxy(`${url}?${params.toString()}`)
 }
+
+export const fetchTopAnime = (page: number, perPage: number) =>
+  fetchList("TopRated", page, perPage)
+export const fetchTrendingAnime = (page: number, perPage: number) =>
+  fetchList("Trending", page, perPage)
+export const fetchPopularAnime = (page: number, perPage: number) =>
+  fetchList("PopularThisSeason", page, perPage)
+export const fetchMostPopularAnime = (page: number, perPage: number) =>
+  fetchList("MostPopular", page, perPage)
+export const fetchMostFavoriteAnime = (page: number, perPage: number) =>
+  fetchList("MostFavorite", page, perPage)
+export const fetchTopAiringAnime = (page: number, perPage: number) =>
+  fetchList("TopAiring", page, perPage)
+export const fetchUpcomingSeasons = (page: number, perPage: number) =>
+  fetchList("Upcoming", page, perPage)
 
 export async function watch(episodeId: string) {
   const response = await fetch(
@@ -190,5 +167,3 @@ export const animeInfo = cache(async function (
 
   return data
 })
-
-const LIMIT = 20

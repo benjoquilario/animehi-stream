@@ -192,10 +192,10 @@ export default function Anime({
               <span className="text-sm text-muted-foreground/70">
                 {animeInfo?.season} {animeInfo?.startDate.year}
               </span>
-              <h1 className="text-2xl font-semibold md:text-3xl">
+              <h1 className="text-center text-2xl font-semibold md:text-3xl">
                 {animeInfo?.title.english ?? animeInfo?.title.romaji}
               </h1>
-              <h4 className="text-sm text-muted-foreground/80">
+              <h4 className="text-center text-sm text-muted-foreground/80">
                 {animeInfo?.title.romaji}
               </h4>
               <div className="flex items-center gap-4">

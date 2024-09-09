@@ -9,7 +9,7 @@ export default async function MostView() {
   const mostViewAnime = await mostView()
 
   return (
-    <div className="w-full pt-5 xl:w-80 xl:pt-0">
+    <div className="w-full pt-5 xl:w-80 xl:pt-6">
       <div className="block w-full">
         <h3 className="mb-2 flex pr-4 text-sm font-medium uppercase md:text-lg">
           <div className="mr-2 h-6 w-2 rounded-md bg-primary md:h-8"></div>

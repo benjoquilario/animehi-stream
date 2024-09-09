@@ -78,7 +78,7 @@ export default function Episodes({
   }, [episodes, interval, isLoading, query, filteredEpisode])
 
   return (
-    <div className="mt-4">
+    <div className="mt-4 px-[2%] lg:px-0">
       {isLoading ? (
         <div className="mt-4 flex items-center gap-2">
           <FaSpinner className="animate-spin" />
