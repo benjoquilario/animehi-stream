@@ -5,8 +5,8 @@ const siteConfi = {
 }
 
 export const animeApi = ""
-export const anyOption: Option = { value: "", label: "Any" }
-export const yearOptions: Option[] = [
+export const anyOption = { value: "", label: "Any" }
+export const yearOptions = [
   {
     value: String(getSeason().year + 1),
     label: String(getSeason().year + 1),
@@ -17,7 +17,7 @@ export const yearOptions: Option[] = [
   })),
 ]
 
-export const genreOptions: Option[] = [
+export const genreOptions = [
   { value: "Action", label: "Action" },
   { value: "Adventure", label: "Adventure" },
   { value: "Comedy", label: "Comedy" },
@@ -37,14 +37,14 @@ export const genreOptions: Option[] = [
   { value: "Thriller", label: "Thriller" },
 ]
 
-export const seasonOptions: Option[] = [
+export const seasonOptions = [
   { value: "WINTER", label: "Winter" },
   { value: "SPRING", label: "Spring" },
   { value: "SUMMER", label: "Summer" },
   { value: "FALL", label: "Fall" },
 ]
 
-export const formatOptions: Option[] = [
+export const formatOptions = [
   { value: "TV", label: "TV" },
   { value: "TV_SHORT", label: "TV Short" },
   { value: "OVA", label: "OVA" },
@@ -54,14 +54,14 @@ export const formatOptions: Option[] = [
   { value: "MUSIC", label: "Music" },
 ]
 
-export const statusOptions: Option[] = [
+export const statusOptions = [
   { value: "RELEASING", label: "Airing" },
   { value: "NOT_YET_RELEASED", label: "Not Yet Aired" },
   { value: "FINISHED", label: "Finished" },
   { value: "CANCELLED", label: "Cancelled" },
 ]
 
-export const sortOptions: Option[] = [
+export const sortOptions = [
   { value: "POPULARITY_DESC", label: "Popularity" },
   { value: "TRENDING_DESC", label: "Trending" },
   { value: "SCORE_DESC", label: "Rating" },
