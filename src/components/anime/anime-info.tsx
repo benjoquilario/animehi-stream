@@ -57,14 +57,9 @@ export default function Anime({
               episodes: data,
             }))
           } else {
-            const data = (await fetchAnimeEpisodesFallback(animeId)) as {
-              providerId: "shash" | "roro"
-              episodes: {
-                id: string
-                title: string
-                number: number
-              }[]
-            }[]
+            const data = (await fetchAnimeEpisodesFallback(
+              animeId
+            )) as IEpisodesFallback[]
             const eps = data.find((ep) => ep.providerId === "shash")
 
             if (eps) {

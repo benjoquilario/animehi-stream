@@ -176,9 +176,9 @@ const VideoPlayer = (props: VideoPlayerProps) => {
   const latestEpisodeNumber = useMemo(
     () =>
       episodesList?.length !== 0
-        ? episodesList?.length ??
+        ? (episodesList?.length ??
           animeResponse.currentEpisode ??
-          animeResponse.nextAiringEpisode.episode - 1
+          animeResponse.nextAiringEpisode.episode - 1)
         : 1,
     [animeResponse, episodesList]
   )
