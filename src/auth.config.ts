@@ -1,6 +1,5 @@
 import type { NextAuthConfig } from "next-auth"
 import { env } from "./env.mjs"
-import User from "./app/(site)/user/page"
 
 export const authConfig = {
   session: {

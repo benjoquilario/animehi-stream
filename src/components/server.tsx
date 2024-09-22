@@ -148,8 +148,6 @@ export default function Server({
           {children}
           <BookmarkForm
             animeId={anilistId}
-            userId={currentUser?.id}
-            bookmarks={currentUser?.bookMarks}
             animeResult={animeResult}
             checkBookmarkExist={checkBookmarkExist}
             anilistId={anilistId}

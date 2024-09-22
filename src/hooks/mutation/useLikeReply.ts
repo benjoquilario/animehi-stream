@@ -27,7 +27,7 @@ export function useLikeReplyCommentMutation({
 
   const likeReplyCommentMutation = useMutation({
     mutationFn: async () => {
-      const response = await likeReplyComment({ replyId, content })
+      const response = await likeReplyComment({ replyId })
 
       if (!response?.ok) {
         if (response?.status === 409) return
