@@ -1,4 +1,4 @@
-import { Source, SourcesResponse } from "types/types"
+import { Source } from "types/types"
 import { create } from "zustand"
 import { persist } from "zustand/middleware"
 
@@ -73,7 +73,7 @@ export const useWatchStore = create<WatchInitialStore>((set) => ({
     selectedBackgroundImage: string,
     vttUrl: string
   ) =>
-    set((state) => {
+    set(() => {
       const currentSource = sources.find(
         (source) => source.quality === "default"
       )
@@ -97,7 +97,7 @@ interface IAutoNext {
 
 export const useAutoNext = create(
   persist<IAutoNext>(
-    (set, get) => ({
+    (set, _) => ({
       autoNext: false,
       setAutoNext: (autoNext: boolean) => set({ autoNext }),
     }),
@@ -114,7 +114,7 @@ interface IAutoPlay {
 
 export const useAutoPlay = create(
   persist<IAutoPlay>(
-    (set, get) => ({
+    (set, _) => ({
       autoPlay: false,
       setAutoPlay: (autoPlay: boolean) => set({ autoPlay }),
     }),
@@ -131,7 +131,7 @@ interface IAutoSkip {
 
 export const useAutoSkip = create(
   persist<IAutoSkip>(
-    (set, get) => ({
+    (set, _) => ({
       autoSkip: false,
       setAutoSkip: (autoSkip: boolean) => set({ autoSkip }),
     }),

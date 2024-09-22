@@ -13,8 +13,6 @@ import { useRouter } from "next/navigation"
 
 type BookmarkFormProps = {
   animeResult?: IAnilistInfo
-  bookmarks?: BookmarkT[]
-  userId?: string
   checkBookmarkExist?: boolean
   anilistId: string
   animeId: string
@@ -22,8 +20,6 @@ type BookmarkFormProps = {
 
 const BookmarkForm = ({
   animeResult,
-  bookmarks,
-  userId,
   animeId,
   checkBookmarkExist,
   anilistId,

@@ -2,13 +2,7 @@
 import db from "@/lib/db"
 import { auth } from "@/auth"
 
-export const likeReplyComment = async ({
-  replyId,
-  content,
-}: {
-  replyId: string
-  content: string
-}) => {
+export const likeReplyComment = async ({ replyId }: { replyId: string }) => {
   const session = await auth()
   const userId = session?.user.id
 

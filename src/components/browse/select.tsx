@@ -1,7 +1,7 @@
 "use client"
 //github.com/Miruro-no-kuon/Miruro/blob/main/src/components/Navigation/SearchFilters.tsx
 
-import React, { useState, useEffect } from "react"
+import React from "react"
 import {
   Select,
   SelectContent,
@@ -11,9 +11,14 @@ import {
 } from "@/components/ui/select"
 import { cn } from "@/lib/utils"
 
+type Options = {
+  value: string
+  label: string
+}
+
 type SelectFilterProps = {
   label: string
-  options?: Option[]
+  options?: Options[]
   onChange?: (value: any) => void
   value?: any
   isMulti?: boolean

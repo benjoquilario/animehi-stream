@@ -1,10 +1,9 @@
 "use client"
 
 import React from "react"
-import Link from "next/link"
 import NextImage from "@/components/ui/image"
 import { FaClosedCaptioning } from "react-icons/fa"
-import { IAdvancedInfo, Seasonal } from "types/types"
+import { IAdvancedInfo } from "types/types"
 
 type ColumnCardProps = {
   result: IAdvancedInfo

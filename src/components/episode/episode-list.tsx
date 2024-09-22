@@ -2,7 +2,6 @@
 
 import type { Episode } from "types/types"
 import { memo } from "react"
-import Link from "next/link"
 import { Button, buttonVariants } from "../ui/button"
 import { cn } from "@/lib/utils"
 import { useRouter } from "next/navigation"

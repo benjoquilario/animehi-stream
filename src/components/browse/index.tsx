@@ -9,39 +9,30 @@ import {
   sortOptions,
   statusOptions,
   yearOptions,
-  genreOptions,
 } from "@/config/site"
-import { getSeason, transformedTitle } from "@/lib/utils"
+import { transformedTitle } from "@/lib/utils"
 import { Input } from "@/components/ui/input"
-import { env } from "@/env.mjs"
 import { IAdvancedInfo } from "types/types"
 import { InView } from "react-intersection-observer"
 import NextImage from "@/components/ui/image"
 import Link from "next/link"
 import { Skeleton } from "@/components/ui/skeleton"
 import { fetchAdvanceSearch } from "@/lib/client"
-import {
-  MultiSelector,
-  MultiSelectorContent,
-  MultiSelectorInput,
-  MultiSelectorItem,
-  MultiSelectorList,
-  MultiSelectorTrigger,
-} from "@/components/ui/multi-select"
+
 import { useDebounce } from "@/hooks/useDebounce"
 
 const Browse = () => {
   const searchParams = useSearchParams()
   const pathname = usePathname()
   const router = useRouter()
-  const currentSeason = getSeason()
+  // const currentSeason = getSeason()
   const [page, setPage] = useState(1)
   const [isLoading, setIsLoading] = useState(false)
 
-  const genresParam = searchParams.get("genres")
-  const initialGenres = genresParam
-    ? genresParam.split(",").map((value) => ({ value, label: value }))
-    : []
+  // const genresParam = searchParams.get("genres")
+  // const initialGenres = genresParam
+  //   ? genresParam.split(",").map((value) => ({ value, label: value }))
+  //   : []
 
   const filters = {
     query: searchParams.get("query") || "",

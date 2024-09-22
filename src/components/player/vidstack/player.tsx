@@ -10,21 +10,12 @@ import {
   MediaProvider,
   Poster,
   Track,
-  Captions,
   TextTrack,
-  useMediaRemote,
-  useMediaStore,
-  Spinner,
   type MediaProviderAdapter,
   type MediaProviderChangeEvent,
   type MediaPlayerInstance,
 } from "@vidstack/react"
-import type {
-  IAnilistInfo,
-  IEpisode,
-  Source,
-  SourcesResponse,
-} from "types/types"
+import type { IAnilistInfo, IEpisode, Source } from "types/types"
 import {
   increment,
   createViewCounter,
@@ -41,16 +32,10 @@ import {
   DefaultVideoLayout,
 } from "@vidstack/react/player/layouts/default"
 import { Button } from "@/components/ui/button"
-import {
-  fetchAnimeInfoFallback,
-  fetchAnimeStreamingLinks,
-  fetchSkipTimes,
-  fetchAnimeStreamingLinksFallback,
-} from "@/lib/cache"
+import { fetchSkipTimes } from "@/lib/cache"
 import { useWatchStore } from "@/store"
 import { AniSkipResult, AniSkip } from "types/types"
 import useVideoSource from "@/hooks/useVideoSource"
-import { AspectRatio } from "@/components/ui/aspect-ratio"
 
 type VidstackPlayerProps = {
   episodeNumber: number
@@ -83,31 +68,22 @@ const VidstackPlayer = (props: VidstackPlayerProps) => {
   const { data: session } = useSession()
   const router = useRouter()
   const player = useRef<MediaPlayerInstance>(null)
-  const remote = useMediaRemote(player)
   // const { duration } = useMediaStore(player)
   const animeVideoTitle = title
   const posterImage = banner
-  const [src, setSrc] = useState<string>("")
   const setDownload = useWatchStore((store) => store.setDownload)
-  const [vttUrl, setVttUrl] = useState<string>("")
   const [skipTimes, setSkipTimes] = useState<AniSkipResult[]>([])
-  const [vttGenerated, setVttGenerated] = useState<boolean>(false)
   const [totalDuration, setTotalDuration] = useState<number>(0)
   const [currentTime, setCurrentTime] = useState<number>(0)
-  const [textTracks, setTextTracks] = useState<ITracks[]>([])
-  const [playerState, setPlayerState] = useState({
-    currentTime: 0,
-    isPlaying: false,
-  })
+
   const url = useWatchStore((store) => store.url)
 
   const [setUrl, resetUrl] = useWatchStore((store) => [
     store.setUrl,
     store.resetUrl,
   ])
-  const [skipTimesLoading, setSkiptimeLoading] = useState(true)
 
-  const { data, isError, isLoading } = useVideoSource(episodeId, provider)
+  const { data, isLoading } = useVideoSource(episodeId, provider)
 
   const sources = useMemo(
     () =>
@@ -133,10 +109,6 @@ const VidstackPlayer = (props: VidstackPlayerProps) => {
   const [otButton, setEdButton] = useState(false)
   const [isPlaying, setIsPlaying] = useState(false)
   let intervalId: NodeJS.Timeout
-
-  useEffect(() => {
-    return player.current?.subscribe(({ currentTime, duration }) => {})
-  }, [skipTimes, episodeId])
 
   useEffect(() => {
     const updateViews = async function () {
@@ -196,14 +168,6 @@ const VidstackPlayer = (props: VidstackPlayerProps) => {
     }
   }, [currentTime])
 
-  useEffect(() => {
-    if (autoPlay && player.current) {
-      player.current
-        .play()
-        .catch((e) => console.log("Playback failed to start automatically:", e))
-    }
-  }, [autoPlay, src])
-
   function onProviderChange(
     provider: MediaProviderAdapter | null,
     _nativeEvent: MediaProviderChangeEvent
@@ -224,7 +188,7 @@ const VidstackPlayer = (props: VidstackPlayerProps) => {
       const currentTime = player.current.currentTime
       const duration = player.current.duration || 1
       const playbackPercentage = (currentTime / duration) * 100
-      const playbackInfo = {
+      const _ = {
         currentTime,
         playbackPercentage,
       }
@@ -275,10 +239,6 @@ const VidstackPlayer = (props: VidstackPlayerProps) => {
     setCurrentTime(parseFloat(localStorage.getItem("currentTime") || "0"))
     setDownload(data?.download)
 
-    if (provider === "zoro" && data?.tracks) {
-      setTextTracks(data?.tracks)
-    }
-
     async function fetchProcessAndSkipTimes() {
       if (!malId) return
 
@@ -296,12 +256,6 @@ const VidstackPlayer = (props: VidstackPlayerProps) => {
 
     // fetchAndSetAnimeSource()
     fetchProcessAndSkipTimes()
-    return () => {
-      setPlayerState({
-        currentTime: 0,
-        isPlaying: false,
-      })
-    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [episodeId, malId])
 

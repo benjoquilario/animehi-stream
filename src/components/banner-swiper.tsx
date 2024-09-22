@@ -3,24 +3,19 @@
 /* eslint-disable @next/next/no-img-element */
 
 import styles from "./banner.module.css"
-import { Button, buttonVariants } from "./ui/button"
+import { buttonVariants } from "./ui/button"
 import { BsFillPlayFill } from "react-icons/bs"
 import Link from "next/link"
 import { cn } from "@/lib/utils"
 import { stripHtml, transformedTitle } from "@/lib/utils"
 import { IAdvancedInfo } from "types/types"
-import { IoAlertCircleOutline } from "react-icons/io5"
 import React from "react"
-import { FaFire, FaCalendar } from "react-icons/fa"
 import Autoplay from "embla-carousel-autoplay"
 import {
   Carousel,
   CarouselContent,
   CarouselItem,
-  CarouselNext,
-  CarouselPrevious,
 } from "@/components/ui/carousel"
-import { AspectRatio } from "./ui/aspect-ratio"
 
 type BannerSwiperProps = {
   trendingAnime: IAdvancedInfo[]

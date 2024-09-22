@@ -1,7 +1,6 @@
 "use client"
 
-import React, { useRef, useState, useTransition, useMemo } from "react"
-import { usePathname } from "next/navigation"
+import React, { useRef, useMemo } from "react"
 import * as z from "zod"
 import { Textarea } from "../ui/textarea"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"

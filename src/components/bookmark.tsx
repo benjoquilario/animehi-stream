@@ -1,6 +1,6 @@
 "use client"
 
-import { useMemo, useState } from "react"
+import { useMemo } from "react"
 import type { AnimeInfoResponse } from "types/types"
 import { BsCheckCircleFill } from "react-icons/bs"
 

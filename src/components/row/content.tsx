@@ -1,6 +1,6 @@
 "use client"
 
-import React, { useEffect, useState } from "react"
+import React from "react"
 import {
   Carousel,
   CarouselContent,
@@ -8,11 +8,9 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from "@/components/ui/carousel"
-import { ConsumetResponse, IAdvancedInfo } from "types/types"
-import { fetchTrendingAnime } from "@/lib/cache"
+import { IAdvancedInfo } from "types/types"
 // import EpisodeCard from "../episode-card"
 import CardRow from "./card-row"
-import { FaChevronRight, FaChevronLeft } from "react-icons/fa"
 import Link from "next/link"
 import { FaArrowRightLong } from "react-icons/fa6"
 

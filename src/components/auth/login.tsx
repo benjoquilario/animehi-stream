@@ -17,7 +17,7 @@ import {
 } from "@/lib/validations/credentials"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { useTransition, useEffect, useState } from "react"
+import { useTransition, useState } from "react"
 import { Button } from "@/components/ui/button"
 import { DialogFooter } from "@/components/ui/dialog"
 import { useAuthStore } from "@/store"

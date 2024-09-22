@@ -13,15 +13,7 @@ import {
   DropdownMenuShortcut,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog"
-import Login from "./auth/login"
-import Register from "./auth/register"
+import { Dialog, DialogContent } from "@/components/ui/dialog"
 import { useAuthStore } from "@/store"
 
 import Link from "next/link"

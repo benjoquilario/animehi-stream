@@ -7,11 +7,9 @@ import { FaClosedCaptioning } from "react-icons/fa"
 
 type MostViewCardProps = {
   result: ViewCounter
-  className?: string
-  rank: number
 }
 
-const MostViewCard = ({ result, className, rank }: MostViewCardProps) => {
+const MostViewCard = ({ result }: MostViewCardProps) => {
   return (
     <>
       <div>

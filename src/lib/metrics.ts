@@ -3,7 +3,6 @@ import "server-only"
 import { cache } from "react"
 import { auth } from "@/auth"
 import db from "./db"
-import { redis } from "./redis"
 
 export const continueWatching = cache(async () => {
   const session = await auth()

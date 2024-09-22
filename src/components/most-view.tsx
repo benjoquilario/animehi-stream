@@ -18,7 +18,7 @@ export default async function MostView() {
         <ClientOnly>
           <div className="bg-background">
             <ul className="">
-              {mostViewAnime.map((mostView, index) => (
+              {mostViewAnime.map((mostView) => (
                 <li
                   key={mostView?.id}
                   className="relative flex w-full items-center justify-between border-b bg-background py-4"
@@ -28,7 +28,7 @@ export default async function MostView() {
                     aria-label={mostView.title}
                     className="relation group flex h-full w-full items-center justify-between rounded-md bg-background transition-all hover:scale-[1.03]"
                   >
-                    <MostViewCard result={mostView} rank={index + 1} />
+                    <MostViewCard result={mostView} />
                   </Link>
                 </li>
               ))}

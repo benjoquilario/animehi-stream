@@ -1,14 +1,12 @@
 "use client"
 
-import React, { useState } from "react"
-import { Swiper, SwiperSlide } from "swiper/react"
+import React from "react"
 
 // Import Swiper styles
 import "swiper/css"
 import "swiper/css/pagination"
 
 // import required modules
-import { Pagination } from "swiper/modules"
 import type { Watchlist } from "@prisma/client"
 import NextImage from "./ui/image"
 import Link from "next/link"

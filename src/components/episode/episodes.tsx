@@ -4,12 +4,11 @@ import { cn } from "@/lib/utils"
 import Link from "next/link"
 import { AiOutlineSearch } from "react-icons/ai"
 import { Input } from "../ui/input"
-import type { IEpisode, IMetadata } from "types/types"
+import type { IEpisode } from "types/types"
 import { Button } from "../ui/button"
 import { FaSpinner } from "react-icons/fa"
 import { FaCirclePlay } from "react-icons/fa6"
 import { useCallback, useMemo, useState } from "react"
-import { usePathname, useSearchParams } from "next/navigation"
 
 type EpisodesProps = {
   animeId: string

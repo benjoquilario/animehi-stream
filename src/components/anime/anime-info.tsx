@@ -57,9 +57,14 @@ export default function Anime({
               episodes: data,
             }))
           } else {
-            const data = (await fetchAnimeEpisodesFallback(
-              animeId
-            )) as IEpisodesFallback[]
+            const data = (await fetchAnimeEpisodesFallback(animeId)) as {
+              providerId: "shash" | "roro"
+              episodes: {
+                id: string
+                title: string
+                number: number
+              }[]
+            }[]
             const eps = data.find((ep) => ep.providerId === "shash")
 
             if (eps) {
@@ -423,17 +428,17 @@ function CharactersItem({ character }: CharactersItemProps) {
               classnamecontainer="w-12 h-12 relative rounded-full"
               src={
                 character.voiceActors.length !== 0
-                  ? character.voiceActors?.[0].image ??
+                  ? (character.voiceActors?.[0].image ??
                     "./placeholder.png" ??
-                    ""
+                    "")
                   : "/placeholder.png"
               }
               alt={
                 character.voiceActors.length !== 0
-                  ? character.voiceActors?.[0].name.userPreferred ??
+                  ? (character.voiceActors?.[0].name.userPreferred ??
                     `${character.voiceActors?.[0].name.first} ${character.voiceActors?.[0].name.last}` ??
                     character.voiceActors?.[0].name.full ??
-                    "No Name"
+                    "No Name")
                   : ""
               }
               fill
@@ -443,10 +448,10 @@ function CharactersItem({ character }: CharactersItemProps) {
             <div className="flex flex-col items-end gap-2">
               <h4 className="text-sm md:text-base">
                 {character.voiceActors.length !== 0
-                  ? character.voiceActors?.[0].name.userPreferred ??
+                  ? (character.voiceActors?.[0].name.userPreferred ??
                     `${character.voiceActors?.[0].name.first} ${character.voiceActors?.[0].name.last}` ??
                     character.voiceActors?.[0].name.full ??
-                    "No Name"
+                    "No Name")
                   : "No Name"}
               </h4>
               <span className="sr-only text-sm text-muted-foreground/80">
