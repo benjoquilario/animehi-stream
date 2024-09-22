@@ -188,7 +188,7 @@ const VidstackPlayer = (props: VidstackPlayerProps) => {
     return () => {
       clearInterval(intervalId)
     }
-  }, [session, isPlaying])
+  }, [session, isPlaying, totalDuration])
 
   useEffect(() => {
     if (player.current && currentTime) {
@@ -367,11 +367,17 @@ const VidstackPlayer = (props: VidstackPlayerProps) => {
     }
   }, [isLoading, resetUrl, setUrl, sources])
 
-  const handlePlay = () => setIsPlaying(true)
+  const handlePlay = function () {
+    setIsPlaying(true)
+  }
 
-  const handlePause = () => setIsPlaying(false)
+  const handlePause = function () {
+    setIsPlaying(false)
+  }
 
-  const handleEnd = () => setIsPlaying(false)
+  const handleEnd = function () {
+    setIsPlaying(false)
+  }
 
   const subtitle = useMemo(
     () => (data?.subtitles ? data?.subtitles[0].url : null),

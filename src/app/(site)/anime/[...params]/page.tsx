@@ -2,8 +2,6 @@ import Anime from "@/components/anime/anime-info"
 import type { Metadata } from "next"
 import type { IAnilistInfo } from "types/types"
 import { animeInfo } from "@/lib/consumet"
-import { fetchAnimeData } from "@/lib/cache"
-import { cookies } from "next/headers"
 
 type AnimeProps = {
   params: {
@@ -24,6 +22,8 @@ export async function generateMetadata({
   if (!animeResponse) {
     return
   }
+
+  console.log(animeResponse)
 
   const title = animeResponse.title.english ?? animeResponse.title.romaji
   const description = animeResponse.description
