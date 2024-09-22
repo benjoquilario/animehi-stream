@@ -70,7 +70,7 @@ export const RowUpComing = async () => {
         seasonalTitle="Next Season"
         results={upcoming.results}
         browse="/browse?query=&sort=FAVOURITES_DESC&format=TV"
-        isNextSeason={true}
+        isNextSeason
       />
     </div>
   )

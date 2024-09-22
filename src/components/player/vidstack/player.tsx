@@ -428,7 +428,7 @@ const VidstackPlayer = (props: VidstackPlayerProps) => {
               label="English"
               kind="captions"
               src={subtitle}
-              default={true}
+              default
               key={subtitle}
             />
           ) : null}
