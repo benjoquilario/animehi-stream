@@ -21,6 +21,14 @@ const nextConfig = {
     ],
     unoptimized: true,
   },
+  experimental: {
+    serverActions: {
+      allowedOrigins: [
+        "literate-acorn-gpjx5qg4w44fp6j.github.dev",
+        "localhost:3000",
+      ],
+    },
+  },
 }
 
 export default process.env.NODE_ENV === "development"

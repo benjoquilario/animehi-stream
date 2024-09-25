@@ -45,6 +45,8 @@ export async function createWatchlist({
 
   if (!session) return
 
+  const userId = session.user.id
+
   const checkEpisode = await db.watchlist.findFirst({
     where: {
       anilistId,
@@ -55,23 +57,15 @@ export async function createWatchlist({
   if (checkEpisode) {
     return
   } else
-    await db.user.update({
-      where: {
-        id: session.user.id,
-      },
+    await db.watchlist.create({
       data: {
-        watchlists: {
-          create: [
-            {
-              episodeId: `${animeId}-episode-${episodeNumber}`,
-              episodeNumber: Number(episodeNumber),
-              image,
-              title,
-              animeId,
-              anilistId,
-            },
-          ],
-        },
+        userId,
+        episodeId: `${animeId}-episode-${episodeNumber}`,
+        episodeNumber: Number(episodeNumber),
+        image,
+        title,
+        animeId,
+        anilistId,
       },
     })
 
