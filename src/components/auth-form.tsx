@@ -161,7 +161,7 @@ const AuthForm = () => {
               })
             }}
           >
-            Sign In with Anilist
+            Sign in with Anilist
           </Button>
         </DialogContent>
       </Dialog>

@@ -47,7 +47,7 @@ const Row = ({
           {results.map((result) => (
             <CarouselItem
               key={result.id}
-              className="basis-[155px] md:basis-[185px]"
+              className="basis-[125px] md:basis-[175px]"
             >
               <div
                 key={result.id}

@@ -4,13 +4,11 @@ import { Suspense } from "react"
 import ContinueWatching from "@/components/continue-watching"
 import MostView from "@/components/most-view"
 import NewestComments from "@/components/comments/newest-comments"
-import Seasonal from "@/components/seasonal"
 import { Skeleton } from "@/components/ui/skeleton"
 import { auth } from "@/auth"
 import Section from "@/components/section"
 // export const revalidate = 60 * 60 * 3
 import NextImage from "@/components/ui/image"
-import Row from "@/components/row/content"
 import RowContent, { RowUpComing } from "@/components/row/row-content"
 import RowSkeleton from "@/components/row/skeleton-row"
 
@@ -49,7 +47,6 @@ export default async function Home() {
                 <ContinueWatching />
               </>
             ) : null}
-
             <Suspense
               fallback={
                 <div className="flex flex-col gap-2">

@@ -131,7 +131,7 @@ const VidstackPlayer = (props: VidstackPlayerProps) => {
           })
         }
 
-        if (!session) {
+        if (session) {
           if (anilistId && currentEpisode) {
             await createWatchlist({
               animeId: currentEpisode.id,
