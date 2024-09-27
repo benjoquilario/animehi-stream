@@ -6,7 +6,7 @@ import { AiOutlineArrowLeft, AiOutlineArrowRight } from "react-icons/ai"
 import { Button } from "./ui/button"
 import { Skeleton } from "./ui/skeleton"
 import { useState, useEffect } from "react"
-import { fetchRecentEpisodes } from "@/lib/cache"
+import { fetchRecentEpisodes } from "@/lib/client"
 
 export default function RecentEpisodes() {
   const [pageNumber, setPageNumber] = useState(1)
