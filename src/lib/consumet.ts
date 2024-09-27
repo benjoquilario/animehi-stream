@@ -17,9 +17,10 @@ interface FetchOptions {
   status?: string
 }
 
+export const REVALIDATE_TIME = 21600
 async function fetchFromProxy(url: string) {
   try {
-    const response = await fetch(url, { next: { revalidate: 21600 } })
+    const response = await fetch(url, { next: { revalidate: REVALIDATE_TIME } })
 
     if (response.status !== 200) {
       const errorMessage = response.statusText || "Unknown server error"

@@ -1,5 +1,4 @@
 import { env } from "@/env.mjs"
-
 interface FetchOptions {
   type?: string
   season?: string
@@ -10,6 +9,8 @@ interface FetchOptions {
   year?: string
   status?: string
 }
+
+const animeApi = env.NEXT_PUBLIC_ANIME_API_URL
 
 export async function fetchAdvanceSearch(
   searchQuery: string = "",
@@ -41,4 +42,36 @@ export async function fetchAdvanceSearch(
   const data = response.json()
 
   return data
+}
+
+async function fetchFromProxy(url: string) {
+  try {
+    const response = await fetch(url)
+
+    if (response.status !== 200) {
+      const errorMessage = response.statusText || "Unknown server error"
+      throw new Error(
+        `Server error: ${
+          response.statusText || response.status
+        } ${errorMessage}`
+      )
+    }
+
+    const data = await response.json()
+
+    return data
+  } catch (error) {
+    throw error
+  }
+}
+
+export async function fetchRecentEpisodes(page = 1, perPage = 18) {
+  const params = new URLSearchParams({
+    page: page.toString(),
+    perPage: perPage.toString(),
+  })
+
+  const url = `${env.NEXT_PUBLIC_APP_URL}/api/anime/recents`
+
+  return fetchFromProxy(`${url}?${params.toString()}`)
 }
