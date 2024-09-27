@@ -192,7 +192,7 @@ This project is governed by a Custom BY-NC License. What does this entail? Simpl
 Your ideas, translations, design changes, code cleaning, real heavy code changes, or any help are always welcome. The more is the contribution, the better it gets.
 
 [Pull requests](https://github.com/benjoquilario/anime-stream/pulls) will be reviewed
-
+.
 ## Author
 
 ### Benjo Quilario
