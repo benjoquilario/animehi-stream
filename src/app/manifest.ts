@@ -9,8 +9,8 @@ const json = {
   short_name: "AnimeHi",
   description:
     "AnimeHi is an anime streaming service that uses the consumet API. No ads and no vpn required",
-  theme_color: "#071203",
-  background_color: "#071203",
+  theme_color: "#000",
+  background_color: "#000",
   display: "standalone",
   orientation: "portrait",
   id: "/",
@@ -18,7 +18,7 @@ const json = {
   start_url: "/",
   icons: [
     {
-      src: "/anime-512x512.png",
+      src: "/anime-192x192.png",
       sizes: "any",
       type: "image/png",
       purpose: "maskable",
