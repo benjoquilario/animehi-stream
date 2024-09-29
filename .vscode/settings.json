@@ -1,4 +1,7 @@
 {
   "typescript.tsdk": "node_modules\\typescript\\lib",
   "typescript.enablePromptUseWorkspaceTsdk": true,
+  "appService.zipIgnorePattern": ["node_modules{,/**}", ".vscode{,/**}"],
+  "appService.defaultWebAppToDeploy": "/subscriptions/f52438c2-b683-4ea1-831a-4ad807eecc12/resourceGroups/animehi_group/providers/Microsoft.Web/sites/animehi",
+  "appService.deploySubpath": "."
 }
