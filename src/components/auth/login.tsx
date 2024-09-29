@@ -21,7 +21,7 @@ import { useTransition, useState } from "react"
 import { Button } from "@/components/ui/button"
 import { DialogFooter } from "@/components/ui/dialog"
 import { useAuthStore } from "@/store"
-import { login, loginAnilist } from "@/server/auth"
+import { login } from "@/server/auth"
 
 const Login = () => {
   const router = useRouter()
@@ -106,7 +106,7 @@ const Login = () => {
                 Sign In
               </Button>
               <span className="text-xs text-muted-foreground/80">or</span>
-              <Button
+              {/* <Button
                 disabled={isAnilistLoading || isPending}
                 type="button"
                 className="w-full"
@@ -119,7 +119,7 @@ const Login = () => {
                 }}
               >
                 Sign In with Anilist
-              </Button>
+              </Button> */}
             </div>
           </DialogFooter>
         </form>
