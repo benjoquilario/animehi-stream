@@ -16,6 +16,7 @@ import {
   CarouselContent,
   CarouselItem,
 } from "@/components/ui/carousel"
+import { FaFire } from "react-icons/fa"
 
 type BannerSwiperProps = {
   trendingAnime: IAdvancedInfo[]
@@ -50,8 +51,9 @@ const BannerSwiper = ({ trendingAnime }: BannerSwiperProps) => {
                   ></div>
 
                   <div className="absolute bottom-[50px] top-auto z-[100] w-full max-w-[800px] pl-[2%] md:bottom-[109px]">
-                    <div className="mb-3 text-base font-bold text-primary md:text-2xl">
-                      #{index + 1} on Trend
+                    <div className="mb-3 flex items-center space-x-1 text-base font-bold text-primary md:text-2xl">
+                      <FaFire />
+                      {index + 1} on Trend
                     </div>
                     <h2
                       title={trending.title.english || trending.title.romaji}
@@ -59,23 +61,7 @@ const BannerSwiper = ({ trendingAnime }: BannerSwiperProps) => {
                     >
                       {trending.title.english || trending.title.romaji}
                     </h2>
-                    {/* <div className="flex items-center gap-3 text-xs md:text-base">
-                      <div className="flex items-center gap-1">
-                        <BsFillPlayFill />
-                        {trending.type}
-                      </div>
-                      <div className="flex items-center gap-1">
-                        <FaFire />
-                        {trending.rating}%
-                      </div>
-                      <div className="font-bold uppercase text-primary">
-                        {trending.status}
-                      </div>
-                      <div className="flex items-center gap-1">
-                        <FaCalendar />
-                        {trending.releaseDate}
-                      </div>
-                    </div> */}
+
                     <p
                       title={trending.description}
                       className="mx-0 my-3 line-clamp-3 w-full max-w-lg pr-6 text-left text-sm text-foreground/90 md:line-clamp-3"

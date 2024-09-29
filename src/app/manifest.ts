@@ -18,13 +18,13 @@ const json = {
   start_url: "/",
   icons: [
     {
-      src: "/anime-34.png",
+      src: "/favicon.png",
       sizes: "192x192",
       type: "image/png",
       purpose: "maskable",
     },
     {
-      src: "/anime-34.png",
+      src: "/favicon.png",
       sizes: "512x512",
       type: "image/png",
     },

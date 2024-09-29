@@ -9,6 +9,7 @@ import {
 import bcrypt from "bcrypt"
 import { signIn, signOut } from "@/auth"
 import { AuthError } from "next-auth"
+import { isRedirectError } from "next/dist/client/components/redirect"
 
 export async function login(values: Credentials) {
   const validatedFields = credentialsValidator.safeParse(values)
@@ -95,8 +96,18 @@ export async function register(values: Register) {
   }
 }
 
-export async function loginAnilist() {
-  await signIn("anilist")
+export async function loginAnilist(provider: string) {
+  try {
+    await signIn(provider)
+
+    return {
+      success: true,
+    }
+  } catch (error) {
+    if (isRedirectError(error)) {
+      throw error
+    }
+  }
 }
 
 export async function logout() {
