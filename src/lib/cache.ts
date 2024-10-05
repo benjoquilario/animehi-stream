@@ -1,4 +1,4 @@
-//"use client"
+"use client"
 
 // crdits: https://github.com/Miruro-no-kuon/Miruro/blob/main/src/hooks/useApi.ts
 import axios from "axios"
@@ -81,20 +81,28 @@ function createOptimizedSessionStorageCache(
   maxAge: number,
   cacheKey: string
 ) {
-  const cache = new Map<string, CacheItem>(
-    JSON.parse(sessionStorage.getItem(cacheKey) || "[]")
-  )
-  const keys = new Set<string>(cache.keys())
+  let cache: any
+  let keys: any
+
+  if (typeof window !== "undefined") {
+    cache = new Map<string, CacheItem>(
+      JSON.parse(sessionStorage.getItem(cacheKey) || "[]")
+    )
+
+    keys = new Set<string>(cache.keys())
+  }
 
   function isItemExpired(item: CacheItem) {
     return Date.now() - item.timestamp > maxAge
   }
 
   function updateSessionStorage() {
-    sessionStorage.setItem(
-      cacheKey,
-      JSON.stringify(Array.from(cache.entries()))
-    )
+    if (typeof window !== "undefined") {
+      sessionStorage.setItem(
+        cacheKey,
+        JSON.stringify(Array.from(cache.entries()))
+      )
+    }
   }
 
   return {
@@ -114,8 +122,8 @@ function createOptimizedSessionStorageCache(
     set(key: string, value: any) {
       if (cache.size >= maxSize) {
         const oldestKey = keys.values().next().value
-        cache.delete(oldestKey)
-        keys.delete(oldestKey)
+        cache.delete(oldestKey!)
+        keys.delete(oldestKey!)
       }
       keys.add(key)
       cache.set(key, { value, timestamp: Date.now() })

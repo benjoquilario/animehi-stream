@@ -99,6 +99,7 @@ export default function RootLayout({
             easing="linear"
             showSpinner
           />
+
           <QueryProvider>
             <ThemeProvider attribute="class" defaultTheme="dark">
               <div className="flex min-h-full flex-col">
