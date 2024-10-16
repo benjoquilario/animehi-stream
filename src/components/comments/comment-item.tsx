@@ -15,7 +15,6 @@ import { BiLike, BiDislike, BiSolidLike, BiSolidDislike } from "react-icons/bi"
 import Link from "next/link"
 import { relativeDate } from "@/lib/utils"
 import { BiDotsHorizontalRounded } from "react-icons/bi"
-import { useSession } from "next-auth/react"
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -59,11 +58,15 @@ import { useCommentDislikeMutation } from "@/hooks/useDislikeMutation"
 import { useUpdateDeleteMutation } from "@/hooks/useUpdateDeleteMutation"
 import Replies from "@/components/replies"
 import { BsArrow90DegDown } from "react-icons/bs"
+import { toast } from "sonner"
 
 export type CommentItemProps = {
   comment: IComment
   animeId: string
   episodeNumber: string
+  haveReplies: boolean
+  isUserComment: boolean
+  isAuthenticated: boolean
 }
 
 const editSchema = z.object({
@@ -78,8 +81,10 @@ const CommentItem: React.FC<CommentItemProps> = ({
   comment,
   animeId,
   episodeNumber,
+  haveReplies = false,
+  isUserComment = false,
+  isAuthenticated = false,
 }) => {
-  const { data: session } = useSession()
   const [isEditing, setIsEditing] = useState(false)
   const buttonRef = useRef<HTMLButtonElement | null>(null)
   const [isOpen, setIsOpen] = useState(false)
@@ -122,13 +127,15 @@ const CommentItem: React.FC<CommentItemProps> = ({
   }, [isEditing, form])
 
   const handleLike = (isLiked: boolean) => {
-    if (!session) return setIsAuthOpen(true)
+    if (!isAuthenticated)
+      return toast.warning("please login to like or dislike comments")
 
     return !isLiked ? likeMutation.mutate() : unlikeMutation.mutate()
   }
 
   const handleDislike = (isDisliked: boolean) => {
-    if (!session) return setIsAuthOpen(true)
+    if (!isAuthenticated)
+      return toast.warning("please login to like or dislike comments")
 
     return !isDisliked ? dislikeMutation.mutate() : undislikeMutation.mutate()
   }
@@ -300,7 +307,7 @@ const CommentItem: React.FC<CommentItemProps> = ({
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent>
-              {session?.user.id === comment.userId && (
+              {isUserComment && (
                 <>
                   <DropdownMenuItem asChild>
                     <Button
@@ -357,7 +364,7 @@ const CommentItem: React.FC<CommentItemProps> = ({
           ) : null}
         </div>
 
-        {comment._count.replyComment !== 0 &&
+        {haveReplies &&
           (!isRepliesOpen ? (
             <div className="ml-2 mt-1">
               <div className="absolute bottom-[12px] left-[18px] h-[42px] w-[38px] rounded-l border-b-2 border-l-2 border-l-input border-t-input md:w-[27px]"></div>

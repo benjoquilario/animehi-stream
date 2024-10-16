@@ -10,6 +10,7 @@ import { ImSpinner8 } from "react-icons/im"
 import { AnimatePresence, motion } from "framer-motion"
 import { Button } from "../ui/button"
 import type { IComment } from "@/hooks/useLikeUnlikeMutation"
+import { useSession } from "next-auth/react"
 
 type CommentsProps = {
   episodeNumber: string
@@ -22,6 +23,7 @@ export default function Comments({
   anilistId,
   animeTitle,
 }: CommentsProps) {
+  const { data: session } = useSession()
   const {
     data: comments,
     isPending,
@@ -73,6 +75,9 @@ export default function Comments({
                       comment={comment}
                       animeId={anilistId}
                       episodeNumber={episodeNumber}
+                      haveReplies={comment._count.replyComment !== 0}
+                      isUserComment={session?.user?.id === comment.userId}
+                      isAuthenticated={!!session}
                     />
                   </motion.div>
                 ))

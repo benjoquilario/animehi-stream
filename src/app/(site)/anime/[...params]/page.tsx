@@ -23,8 +23,6 @@ export async function generateMetadata({
     return
   }
 
-  console.log(animeResponse)
-
   const title = animeResponse.title.english ?? animeResponse.title.romaji
   const description = animeResponse.description
   const imageUrl = animeResponse.cover ?? animeResponse.image
@@ -60,7 +58,7 @@ export async function generateMetadata({
   }
 }
 
-export default function AnimePage({ params }: AnimeProps) {
+export default async function AnimePage({ params }: AnimeProps) {
   const [slug, animeId] = params.params as string[]
 
   return <Anime animeId={animeId} slug={slug} />

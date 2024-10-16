@@ -9,20 +9,19 @@ import { IAnilistInfo, ICharacter, type IEpisode } from "types/types"
 import useEpisodes from "@/hooks/useEpisodes"
 import { BsFillPlayFill } from "react-icons/bs"
 import { useEffect, useMemo, useState, useCallback } from "react"
-import { useRouter } from "next/navigation"
 import Episodes from "@/components/episode/episodes"
 import Relations from "@/components/anime/relations"
 import { Skeleton } from "@/components/ui/skeleton"
 import { FaSpinner } from "react-icons/fa"
 import Recommendations from "@/components/anime/recommendations"
-import { env } from "@/env.mjs"
-import useAnimeInfo from "@/hooks/useAnimeInfo"
 import {
   fetchAnimeInfo,
   fetchAnimeData,
   fetchAnimeEpisodes,
   fetchAnimeEpisodesFallback,
 } from "@/lib/cache"
+import { useRouter } from "next/navigation"
+import { startHolyLoader, stopHolyLoader } from "holy-loader"
 
 export default function Anime({
   animeId,
@@ -113,7 +112,6 @@ export default function Anime({
       try {
         const info = await fetchAnimeData(animeId)
 
-        console.log(info)
         if (isMounted && info) {
           setAnimeInfo(info)
         }
@@ -210,11 +208,18 @@ export default function Anime({
             <Button
               disabled={state.loading.episodes}
               variant="shine"
-              onClick={() =>
-                router.push(
-                  `/watch/${animeId}?ep=${state.episodes?.length !== 0 ? state.episodes?.[state.episodes.length - 1]?.number : 1}&provider=gogoanime&type=sub`
-                )
-              }
+              onClick={() => {
+                try {
+                  startHolyLoader()
+                } catch (error) {
+                  console.error("Error navigating to watch page:", error)
+                } finally {
+                  router.push(
+                    `/watch/${animeId}?ep=${state.episodes?.length !== 0 ? state.episodes?.[state.episodes.length - 1]?.number : 1}&provider=gogoanime&type=sub`
+                  )
+                  stopHolyLoader()
+                }
+              }}
             >
               <BsFillPlayFill className="h-6 w-6" />
               Watch Now
@@ -336,9 +341,17 @@ export default function Anime({
                 const episode = state.episodes?.find((e) => e.number === epNum)
                 if (episode) {
                   // console.log("click", epNum)
-                  router.push(
-                    `/watch/${animeId}?ep=${episode.number}&provider=gogoanime&type=sub`
-                  )
+
+                  try {
+                    startHolyLoader()
+                  } catch (error) {
+                    console.error("Error starting loader:", error)
+                  } finally {
+                    router.push(
+                      `/watch/${animeId}?ep=${episode.number}&provider=gogoanime&type=sub`
+                    )
+                    stopHolyLoader()
+                  }
                 }
               }}
             />

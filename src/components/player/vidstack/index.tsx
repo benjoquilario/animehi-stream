@@ -3,7 +3,7 @@
 import React, { useEffect, useState, useCallback, useMemo } from "react"
 import { IAnilistInfo } from "types/types"
 import Episodes from "@/components/episode/episodes"
-import { useRouter, useSearchParams } from "next/navigation"
+import { useSearchParams } from "next/navigation"
 import Server from "@/components/server"
 import ButtonAction from "@/components/button-action"
 import { useWatchStore } from "@/store"

@@ -8,7 +8,16 @@ import type { IEpisode } from "types/types"
 import { Button } from "../ui/button"
 import { FaSpinner } from "react-icons/fa"
 import { FaCirclePlay } from "react-icons/fa6"
-import { useCallback, useMemo, useState } from "react"
+import React, { useCallback, useMemo, useState } from "react"
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectLabel,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select"
 
 type EpisodesProps = {
   animeId: string
@@ -51,13 +60,10 @@ export default function Episodes({
     }
   }, [episodes, isLoading])
 
-  const handleIntervalChange = useCallback(
-    (e: React.ChangeEvent<HTMLSelectElement>) => {
-      const [start, end] = e.target.value.split("-").map(Number)
-      setInterval([start, end])
-    },
-    []
-  )
+  const handleIntervalChange = useCallback((value: string) => {
+    const [start, end] = value.split("-").map(Number)
+    setInterval([start, end])
+  }, [])
 
   const filteredEpisode = useMemo(() => {
     const searchQuery = query.toLowerCase()
@@ -86,18 +92,27 @@ export default function Episodes({
       ) : (
         <div className="mb-2 flex items-center justify-between">
           <div className="w-full">
-            <div className="mb-4 flex h-full justify-between">
-              <select
-                onChange={handleIntervalChange}
+            <div className="mb-4 flex h-full justify-between gap-2">
+              <Select
                 value={`${interval[0]}-${interval[1]}`}
-                className="rounded-md border-none bg-secondary px-3"
+                onValueChange={handleIntervalChange}
+                defaultValue={`${interval[0]}-${interval[1]}`}
               >
-                {intervalOptions?.map((option, i) => (
-                  <option key={i} value={`${option.start}-${option.end}`}>
-                    Episode {option.start + 1} - {option.end + 1}
-                  </option>
-                ))}
-              </select>
+                <SelectTrigger className="w-[160px] md:w-[180px]">
+                  <SelectValue placeholder="Select a Episodes" />
+                </SelectTrigger>
+                <SelectContent
+                  ref={(ref) =>
+                    ref?.addEventListener("touchend", (e) => e.preventDefault())
+                  }
+                >
+                  {intervalOptions?.map((option, i) => (
+                    <SelectItem key={i} value={`${option.start}-${option.end}`}>
+                      Episode {option.start + 1} - {option.end + 1}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
 
               <div className="relative">
                 <Input
