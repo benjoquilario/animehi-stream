@@ -101,12 +101,13 @@ This app would not have been possible without the kind and rapid support of the 
 - Continue Watching
 - AutoNext/AutoPlay/AutoSkip features
 - Fully Responsive
-- Login/Register Account
+- Login/Register Account using anilist
+- Share your episode thoughts on comment sections
 - ...enough talk [see it yourself](https://animehi-stream.vercel.app/)
 
 ### Coming Features
 
-- Authorization system with anilist
+- <s>Authorization system with anilist</s>✅
 - <s>Watch list</s> ✅
 - <s>Recently Watching</s> ✅
 - <s>PWA</s>✅
@@ -135,7 +136,7 @@ cd animehi-stream
 - You can use Bun to install dependencies quickly. If you prefer, `npm` / `yarn` or `pnpm` can also be used with equivalent commands.
 
 ```bash
-bun install
+pnpm install
 ```
 
 ### Copy `.env.example` into `.env` in the root folder
@@ -162,13 +163,13 @@ npx prisma migrate dev
 - Run on development mode
 
 ```bash
-bun run dev
+pnpm run dev
 ```
 
 - Run on production mode
 
 ```bash
-bun run preview
+pnpm run preview
 ```
 
 You are all set! Open [localhost:3000](http://localhost:3000/) to see the app.
