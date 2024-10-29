@@ -3,12 +3,11 @@
 import { Button } from "@/components/ui/button"
 import NextImage from "@/components/ui/image"
 import styles from "@/components/banner.module.css"
-import { base64SolidImage, chunk, cn, stripHtml } from "@/lib/utils"
+import { base64SolidImage, cn, stripHtml } from "@/lib/utils"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { IAnilistInfo, ICharacter, type IEpisode } from "types/types"
-import useEpisodes from "@/hooks/useEpisodes"
 import { BsFillPlayFill } from "react-icons/bs"
-import { useEffect, useMemo, useState, useCallback } from "react"
+import { useEffect, useState } from "react"
 import Episodes from "@/components/episode/episodes"
 import Relations from "@/components/anime/relations"
 import { Skeleton } from "@/components/ui/skeleton"
@@ -23,13 +22,12 @@ import {
 import { useRouter } from "next/navigation"
 import { startHolyLoader, stopHolyLoader } from "holy-loader"
 
-export default function Anime({
-  animeId,
-  slug,
-}: {
+interface AnimeProps {
   animeId: string
   slug: string
-}) {
+}
+
+const Anime: React.FC<AnimeProps> = ({ animeId, slug }) => {
   const [state, setState] = useState({
     episodes: [] as IEpisode[],
     loading: {
@@ -472,3 +470,5 @@ function CharactersItem({ character }: CharactersItemProps) {
     </div>
   )
 }
+
+export default Anime

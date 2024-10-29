@@ -4,11 +4,11 @@ import { useCountdown } from "@/hooks/useCountdown"
 import React from "react"
 import { IAnilistInfo } from "types/types"
 
-type NextAiringEpisodeProps = {
+interface NextAiringEpisodeProps {
   animeInfo?: IAnilistInfo
 }
 
-const NextAiringEpisode = ({ animeInfo }: NextAiringEpisodeProps) => {
+const NextAiringEpisode: React.FC<NextAiringEpisodeProps> = ({ animeInfo }) => {
   const nextEpisodeNumber =
     animeInfo?.status === "Ongoing" ? animeInfo?.nextAiringEpisode.episode : ""
   const nextEpisodeAiringTime =

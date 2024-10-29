@@ -30,12 +30,13 @@ import {
   CarouselPrevious,
 } from "@/components/ui/carousel"
 
-type SwiperContinueWatchingProps = {
+interface SwiperContinueWatchingProps {
   results: Watchlist[]
 }
 
-const SwiperContinueWatching = (props: SwiperContinueWatchingProps) => {
-  const { results } = props
+const SwiperContinueWatching: React.FC<SwiperContinueWatchingProps> = ({
+  results,
+}) => {
   const queryClient = useQueryClient()
 
   const mutate = useMutation({

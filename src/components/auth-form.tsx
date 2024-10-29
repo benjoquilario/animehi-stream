@@ -1,5 +1,5 @@
 "use client"
-import React, { useTransition } from "react"
+import React from "react"
 import { Button, buttonVariants } from "./ui/button"
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
@@ -8,33 +8,19 @@ import {
   DropdownMenuContent,
   DropdownMenuGroup,
   DropdownMenuItem,
-  DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuShortcut,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
-import { Dialog, DialogContent } from "@/components/ui/dialog"
-import { useAuthStore } from "@/store"
 
 import Link from "next/link"
 import { logout } from "@/server/auth"
 import { useSession } from "next-auth/react"
 import { ImSpinner8 } from "react-icons/im"
-import { toast } from "sonner"
 import { loginAnilist } from "@/server/auth"
 
 const AuthForm = () => {
   const { data: session, status } = useSession()
-  const [isAuthOpen, setIsAuthOpen] = useAuthStore((store) => [
-    store.isAuthOpen,
-    store.setIsAuthOpen,
-  ])
-  const [isAnilistLoading, startTransitionAnilist] = useTransition()
-
-  const [isLogin, setIsLogin] = useAuthStore((store) => [
-    store.isLogin,
-    store.setIsLogin,
-  ])
 
   if (status === "loading") {
     return (
@@ -64,11 +50,8 @@ const AuthForm = () => {
         >
           <Avatar className="h-8 w-8">
             <AvatarImage
-              src={
-                `${session ? session.user.image : "/placeholder.png"}` ??
-                "/placeholder.png"
-              }
-              alt={`${session ? session.user.name : ""}` ?? ""}
+              src={`${session ? session.user.image : "/placeholder.png"}`}
+              alt={`${session ? session.user.name : ""}`}
             />
             <AvatarFallback>
               <div className="h-full w-full animate-pulse"></div>

@@ -18,12 +18,17 @@ type CommentsProps = {
   animeTitle: string
 }
 
-export default function Comments({
+const Comments: React.FC<CommentsProps> = ({
   episodeNumber,
   anilistId,
   animeTitle,
-}: CommentsProps) {
+}) => {
   const { data: session } = useSession()
+  const queryKey = [
+    QUERY_KEYS.GET_INFINITE_COMMENTS,
+    `${anilistId}-episode-${episodeNumber}`,
+  ]
+
   const {
     data: comments,
     isPending,
@@ -31,10 +36,7 @@ export default function Comments({
     hasNextPage,
     isFetchingNextPage,
   } = useInfiniteQuery({
-    queryKey: [
-      QUERY_KEYS.GET_INFINITE_COMMENTS,
-      `${anilistId}-episode-${episodeNumber}`,
-    ],
+    queryKey,
     queryFn: ({ pageParam }) =>
       fetch(
         `${process.env.NEXT_PUBLIC_APP_URL}/api/comments/${anilistId}-episode-${episodeNumber}?limit=${5}&cursor=${pageParam}`
@@ -43,8 +45,6 @@ export default function Comments({
     getNextPageParam: (lastPage) => lastPage.nextSkip,
     refetchOnWindowFocus: false,
   })
-
-  console.log(comments)
 
   return (
     <div className="mt-2 rounded-lg px-[2%] lg:px-0">
@@ -113,3 +113,5 @@ export default function Comments({
     </div>
   )
 }
+
+export default Comments

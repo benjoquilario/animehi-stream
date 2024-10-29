@@ -1,18 +1,11 @@
 "use client"
 
 import { useWatchStore } from "@/store"
-import { Button } from "../ui/button"
-import React, { useCallback } from "react"
-import { useRouter, useSearchParams } from "next/navigation"
+import React from "react"
+import { useSearchParams } from "next/navigation"
 import { cn } from "@/lib/utils"
 
-type SubProps = {
-  episodeNumber: number
-}
-
-const Sub = (props: SubProps) => {
-  const { episodeNumber } = props
-  const router = useRouter()
+const Sub = () => {
   const searchParams = useSearchParams()
 
   const provider = searchParams.get("provider")
@@ -24,7 +17,6 @@ const Sub = (props: SubProps) => {
     provider: string
   ) {
     const params = new URLSearchParams(searchParams.toString())
-    // params.set("ep", `${lastEpisode}`)
     params.set(name, value)
     params.set("provider", provider)
     window.history.pushState(null, "", `?${params.toString()}`)

@@ -1,17 +1,10 @@
 "use client"
 
-import { useWatchStore } from "@/store"
-import { Button } from "../ui/button"
-import React, { useCallback } from "react"
-import { useRouter, useSearchParams } from "next/navigation"
+import React from "react"
+import { useSearchParams } from "next/navigation"
 import { cn } from "@/lib/utils"
 
-type DubProps = {
-  episodeNumber: number
-}
-
-const Dub = (props: DubProps) => {
-  const { episodeNumber } = props
+const Dub = () => {
   const searchParams = useSearchParams()
 
   const handleSelectType = function (

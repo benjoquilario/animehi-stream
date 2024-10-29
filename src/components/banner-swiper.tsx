@@ -18,11 +18,11 @@ import {
 } from "@/components/ui/carousel"
 import { FaFire } from "react-icons/fa"
 
-type BannerSwiperProps = {
+interface BannerSwiperProps {
   trendingAnime: IAdvancedInfo[]
 }
 
-const BannerSwiper = ({ trendingAnime }: BannerSwiperProps) => {
+const BannerSwiper: React.FC<BannerSwiperProps> = ({ trendingAnime }) => {
   const plugin = React.useRef(
     Autoplay({ delay: 2500, stopOnInteraction: true })
   )
@@ -48,7 +48,7 @@ const BannerSwiper = ({ trendingAnime }: BannerSwiperProps) => {
                     style={{
                       backgroundImage: `url("${trending.cover ?? trending.image}")`,
                     }}
-                  ></div>
+                  />
 
                   <div className="absolute bottom-[50px] top-auto z-[100] w-full max-w-[800px] pl-[2%] md:bottom-[109px]">
                     <div className="mb-3 flex items-center space-x-1 text-base font-bold text-primary md:text-2xl">

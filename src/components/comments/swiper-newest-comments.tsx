@@ -12,7 +12,7 @@ import {
   CarouselItem,
 } from "@/components/ui/carousel"
 
-export type SwiperNewestCommentsProps = {
+export interface SwiperNewestCommentsProps {
   newestComments: Array<
     Comment & {
       user: User
@@ -20,9 +20,9 @@ export type SwiperNewestCommentsProps = {
   >
 }
 
-const SwiperNewestComments = ({
+const SwiperNewestComments: React.FC<SwiperNewestCommentsProps> = ({
   newestComments,
-}: SwiperNewestCommentsProps) => {
+}) => {
   return (
     <>
       <div className="flex w-[calc(100%-300px)] grow flex-col">

@@ -2,21 +2,29 @@
 
 import React from "react"
 import { motion } from "framer-motion"
-
-type SectionProps = {
+interface SectionProps {
   children: React.ReactNode
   className?: string
   sectionName: string
 }
 
-export default function Section({
+const Section: React.FC<SectionProps> = ({
   children,
   className,
   sectionName,
-}: SectionProps) {
+}) => {
   return (
-    <div key={sectionName} className={className}>
+    <motion.div
+      initial={{ y: 20, opacity: 0 }}
+      whileInView={{ y: 0, opacity: 1 }}
+      transition={{ duration: 0.5 }}
+      viewport={{ once: true }}
+      key={sectionName}
+      className={className}
+    >
       {children}
-    </div>
+    </motion.div>
   )
 }
+
+export default Section

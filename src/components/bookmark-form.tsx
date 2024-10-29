@@ -1,29 +1,27 @@
 "use client"
 
 import { useSession } from "next-auth/react"
-import React, { useCallback, useState, useMemo } from "react"
+import React, { useState } from "react"
 import { Button } from "./ui/button"
 import { BsFillBookmarkPlusFill, BsCheckCircleFill } from "react-icons/bs"
 import { toast } from "sonner"
-import type { AnimeInfoResponse, IAnilistInfo } from "types/types"
-import type { Bookmark as BookmarkT } from "@prisma/client"
+import type { IAnilistInfo } from "types/types"
 import { ImSpinner8 } from "react-icons/im"
 import { createBookmark } from "@/server/anime"
-import { useRouter } from "next/navigation"
 
-type BookmarkFormProps = {
+interface BookmarkFormProps {
   animeResult?: IAnilistInfo
   checkBookmarkExist?: boolean
   anilistId: string
   animeId: string
 }
 
-const BookmarkForm = ({
+const BookmarkForm: React.FC<BookmarkFormProps> = ({
   animeResult,
   animeId,
   checkBookmarkExist,
   anilistId,
-}: BookmarkFormProps) => {
+}) => {
   const [isLoading, setIsLoading] = useState(false)
   const { data: session } = useSession()
   const [isBookmark, setIsBookMark] = useState(false)

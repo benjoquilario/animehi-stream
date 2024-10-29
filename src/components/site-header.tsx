@@ -10,7 +10,7 @@ import { useState, useEffect } from "react"
 import { permanentMarker } from "@/lib/fonts"
 import ClientOnly from "./ui/client-only"
 
-export default function SiteHeader() {
+const SiteHeader = () => {
   const [isFixed, setIsFixed] = useState(false)
 
   useEffect(() => {
@@ -64,7 +64,7 @@ export default function SiteHeader() {
   return (
     <header
       className={cn(
-        isFixed ? "top-[-56px]" : "top-0",
+        isFixed ? "top-[-56px]" : "top-0 bg-transparent",
         "fixed left-0 z-[99999] h-[52px] w-full bg-background shadow-sm transition-all md:h-[64px] 2xl:h-[75px]"
       )}
     >
@@ -138,3 +138,5 @@ export default function SiteHeader() {
     </header>
   )
 }
+
+export default SiteHeader

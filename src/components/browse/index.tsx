@@ -25,14 +25,8 @@ const Browse = () => {
   const searchParams = useSearchParams()
   const pathname = usePathname()
   const router = useRouter()
-  // const currentSeason = getSeason()
   const [page, setPage] = useState(1)
   const [isLoading, setIsLoading] = useState(false)
-
-  // const genresParam = searchParams.get("genres")
-  // const initialGenres = genresParam
-  //   ? genresParam.split(",").map((value) => ({ value, label: value }))
-  //   : []
 
   const filters = {
     query: searchParams.get("query") || "",

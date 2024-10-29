@@ -13,22 +13,23 @@ import { IAdvancedInfo } from "types/types"
 import CardRow from "./card-row"
 import Link from "next/link"
 import { FaArrowRightLong } from "react-icons/fa6"
+import Section from "../section"
 
-type RowProps = {
+interface RowProps {
   browse: string
   results: IAdvancedInfo[]
   seasonalTitle: string
   isNextSeason?: boolean
 }
 
-const Row = ({
+const Row: React.FC<RowProps> = ({
   browse,
   results,
   seasonalTitle,
   isNextSeason = false,
-}: RowProps) => {
+}) => {
   return (
-    <div className="mt-4 flex flex-col gap-2">
+    <Section sectionName={seasonalTitle} className="mt-4 flex flex-col gap-2">
       <Link
         href={browse}
         className="group relative mb-2 ml-4 flex items-center text-sm font-medium uppercase transition-all md:ml-6 xl:text-base"
@@ -61,7 +62,7 @@ const Row = ({
         <CarouselPrevious className="absolute left-1 h-8 w-8" />
         <CarouselNext className="absolute right-1 h-8 w-8" />
       </Carousel>
-    </div>
+    </Section>
   )
 }
 

@@ -7,7 +7,7 @@ import BookmarkForm from "./bookmark-form"
 import { FaClosedCaptioning } from "react-icons/fa6"
 import { FaMicrophone } from "react-icons/fa"
 import { FaDownload } from "react-icons/fa"
-import { useEffect, useMemo, useState } from "react"
+import { useMemo, useState } from "react"
 import Sub from "@/components/watch/subtitle"
 import Dub from "./watch/dub"
 import NextAiringEpisode from "./anime/next-airing"
@@ -19,8 +19,9 @@ import { FaCheck } from "react-icons/fa6"
 import { IoCloseSharp, IoAlertCircleOutline } from "react-icons/io5"
 import { useSearchParams } from "next/navigation"
 import { cn } from "@/lib/utils"
+import { IoMdShareAlt, IoMdHeart } from "react-icons/io"
 
-type ServerProps = {
+interface ServerProps {
   animeResult?: IAnilistInfo
   animeId: string
   anilistId: string
@@ -28,16 +29,18 @@ type ServerProps = {
   lastEpisode: number
   download: string
   children: React.ReactNode
+  views: number
 }
 
-export default function Server({
+const Server: React.FC<ServerProps> = ({
   animeResult,
   anilistId,
   currentUser,
   lastEpisode,
   download,
   children,
-}: ServerProps) {
+  views = 0,
+}) => {
   const [isRemove, setIsRemove] = useState(false)
   const checkBookmarkExist = useMemo(
     () =>
@@ -186,7 +189,7 @@ export default function Server({
             <span>
               <FaClosedCaptioning />
             </span>
-            <Sub episodeNumber={lastEpisode} />
+            <Sub />
             <button
               onClick={() => handleSelectProvider("type", "sub", "zoro")}
               className={cn(
@@ -203,7 +206,7 @@ export default function Server({
             <span>
               <FaMicrophone />
             </span>
-            <Dub episodeNumber={lastEpisode} />
+            <Dub />
             <button
               className={cn(
                 "inline-flex h-9 items-center justify-center rounded-md px-3 text-xs font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50",
@@ -218,6 +221,22 @@ export default function Server({
           </div>
         </div>
       </div>
+      <div className="flex w-full items-center justify-between">
+        <div className="h-10 rounded-sm bg-secondary/20 px-4 py-2 text-sm">
+          {views} views
+        </div>
+        <div className="flex items-center gap-2 text-sm">
+          <Button size="sm" className="flex gap-1 bg-secondary/20">
+            <IoMdHeart /> Liked
+          </Button>
+          <Button size="sm" className="flex gap-1 bg-secondary/20">
+            <IoMdShareAlt />
+            Share
+          </Button>
+        </div>
+      </div>
     </div>
   )
 }
+
+export default Server

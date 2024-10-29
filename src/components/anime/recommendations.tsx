@@ -5,13 +5,13 @@ import NextImage from "@/components/ui/image"
 import Link from "next/link"
 import { transformedTitle } from "@/lib/utils"
 
-type RecommendationsProps = {
+interface RecommendationsProps {
   recommendations?: IRecommendationItem[]
 }
 
-export default function Recommendations({
+const Recommendations: React.FC<RecommendationsProps> = ({
   recommendations,
-}: RecommendationsProps) {
+}) => {
   return (
     <ul className="relative grid grid-cols-3 gap-3 overflow-hidden md:grid-cols-5 lg:grid-cols-7">
       {recommendations?.map((recommendation) => (
@@ -30,8 +30,9 @@ type RecommendationItemProps = {
   recommendation: IRecommendationItem
 }
 
-function RecommendationItem(props: RecommendationItemProps) {
-  const { recommendation } = props
+const RecommendationItem: React.FC<RecommendationItemProps> = ({
+  recommendation,
+}) => {
   const title = transformedTitle(recommendation.title.romaji)
 
   return (
@@ -67,3 +68,5 @@ function RecommendationItem(props: RecommendationItemProps) {
     </>
   )
 }
+
+export default Recommendations

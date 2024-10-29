@@ -60,7 +60,7 @@ import Replies from "@/components/replies"
 import { BsArrow90DegDown } from "react-icons/bs"
 import { toast } from "sonner"
 
-export type CommentItemProps = {
+export interface CommentItemProps {
   comment: IComment
   animeId: string
   episodeNumber: string
@@ -89,7 +89,6 @@ const CommentItem: React.FC<CommentItemProps> = ({
   const buttonRef = useRef<HTMLButtonElement | null>(null)
   const [isOpen, setIsOpen] = useState(false)
   const [isPending, startTransition] = useTransition()
-  const setIsAuthOpen = useAuthStore((store) => store.setIsAuthOpen)
   const [isRepliesOpen, setIsRepliesOpen] = useState(false)
 
   const likeParams = {
@@ -121,24 +120,25 @@ const CommentItem: React.FC<CommentItemProps> = ({
     }
   }
 
-  const handleEdit = useCallback(() => {
-    setIsEditing(!isEditing)
-    form.setFocus("comment")
-  }, [isEditing, form])
+  const handleLike = React.useCallback(
+    (isLiked: boolean) => {
+      if (!isAuthenticated)
+        return toast.warning("please login to like or dislike comments")
 
-  const handleLike = (isLiked: boolean) => {
-    if (!isAuthenticated)
-      return toast.warning("please login to like or dislike comments")
+      return !isLiked ? likeMutation.mutate() : unlikeMutation.mutate()
+    },
+    [isAuthenticated, likeMutation, unlikeMutation]
+  )
 
-    return !isLiked ? likeMutation.mutate() : unlikeMutation.mutate()
-  }
+  const handleDislike = React.useCallback(
+    (isDisliked: boolean) => {
+      if (!isAuthenticated)
+        return toast.warning("please login to like or dislike comments")
 
-  const handleDislike = (isDisliked: boolean) => {
-    if (!isAuthenticated)
-      return toast.warning("please login to like or dislike comments")
-
-    return !isDisliked ? dislikeMutation.mutate() : undislikeMutation.mutate()
-  }
+      return !isDisliked ? dislikeMutation.mutate() : undislikeMutation.mutate()
+    },
+    [dislikeMutation, isAuthenticated, undislikeMutation]
+  )
 
   useEffect(() => {
     if (form.formState.isSubmitSuccessful) {
@@ -152,8 +152,6 @@ const CommentItem: React.FC<CommentItemProps> = ({
       commentText: data.comment,
     })
   }
-
-  console.log(comment)
 
   return (
     <div className="relative flex w-full gap-2">

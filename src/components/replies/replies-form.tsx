@@ -35,12 +35,12 @@ const repliesSchema = z.object({
 
 type Inputs = z.infer<typeof repliesSchema>
 
-type RepliesFormProps = {
+interface RepliesFormProps {
   commentId: string
   replyId: string
 }
 
-export default function RepliesForm({ commentId, replyId }: RepliesFormProps) {
+const RepliesForm: React.FC<RepliesFormProps> = ({ commentId, replyId }) => {
   const buttonRef = useRef<HTMLButtonElement | null>(null)
   const queryClient = useQueryClient()
   const { data: session } = useSession()
@@ -177,3 +177,5 @@ export default function RepliesForm({ commentId, replyId }: RepliesFormProps) {
     </div>
   )
 }
+
+export default RepliesForm

@@ -6,17 +6,17 @@ import { Button, buttonVariants } from "../ui/button"
 import { cn } from "@/lib/utils"
 import { useRouter } from "next/navigation"
 
-type EpisodeListProps = {
+interface EpisodeListProps {
   episodes?: Episode[]
   currentEpisode?: Episode
   animeId: string
 }
 
-const EpisodeList = ({
+const EpisodeList: React.FC<EpisodeListProps> = ({
   episodes,
   currentEpisode,
   animeId,
-}: EpisodeListProps) => {
+}) => {
   const router = useRouter()
 
   return (

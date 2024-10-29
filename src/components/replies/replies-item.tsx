@@ -1,6 +1,6 @@
 "use client"
 
-import React, { useState, useRef, useEffect } from "react"
+import React, { useState, useRef, useEffect, memo } from "react"
 import Link from "next/link"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Button } from "@/components/ui/button"
@@ -48,7 +48,7 @@ import { Textarea } from "@/components/ui/textarea"
 import { BiLike, BiSolidLike } from "react-icons/bi"
 import { useAuthStore } from "@/store"
 
-type ReplyItemProps = {
+interface ReplyItemProps {
   reply: IReplyComment<User>
   commentId: string
 }
@@ -59,8 +59,7 @@ const editSchema = z.object({
     .min(1, { message: "Comment must be at least 1 character" }),
 })
 
-const RepliesItem = (props: ReplyItemProps) => {
-  const { reply, commentId } = props
+const RepliesItem: React.FC<ReplyItemProps> = ({ reply, commentId }) => {
   const { data: session } = useSession()
   const [isAlertOpen, setIsAlertOpen] = useState(false)
   const [isOpen, setIsOpen] = useState(false)
@@ -75,8 +74,6 @@ const RepliesItem = (props: ReplyItemProps) => {
       replyId: reply.id,
       content: reply.content,
     })
-
-  console.log(reply, commentId)
 
   const setSelectedReply = useReplyCommentStore(
     (store) => store.setSelectedReply
@@ -413,4 +410,4 @@ const RepliesItem = (props: ReplyItemProps) => {
   )
 }
 
-export default RepliesItem
+export default memo(RepliesItem)

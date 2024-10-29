@@ -2,11 +2,10 @@
 
 import NextImage from "@/components/ui/image"
 import type { IRelationItem } from "types/types"
-import { useMemo } from "react"
 import Link from "next/link"
 import { transformedTitle } from "@/lib/utils"
 
-type RelationsProps = {
+interface RelationsProps {
   relations: IRelationItem[]
   animeId: string
 }
@@ -22,62 +21,21 @@ export const RELATION_TYPE = {
   SEQUEL: "SEQUEL",
 }
 
-export default function Relations({ relations, animeId }: RelationsProps) {
-  const alternative = useMemo(() => {
-    const type = "ALTERNATIVE"
-    return relations.filter((relation) => relation.relationType === type)
-  }, [relations])
+const filterRelations = (type: string, relations: IRelationItem[]) => {
+  return relations.filter((relation) => relation.relationType === type)
+}
 
-  const adaptation = useMemo(
-    () =>
-      relations.filter((relation) => relation.relationType === "ADAPTATION"),
-    [relations]
-  )
+const Relations: React.FC<RelationsProps> = ({ relations, animeId }) => {
+  const alternative = filterRelations(RELATION_TYPE.ALTERNATIVE, relations)
+  const adaptation = filterRelations(RELATION_TYPE.ADAPTATION, relations)
 
-  const sideStory = useMemo(
-    () =>
-      relations.filter((relation) => relation.relationType === "SIDE_STORY"),
-    [relations]
-  )
+  const sideStory = filterRelations(RELATION_TYPE.SIDE_STORY, relations)
+  const character = filterRelations(RELATION_TYPE.CHARACTER, relations)
+  const other = filterRelations(RELATION_TYPE.OTHER, relations)
 
-  const character = useMemo(
-    () =>
-      relations.filter(
-        (relation) => relation.relationType === RELATION_TYPE.CHARACTER
-      ),
-    [relations]
-  )
-  const other = useMemo(
-    () =>
-      relations.filter(
-        (relation) => relation.relationType === RELATION_TYPE.OTHER
-      ),
-    [relations]
-  )
-
-  const sequel = useMemo(
-    () =>
-      relations.filter(
-        (relation) => relation.relationType === RELATION_TYPE.SEQUEL
-      ),
-    [relations]
-  )
-
-  const prequel = useMemo(
-    () =>
-      relations.filter(
-        (relation) => relation.relationType === RELATION_TYPE.PREQUEL
-      ),
-    [relations]
-  )
-
-  const summary = useMemo(
-    () =>
-      relations.filter(
-        (relation) => relation.relationType === RELATION_TYPE.SUMMARY
-      ),
-    [relations]
-  )
+  const sequel = filterRelations(RELATION_TYPE.SEQUEL, relations)
+  const prequel = filterRelations(RELATION_TYPE.PREQUEL, relations)
+  const summary = filterRelations(RELATION_TYPE.SUMMARY, relations)
 
   return (
     <div className="no-scrollbar flex max-h-[450px] flex-col overflow-auto">
@@ -115,15 +73,18 @@ export default function Relations({ relations, animeId }: RelationsProps) {
   )
 }
 
-type RelationWithTypeProps = {
+export default Relations
+
+interface RelationWithTypeProps {
   relationType: string
   relations: IRelationItem[]
 }
 
-function RelationWithType(props: RelationWithTypeProps) {
-  const { relationType, relations } = props
-
-  return relations.length !== 0 ? (
+const RelationWithType: React.FC<RelationWithTypeProps> = ({
+  relationType,
+  relations,
+}) =>
+  relations.length !== 0 ? (
     <div className="mb-3 flex flex-col gap-3">
       <div className="mb-2">
         <h3 className="font-semibold underline underline-offset-8">
@@ -181,4 +142,3 @@ function RelationWithType(props: RelationWithTypeProps) {
       ))}
     </div>
   ) : null
-}

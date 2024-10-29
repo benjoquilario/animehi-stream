@@ -3,7 +3,7 @@ import { useRouter } from "next/navigation"
 import { Button } from "./ui/button"
 import { AiFillForward, AiFillBackward } from "react-icons/ai"
 
-type ButtonActionProps = {
+interface ButtonActionProps {
   anilistId: string
   lastEpisode: number
   latestEpisodeNumber: number
@@ -13,7 +13,7 @@ type ButtonActionProps = {
   type: string
 }
 
-const ButtonAction = ({
+const ButtonAction: React.FC<ButtonActionProps> = ({
   anilistId,
   latestEpisodeNumber,
   isLoading,
@@ -21,7 +21,7 @@ const ButtonAction = ({
   animeTitle,
   provider,
   type,
-}: ButtonActionProps) => {
+}) => {
   const router = useRouter()
 
   return (

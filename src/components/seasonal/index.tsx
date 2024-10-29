@@ -16,7 +16,7 @@ import {
 } from "@/lib/cache"
 import { Skeleton } from "@/components/ui/skeleton"
 
-export default function Seasonal() {
+const Seasonal = () => {
   const currentSeason = getSeason()
   const [itemsCount, setItemsCount] = useState(
     window.innerWidth > 500 ? 24 : 15
@@ -178,3 +178,5 @@ function SeasonalCardSkeleton() {
     </div>
   )
 }
+
+export default Seasonal

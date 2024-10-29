@@ -3,8 +3,8 @@ import type { Metadata } from "next"
 import type { IAnilistInfo } from "types/types"
 import { getCurrentUser } from "@/lib/current-user"
 import VideoPlayer from "@/components/player/vidstack"
-import { Suspense } from "react"
 import { notFound } from "next/navigation"
+import { getAnimeViews } from "@/lib/metrics"
 
 type Params = {
   params: {
@@ -25,8 +25,6 @@ export async function generateMetadata({
   if (!animeResponse) {
     return
   }
-
-  console.log(ep)
 
   const title = animeResponse.title.english ?? animeResponse.title.romaji
   const description = animeResponse.description
@@ -68,11 +66,11 @@ export default async function Watch({ params, searchParams }: Params) {
   const animeResponse = (await animeInfo(animeId)) as IAnilistInfo
   const currentUser = await getCurrentUser()
 
-  // const ep = searchParams.ep
+  const animeViews = await getAnimeViews(animeId)
 
   if (!animeResponse || !animeId) notFound()
 
-  // console.log(ep)
+  console.log(animeViews)
 
   return (
     <div className="mt-2 flex-1">
@@ -80,6 +78,7 @@ export default async function Watch({ params, searchParams }: Params) {
         anilistId={animeId}
         animeResponse={animeResponse}
         currentUser={currentUser}
+        views={animeViews?.view as number}
       />
     </div>
   )

@@ -19,7 +19,7 @@ import {
   SelectValue,
 } from "@/components/ui/select"
 
-type EpisodesProps = {
+interface EpisodesProps {
   animeId: string
   episodeNumber?: number
   episodes?: IEpisode[]
@@ -27,13 +27,13 @@ type EpisodesProps = {
   onEpisodeSelect: (epNum: number) => void
 }
 
-export default function Episodes({
+const Episodes: React.FC<EpisodesProps> = ({
   animeId,
   episodes,
   isLoading,
   episodeNumber,
   onEpisodeSelect,
-}: EpisodesProps) {
+}) => {
   const [query, setQuery] = useState("")
   const [interval, setInterval] = useState<[number, number]>([0, 99])
 
@@ -261,3 +261,5 @@ export default function Episodes({
     </div>
   )
 }
+
+export default Episodes

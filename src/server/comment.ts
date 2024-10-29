@@ -6,7 +6,7 @@ import { Ratelimit } from "@upstash/ratelimit"
 import { Redis } from "@upstash/redis"
 import type { AddComment } from "types/types"
 
-export async function deleteComment(id: string) {
+export const deleteComment = async (id: string) => {
   const session = await auth()
 
   if (!session) return
@@ -36,13 +36,13 @@ export async function deleteComment(id: string) {
   }
 }
 
-export async function editComment({
+export const editComment = async ({
   id,
   commentText,
 }: {
   id: string
   commentText: string
-}) {
+}) => {
   const session = await auth()
 
   if (!session) return
@@ -65,7 +65,7 @@ export async function editComment({
   }
 }
 
-export async function likeComment({ commentId }: { commentId: string }) {
+export const likeComment = async ({ commentId }: { commentId: string }) => {
   const session = await auth()
   const userId = session?.user.id
 
@@ -97,7 +97,7 @@ export async function likeComment({ commentId }: { commentId: string }) {
   return
 }
 
-export async function unlikeComment({ commentId }: { commentId: string }) {
+export const unlikeComment = async ({ commentId }: { commentId: string }) => {
   const session = await auth()
   const userId = session?.user.id
 
@@ -132,7 +132,7 @@ export async function unlikeComment({ commentId }: { commentId: string }) {
   return
 }
 
-export async function dislikeComment({ commentId }: { commentId: string }) {
+export const dislikeComment = async ({ commentId }: { commentId: string }) => {
   const session = await auth()
   const userId = session?.user.id
 
@@ -164,7 +164,11 @@ export async function dislikeComment({ commentId }: { commentId: string }) {
   return
 }
 
-export async function unDislikeComment({ commentId }: { commentId: string }) {
+export const unDislikeComment = async ({
+  commentId,
+}: {
+  commentId: string
+}) => {
   const session = await auth()
   const userId = session?.user.id
 
@@ -199,7 +203,7 @@ export async function unDislikeComment({ commentId }: { commentId: string }) {
   return
 }
 
-export async function addComment(comment: AddComment) {
+export const addComment = async (comment: AddComment) => {
   const ip = headers().get("x-forwarded-for")
 
   const { commentText, animeId, episodeNumber, anilistId, animeTitle } = comment
@@ -273,5 +277,88 @@ export async function addComment(comment: AddComment) {
     data: createdComment,
     message: "Comment Created",
     ok: true,
+  }
+}
+
+export const getComments = async (episodeId: string, limit = 5, skip = 0) => {
+  const session = await auth()
+
+  let userId
+
+  if (session) {
+    userId = session.user.id
+  }
+
+  const comments = await db.comment.findMany({
+    where: {
+      episodeId: episodeId,
+    },
+    include: {
+      user: {
+        select: {
+          id: true,
+          userName: true,
+          name: true,
+          image: true,
+          email: true,
+        },
+      },
+      commentLike: {
+        select: {
+          id: true,
+        },
+        where: {
+          userId,
+        },
+      },
+      commentDislike: {
+        select: {
+          id: true,
+        },
+        where: {
+          userId,
+        },
+      },
+      _count: {
+        select: {
+          commentLike: true,
+          commentDislike: true,
+          replyComment: true,
+        },
+      },
+    },
+    orderBy: { createdAt: "desc" },
+    take: Number(limit) || 5,
+    skip: Number(skip) || 0,
+  })
+
+  const nextId =
+    comments.length < Number(limit) ? undefined : comments[Number(limit) - 1].id
+
+  if (comments.length === 0) {
+    return {
+      comments: [],
+      hasNextPage: false,
+      nextSkip: null,
+    }
+  }
+
+  const transformedComments = comments.map((comment) => {
+    const { _count, ...rest } = comment
+    return {
+      ...rest,
+      _count,
+      isLiked: session ? _count.commentLike > 0 : false,
+      isDisliked: session ? _count.commentDislike > 0 : false,
+    }
+  })
+
+  return {
+    comments: transformedComments,
+    hasNextPage: comments.length < (Number(limit) || 5) ? false : true,
+    nextSkip:
+      comments.length < (Number(limit) || 5)
+        ? null
+        : Number(skip) + (Number(limit) as number),
   }
 }

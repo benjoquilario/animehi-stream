@@ -10,13 +10,11 @@ import type { User } from "@prisma/client"
 import { ImSpinner8 } from "react-icons/im"
 import { Button } from "@/components/ui/button"
 
-type CreateCommentProps = {
+interface CreateCommentProps {
   commentId: string
 }
 
-const CreateReplyComment = (props: CreateCommentProps) => {
-  const { commentId } = props
-
+const CreateReplyComment: React.FC<CreateCommentProps> = ({ commentId }) => {
   const {
     data: comments,
     isPending,

@@ -19,15 +19,19 @@ import { fetchAnimeEpisodes, fetchAnimeEpisodesFallback } from "@/lib/cache"
 import ClientOnly from "@/components/ui/client-only"
 // import { AspectRatio } from "@/components/ui/aspect-ratio"
 
-type VideoPlayerProps = {
+interface VideoPlayerProps {
   animeResponse: IAnilistInfo
   anilistId: string
   currentUser: any
+  views: number
 }
 
-const VideoPlayer = (props: VideoPlayerProps) => {
-  const { animeResponse, anilistId, currentUser } = props
-
+const VideoPlayer: React.FC<VideoPlayerProps> = ({
+  animeResponse,
+  anilistId,
+  currentUser,
+  views = 0,
+}) => {
   const searchParams = useSearchParams()
   const type = searchParams.get("type") || "sub"
   const ep = searchParams.get("ep")
@@ -216,6 +220,7 @@ const VideoPlayer = (props: VideoPlayerProps) => {
           anilistId={anilistId}
           currentUser={currentUser}
           lastEpisode={episodesNavigation?.number!}
+          views={views}
         >
           <ButtonAction
             isLoading={isPending}

@@ -5,7 +5,7 @@ import Section from "./section"
 import { useQuery } from "@tanstack/react-query"
 import { Skeleton } from "./ui/skeleton"
 
-export default function ContinueWatching() {
+const ContinueWatching = () => {
   const { data, isLoading } = useQuery({
     queryKey: ["watching"],
     queryFn: () => fetch(`/api/user/watching`).then((res) => res.json()),
@@ -33,3 +33,5 @@ export default function ContinueWatching() {
     </Section>
   )
 }
+
+export default ContinueWatching

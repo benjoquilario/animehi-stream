@@ -6,19 +6,19 @@ import { BsCheckCircleFill } from "react-icons/bs"
 
 import type { Bookmark as BookmarkT } from "@prisma/client"
 
-type BookmarkProps = {
+interface BookmarkProps {
   animeResult: AnimeInfoResponse | null
   bookMarks?: BookmarkT[]
   userId?: string
   children: React.ReactNode
 }
 
-export default function Bookmark({
+const Bookmark: React.FC<BookmarkProps> = ({
   animeResult,
   bookMarks,
   userId,
   children,
-}: BookmarkProps) {
+}) => {
   const isAnimeExist = useMemo(
     () =>
       bookMarks?.some(
@@ -46,3 +46,5 @@ export default function Bookmark({
     </>
   )
 }
+
+export default Bookmark

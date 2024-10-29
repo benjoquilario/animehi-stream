@@ -24,7 +24,6 @@ import {
 import { QUERY_KEYS } from "@/lib/queriesKeys"
 import { useAuthStore } from "@/store"
 import { Comment } from "@prisma/client"
-import chunk from "lodash.chunk"
 import type { AddComment } from "types/types"
 import { addComment } from "@/server/comment"
 
@@ -36,23 +35,23 @@ const commentSchema = z.object({
 
 type Inputs = z.infer<typeof commentSchema>
 
-type CommentFormProps = {
+interface CommentFormProps {
   episodeNumber: string
   anilistId: string
   animeTitle: string
 }
 
-export type TPage<TData> = {
+export interface TPage<TData> {
   comments: TData
   hasNextPage: boolean
   nextSkip: number
 }
 
-export default function CommentForm({
+const CommentForm: React.FC<CommentFormProps> = ({
   episodeNumber,
   anilistId,
   animeTitle,
-}: CommentFormProps) {
+}) => {
   const setIsAuthOpen = useAuthStore((store) => store.setIsAuthOpen)
   const { data: session, status } = useSession()
   const buttonRef = useRef<HTMLButtonElement | null>(null)
@@ -202,3 +201,5 @@ export default function CommentForm({
     </div>
   )
 }
+
+export default CommentForm

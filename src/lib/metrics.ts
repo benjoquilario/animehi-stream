@@ -133,3 +133,13 @@ export const getContinueWatching = async function () {
 
   return watching
 }
+
+export const getAnimeViews = cache(async function (animeId: string) {
+  const views = await db.viewCounter.findFirst({
+    where: {
+      anilistId: animeId,
+    },
+  })
+
+  return views
+})
