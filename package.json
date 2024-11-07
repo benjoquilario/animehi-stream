@@ -17,7 +17,7 @@
   "dependencies": {
     "@auth/core": "^0.16.1",
     "@auth/prisma-adapter": "^2.2.0",
-    "@consumet/extensions": "^1.7.0",
+    "@consumet/extensions": "^1.8.1",
     "@hookform/resolvers": "^3.3.2",
     "@next-auth/prisma-adapter": "^1.0.7",
     "@oplayer/core": "^1.2.36",

@@ -347,6 +347,21 @@ export async function fetchAnimeEpisodes(
   return fetchFromProxy(url, animeEpisodesCache, cacheKey)
 }
 
+export async function fetchAnimeEpisodesV2(
+  animeId: string,
+  dub: boolean = false
+) {
+  const params = new URLSearchParams({ dub: dub ? "true" : "falase" })
+  const url = `${env.NEXT_PUBLIC_APP_URL}/api/anime/episodes/${animeId}?${params.toString()}`
+  const cacheKey = generateCacheKey(
+    "animeEpisodesV2",
+    animeId,
+    dub ? "dub" : "sub"
+  )
+
+  return fetchFromProxy(url, animeEpisodesCache, cacheKey)
+}
+
 export async function fetchAnimeEmbeddedEpisodes(episodeId: string) {
   const url = `${BASE_URL}meta/anilist/servers/${episodeId}`
   const cacheKey = generateCacheKey("animeEmbeddedServers", episodeId)

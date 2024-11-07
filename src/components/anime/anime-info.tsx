@@ -18,6 +18,7 @@ import {
   fetchAnimeData,
   fetchAnimeEpisodes,
   fetchAnimeEpisodesFallback,
+  fetchAnimeEpisodesV2,
 } from "@/lib/cache"
 import { useRouter } from "next/navigation"
 import { startHolyLoader, stopHolyLoader } from "holy-loader"
@@ -45,7 +46,9 @@ const Anime: React.FC<AnimeProps> = ({ animeId, slug }) => {
       if (!animeId) return
       try {
         setState((prevState) => ({ ...prevState, error: null }))
-        const data = (await fetchAnimeEpisodes(animeId)) as IEpisode[]
+        const data = (await fetchAnimeEpisodesV2(animeId)) as IEpisode[]
+
+        console.log(data)
 
         if (isMounted && data) {
           if (data.length !== 0) {

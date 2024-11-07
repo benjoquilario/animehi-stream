@@ -15,8 +15,8 @@ importers:
         specifier: ^2.2.0
         version: 2.5.0(@prisma/client@5.19.1(prisma@5.19.1))
       '@consumet/extensions':
-        specifier: ^1.7.0
-        version: 1.7.0
+        specifier: ^1.8.1
+        version: 1.8.1
       '@hookform/resolvers':
         specifier: ^3.3.2
         version: 3.9.0(react-hook-form@7.53.0(react@18.2.0))
@@ -904,8 +904,8 @@ packages:
     resolution: {integrity: sha512-/l42B1qxpG6RdfYf343Uw1vmDjeNhneUXtzhojE7pDgfpEypmRhI6j1kr17XCVv4Cgl9HdAiQY2x0GwKm7rWCw==}
     engines: {node: '>=6.9.0'}
 
-  '@consumet/extensions@1.7.0':
-    resolution: {integrity: sha512-Cd/RrTdkZpDgssmmv+ymIGwlXqFOnkIIfvfqINtkcegJmDOLI86Kyp6uTdGNyUvBY2kDqHbh3iwjcr14pKnVnQ==}
+  '@consumet/extensions@1.8.1':
+    resolution: {integrity: sha512-Khs65PGB2hIR+SaM3jA074gYMq5n6qItzBECp69AiKFzIMDzvRxlviupetnjgU0xgLkfbfb9OttQ/NTpowD/JQ==}
 
   '@emotion/is-prop-valid@0.8.8':
     resolution: {integrity: sha512-u5WtneEAr5IDG2Wv65yhunPSMLIpuKsbuOktRojfrEiEvRyC85LgPMZI63cr7NUqT8ZIGdSVg8ZKGxIug4lXcA==}
@@ -3170,6 +3170,11 @@ packages:
   human-signals@2.1.0:
     resolution: {integrity: sha512-B4FFZ6q/T2jhhksgkbEW3HBvWIfDW85snkQgawt07S7J5QXTk6BkNV+0yAeZrM5QpMAdYlocGoljn0sJ/WQkFw==}
     engines: {node: '>=10.17.0'}
+
+  husky@9.1.6:
+    resolution: {integrity: sha512-sqbjZKK7kf44hfdE94EoX8MZNk0n7HeW37O4YrVGCF4wzgQjp+akPAkfUK5LZ6KuR/6sqeAVuXHji+RzQgOn5A==}
+    engines: {node: '>=18'}
+    hasBin: true
 
   iconv-lite@0.6.3:
     resolution: {integrity: sha512-4fCk79wshMdzMp2rH06qWrJE4iolqLhCUH+OiuIgU++RB0+94NlDL81atO7GX55uUKueo0txHNtvEyI6D7WdMw==}
@@ -5942,13 +5947,15 @@ snapshots:
       '@babel/helper-validator-identifier': 7.24.7
       to-fast-properties: 2.0.0
 
-  '@consumet/extensions@1.7.0':
+  '@consumet/extensions@1.8.1':
     dependencies:
       ascii-url-encoder: 1.2.0
       axios: 0.27.2
       cheerio: 1.0.0
       crypto-js: 4.2.0
+      domhandler: 5.0.3
       form-data: 4.0.0
+      husky: 9.1.6
     transitivePeerDependencies:
       - debug
 
@@ -8568,6 +8575,8 @@ snapshots:
       - supports-color
 
   human-signals@2.1.0: {}
+
+  husky@9.1.6: {}
 
   iconv-lite@0.6.3:
     dependencies:

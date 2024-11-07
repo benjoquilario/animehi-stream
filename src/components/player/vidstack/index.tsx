@@ -15,7 +15,11 @@ import { LuMessageSquare } from "react-icons/lu"
 // import { Spinner } from "@vidstack/react"
 // import dynamic from "next/dynamic"
 import VidstackPlayer from "./player"
-import { fetchAnimeEpisodes, fetchAnimeEpisodesFallback } from "@/lib/cache"
+import {
+  fetchAnimeEpisodes,
+  fetchAnimeEpisodesFallback,
+  fetchAnimeEpisodesV2,
+} from "@/lib/cache"
 import ClientOnly from "@/components/ui/client-only"
 // import { AspectRatio } from "@/components/ui/aspect-ratio"
 
@@ -89,9 +93,8 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({
       try {
         const dub = type === "dub" ? true : false
         if (provider && type) {
-          const data = (await fetchAnimeEpisodes(
+          const data = (await fetchAnimeEpisodesV2(
             anilistId,
-            provider,
             dub
           )) as IEpisode[]
 
