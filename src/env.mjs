@@ -11,7 +11,6 @@ export const env = createEnv({
     DATABASE_URL: z.string().url(),
     ANIME_API_URI: z.string().url(),
     AUTH_SECRET: z.string(),
-    ANIME_API_URI_V2: z.string().url(),
   },
   client: {
     NEXT_PUBLIC_ANIME_API_URL: z.string().url(),
@@ -34,7 +33,6 @@ export const env = createEnv({
     NEXT_PUBLIC_ANIME_API_URL: process.env.NEXT_PUBLIC_ANIME_API_URL,
     NEXT_PUBLIC_APP_URL: process.env.NEXT_PUBLIC_APP_URL,
     NEXT_PUBLIC_PROXY_URI: process.env.NEXT_PUBLIC_PROXY_URI,
-    ANIME_API_URI_V2: process.env.ANIME_API_URI_V2,
     NEXT_PUBLIC_ANIME_API_URL_V2: process.env.NEXT_PUBLIC_ANIME_API_URL_V2,
     NEXT_PUBLIC_ANIME_API_URL_V3: process.env.NEXT_PUBLIC_ANIME_API_URL_V3,
     NEXT_PUBLIC_SKIP_TIMES: process.env.NEXT_PUBLIC_SKIP_TIMES,

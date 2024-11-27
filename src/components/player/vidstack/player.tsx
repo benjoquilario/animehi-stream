@@ -349,7 +349,7 @@ const VidstackPlayer = (props: VidstackPlayerProps) => {
         key={url}
         className="font-geist-sans player relative"
         title={animeVideoTitle || animeResponse.title.english}
-        src={url}
+        src={`${env.NEXT_PUBLIC_PROXY_URI}?url=${url}`}
         onCanPlay={onCanPlay}
         autoplay={autoPlay}
         crossorigin="anonymous"
