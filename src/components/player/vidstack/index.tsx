@@ -15,11 +15,7 @@ import { LuMessageSquare } from "react-icons/lu"
 // import { Spinner } from "@vidstack/react"
 // import dynamic from "next/dynamic"
 import VidstackPlayer from "./player"
-import {
-  fetchAnimeEpisodes,
-  fetchAnimeEpisodesFallback,
-  fetchAnimeEpisodesV2,
-} from "@/lib/cache"
+import { fetchAnimeEpisodes, fetchAnimeEpisodesV2 } from "@/lib/cache"
 import ClientOnly from "@/components/ui/client-only"
 // import { AspectRatio } from "@/components/ui/aspect-ratio"
 
@@ -101,27 +97,6 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({
           if (isMounted && data) {
             if (data.length !== 0) {
               setEpisodesLists(data)
-            } else {
-              const data = (await fetchAnimeEpisodesFallback(
-                anilistId
-              )) as IEpisodesFallback[]
-
-              const eps = data.find((ep) => ep.providerId === "shash")
-
-              const transformEpisodes = eps?.episodes.map((ep) => {
-                return {
-                  id: ep.id,
-                  title: `Episode ${ep.number}`,
-                  description: "",
-                  number: ep.number,
-                  image: selectedBackgroundImage,
-                  createdAt: "",
-                  imageHash: "",
-                  url: "",
-                }
-              })
-
-              setEpisodesLists(transformEpisodes)
             }
           }
         }

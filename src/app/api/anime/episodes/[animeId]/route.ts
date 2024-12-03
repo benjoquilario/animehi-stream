@@ -28,9 +28,11 @@ export async function GET(
 
     const data = await anilist.fetchEpisodesListById(animeId, dub as boolean)
 
+    console.log(data)
+
     const stringifyResult = JSON.stringify(data)
 
-    await redis.setex(`episodes:${animeId}`, 60 * 60 * 84 + 84, stringifyResult)
+    await redis.setex(`episodes:${animeId}`, 60 * 60 * 24, stringifyResult)
 
     return NextResponse.json(data)
   } catch (error) {

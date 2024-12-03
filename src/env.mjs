@@ -10,6 +10,7 @@ export const env = createEnv({
     GRAPHQL_ENDPOINT: z.string(),
     DATABASE_URL: z.string().url(),
     ANIME_API_URI: z.string().url(),
+    ANIME_API_URI_V2: z.string().url(),
     AUTH_SECRET: z.string(),
   },
   client: {
@@ -30,6 +31,7 @@ export const env = createEnv({
     AUTH_SECRET: process.env.AUTH_SECRET,
     DATABASE_URL: process.env.DATABASE_URL,
     ANIME_API_URI: process.env.ANIME_API_URI,
+    ANIME_API_URI_V2: process.env.ANIME_API_URI_V2,
     NEXT_PUBLIC_ANIME_API_URL: process.env.NEXT_PUBLIC_ANIME_API_URL,
     NEXT_PUBLIC_APP_URL: process.env.NEXT_PUBLIC_APP_URL,
     NEXT_PUBLIC_PROXY_URI: process.env.NEXT_PUBLIC_PROXY_URI,

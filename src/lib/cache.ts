@@ -171,7 +171,10 @@ async function fetchFromProxy(url: string, cache: any, cacheKey: string) {
 
     const requestConfig = PROXY_URL ? { params: { url } } : {}
 
-    const response = await axios.get(url)
+    const response = await axiosInstance.get(
+      PROXY_URL ? "" : url,
+      requestConfig
+    )
 
     if (
       response.status !== 200 ||
@@ -351,7 +354,7 @@ export async function fetchAnimeEpisodesV2(
   animeId: string,
   dub: boolean = false
 ) {
-  const params = new URLSearchParams({ dub: dub ? "true" : "falase" })
+  const params = new URLSearchParams({ dub: dub ? "true" : "false" })
   const url = `${env.NEXT_PUBLIC_APP_URL}/api/anime/episodes/${animeId}?${params.toString()}`
   const cacheKey = generateCacheKey(
     "animeEpisodesV2",
@@ -374,24 +377,6 @@ export async function fetchAnimeStreamingLinks(episodeId: string) {
   const cacheKey = generateCacheKey("animeStreamingLinks", episodeId)
 
   return fetchFromProxy(url, videoSourcesCache, cacheKey)
-}
-
-export async function fetchAnimeStreamingLinksFallback(episodeId: string) {
-  const url = `${env.NEXT_PUBLIC_PROXY_URI}?url=${env.NEXT_PUBLIC_ANIME_API_URL_V2}/anime/episode-srcs?id=${episodeId}`
-  const cacheKey = generateCacheKey("animeStreamingLinksFallback", episodeId)
-
-  return fetchFromProxy(
-    url,
-    createCache("animeStreamingLinksFallback"),
-    cacheKey
-  )
-}
-
-export async function fetchAnimeEpisodesFallback(animeId: string) {
-  const url = `${env.NEXT_PUBLIC_ANIME_API_URI}/episodes?id=${animeId}`
-  const cacheKey = generateCacheKey("animeEpisodesFallback", animeId)
-
-  return fetchFromProxy(url, createCache("animeEpisodesFallback"), cacheKey)
 }
 
 interface FetchSkipTimesParams {

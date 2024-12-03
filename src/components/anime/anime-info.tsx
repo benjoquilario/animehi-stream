@@ -17,7 +17,6 @@ import {
   fetchAnimeInfo,
   fetchAnimeData,
   fetchAnimeEpisodes,
-  fetchAnimeEpisodesFallback,
   fetchAnimeEpisodesV2,
 } from "@/lib/cache"
 import { useRouter } from "next/navigation"
@@ -56,31 +55,6 @@ const Anime: React.FC<AnimeProps> = ({ animeId, slug }) => {
               ...prevState,
               episodes: data,
             }))
-          } else {
-            const data = (await fetchAnimeEpisodesFallback(
-              animeId
-            )) as IEpisodesFallback[]
-            const eps = data.find((ep) => ep.providerId === "shash")
-
-            if (eps) {
-              const transformEpisodes: IEpisode[] = eps.episodes.map((ep) => {
-                return {
-                  id: ep.id,
-                  title: `Episode ${ep.number}`,
-                  description: "",
-                  number: ep.number,
-                  image: "",
-                  createdAt: "",
-                  imageHash: "",
-                  url: "",
-                }
-              })
-
-              setState((prevState) => ({
-                ...prevState,
-                episodes: transformEpisodes,
-              }))
-            }
           }
         }
       } catch (error) {
