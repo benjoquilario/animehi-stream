@@ -26,6 +26,11 @@ const axiosInstance = axios.create({
   timeout: 10000,
   headers: {
     "X-API-Key": API_KEY, // Assuming your API expects the key in this header
+    "Access-Control-Allow-Origin": env.NEXT_PUBLIC_APP_URL,
+    "Access-Control-Allow-Credentials": "true",
+    "Access-Control-Allow-Methods": "GET,HEAD,OPTIONS,POST,PUT",
+    "Access-Control-Allow-Headers":
+      "Origin, X-Requested-With, Content-Type, Accept, Authorization",
   },
 })
 
