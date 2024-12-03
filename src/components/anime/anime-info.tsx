@@ -1,7 +1,7 @@
 "use client"
 
 import { Button } from "@/components/ui/button"
-import NextImage from "@/components/ui/image"
+import Image from "next/image"
 import styles from "@/components/banner.module.css"
 import { base64SolidImage, cn, stripHtml } from "@/lib/utils"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
@@ -121,15 +121,17 @@ const Anime: React.FC<AnimeProps> = ({ animeId, slug }) => {
   return (
     <div className="overflow-hidden">
       <div className="relative z-0 h-[200px] w-full md:h-[400px]">
-        <NextImage
-          src={`${animeInfo?.cover ?? ""}`}
-          alt={animeInfo?.title.english ?? animeInfo?.title.romaji ?? ""}
-          fill
-          style={{ objectFit: "cover" }}
-          classnamecontainer="relative w-full h-full"
-          placeholder="blur"
-          blurDataURL={`data:image/svg+xml;base64,$${base64SolidImage(animeInfo?.color ?? "")}`}
-        />
+        <div className="relative h-full w-full">
+          <Image
+            src={`${animeInfo?.cover ?? ""}`}
+            alt={animeInfo?.title.english ?? animeInfo?.title.romaji ?? ""}
+            fill
+            style={{ objectFit: "cover" }}
+            placeholder="blur"
+            blurDataURL={`data:image/svg+xml;base64,$${base64SolidImage(animeInfo?.color ?? "")}`}
+          />
+        </div>
+
         <div
           className={cn("absolute left-0 top-0 h-full w-full", styles.overlay)}
         ></div>
@@ -140,16 +142,19 @@ const Anime: React.FC<AnimeProps> = ({ animeId, slug }) => {
             <Skeleton className="mt-[-88px] block h-[196px] w-full min-w-full md:mt-[-69px] md:h-[300px]" />
           ) : (
             <div className="mt-[-88px] block h-[196px] w-full min-w-full md:mt-[-69px] md:h-[300px]">
-              <NextImage
-                classnamecontainer="relative w-full min-w-full h-full"
-                className="rounded-lg"
-                style={{ objectFit: "cover" }}
-                fill
-                src={animeInfo?.image ?? ""}
-                alt={animeInfo?.title.english ?? animeInfo?.title.romaji ?? ""}
-                placeholder="blur"
-                blurDataURL={`data:image/svg+xml;base64,$${base64SolidImage(animeInfo?.color ?? "")}`}
-              />
+              <div className="relative h-full w-full min-w-full">
+                <Image
+                  className="rounded-lg"
+                  style={{ objectFit: "cover" }}
+                  fill
+                  src={animeInfo?.image ?? ""}
+                  alt={
+                    animeInfo?.title.english ?? animeInfo?.title.romaji ?? ""
+                  }
+                  placeholder="blur"
+                  blurDataURL={`data:image/svg+xml;base64,$${base64SolidImage(animeInfo?.color ?? "")}`}
+                />
+              </div>
             </div>
           )}
         </div>
@@ -382,18 +387,20 @@ function CharactersItem({ character }: CharactersItemProps) {
     <div className="overflow-hidden rounded-md bg-secondary/80 p-3">
       <div className="flex items-center justify-between">
         <div className="flex gap-2">
-          <NextImage
-            classnamecontainer="w-12 h-12 relative rounded-full"
-            src={character.image ?? "/placeholder.png"}
-            alt={
-              character.name.userPreferred ??
-              `${character.name.first} ${character.name.last}` ??
-              character.name.full
-            }
-            fill
-            className="rounded-full"
-            style={{ objectFit: "cover" }}
-          />
+          <div className="relative h-12 w-12 rounded-full">
+            <Image
+              src={character.image ?? "/placeholder.png"}
+              alt={
+                character.name.userPreferred ??
+                `${character.name.first} ${character.name.last}` ??
+                character.name.full
+              }
+              fill
+              className="rounded-full"
+              style={{ objectFit: "cover" }}
+            />
+          </div>
+
           <div className="flex flex-col gap-2">
             <h4 className="text-sm md:text-base">
               {character.name.userPreferred ??
@@ -407,27 +414,29 @@ function CharactersItem({ character }: CharactersItemProps) {
         </div>
         <div>
           <div className="flex flex-row-reverse gap-2">
-            <NextImage
-              classnamecontainer="w-12 h-12 relative rounded-full"
-              src={
-                character.voiceActors.length !== 0
-                  ? (character.voiceActors?.[0].image ??
-                    "./placeholder.png" ??
-                    "")
-                  : "/placeholder.png"
-              }
-              alt={
-                character.voiceActors.length !== 0
-                  ? (character.voiceActors?.[0].name.userPreferred ??
-                    `${character.voiceActors?.[0].name.first} ${character.voiceActors?.[0].name.last}` ??
-                    character.voiceActors?.[0].name.full ??
-                    "No Name")
-                  : ""
-              }
-              fill
-              style={{ objectFit: "cover" }}
-              className="rounded-full"
-            />
+            <div className="relative h-12 w-12 rounded-full">
+              <Image
+                src={
+                  character.voiceActors.length !== 0
+                    ? (character.voiceActors?.[0].image ??
+                      "./placeholder.png" ??
+                      "")
+                    : "/placeholder.png"
+                }
+                alt={
+                  character.voiceActors.length !== 0
+                    ? (character.voiceActors?.[0].name.userPreferred ??
+                      `${character.voiceActors?.[0].name.first} ${character.voiceActors?.[0].name.last}` ??
+                      character.voiceActors?.[0].name.full ??
+                      "No Name")
+                    : ""
+                }
+                fill
+                style={{ objectFit: "cover" }}
+                className="rounded-full"
+              />
+            </div>
+
             <div className="flex flex-col items-end gap-2">
               <h4 className="text-sm md:text-base">
                 {character.voiceActors.length !== 0

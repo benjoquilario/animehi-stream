@@ -94,6 +94,8 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({
             dub
           )) as IEpisode[]
 
+          console.log(data)
+
           if (isMounted && data) {
             if (data.length !== 0) {
               setEpisodesLists(data)

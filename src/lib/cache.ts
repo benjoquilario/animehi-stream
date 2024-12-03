@@ -18,7 +18,7 @@ if (PROXY_URL) {
   PROXY_URL = ensureUrlEndsWithSlash(env.NEXT_PUBLIC_PROXY_URI as string)
 }
 
-const API_KEY = env.AUTH_SECRET
+const API_KEY = "secret key"
 
 // Axios instance
 const axiosInstance = axios.create({
