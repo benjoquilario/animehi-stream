@@ -18,19 +18,19 @@ if (PROXY_URL) {
   PROXY_URL = ensureUrlEndsWithSlash(env.NEXT_PUBLIC_PROXY_URI as string)
 }
 
-const API_KEY = "CGnCt6OvPywmxUVjnJe4ccsYnTJuYXrAFAFkyeddREw="
+const API_KEY = env.AUTH_SECRET
 
 // Axios instance
 const axiosInstance = axios.create({
   baseURL: PROXY_URL || undefined,
   timeout: 10000,
   headers: {
-    "X-API-Key": API_KEY, // Assuming your API expects the key in this header
-    "Access-Control-Allow-Origin": "*",
-    "Access-Control-Allow-Credentials": "true",
-    "Access-Control-Allow-Methods": "GET,HEAD,OPTIONS,POST,PUT",
-    "Access-Control-Allow-Headers":
-      "Origin, X-Requested-With, Content-Type, Accept, Authorization",
+    "X-API-Key": API_KEY,
+    "access-control-allow-headers": "x-atx, Content-Type",
+    "access-control-allow-methods": "GET, POST, PUT, DELETE, OPTIONS",
+    "access-control-allow-origin": "*",
+    "User-Agent":
+      "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36 Edg/131.0.0.0",
   },
 })
 
@@ -176,10 +176,7 @@ async function fetchFromProxy(url: string, cache: any, cacheKey: string) {
 
     const requestConfig = PROXY_URL ? { params: { url } } : {}
 
-    const response = await axiosInstance.get(
-      PROXY_URL ? "" : url,
-      requestConfig
-    )
+    const response = await axios.get(url)
 
     if (
       response.status !== 200 ||
