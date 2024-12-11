@@ -20,19 +20,7 @@ export async function GET(
         status: 422,
       })
 
-    const cachedResponse = await redis.get(`episodes:${animeId}`)
-
-    if (cachedResponse) {
-      return NextResponse.json(cachedResponse)
-    }
-
     const data = await anilist.fetchEpisodesListById(animeId, dub as boolean)
-
-    console.log(data)
-
-    const stringifyResult = JSON.stringify(data)
-
-    await redis.setex(`episodes:${animeId}`, 60 * 60 * 24, stringifyResult)
 
     return NextResponse.json(data)
   } catch (error) {
