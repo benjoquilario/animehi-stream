@@ -357,7 +357,7 @@ export async function fetchAnimeEpisodesV2(
   dub: boolean = false
 ) {
   const params = new URLSearchParams({ dub: dub ? "true" : "false" })
-  const url = `${env.NEXT_PUBLIC_APP_URL}/api/anime/episodes/${animeId}?${params.toString()}`
+  const url = `/api/anime/episodes/${animeId}?${params.toString()}`
   const cacheKey = generateCacheKey(
     "animeEpisodesV2",
     animeId,

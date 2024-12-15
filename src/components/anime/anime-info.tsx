@@ -47,8 +47,6 @@ const Anime: React.FC<AnimeProps> = ({ animeId, slug }) => {
         setState((prevState) => ({ ...prevState, error: null }))
         const data = (await fetchAnimeEpisodesV2(animeId)) as IEpisode[]
 
-        console.log(data)
-
         if (isMounted && data) {
           if (data.length !== 0) {
             setState((prevState) => ({
