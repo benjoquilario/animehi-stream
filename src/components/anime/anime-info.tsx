@@ -51,6 +51,8 @@ const Anime: React.FC<AnimeProps> = ({ animeId, slug }) => {
             }))
           }
         }
+
+        console.log(data)
       } catch (error) {
         setState((prevState) => ({
           ...prevState,

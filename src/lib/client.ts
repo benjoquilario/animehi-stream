@@ -1,4 +1,6 @@
 import { env } from "@/env.mjs"
+import { META } from "@consumet/extensions"
+
 interface FetchOptions {
   type?: string
   season?: string
@@ -72,6 +74,7 @@ async function fetchFromProxy(url: string, cache: any, cacheKey: string) {
 }
 
 import { createCache, generateCacheKey } from "./cache"
+import { create } from "domain"
 
 const animeEpisodesCache = createCache("EpisodesV2")
 const recentEpisodesCache = createCache("RecentEpisodes")
@@ -96,12 +99,19 @@ export async function fetchAnimeEpisodesV2(
   animeId: string,
   dub: boolean = false
 ) {
-  const params = new URLSearchParams({ dub: dub ? "true" : "false" })
-  const url = `${env.NEXT_PUBLIC_APP_URL}/api/anime/episodes/${animeId}?${params.toString()}`
-  const cacheKey = generateCacheKey(
-    "animeEpisodes",
-    animeId,
-    dub ? "dub" : "sub"
-  )
-  return fetchFromProxy(url, animeEpisodesCache, cacheKey)
+  const anilist = new META.Anilist()
+
+  const cache = createCache("EpisodesV2")
+
+  const cacheKey = generateCacheKey("animeEpisodes", animeId, dub.toString())
+
+  const cachedResponse = cache.get(cacheKey)
+  if (cachedResponse) {
+    return cachedResponse // Return the cached response if available
+  }
+
+  const data = await anilist.fetchEpisodesListById(animeId, dub as boolean)
+
+  cache.set(cacheKey, data)
+  return data
 }
