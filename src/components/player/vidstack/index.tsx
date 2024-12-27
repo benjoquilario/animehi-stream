@@ -163,10 +163,12 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({
       episodesList?.length !== 0
         ? (episodesList?.length ??
           animeResponse.currentEpisode ??
-          animeResponse.nextAiringEpisode.episode - 1)
-        : 1,
+          animeResponse.nextAiringEpisode?.episode - 1)
+        : 1 || 1,
     [animeResponse, episodesList]
   )
+
+  console.log(latestEpisodeNumber)
 
   return (
     <ClientOnly>

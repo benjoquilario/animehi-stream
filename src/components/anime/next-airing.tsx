@@ -10,10 +10,10 @@ interface NextAiringEpisodeProps {
 
 const NextAiringEpisode: React.FC<NextAiringEpisodeProps> = ({ animeInfo }) => {
   const nextEpisodeNumber =
-    animeInfo?.status === "Ongoing" ? animeInfo?.nextAiringEpisode.episode : ""
+    animeInfo?.status === "Ongoing" ? animeInfo?.nextAiringEpisode?.episode : ""
   const nextEpisodeAiringTime =
     animeInfo?.status === "Ongoing" && animeInfo?.nextAiringEpisode
-      ? animeInfo?.nextAiringEpisode.airingTime * 1000
+      ? animeInfo?.nextAiringEpisode?.airingTime * 1000
       : null
 
   const countdown = useCountdown(nextEpisodeAiringTime)
