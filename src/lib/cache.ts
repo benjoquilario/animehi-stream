@@ -72,7 +72,7 @@ function handleError(error: any, context: string) {
   throw new Error(errorMessage)
 }
 
-function generateCacheKey(...args: string[]) {
+export function generateCacheKey(...args: string[]) {
   return args.join("-")
 }
 
@@ -81,7 +81,7 @@ interface CacheItem {
   timestamp: number
 }
 
-function createOptimizedSessionStorageCache(
+export function createOptimizedSessionStorageCache(
   maxSize: number,
   maxAge: number,
   cacheKey: string
@@ -144,7 +144,7 @@ const CACHE_MAX_AGE = 24 * 60 * 60 * 1000 // 24 hours in milliseconds
 
 // Factory function for cache creation
 // Function to create cache with given cache key
-function createCache(cacheKey: string) {
+export function createCache(cacheKey: string) {
   return createOptimizedSessionStorageCache(CACHE_SIZE, CACHE_MAX_AGE, cacheKey)
 }
 

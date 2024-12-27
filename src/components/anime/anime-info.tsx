@@ -13,12 +13,8 @@ import Relations from "@/components/anime/relations"
 import { Skeleton } from "@/components/ui/skeleton"
 import { FaSpinner } from "react-icons/fa"
 import Recommendations from "@/components/anime/recommendations"
-import {
-  fetchAnimeInfo,
-  fetchAnimeData,
-  fetchAnimeEpisodes,
-  fetchAnimeEpisodesV2,
-} from "@/lib/cache"
+import { fetchAnimeInfo, fetchAnimeData } from "@/lib/cache"
+import { fetchAnimeEpisodesV2 } from "@/lib/client"
 import { useRouter } from "next/navigation"
 import { startHolyLoader, stopHolyLoader } from "holy-loader"
 

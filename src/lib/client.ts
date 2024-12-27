@@ -44,8 +44,13 @@ export async function fetchAdvanceSearch(
   return data
 }
 
-async function fetchFromProxy(url: string) {
+async function fetchFromProxy(url: string, cache: any, cacheKey: string) {
   try {
+    const cachedResponse = cache.get(cacheKey)
+    if (cachedResponse) {
+      return cachedResponse // Return the cached response if available
+    }
+
     const response = await fetch(url)
 
     if (response.status !== 200) {
@@ -59,12 +64,17 @@ async function fetchFromProxy(url: string) {
 
     const data = await response.json()
 
+    cache.set(cacheKey, data)
     return data
   } catch (error) {
     throw error
   }
 }
 
+import { createCache, generateCacheKey } from "./cache"
+
+const animeEpisodesCache = createCache("EpisodesV2")
+const recentEpisodesCache = createCache("RecentEpisodes")
 export async function fetchRecentEpisodes(page = 1, perPage = 18) {
   const params = new URLSearchParams({
     page: page.toString(),
@@ -73,5 +83,25 @@ export async function fetchRecentEpisodes(page = 1, perPage = 18) {
 
   const url = `${env.NEXT_PUBLIC_APP_URL}/api/anime/recents`
 
-  return fetchFromProxy(`${url}?${params.toString()}`)
+  const cacheKey = generateCacheKey("recentsEpisoedes", page.toString())
+
+  return fetchFromProxy(
+    `${url}?${params.toString()}`,
+    recentEpisodesCache,
+    cacheKey
+  )
+}
+
+export async function fetchAnimeEpisodesV2(
+  animeId: string,
+  dub: boolean = false
+) {
+  const params = new URLSearchParams({ dub: dub ? "true" : "false" })
+  const url = `${env.NEXT_PUBLIC_APP_URL}/api/anime/episodes/${animeId}?${params.toString()}`
+  const cacheKey = generateCacheKey(
+    "animeEpisodes",
+    animeId,
+    dub ? "dub" : "sub"
+  )
+  return fetchFromProxy(url, animeEpisodesCache, cacheKey)
 }
