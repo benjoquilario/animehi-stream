@@ -5,6 +5,7 @@ import { getCurrentUser } from "@/lib/current-user"
 import VideoPlayer from "@/components/player/vidstack"
 import { notFound } from "next/navigation"
 import { getAnimeViews } from "@/lib/metrics"
+import { Suspense } from "react"
 
 type Params = {
   params: {
@@ -70,16 +71,16 @@ export default async function Watch({ params, searchParams }: Params) {
 
   if (!animeResponse || !animeId) notFound()
 
-  console.log(animeViews)
-
   return (
     <div className="mt-2 flex-1">
-      <VideoPlayer
-        anilistId={animeId}
-        animeResponse={animeResponse}
-        currentUser={currentUser}
-        views={animeViews?.view as number}
-      />
+      <Suspense>
+        <VideoPlayer
+          anilistId={animeId}
+          animeResponse={animeResponse}
+          currentUser={currentUser}
+          views={animeViews?.view as number}
+        />
+      </Suspense>
     </div>
   )
 }

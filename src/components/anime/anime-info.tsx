@@ -13,7 +13,7 @@ import Relations from "@/components/anime/relations"
 import { Skeleton } from "@/components/ui/skeleton"
 import { FaSpinner } from "react-icons/fa"
 import Recommendations from "@/components/anime/recommendations"
-import { fetchAnimeInfo, fetchAnimeData } from "@/lib/cache"
+import { fetchAnimeInfo, fetchAnimeData, fetchAnimeEpisodes } from "@/lib/cache"
 import { fetchAnimeEpisodesV2 } from "@/lib/client"
 import { useRouter } from "next/navigation"
 import { startHolyLoader, stopHolyLoader } from "holy-loader"
@@ -31,6 +31,7 @@ const Anime: React.FC<AnimeProps> = ({ animeId, slug }) => {
     },
     error: null as string | null,
   })
+  const [provider, setProvider] = useState("gogoanime")
 
   const [animeInfo, setAnimeInfo] = useState<IAnilistInfo | null>(null)
   const [loading, setIsLoading] = useState(true)
@@ -41,15 +42,13 @@ const Anime: React.FC<AnimeProps> = ({ animeId, slug }) => {
       if (!animeId) return
       try {
         setState((prevState) => ({ ...prevState, error: null }))
-        const data = (await fetchAnimeEpisodesV2(animeId)) as IEpisode[]
+        const data = (await fetchAnimeEpisodes(animeId, provider)) as IEpisode[]
 
         if (isMounted && data) {
-          if (data.length !== 0) {
-            setState((prevState) => ({
-              ...prevState,
-              episodes: data,
-            }))
-          }
+          setState((prevState) => ({
+            ...prevState,
+            episodes: data,
+          }))
         }
 
         console.log(data)
@@ -69,7 +68,13 @@ const Anime: React.FC<AnimeProps> = ({ animeId, slug }) => {
     }
 
     fetchData()
-  }, [animeId])
+  }, [animeId, provider])
+
+  useEffect(() => {
+    if (state.episodes.length === 0 && provider === "gogoanime") {
+      setProvider("zoro")
+    }
+  }, [provider, state.episodes.length])
 
   useEffect(() => {
     let isMounted = true
@@ -324,7 +329,7 @@ const Anime: React.FC<AnimeProps> = ({ animeId, slug }) => {
                     console.error("Error starting loader:", error)
                   } finally {
                     router.push(
-                      `/watch/${animeId}?ep=${episode.number}&provider=gogoanime&type=sub`
+                      `/watch/${animeId}?ep=${episode.number}&provider=${provider}&type=sub`
                     )
                     stopHolyLoader()
                   }

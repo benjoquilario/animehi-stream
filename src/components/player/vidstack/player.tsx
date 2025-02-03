@@ -83,7 +83,7 @@ const VidstackPlayer = (props: VidstackPlayerProps) => {
     store.resetUrl,
   ])
 
-  const { data, isLoading } = useVideoSource(episodeId, provider)
+  const { data, isLoading, isError } = useVideoSource(episodeId, provider)
 
   const sources = useMemo(
     () =>
@@ -242,16 +242,22 @@ const VidstackPlayer = (props: VidstackPlayerProps) => {
     async function fetchProcessAndSkipTimes() {
       if (!malId) return
 
-      const data = (await fetchSkipTimes({
-        malId: malId.toString(),
-        episodeNumber: `${episodeNumber}`,
-      })) as AniSkip
+      try {
+        const data = (await fetchSkipTimes({
+          malId: malId.toString(),
+          episodeNumber: `${episodeNumber}`,
+        })) as AniSkip
 
-      const filteredSkipTimes = data.results.filter(
-        ({ skipType }) => skipType === "op" || skipType === "ed"
-      )
+        console.log(data)
 
-      setSkipTimes(filteredSkipTimes)
+        const filteredSkipTimes = data.results.filter(
+          ({ skipType }) => skipType === "op" || skipType === "ed"
+        )
+
+        setSkipTimes(filteredSkipTimes)
+      } catch (error) {
+        console.log("error")
+      }
     }
 
     // fetchAndSetAnimeSource()
@@ -343,81 +349,87 @@ const VidstackPlayer = (props: VidstackPlayerProps) => {
     [data]
   )
 
+  console.log(isError)
+
   return (
     <>
-      <MediaPlayer
-        key={url}
-        className="font-geist-sans player relative"
-        title={animeVideoTitle || animeResponse.title.english}
-        src={`${env.NEXT_PUBLIC_PROXY_URI}?url=${url}`}
-        onCanPlay={onCanPlay}
-        autoplay={autoPlay}
-        crossorigin="anonymous"
-        playsinline
-        onLoadedMetadata={onLoadedMetadata}
-        onProviderChange={onProviderChange}
-        onTimeUpdate={onTimeUpdate}
-        ref={player}
-        aspectRatio="16/9"
-        load="eager"
-        posterLoad="eager"
-        streamType="on-demand"
-        storage="storage-key"
-        keyTarget="player"
-        onPause={handlePause}
-        onEnd={handleEnd}
-        onPlay={handlePlay}
-        onEnded={handlePlaybackEnded}
-      >
-        <MediaProvider>
-          <Poster
-            className="vds-poster absolute inset-0	h-full w-full translate-x-0 translate-y-0"
-            src={`${env.NEXT_PUBLIC_PROXY_URI}?url=${posterImage}`}
-            alt=""
-            style={{ objectFit: "cover" }}
-          />
-
-          {subtitle && provider === "zoro" ? (
-            <Track
-              label="English"
-              kind="captions"
-              src={subtitle}
-              default
-              key={subtitle}
+      {isError ? (
+        <div>There was an error</div>
+      ) : (
+        <MediaPlayer
+          key={url}
+          className="font-geist-sans player relative"
+          title={animeVideoTitle || animeResponse.title.english}
+          src={`${env.NEXT_PUBLIC_PROXY_URI}?url=${url}`}
+          onCanPlay={onCanPlay}
+          autoplay={autoPlay}
+          crossorigin="anonymous"
+          playsinline
+          onLoadedMetadata={onLoadedMetadata}
+          onProviderChange={onProviderChange}
+          onTimeUpdate={onTimeUpdate}
+          ref={player}
+          aspectRatio="16/9"
+          load="eager"
+          posterLoad="eager"
+          streamType="on-demand"
+          storage="storage-key"
+          keyTarget="player"
+          onPause={handlePause}
+          onEnd={handleEnd}
+          onPlay={handlePlay}
+          onEnded={handlePlaybackEnded}
+        >
+          <MediaProvider>
+            <Poster
+              className="vds-poster absolute inset-0	h-full w-full translate-x-0 translate-y-0"
+              src={`${env.NEXT_PUBLIC_PROXY_URI}?url=${posterImage}`}
+              alt=""
+              style={{ objectFit: "cover" }}
             />
-          ) : null}
-        </MediaProvider>
-        {opButton && (
-          <Button
-            onClick={() =>
-              Object.assign(player.current ?? {}, {
-                currentTime: skipTimes[0]?.interval.endTime ?? 0,
-              })
-            }
-            variant="secondary"
-            className="absolute bottom-[70px] right-4 z-40 rounded-md px-3 py-2 text-sm sm:bottom-[83px]"
-          >
-            Skip Opening
-          </Button>
-        )}
-        {otButton && (
-          <Button
-            variant="secondary"
-            onClick={() =>
-              Object.assign(player.current ?? {}, {
-                currentTime: skipTimes[1]?.interval.endTime ?? 0,
-              })
-            }
-            className="absolute bottom-[70px] right-4 z-40 rounded-[6px] px-3 py-2 text-sm sm:bottom-[83px]"
-          >
-            Skip Ending
-          </Button>
-        )}
-        <DefaultVideoLayout
-          thumbnails={thumbnails ?? ""}
-          icons={defaultLayoutIcons}
-        />
-      </MediaPlayer>
+
+            {subtitle && provider === "zoro" ? (
+              <Track
+                label="English"
+                kind="captions"
+                src={subtitle}
+                default
+                key={subtitle}
+              />
+            ) : null}
+          </MediaProvider>
+          {opButton && (
+            <Button
+              onClick={() =>
+                Object.assign(player.current ?? {}, {
+                  currentTime: skipTimes[0]?.interval.endTime ?? 0,
+                })
+              }
+              variant="secondary"
+              className="absolute bottom-[70px] right-4 z-40 rounded-md px-3 py-2 text-sm sm:bottom-[83px]"
+            >
+              Skip Opening
+            </Button>
+          )}
+          {otButton && (
+            <Button
+              variant="secondary"
+              onClick={() =>
+                Object.assign(player.current ?? {}, {
+                  currentTime: skipTimes[1]?.interval.endTime ?? 0,
+                })
+              }
+              className="absolute bottom-[70px] right-4 z-40 rounded-[6px] px-3 py-2 text-sm sm:bottom-[83px]"
+            >
+              Skip Ending
+            </Button>
+          )}
+          <DefaultVideoLayout
+            thumbnails={thumbnails ?? ""}
+            icons={defaultLayoutIcons}
+          />
+        </MediaPlayer>
+      )}
     </>
   )
 }

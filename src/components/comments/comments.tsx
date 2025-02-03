@@ -60,7 +60,7 @@ const Comments: React.FC<CommentsProps> = ({
             anilistId={anilistId}
           />
 
-          <AnimatePresence>
+          <AnimatePresence key={`${anilistId}-episode-${episodeNumber}`}>
             {comments?.pages.map((page) =>
               page?.comments.length !== 0 ? (
                 page?.comments.map((comment: IComment) => (

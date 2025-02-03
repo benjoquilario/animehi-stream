@@ -90,8 +90,9 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({
       try {
         const dub = type === "dub" ? true : false
         if (provider && type) {
-          const data = (await fetchAnimeEpisodesV2(
+          const data = (await fetchAnimeEpisodes(
             anilistId,
+            provider,
             dub
           )) as IEpisode[]
 
@@ -114,6 +115,14 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({
     fetchData()
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [anilistId, episodeNumber, type, provider])
+
+  useEffect(() => {
+    if (episodesList?.length === 0 && provider === "gogoanime") {
+      const params = new URLSearchParams(searchParams.toString())
+      params.set("provider", `zoro`)
+      window.history.pushState(null, "", `?${params.toString()}`)
+    }
+  }, [episodesList?.length, searchParams, provider])
 
   useEffect(() => {
     if (episodesList) {

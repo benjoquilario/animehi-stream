@@ -74,7 +74,6 @@ async function fetchFromProxy(url: string, cache: any, cacheKey: string) {
 }
 
 import { createCache, generateCacheKey } from "./cache"
-import { create } from "domain"
 
 const animeEpisodesCache = createCache("EpisodesV2")
 const recentEpisodesCache = createCache("RecentEpisodes")
