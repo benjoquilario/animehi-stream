@@ -381,6 +381,19 @@ export async function fetchAnimeStreamingLinks(episodeId: string) {
   return fetchFromProxy(url, videoSourcesCache, cacheKey)
 }
 
+export async function fetchAnimeGogoUrlLink(episodeId: string) {
+  const url = `https://gogoanime-api-eta.vercel.app/anime/gogoanime/watch/${episodeId}`
+  const cacheKey = generateCacheKey("animeGogoUrlLink", episodeId)
+
+  return fetchFromProxy(url, videoSourcesCache, cacheKey)
+}
+
+export async function fetchZoroUrlLink(episodeId: string) {
+  const url = `${BASE_URL}meta/anilist/watch/${episodeId}?provider=zoro`
+  const cacheKey = generateCacheKey("animeZoroUrlLink", episodeId)
+  return fetchFromProxy(url, videoSourcesCache, cacheKey)
+}
+
 interface FetchSkipTimesParams {
   malId: string
   episodeNumber: string

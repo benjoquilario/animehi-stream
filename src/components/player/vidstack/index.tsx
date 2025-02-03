@@ -143,7 +143,7 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({
         })
       }
     }
-  }, [episodeNumber, episodesList])
+  }, [episodeNumber, episodesList, provider])
 
   useEffect(() => {
     const mediaSession = navigator.mediaSession

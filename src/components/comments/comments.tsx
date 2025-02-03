@@ -72,6 +72,7 @@ const Comments: React.FC<CommentsProps> = ({
                     className="mb-2 flex w-full gap-3 hover:bg-background/90"
                   >
                     <CommentItem
+                      key={comment.id}
                       comment={comment}
                       animeId={anilistId}
                       episodeNumber={episodeNumber}
