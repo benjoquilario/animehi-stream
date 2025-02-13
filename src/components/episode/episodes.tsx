@@ -139,6 +139,7 @@ const Episodes: React.FC<EpisodesProps> = ({
 
                     return (
                       <Button
+                        // href={`/watch/${animeId}?ep=${episode.&provider=zoro&type=sub`}
                         onClick={() => handleEpisodeSelect(episode.number)}
                         key={episode.id}
                         className={cn(

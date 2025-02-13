@@ -42,3 +42,33 @@ interface IEpisodesFallback {
     number: number
   }[]
 }
+
+interface Tracks {
+  file: string
+  label?: string
+  kind: "captions" | "thumbnails"
+  default?: boolean
+}
+
+interface Sources {
+  url: string
+  type: string
+}
+
+interface IZoroSource {
+  success: boolean
+  data: {
+    tracks: Tracks[]
+    intro: {
+      start: number
+      end: number
+    }
+    outro: {
+      start: number
+      end: number
+    }
+    sources: Sources[]
+    anilistID: number
+    malID: number
+  }
+}

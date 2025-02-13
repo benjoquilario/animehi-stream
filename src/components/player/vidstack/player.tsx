@@ -53,6 +53,9 @@ type VidstackPlayerProps = {
   banner: string
   provider: string
   type: string
+  thumbnail?: string
+  subtitle?: string
+  videoUrl: string
 }
 
 const VidstackPlayer = (props: VidstackPlayerProps) => {
@@ -68,6 +71,9 @@ const VidstackPlayer = (props: VidstackPlayerProps) => {
     provider,
     type,
     banner,
+    thumbnail,
+    subtitle,
+    videoUrl,
   } = props
   const { data: session } = useSession()
   const router = useRouter()
@@ -75,61 +81,10 @@ const VidstackPlayer = (props: VidstackPlayerProps) => {
   // const { duration } = useMediaStore(player)
   const animeVideoTitle = title
   const posterImage = banner
-  const setDownload = useWatchStore((store) => store.setDownload)
   const [skipTimes, setSkipTimes] = useState<AniSkipResult[]>([])
   const [totalDuration, setTotalDuration] = useState<number>(0)
   const [currentTime, setCurrentTime] = useState<number>(0)
   // const [isLoading, setIsLoading] = useState(false)
-
-  const url = useWatchStore((store) => store.url)
-
-  const [setUrl, resetUrl] = useWatchStore((store) => [
-    store.setUrl,
-    store.resetUrl,
-  ])
-
-  const { data, isLoading, isError } = useVideoSource(episodeId, provider)
-
-  // useEffect(() => {
-  //   async function fetchEpisodeLink() {
-  //     if (provider === "gogoanime") {
-  //       setIsLoading(true)
-
-  //       try {
-  //         const data = await fetchAnimeGogoUrlLink(episodeId)
-
-  //         setData(data)
-  //         setIsLoading(false)
-  //       } catch (error) {
-  //         console.log(error)
-  //       }
-  //     } else {
-  //       setIsLoading(true)
-  //       try {
-  //         const data = await fetchZoroUrlLink(episodeId)
-
-  //         setData(data)
-  //         setIsLoading(false)
-  //       } catch (error) {
-  //         console.log(error)
-  //       }
-  //     }
-  //   }
-
-  //   if (episodeId) {
-  //     fetchEpisodeLink()
-  //   }
-  //   // eslint-disable-next-line react-hooks/exhaustive-deps
-  // }, [episodeId, provider])
-
-  const sources = useMemo(
-    () =>
-      data?.sources?.find((source: Source) => source.quality === "default") ??
-      data?.sources?.[0],
-    [data]
-  )
-
-  console.log(data)
 
   const autoSkip = useStore(
     useAutoSkip,
@@ -276,7 +231,7 @@ const VidstackPlayer = (props: VidstackPlayerProps) => {
 
   useEffect(() => {
     setCurrentTime(parseFloat(localStorage.getItem("currentTime") || "0"))
-    setDownload(data?.download)
+    // setDownload(data?.download)
 
     async function fetchProcessAndSkipTimes() {
       if (!malId) return
@@ -356,16 +311,6 @@ const VidstackPlayer = (props: VidstackPlayerProps) => {
     }
   }
 
-  useEffect(() => {
-    if (isLoading) {
-      resetUrl()
-    }
-
-    if (sources) {
-      setUrl(sources.url)
-    }
-  }, [isLoading, resetUrl, setUrl, sources])
-
   const handlePlay = function () {
     setIsPlaying(true)
   }
@@ -378,92 +323,84 @@ const VidstackPlayer = (props: VidstackPlayerProps) => {
     setIsPlaying(false)
   }
 
-  const subtitle = useMemo(
-    () => (data?.subtitles ? data?.subtitles[0].url : null),
-    [data]
-  )
-
-  const thumbnails = useMemo(
-    () => (data?.subtitles ? data?.subtitles[1].url : ""),
-    [data]
-  )
-
   return (
-    <>
-      <MediaPlayer
-        key={url}
-        className="font-geist-sans player relative"
-        title={animeVideoTitle || animeResponse.title.english}
-        src={`${env.NEXT_PUBLIC_PROXY_URI}?url=${url}`}
-        onCanPlay={onCanPlay}
-        autoplay={autoPlay}
-        crossorigin="anonymous"
-        playsinline
-        onLoadedMetadata={onLoadedMetadata}
-        onProviderChange={onProviderChange}
-        onTimeUpdate={onTimeUpdate}
-        ref={player}
-        aspectRatio="16/9"
-        load="eager"
-        posterLoad="eager"
-        streamType="on-demand"
-        storage="storage-key"
-        keyTarget="player"
-        onPause={handlePause}
-        onEnd={handleEnd}
-        onPlay={handlePlay}
-        onEnded={handlePlaybackEnded}
-      >
-        <MediaProvider>
+    <MediaPlayer
+      key={videoUrl}
+      className="font-geist-sans player relative"
+      title={animeVideoTitle || animeResponse.title.english}
+      src={`${env.NEXT_PUBLIC_PROXY_URI}?url=${videoUrl}`}
+      onCanPlay={onCanPlay}
+      autoplay={autoPlay}
+      crossorigin="anonymous"
+      playsinline
+      onLoadedMetadata={onLoadedMetadata}
+      onProviderChange={onProviderChange}
+      onTimeUpdate={onTimeUpdate}
+      ref={player}
+      aspectRatio="16/9"
+      load="eager"
+      posterLoad="eager"
+      streamType="on-demand"
+      storage="storage-key"
+      keyTarget="player"
+      onPause={handlePause}
+      onEnd={handleEnd}
+      onPlay={handlePlay}
+      onEnded={handlePlaybackEnded}
+    >
+      <MediaProvider>
+        {banner ? (
           <Poster
             className="vds-poster absolute inset-0	h-full w-full translate-x-0 translate-y-0"
             src={`${env.NEXT_PUBLIC_PROXY_URI}?url=${posterImage}`}
             alt=""
             style={{ objectFit: "cover" }}
           />
+        ) : (
+          <div className="absolute inset-0"></div>
+        )}
 
-          {subtitle && provider === "zoro" ? (
-            <Track
-              label="English"
-              kind="captions"
-              src={subtitle}
-              default
-              key={subtitle}
-            />
-          ) : null}
-        </MediaProvider>
-        {opButton && (
-          <Button
-            onClick={() =>
-              Object.assign(player.current ?? {}, {
-                currentTime: skipTimes[0]?.interval.endTime ?? 0,
-              })
-            }
-            variant="secondary"
-            className="absolute bottom-[70px] right-4 z-40 rounded-md px-3 py-2 text-sm sm:bottom-[83px]"
-          >
-            Skip Opening
-          </Button>
-        )}
-        {otButton && (
-          <Button
-            variant="secondary"
-            onClick={() =>
-              Object.assign(player.current ?? {}, {
-                currentTime: skipTimes[1]?.interval.endTime ?? 0,
-              })
-            }
-            className="absolute bottom-[70px] right-4 z-40 rounded-[6px] px-3 py-2 text-sm sm:bottom-[83px]"
-          >
-            Skip Ending
-          </Button>
-        )}
-        <DefaultVideoLayout
-          thumbnails={thumbnails ?? ""}
-          icons={defaultLayoutIcons}
-        />
-      </MediaPlayer>
-    </>
+        {subtitle && provider === "zoro" ? (
+          <Track
+            label="English"
+            kind="captions"
+            src={subtitle}
+            default
+            key={subtitle}
+          />
+        ) : null}
+      </MediaProvider>
+      {opButton && (
+        <Button
+          onClick={() =>
+            Object.assign(player.current ?? {}, {
+              currentTime: skipTimes[0]?.interval.endTime ?? 0,
+            })
+          }
+          variant="secondary"
+          className="absolute bottom-[70px] right-4 z-40 rounded-md px-3 py-2 text-sm sm:bottom-[83px]"
+        >
+          Skip Opening
+        </Button>
+      )}
+      {otButton && (
+        <Button
+          variant="secondary"
+          onClick={() =>
+            Object.assign(player.current ?? {}, {
+              currentTime: skipTimes[1]?.interval.endTime ?? 0,
+            })
+          }
+          className="absolute bottom-[70px] right-4 z-40 rounded-[6px] px-3 py-2 text-sm sm:bottom-[83px]"
+        >
+          Skip Ending
+        </Button>
+      )}
+      <DefaultVideoLayout
+        thumbnails={thumbnail ?? ""}
+        icons={defaultLayoutIcons}
+      />
+    </MediaPlayer>
   )
 }
 export default VidstackPlayer

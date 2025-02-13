@@ -1,6 +1,6 @@
 "use client"
 
-import React, { useEffect, useState, useCallback, useMemo } from "react"
+import React, { useEffect, useState, useMemo } from "react"
 import { IAnilistInfo } from "types/types"
 import Episodes from "@/components/episode/episodes"
 import { useSearchParams } from "next/navigation"
@@ -16,7 +16,6 @@ import { LuMessageSquare } from "react-icons/lu"
 // import dynamic from "next/dynamic"
 import VidstackPlayer from "./player"
 import { fetchAnimeEpisodes } from "@/lib/cache"
-import { fetchAnimeEpisodesV2 } from "@/lib/client"
 import ClientOnly from "@/components/ui/client-only"
 // import { AspectRatio } from "@/components/ui/aspect-ratio"
 
@@ -38,41 +37,72 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({
   const ep = searchParams.get("ep")
   const provider = searchParams.get("provider") || "gogoanime"
   const episodeNumber = Number(ep) || 1
-  const download = useWatchStore((store) => store.download)
+
+  const { download } = useWatchStore()
   const [isPending, setIsPending] = useState(false)
   const [error, setError] = useState(false)
   const [selectedBackgroundImage, setSelectedBackgroundImage] =
     useState<string>("")
-  const [episodesList, setEpisodesLists] = useState<IEpisode[]>()
+  const [episodesList, setEpisodesLists] = useState<IEpisode[]>([])
   const [episodesNavigation, setEpisodeNavigation] = useState<IEpisode | null>(
     null
   )
+
+  const [videoSource, setVideoSource] = useState<IZoroSource | null>(null)
+
+  useEffect(() => {
+    let isMounted = true
+
+    const fetchData = async function () {
+      if (episodesNavigation?.id) {
+        const res = await fetch(
+          `/api/anime/sources?provider=${provider}&episodeId=${episodesNavigation?.id}`
+        )
+
+        const data = (await res.json()) as IZoroSource
+
+        if (isMounted) {
+          setVideoSource(data)
+        }
+      }
+    }
+
+    fetchData()
+
+    return () => {
+      isMounted = false
+    }
+  }, [episodesNavigation?.id, provider])
+
+  console.log(videoSource)
 
   useEffect(() => {
     const updateBackgroundImage = () => {
       const episodeImage = episodesNavigation?.image
       const bannerImage = animeResponse?.cover || animeResponse?.image
-      if (episodeImage && episodeImage !== animeResponse.image) {
-        const img = new Image()
-        img.onload = () => {
-          if (img.width > 500) {
-            setSelectedBackgroundImage(episodeImage)
-          } else {
-            setSelectedBackgroundImage(bannerImage)
-          }
+
+      const img = new Image()
+
+      img.onload = () => {
+        const newBackgroundImage = img.width > 500 ? episodeImage : bannerImage
+        if (newBackgroundImage) {
+          setSelectedBackgroundImage(newBackgroundImage)
         }
-        img.onerror = () => {
+      }
+
+      img.onerror = () => {
+        if (bannerImage !== selectedBackgroundImage) {
           setSelectedBackgroundImage(bannerImage)
         }
-        img.src = episodeImage
-      } else {
-        setSelectedBackgroundImage(bannerImage)
       }
+
+      img.src = episodeImage || bannerImage
     }
+
     if (animeResponse && episodesNavigation) {
       updateBackgroundImage()
     }
-  }, [animeResponse, episodesNavigation])
+  }, [animeResponse, episodesNavigation, selectedBackgroundImage])
 
   const handleEpisodeSelect = (selectedEpisode: IEpisode) => {
     const params = new URLSearchParams(searchParams.toString())
@@ -113,7 +143,10 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({
     }
 
     fetchData()
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+
+    return () => {
+      isMounted = false
+    }
   }, [anilistId, episodeNumber, type, provider])
 
   useEffect(() => {
@@ -131,16 +164,7 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({
       )
 
       if (currentEpisode) {
-        setEpisodeNavigation({
-          id: currentEpisode.id,
-          title: currentEpisode.title,
-          description: currentEpisode.description || "",
-          number: currentEpisode.number,
-          image: currentEpisode.image,
-          createdAt: "",
-          imageHash: "",
-          url: "",
-        })
+        setEpisodeNavigation(currentEpisode)
       }
     }
   }, [episodeNumber, episodesList, provider])
@@ -168,42 +192,43 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({
   }, [episodesNavigation, animeResponse, episodeNumber])
 
   const latestEpisodeNumber = useMemo(
-    () =>
-      episodesList?.length !== 0
-        ? (episodesList?.length ??
-          animeResponse.currentEpisode ??
-          animeResponse.nextAiringEpisode?.episode - 1)
-        : 1 || 1,
-    [animeResponse, episodesList]
+    () => (episodesList.length ? episodesList.length : 1),
+    [episodesList]
   )
 
-  console.log(latestEpisodeNumber)
+  const thumbnails = videoSource?.data.tracks.find(
+    (t) => t.kind === "thumbnails"
+  )
+
+  const subtitles = videoSource?.data.tracks.find((t) => t.kind === "captions")
 
   return (
     <ClientOnly>
-      {isPending ? (
+      {error ? (
+        <div>Please try again</div>
+      ) : isPending ? (
         <div className="flex animate-pulse">
           <div className="relative h-0 w-full rounded-md bg-primary/10 pt-[56%]"></div>
         </div>
-      ) : !error ? (
-        episodesNavigation && (
-          <VidstackPlayer
-            type={type}
-            provider={provider}
-            malId={`${animeResponse.malId}`}
-            episodeId={episodesNavigation.id}
-            animeResponse={animeResponse}
-            episodeNumber={episodesNavigation.number}
-            latestEpisodeNumber={latestEpisodeNumber}
-            anilistId={anilistId}
-            banner={selectedBackgroundImage}
-            currentEpisode={episodesNavigation}
-            title={`${animeResponse.title.english ?? animeResponse.title.romaji}`}
-          />
-        )
       ) : (
-        <div>Please try again</div>
+        <VidstackPlayer
+          type={type}
+          videoUrl={videoSource?.data.sources[0].url!}
+          subtitle={subtitles?.file}
+          thumbnail={thumbnails?.file}
+          provider={provider}
+          malId={`${animeResponse.malId}`}
+          episodeId={episodesNavigation?.id!}
+          animeResponse={animeResponse}
+          episodeNumber={episodesNavigation?.number!}
+          latestEpisodeNumber={latestEpisodeNumber}
+          anilistId={anilistId}
+          banner={selectedBackgroundImage}
+          currentEpisode={episodesNavigation!}
+          title={`${animeResponse.title.english ?? animeResponse.title.romaji}`}
+        />
       )}
+
       {provider && episodesNavigation && type ? (
         <Server
           download={download ?? ""}
